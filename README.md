@@ -3,16 +3,17 @@
 🎧 Application de recommandation musicale quotidienne personnalisée.
 
 ## Fonctionnalités
-- Roue de styles/pays aléatoires
-- Système de notation de 1 à 10
-- Données genre/pays intégrables
-- Interface stylée et responsive
+- Roue de styles/pays animée
+- Notation de 1 à 10
+- Filtres d'exploration dynamiques
+- Historique exportable (.json)
+- Liens Spotify intégrés
 
-## Démarrage local
+## Démarrage
 ```bash
 npm install
 npm run dev
 ```
 
 ## Déploiement
-Déployable directement sur Vercel ou depuis GitHub.
+Déployable via Vercel ou GitHub
