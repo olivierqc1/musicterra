@@ -1,4 +1,20 @@
 // types.ts
+export interface UserPreferences {
+  favoriteGenres: string[];
+  favoriteCountries: string[];
+  ratings: Record<string, number>;
+  location: string | null;
+  searchHistory?: string[];
+  theme?: 'dark' | 'light';
+  interactionHistory?: {
+    timestamp: number;
+    type: 'view' | 'like' | 'search';
+    itemType: 'genre' | 'country';
+    itemName: string;
+  }[];
+  spotifyConnected?: boolean;
+}
+
 export interface User {
   id: string;
   username: string;
