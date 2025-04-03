@@ -1,4 +1,4 @@
-# Music Explorer
+# MusicTerra
 
 Une application web pour explorer des genres musicaux et des connexions culturelles entre pays.
 
