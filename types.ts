@@ -55,5 +55,3 @@ export interface Notification {
   type: 'success' | 'error' | 'info';
   duration?: number;
 }
-
-export
