@@ -1,0 +1,9 @@
+{
+  "short_name": "Music Terra",
+  "name": "Music Terra - Découverte Musicale",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
