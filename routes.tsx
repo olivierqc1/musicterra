@@ -105,31 +105,50 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
   translations,
   notifications
 }) => {
-  const t = translations[language];
-
   return (
     <Router>
-      {isLoading && <LoadingOverlay message={t.loading} />}
-      
-      <Header 
-        user={user}
+      <Header
         theme={theme}
         toggleTheme={toggleTheme}
+        user={user}
         language={language}
         setLanguage={setLanguage}
+        openAuthModal={() => setIsAuthModalOpen(true)}
+        logout={handleLogout}
         isMobile={isMobile}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
-        setIsAuthModalOpen={setIsAuthModalOpen}
-        setIsLoginMode={setIsLoginMode}
-        handleLogout={handleLogout}
-        t={t}
       />
-      
+
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        setIsOpen={setIsMobileMenuOpen}
+        ref={mobileMenuRef}
+        user={user}
+        logout={handleLogout}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        isLoginMode={isLoginMode}
+        setIsLoginMode={setIsLoginMode}
+        authError={authError}
+        formData={formData}
+        handleInputChange={handleInputChange}
+        handleLogin={handleLogin}
+        handleSignUp={handleSignUp}
+      />
+
+      <NotificationContainer notifications={notifications} />
+
+      {isLoading && <LoadingOverlay />}
+
       <Routes>
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
-            <Home 
+            <Home
+              language={language}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               handleSearch={handleSearch}
@@ -145,71 +164,26 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
               connectToSpotify={connectToSpotify}
               spotifyData={spotifyData}
               recommendations={recommendations}
-              language={language}
               translations={translations}
-              isMobile={isMobile}
             />
-          } 
+          }
         />
-        <Route 
-          path="/genre/:genreName" 
-          element={<GenreDetails rateItem={rateItem} shareItem={shareItem} t={t} />} 
-        />
-        <Route 
-          path="/country/:countryName" 
-          element={<CountryDetails rateItem={rateItem} shareItem={shareItem} t={t} />} 
-        />
-        <Route 
-          path="/profile" 
+        <Route path="/genre/:genreName" element={<GenreDetails />} />
+        <Route path="/country/:countryName" element={<CountryDetails />} />
+        <Route
+          path="/profile"
           element={
-            <Profile 
-              user={user}
+            <Profile
               userPreferences={userPreferences}
-              spotifyData={spotifyData}
-              connectToSpotify={connectToSpotify}
-              t={t}
+              rateItem={rateItem}
+              shareItem={shareItem}
             />
-          } 
+          }
         />
-        <Route path="*" element={<NotFound t={t} />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-      
-      <Footer t={t} />
-      
-      {/* Modals and Overlays */}
-      {isAuthModalOpen && (
-        <AuthModal 
-          isLoginMode={isLoginMode}
-          setIsLoginMode={setIsLoginMode}
-          authError={authError}
-          formData={formData}
-          handleInputChange={handleInputChange}
-          handleLogin={handleLogin}
-          handleSignUp={handleSignUp}
-          setIsAuthModalOpen={setIsAuthModalOpen}
-          isLoading={isLoading}
-          t={t}
-        />
-      )}
-      
-      {isMobile && (
-        <MobileMenu 
-          isMobileMenuOpen={isMobileMenuOpen}
-          setIsMobileMenuOpen={setIsMobileMenuOpen}
-          mobileMenuRef={mobileMenuRef}
-          language={language}
-          setLanguage={setLanguage}
-          toggleTheme={toggleTheme}
-          theme={theme}
-          user={user}
-          handleLogout={handleLogout}
-          setIsAuthModalOpen={setIsAuthModalOpen}
-          setIsLoginMode={setIsLoginMode}
-          t={t}
-        />
-      )}
-      
-      <NotificationContainer notifications={notifications} />
+
+      <Footer language={language} />
     </Router>
   );
 };
