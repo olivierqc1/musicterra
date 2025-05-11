@@ -1,3 +1,4 @@
+
 import React from 'react';
 import SearchBar from '../components/UI/SearchBar';
 import SearchResults from '../components/SearchResults';
@@ -11,6 +12,7 @@ import { Genre, UserPreferences } from '../types/types';
 import { Artist } from '../types/types';
 import genreData from '../data/genreData';
 import countriesData from '../data/countriesData';
+import { matrix } from '../data/matrix';
 
 interface HomeProps {
   searchTerm: string;
@@ -37,12 +39,6 @@ interface HomeProps {
     related: Genre[];
     artists: Artist[];
   };
-  language: 'fr' | 'en';
-  translations: {
-    fr: Record<string, string>;
-    en: Record<string, string>;
-  };
-  isMobile: boolean;
 }
 
 const Home: React.FC<HomeProps> = ({
@@ -60,108 +56,51 @@ const Home: React.FC<HomeProps> = ({
   shareItem,
   connectToSpotify,
   spotifyData,
-  recommendations,
-  language,
-  translations,
-  isMobile
+  recommendations
 }) => {
-  const t = translations[language];
+  const currentDecade = "2010s"; // TODO: rendre dynamique
+
+  const country = selectedCountry?.name;
+  const matrixEntry = country && matrix[country] && matrix[country][currentDecade]
+    ? matrix[country][currentDecade]
+    : null;
 
   return (
-    <div className="home-container">
-      <SearchBar 
+    <div className="home">
+      <SearchBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         handleSearch={handleSearch}
-        placeholder={t.searchPlaceholder}
-        buttonText={t.search}
       />
-      
-      {userPreferences.searchHistory && userPreferences.searchHistory.length > 0 && (
-        <SearchHistory 
-          history={userPreferences.searchHistory}
-          onSelectTerm={selectSearchHistoryTerm}
-          title={t.recentSearches}
-        />
-      )}
-      
-      {searchTerm && (
-        <SearchResults 
-          results={searchResults}
-          noResultsText={t.noResults}
-          genresTitle={t.genres}
-          countriesTitle={t.countries}
-          searchResultsTitle={t.searchResults}
-        />
-      )}
-      
-      <div className={`wheels-section ${isMobile ? 'mobile' : ''}`}>
-        <Wheel 
-          type="genre"
-          items={genreData.genres}
-          rotation={wheelRotation.genre}
-          onSpin={() => handleSpin('genre')}
-          title={t.genreWheel}
-          spinButtonText={t.spin}
-        />
-        
-        <Wheel 
-          type="country"
-          items={Object.keys(countriesData).map(name => ({ name }))}
-          rotation={wheelRotation.country}
-          onSpin={() => handleSpin('country')}
-          title={t.countryWheel}
-          spinButtonText={t.spin}
-        />
-      </div>
-      
-      {selectedGenre && (
-        <GenreDetails 
-          genre={selectedGenre}
-          onRate={(rating) => rateItem('genre', selectedGenre.name, rating)}
-          onShare={() => shareItem('genre', selectedGenre.name)}
-          currentRating={userPreferences.ratings[`genre:${selectedGenre.name}`] || 0}
-          shareButtonText={t.share}
-        />
-      )}
-      
-      <Recommendations 
-        recommendations={recommendations}
-        onSelectGenre={(genre) => window.location.href = `/genre/${genre.name}`}
-        onSelectCountry={(country) => window.location.href = `/country/${country}`}
-        recommendedTitle={t.recommended}
-        recommendedGenresTitle={t.recommendedGenres}
-        recommendedCountriesTitle={t.recommendedCountries}
-        relatedGenresTitle={t.relatedGenres}
-        artistsToDiscoverTitle={t.artistsToDiscover}
-        isMobile={isMobile}
+
+      <SearchResults results={searchResults} />
+      <SearchHistory
+        history={userPreferences.searchHistory || []}
+        onSelect={selectSearchHistoryTerm}
       />
-      
-      <SpotifyData 
-        isConnected={userPreferences.spotifyConnected}
-        data={spotifyData}
-        onConnect={connectToSpotify}
-        spotifyTitle="Spotify"
-        connectButtonText={t.connectSpotify}
-        tracksTitle={t.spotifyTracks}
-        artistsTitle={t.spotifyArtists}
-        recommendationsTitle={t.spotifyRecommendations}
+
+      <Wheel
+        wheelRotation={wheelRotation}
+        handleSpin={handleSpin}
+        selectedGenre={selectedGenre}
+        selectedCountry={selectedCountry}
       />
-      
-      {selectedCountry && countriesData[selectedCountry.name] && (
-        <CountryConnections 
-          country={selectedCountry.name}
-          countryDetails={countriesData[selectedCountry.name]}
-          onRate={(rating) => rateItem('country', selectedCountry.name, rating)}
-          onShare={() => shareItem('country', selectedCountry.name)}
-          currentRating={userPreferences.ratings[`country:${selectedCountry.name}`] || 0}
-          shareButtonText={t.share}
-          relatedCountriesTitle={t.relatedCountries}
-          genresTitle={t.genres}
-          popularArtistsTitle={t.popularArtists}
-          traditionalMusicTitle={t.traditionalMusic}
-        />
+
+      {matrixEntry && (
+        <div className="matrix-recommendation">
+          <h3>Genre dominant pour {country} dans les années {currentDecade} :</h3>
+          <p>{matrixEntry.dominantGenre}</p>
+          <p>Pays similaires : {matrixEntry.similarCountries.join(', ')}</p>
+          <a href={matrixEntry.playlist} target="_blank" rel="noopener noreferrer">
+            Écouter la playlist Spotify
+          </a>
+        </div>
       )}
+
+      <Recommendations recommendations={recommendations} rateItem={rateItem} shareItem={shareItem} />
+      <CountryConnections selectedCountry={selectedCountry} />
+      <GenreDetails selectedGenre={selectedGenre} />
+      <SpotifyData data={spotifyData} />
     </div>
   );
 };
