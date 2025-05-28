@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useTheme } from './context/ThemeContext';
+import { useTheme } from './ThemeContext';
 import AppRoutes from './routes';
 import './App.css';
 import { User, Genre, Artist, UserPreferences } from './types/types';
