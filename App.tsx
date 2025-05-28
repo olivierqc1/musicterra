@@ -3,7 +3,7 @@ import { useTheme } from './ThemeContext';
 import AppRoutes from './routes';
 import './App.css';
 import { User, Genre, Artist, UserPreferences } from './types/types';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from './AuthContext';
 import { useNotifications } from './hooks/useNotifications';
 import genreData from './data/genreData';
 import countriesData from './data/countriesData';
