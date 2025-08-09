@@ -89,7 +89,7 @@ export const genres: Item[] = [
     descriptionEn: "Afrobeat fusion, gospel, and contemporary Rwandan pop.",
     subgenres: ['Afro-Gospel', 'Urban Pop'],
     artists: ['Meddy', 'The Ben'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX7dZc2QeWvZQ",
+    spotify: "https://open.spotify.com/playlist/4Cz5u54QYbcnybUpZ8tYYh",
     image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meddy_Rwanda.jpg"
   }
 ];

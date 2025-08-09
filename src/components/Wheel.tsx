@@ -22,7 +22,7 @@ export const Wheel: React.FC<WheelProps> = ({ items, onSpinResult }) => {
           borderRadius: '12px',
           border: 'none',
           background: '#4CAF50',
-          color: 'white',
+          color: 'blue',
           cursor: 'pointer'
         }}
       >
