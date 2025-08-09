@@ -1,4 +1,6 @@
-export const countries = [
+import type { Item } from '../types';
+
+export const countries: Item[] = [
   {
     name: 'France',
     descriptionFr: "Chanson française, électro, rap moderne.",
@@ -26,13 +28,14 @@ export const countries = [
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DWU0ScTcjJBdj",
     image: "https://upload.wikimedia.org/wikipedia/commons/d/db/Alhambra.jpg"
   },
+  // Afrique de l'Est
   {
     name: 'Tanzania',
     descriptionFr: "Bongo Flava, taarab, et rythmes traditionnels de la côte swahilie.",
     descriptionEn: "Bongo Flava, taarab, and traditional Swahili coast rhythms.",
     regions: ['Dar es Salaam', 'Zanzibar', 'Arusha'],
     artists: ['Diamond Platnumz', 'Ali Kiba', 'Lady Jaydee'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWU0ScTcjJBdj", // playlist Tanzanie
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX31fVvTvdTRa",
     image: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Zanzibar_Stone_Town.jpg"
   },
   {
@@ -41,7 +44,7 @@ export const countries = [
     descriptionEn: "Afro-pop, genge, benga, and traditional highland music.",
     regions: ['Nairobi', 'Mombasa', 'Kisumu'],
     artists: ['Sauti Sol', 'Nyashinski', 'Fadhilee Itulya'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX9lAKJGxQ0Im", // playlist Kenya
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX9lAKJGxQ0Im",
     image: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Nairobi_skyline.jpg"
   },
   {
@@ -50,7 +53,7 @@ export const countries = [
     descriptionEn: "Afrobeats, kadongo kamu, and afro-electronic fusion.",
     regions: ['Kampala', 'Jinja', 'Gulu'],
     artists: ['Eddy Kenzo', 'Sheebah Karungi', 'Bebe Cool'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX3EbcelyrZPd", // playlist Uganda
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX3EbcelyrZPd",
     image: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Kampala_skyline.jpg"
   },
   {
@@ -59,7 +62,8 @@ export const countries = [
     descriptionEn: "Afrobeat, gospel, and traditional hill country music.",
     regions: ['Kigali', 'Huye', 'Musanze'],
     artists: ['Meddy', 'The Ben', 'Aline Gahongayire'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWXb9I5xoXLjp", // playlist Rwanda
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWXb9I5xoXLjp",
     image: "https://upload.wikimedia.org/wikipedia/commons/d/d1/Kigali_city_view.jpg"
   }
 ];
+

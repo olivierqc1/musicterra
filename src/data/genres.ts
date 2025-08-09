@@ -1,4 +1,6 @@
-export const genres = [
+import type { Item } from '../types';
+
+export const genres: Item[] = [
   {
     name: 'Rock',
     descriptionFr: "Né dans les années 50 aux USA, influencé par le blues et la country.",
@@ -35,6 +37,7 @@ export const genres = [
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt",
     image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Jazz_band.jpg"
   },
+  // Afrique de l'Est
   {
     name: 'Bongo Flava',
     descriptionFr: "Genre tanzanien mêlant hip-hop, R&B, et influences swahilies.",
@@ -47,7 +50,7 @@ export const genres = [
   {
     name: 'Taarab',
     descriptionFr: "Musique traditionnelle de Zanzibar, mélange arabe, swahili et indien.",
-    descriptionEn: "Traditional music from Zanzibar, blending Arabic, Swahili, and Indian influences.",
+    descriptionEn: "Traditional music from Zanzibar blending Arabic, Swahili and Indian influences.",
     subgenres: ['Classique', 'Moderne'],
     artists: ['Bi Kidude', 'Culture Musical Club'],
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DWSmCnE8n7DWH",
@@ -90,3 +93,4 @@ export const genres = [
     image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meddy_Rwanda.jpg"
   }
 ];
+

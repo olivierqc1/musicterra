@@ -22,11 +22,10 @@ export const UserPreferencesProvider: React.FC<{ children: React.ReactNode }> = 
 
       if (similarityMatrix[itemName]) {
         for (const [relatedItem, similarity] of Object.entries(similarityMatrix[itemName])) {
-          const existing = updated[relatedItem] || 0;
+          const existing = updated[relatedItem] ?? 0;
           updated[relatedItem] = Math.min(10, existing + rating * similarity);
         }
       }
-
       return updated;
     });
   };

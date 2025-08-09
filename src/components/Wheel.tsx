@@ -1,15 +1,5 @@
 import React from 'react';
-
-type Item = {
-  name: string;
-  descriptionFr: string;
-  descriptionEn: string;
-  subgenres?: string[];
-  regions?: string[];
-  artists?: string[];
-  spotify?: string;
-  image?: string;
-};
+import type { Item } from '../types';
 
 interface WheelProps {
   items: Item[];
@@ -24,7 +14,7 @@ export const Wheel: React.FC<WheelProps> = ({ items, onSpinResult }) => {
 
   return (
     <div>
-      <button 
+      <button
         onClick={spinWheel}
         style={{
           fontSize: '1.5rem',
