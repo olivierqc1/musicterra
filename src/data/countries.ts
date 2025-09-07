@@ -29,6 +29,16 @@ export const countries: Item[] = [
     ]
   },
   {
+  name: 'Guatemala',
+  descriptionFr: "Marimba, musique folklorique maya, et fusion moderne.",
+  descriptionEn: "Marimba, traditional Mayan folk music, and modern fusion.",
+  regions: ['Antigua', 'Guatemala City', 'Quetzaltenango'],
+  artists: ['Gaby Moreno', 'Ricardo Arjona', 'Marimba Chapinlandia'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4xuWVBs4FgJ",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Antigua_Guatemala_Street.jpg"
+},
+
+  {
   name: 'Spain',
   descriptionFr: "Flamenco, musiques gitanes, pop/rock et électronica — fortes racines andalouses.",
   descriptionEn: "Flamenco, gypsy music, pop/rock and electronica — strong Andalusian roots.",

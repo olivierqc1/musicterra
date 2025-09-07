@@ -132,6 +132,25 @@ export const genres: Item[] = [
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DX7dZc2QeWvZQ",
     image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meddy_Rwanda.jpg"
   }
+  {
+  name: 'Marimba',
+  descriptionFr: "Instrument national, présent dans la musique traditionnelle et festive.",
+  descriptionEn: "National instrument, central to Guatemalan traditional and festive music.",
+  subgenres: ['Marimba folklorique', 'Marimba moderne'],
+  artists: ['Marimba Chapinlandia', 'Marimba de Concierto'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4xuWVBs4FgJ",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Marimba_Instrument.jpg"
+},
+{
+  name: 'Fusion Latino',
+  descriptionFr: "Mélange de sonorités latines, pop, rock et rythmes traditionnels.",
+  descriptionEn: "Mix of Latin sounds, pop, rock, and traditional rhythms.",
+  subgenres: ['Pop latino', 'Folk fusion', 'Rock alternatif'],
+  artists: ['Gaby Moreno', 'Ricardo Arjona'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX1s9knjP51Oa",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Latin_Fusion_Band.jpg"
+},
+
 ];
 
 
