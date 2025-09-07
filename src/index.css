@@ -1,111 +1,55 @@
-/* ---------- Reset très léger ---------- */
+/* Reset simple */
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
 body { margin: 0; }
 
-/* ---------- Thème haute lisibilité ---------- */
-:root{
-  --bg: #f7f7f7;           /* fond clair */
-  --card: #ffffff;         /* cartes */
-  --text: #111111;         /* texte principal */
-  --muted: #555555;        /* texte secondaire */
-  --border: #e6e6e6;       /* bordures */
-  --accent: #111111;       /* boutons/onglets actifs */
-  --accent-contrast: #ffffff;
-  --focus: #2b8cff;        /* contour focus clavier */
-}
-
-body{
-  background: var(--bg) !important;   /* écrase tout fond sombre/texture */
-  color: var(--text);
+/* Thème clair forcé */
+body, #root, .app-root {
+  background: #f7f7f7 !important;
+  color: #111 !important;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  line-height: 1.35;
 }
 
-/* ---------- Liens ---------- */
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-/* ---------- Cartes / blocs ---------- */
-.card{
-  background: var(--card);
-  border: 1px solid var(--border);
+/* Cartes lisibles */
+.card {
+  background: #fff !important;
+  color: #111 !important;
+  border: 1px solid #e6e6e6 !important;
   border-radius: 14px;
   padding: 14px;
-  box-shadow: 0 1px 0 rgba(0,0,0,.03);
 }
 
-/* ---------- Boutons ---------- */
-.btn{
-  display: inline-flex; align-items: center; justify-content: center;
+/* Boutons */
+.btn {
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid var(--accent);
-  background: var(--accent);
-  color: var(--accent-contrast);
+  border: 1px solid #111;
+  background: #111;
+  color: #fff !important;
   cursor: pointer;
   font-weight: 600;
 }
-.btn:hover{ filter: brightness(0.95); }
-.btn:focus-visible{ outline: 3px solid var(--focus); outline-offset: 2px; }
-
-.btn--ghost{
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn--ghost:hover{ background: #fafafa; }
-
-/* ---------- Onglets ---------- */
-.tabs{ display:flex; gap:8px; flex-wrap: wrap; border-bottom:1px solid var(--border); padding-bottom:8px; }
-.tab{
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--card);
-  color: var(--text);
-  cursor: pointer;
-}
-.tab--active{
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--accent-contrast);
+.btn--ghost {
+  background: #fff !important;
+  color: #111 !important;
+  border: 1px solid #e6e6e6;
 }
 
-/* ---------- Inputs ---------- */
-input, textarea, select{
+/* Inputs */
+input, textarea, select {
   width: 100%;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
+  border: 1px solid #e6e6e6;
+  background: #fff !important;
+  color: #111 !important;
 }
-textarea{ min-height: 90px; resize: vertical; }
-input::placeholder, textarea::placeholder{ color: #8a8a8a; }
-input:focus-visible, textarea:focus-visible, select:focus-visible{
-  outline: 3px solid var(--focus); outline-offset: 2px;
-}
+::placeholder { color: #8a8a8a; }
 
-/* ---------- Chips / Badges ---------- */
-.chip{
-  display:inline-block; padding:6px 10px; border-radius:999px;
-  border:1px solid var(--border); background: var(--card); color: var(--text);
-}
-.chip--on{ background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
-.badge{ display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid var(--border); background:#fafafa; color: var(--muted); font-size:12px; }
+/* Onglets */
+.tabs { display: flex; gap: 8px; border-bottom: 1px solid #e6e6e6; padding-bottom: 8px; }
+.tab { padding: 8px 12px; border: 1px solid #e6e6e6; border-radius: 999px; background: #fff; color: #111; }
+.tab--active { background: #111; color: #fff; border-color: #111; }
 
-/* ---------- Petits utilitaires ---------- */
-.muted{ color: var(--muted); }
-.grid{ display:grid; gap:12px; }
-
-/* ---------- Dark mode (optionnel) : garde un contraste fort ---------- */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0f1113; --card:#14171a; --text:#f1f5f9; --muted:#b3c0cc; --border:#2a2f36;
-    --accent:#e2e8f0; --accent-contrast:#0b0c0e; --focus:#7cb8ff;
-  }
-  a:hover{ text-decoration: underline; }
-}
 
 
