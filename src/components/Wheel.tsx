@@ -1,14 +1,17 @@
 import React from 'react';
 import type { Item } from '../types';
+import { logEvent } from '../utils/analytics';
 
 interface WheelProps {
   items: Item[];
   onSpinResult: (item: Item) => void;
+  pool?: 'all' | 'genres' | 'countries' | 'cities';
 }
 
-export const Wheel: React.FC<WheelProps> = ({ items, onSpinResult }) => {
+export const Wheel: React.FC<WheelProps> = ({ items, onSpinResult, pool = 'all' }) => {
   const spinWheel = () => {
     const randomItem = items[Math.floor(Math.random() * items.length)];
+    logEvent({ type: 'spin', pool, picked: randomItem.name });
     onSpinResult(randomItem);
   };
 
@@ -22,7 +25,7 @@ export const Wheel: React.FC<WheelProps> = ({ items, onSpinResult }) => {
           borderRadius: '12px',
           border: 'none',
           background: '#4CAF50',
-          color: 'blue',
+          color: 'white',
           cursor: 'pointer'
         }}
       >
@@ -31,3 +34,4 @@ export const Wheel: React.FC<WheelProps> = ({ items, onSpinResult }) => {
     </div>
   );
 };
+
