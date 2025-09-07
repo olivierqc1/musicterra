@@ -29,6 +29,47 @@ export const countries: Item[] = [
     ]
   },
   {
+  name: 'Spain',
+  descriptionFr: "Flamenco, musiques gitanes, pop/rock et électronica — fortes racines andalouses.",
+  descriptionEn: "Flamenco, gypsy music, pop/rock and electronica — strong Andalusian roots.",
+  regions: ['Andalucía', 'Catalunya', 'Madrid', 'València', 'Galicia'],
+  artists: ['Paco de Lucía', 'Rosalía', 'Manolo Sanlúcar'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DWU0ScTcjJBdj",
+  image: "https://upload.wikimedia.org/wikipedia/commons/d/db/Alhambra.jpg",
+  cities: [
+    {
+      name: 'Seville',
+      styles: ['Flamenco', 'Rumba', 'Sevillanas'],
+      artists: ['Paco de Lucía', 'Niña Pastori']
+    },
+    {
+      name: 'Madrid',
+      styles: ['Pop', 'Rock', 'Rap'],
+      artists: ['Vetusta Morla', 'C. Tangana'],
+      spotify: 'https://open.spotify.com/playlist/37i9dQZF1DX2Xmsr0G8Eux'
+    },
+    {
+      name: 'Barcelona',
+      styles: ['Indie Pop', 'Electronica', 'Urban'],
+      artists: ['Rosalía', 'Love of Lesbian'],
+      spotify: 'https://open.spotify.com/playlist/37i9dQZF1DX0CIO5EOSHeD'
+    },
+    {
+      name: 'Granada',
+      styles: ['Flamenco', 'World', 'Indie'],
+      artists: ['Los Planetas'],
+      spotify: 'https://open.spotify.com/playlist/37i9dQZF1DX3ntY0G0BiLh'
+    },
+    {
+      name: 'Valencia',
+      styles: ['Electronic', 'Dance', 'Pop'],
+      artists: ['Chimo Bayo'],
+      spotify: 'https://open.spotify.com/playlist/37i9dQZF1DWWY64wDtewQt'
+    }
+  ]
+},
+
+  {
     name: 'Brazil',
     descriptionFr: "Samba, bossa nova, MPB et funk carioca — une palette rythmique unique.",
     descriptionEn: "Samba, bossa nova, MPB and funk carioca — a unique rhythmic palette.",
