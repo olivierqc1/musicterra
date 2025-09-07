@@ -1,68 +1,110 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* ---------- Reset très léger ---------- */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body { margin: 0; }
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ---------- Thème haute lisibilité ---------- */
+:root{
+  --bg: #f7f7f7;           /* fond clair */
+  --card: #ffffff;         /* cartes */
+  --text: #111111;         /* texte principal */
+  --muted: #555555;        /* texte secondaire */
+  --border: #e6e6e6;       /* bordures */
+  --accent: #111111;       /* boutons/onglets actifs */
+  --accent-contrast: #ffffff;
+  --focus: #2b8cff;        /* contour focus clavier */
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+body{
+  background: var(--bg) !important;   /* écrase tout fond sombre/texture */
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.35;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+/* ---------- Liens ---------- */
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
+/* ---------- Cartes / blocs ---------- */
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 14px;
-  border: 1px solid #e7e7e7;
   padding: 14px;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* ---------- Boutons ---------- */
+.btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  cursor: pointer;
+  font-weight: 600;
 }
+.btn:hover{ filter: brightness(0.95); }
+.btn:focus-visible{ outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.btn--ghost{
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn--ghost:hover{ background: #fafafa; }
+
+/* ---------- Onglets ---------- */
+.tabs{ display:flex; gap:8px; flex-wrap: wrap; border-bottom:1px solid var(--border); padding-bottom:8px; }
+.tab{
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+.tab--active{
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* ---------- Inputs ---------- */
+input, textarea, select{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+textarea{ min-height: 90px; resize: vertical; }
+input::placeholder, textarea::placeholder{ color: #8a8a8a; }
+input:focus-visible, textarea:focus-visible, select:focus-visible{
+  outline: 3px solid var(--focus); outline-offset: 2px;
+}
+
+/* ---------- Chips / Badges ---------- */
+.chip{
+  display:inline-block; padding:6px 10px; border-radius:999px;
+  border:1px solid var(--border); background: var(--card); color: var(--text);
+}
+.chip--on{ background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
+.badge{ display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid var(--border); background:#fafafa; color: var(--muted); font-size:12px; }
+
+/* ---------- Petits utilitaires ---------- */
+.muted{ color: var(--muted); }
+.grid{ display:grid; gap:12px; }
+
+/* ---------- Dark mode (optionnel) : garde un contraste fort ---------- */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1113; --card:#14171a; --text:#f1f5f9; --muted:#b3c0cc; --border:#2a2f36;
+    --accent:#e2e8f0; --accent-contrast:#0b0c0e; --focus:#7cb8ff;
+  }
+  a:hover{ text-decoration: underline; }
+}
+
