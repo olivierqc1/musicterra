@@ -132,7 +132,7 @@ export const genres: Item[] = [
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DX7dZc2QeWvZQ",
     image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meddy_Rwanda.jpg"
   },
-  ,
+  
   {
   name: 'Marimba',
   descriptionFr: "Instrument national, présent dans la musique traditionnelle et festive.",
