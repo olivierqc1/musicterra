@@ -30,18 +30,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
 
-  // session
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
-      setSession(data.session ?? null);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange(
-      (_e: string, s: Session | null) => setSession(s)
-    );
+    supabase.auth.getSession().then(({ data }) => setSession(data.session ?? null));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  // profil minimal
   useEffect(() => {
     (async () => {
       const uid = session?.user?.id;
@@ -54,23 +48,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (data) setProfile(data as Profile);
       else {
-        const dflt: Partial<Profile> = {
-          display_name: session?.user?.email ?? null,
-          bio: null,
-          location_city: null,
-          location_country: null,
-          genres: [],
-        };
+        const dflt = { display_name: session?.user?.email ?? null, bio: null, location_city: null, location_country: null, genres: [] };
         await supabase.from("profiles").insert({ id: uid, ...dflt });
-        setProfile({ id: uid, ...dflt } as Profile);
+        setProfile({ id: uid, ...dflt });
       }
     })();
   }, [session]);
 
-  const signInWithMagicLink = async (email: string) => {
-    await supabase.auth.signInWithOtp({ email });
-  };
-
+  const signInWithMagicLink = async (email: string) => { await supabase.auth.signInWithOtp({ email }); };
   const signOut = async () => { await supabase.auth.signOut(); };
 
   return (
