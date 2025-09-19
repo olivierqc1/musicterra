@@ -1,150 +1,83 @@
-// src/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
-// Type de session Supabase
 type Session = Awaited<ReturnType<typeof supabase.auth.getSession>>["data"]["session"];
 
-// Schéma minimal du profil (table public.profiles)
-export type Profile = {
+type Profile = {
   id: string;
-  username: string | null;
-  avatar_url: string | null;
-  preferences: any | null; // tu pourras typer plus tard (e.g. {genres:string[]})
-  updated_at: string | null;
+  display_name: string | null;
+  bio: string | null;
+  location_city: string | null;
+  location_country: string | null;
+  genres: string[] | null;
 };
 
 type AuthCtx = {
   session: Session | null;
   profile: Profile | null;
-  loading: boolean;
   signInWithMagicLink: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
-  saveProfile: (patch: Partial<Profile>) => Promise<void>;
 };
 
-const Ctx = createContext<AuthCtx | null>(null);
-export const useAuth = () => {
-  const v = useContext(Ctx);
-  if (!v) throw new Error("useAuth must be used within <AuthProvider>");
-  return v;
-};
+const Ctx = createContext<AuthCtx>({
+  session: null,
+  profile: null,
+  signInWithMagicLink: async () => {},
+  signOut: async () => {},
+});
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  // 1) Monter la session existante + écouter les changements
+  // session
   useEffect(() => {
-    let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setSession(data.session);
-      setLoading(false);
+    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
+      setSession(data.session ?? null);
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s);
-    });
-    return () => {
-      mounted = false;
-      sub.subscription.unsubscribe();
-    };
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      (_e: string, s: Session | null) => setSession(s)
+    );
+    return () => sub.subscription.unsubscribe();
   }, []);
 
-  // 2) Charger / créer le profil quand on a une session
+  // profil minimal
   useEffect(() => {
     (async () => {
       const uid = session?.user?.id;
-      if (!uid) {
-        setProfile(null);
-        return;
-      }
-      // lire profil
-      const { data, error } = await supabase
+      if (!uid) { setProfile(null); return; }
+      const { data } = await supabase
         .from("profiles")
-        .select("id, username, avatar_url, preferences, updated_at")
+        .select("id, display_name, bio, location_city, location_country, genres")
         .eq("id", uid)
         .maybeSingle();
 
-      if (error) {
-        console.error("profiles select error:", error.message);
-        return;
+      if (data) setProfile(data as Profile);
+      else {
+        const dflt: Partial<Profile> = {
+          display_name: session?.user?.email ?? null,
+          bio: null,
+          location_city: null,
+          location_country: null,
+          genres: [],
+        };
+        await supabase.from("profiles").insert({ id: uid, ...dflt });
+        setProfile({ id: uid, ...dflt } as Profile);
       }
-
-      if (data) {
-        setProfile(data as Profile);
-        return;
-      }
-
-      // créer profil minimal s’il n’existe pas
-      const fallbackName = session.user.email?.split("@")[0] ?? "User";
-      const { data: ins, error: insErr } = await supabase
-        .from("profiles")
-        .insert([{ id: uid, username: fallbackName, avatar_url: null, preferences: null }])
-        .select()
-        .maybeSingle();
-
-      if (insErr) {
-        console.error("profiles insert error:", insErr.message);
-        return;
-      }
-      setProfile(ins as Profile);
     })();
-  }, [session?.user?.id]);
+  }, [session]);
 
-  // 3) Connexion par lien magique (IMPORTANT: redirection exacte)
   const signInWithMagicLink = async (email: string) => {
-    const redirect = `${window.location.origin}/`; // ex: https://musicterra-xxx.vercel.app/
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: redirect,
-        shouldCreateUser: true,
-      },
-    });
-    if (error) {
-      console.error("signInWithOtp error:", error.message);
-      throw error;
-    }
+    await supabase.auth.signInWithOtp({ email });
   };
 
-  // 4) Déconnexion
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    setSession(null);
-    setProfile(null);
-  };
-
-  // 5) Sauvegarde partielle du profil
-  const saveProfile = async (patch: Partial<Profile>) => {
-    if (!session?.user?.id) return;
-    const uid = session.user.id;
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ ...patch, updated_at: new Date().toISOString() })
-      .eq("id", uid)
-      .select()
-      .maybeSingle();
-    if (error) {
-      console.error("profiles update error:", error.message);
-      throw error;
-    }
-    setProfile(data as Profile);
-  };
+  const signOut = async () => { await supabase.auth.signOut(); };
 
   return (
-    <Ctx.Provider
-      value={{
-        session,
-        profile,
-        loading,
-        signInWithMagicLink,
-        signOut,
-        saveProfile,
-      }}
-    >
+    <Ctx.Provider value={{ session, profile, signInWithMagicLink, signOut }}>
       {children}
     </Ctx.Provider>
   );
 };
+
+export const useAuth = () => useContext(Ctx);
