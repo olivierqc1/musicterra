@@ -1,37 +1,23 @@
-import React from 'react';
-import type { Item } from '../types';
-import { logEvent } from '../utils/analytics';
+import React, { useState } from "react";
 
-interface WheelProps {
-  items: Item[];
-  onSpinResult: (item: Item) => void;
-  pool?: 'all' | 'genres' | 'countries' | 'cities';
-}
+type Props = { items: string[]; onSelect: (name: string) => void; language: "fr" | "en" };
 
-export const Wheel: React.FC<WheelProps> = ({ items, onSpinResult, pool = 'all' }) => {
-  const spinWheel = () => {
-    const randomItem = items[Math.floor(Math.random() * items.length)];
-    logEvent({ type: 'spin', pool, picked: randomItem.name });
-    onSpinResult(randomItem);
+export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
+  const [spinning, setSpinning] = useState(false);
+  const spin = () => {
+    if (!items.length) return;
+    setSpinning(true);
+    const pick = items[Math.floor(Math.random() * items.length)];
+    setTimeout(() => { onSelect(pick); setSpinning(false); }, 600);
   };
-
   return (
-    <div>
-      <button
-        onClick={spinWheel}
-        style={{
-          fontSize: '1.5rem',
-          padding: '1rem 2rem',
-          borderRadius: '12px',
-          border: 'none',
-          background: '#4CAF50',
-          color: 'white',
-          cursor: 'pointer'
-        }}
-      >
-        🎡 Spin the wheel
+    <div style={{ display: "grid", gap: 8 }}>
+      <button onClick={spin} disabled={spinning} style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #ddd" }}>
+        {spinning ? (language === "fr" ? "…ça tourne" : "…spinning") : "🎡 " + (language === "fr" ? "Lancer" : "Spin")}
       </button>
+      <div style={{ fontSize: 12, color: "#666" }}>
+        {language === "fr" ? `${items.length} possibilités` : `${items.length} options`}
+      </div>
     </div>
   );
 };
-
