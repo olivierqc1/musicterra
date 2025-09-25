@@ -1,55 +1,8 @@
-/* Reset simple */
-* { box-sizing: border-box; }
 html, body, #root { height: 100%; }
-body { margin: 0; }
-
-/* Thème clair forcé */
-body, #root, .app-root {
-  background: #f7f7f7 !important;
-  color: #111 !important;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+body {
+  margin: 0;
+  background: #f1f5f9;  /* gris clair lisible */
+  color: #0f172a;       /* bleu nuit lisible */
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
-
-/* Cartes lisibles */
-.card {
-  background: #fff !important;
-  color: #111 !important;
-  border: 1px solid #e6e6e6 !important;
-  border-radius: 14px;
-  padding: 14px;
-}
-
-/* Boutons */
-.btn {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #111;
-  background: #111;
-  color: #fff !important;
-  cursor: pointer;
-  font-weight: 600;
-}
-.btn--ghost {
-  background: #fff !important;
-  color: #111 !important;
-  border: 1px solid #e6e6e6;
-}
-
-/* Inputs */
-input, textarea, select {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #e6e6e6;
-  background: #fff !important;
-  color: #111 !important;
-}
-::placeholder { color: #8a8a8a; }
-
-/* Onglets */
-.tabs { display: flex; gap: 8px; border-bottom: 1px solid #e6e6e6; padding-bottom: 8px; }
-.tab { padding: 8px 12px; border: 1px solid #e6e6e6; border-radius: 999px; background: #fff; color: #111; }
-.tab--active { background: #111; color: #fff; border-color: #111; }
-
-
-
+button, input { font: inherit; }
