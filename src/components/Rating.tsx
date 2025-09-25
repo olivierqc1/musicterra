@@ -1,39 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { getUserRating, upsertRating } from "../lib/ratings";
-
-type Props = {
-  itemType: "genre" | "country";
-  itemName: string;
-  onSaved?: (score: number) => void; // callback optionnel
-};
-
-/**
- * Rating sur 0..10
- * - charge la note existante
- * - sauvegarde à la volée
- */
-export const Rating: React.FC<Props> = ({ itemType, itemName, onSaved }) => {
-  const [score, setScore] = useState<number | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Charger la note existante
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const existing = await getUserRating(itemType, itemName);
-        if (mounted) setScore(existing?.score ?? null);
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-    return () => { mounted = false; };
-  }, [itemType, itemName]);
-
-  // Sauvegarde
-  const save = async (val: number) => {
-    setSaving(true);
     setError(null);
     try {
       await upsertRating(itemType, itemName, val);
