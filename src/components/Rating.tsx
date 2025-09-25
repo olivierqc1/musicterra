@@ -1,43 +1,15 @@
-    setError(null);
-    try {
-      await upsertRating(itemType, itemName, val);
-      setScore(val);
-      onSaved?.(val);
-    } catch (e: any) {
-      setError("Erreur de sauvegarde");
-    } finally {
-      setSaving(false);
-    }
-  };
+import React, { useState } from "react";
 
-  // UI simple : 11 boutons (0..10)
+type Props = { max: number; onRate: (score: number) => void; language: "fr" | "en" };
+
+export const Rating: React.FC<Props> = ({ max, onRate, language }) => {
+  const [v, setV] = useState<number>(0);
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-      <span style={{ minWidth: 80, fontWeight: 600 }}>
-        Note /10 :
-      </span>
-      <div role="radiogroup" aria-label={`Note pour ${itemName}`}>
-        {Array.from({ length: 11 }).map((_, i) => {
-          const active = score === i;
-          return (
-            <button
-              key={i}
-              type="button"
-              aria-checked={active}
-              role="radio"
-              onClick={() => save(i)}
-              className={`chip ${active ? "chip--on" : ""}`}
-              style={{ marginRight: 6 }}
-              disabled={saving}
-              title={`${i}/10`}
-            >
-              {i}
-            </button>
-          );
-        })}
-      </div>
-      {saving && <span className="badge">Sauvegarde…</span>}
-      {error && <span className="badge" style={{ color: "#b00020" }}>{error}</span>}
+    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+      <input type="range" min={0} max={max} value={v} onChange={(e) => setV(Number(e.target.value))} />
+      <button onClick={() => onRate(v)} style={{ padding: "6px 10px", border: "1px solid #ccc", borderRadius: 8 }}>
+        {language === "fr" ? `Noter (${v}/${max})` : `Rate (${v}/${max})`}
+      </button>
     </div>
   );
 };
