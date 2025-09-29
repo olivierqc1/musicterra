@@ -103,3 +103,36 @@ const styles: Record<string, React.CSSProperties> = {
   card: {
     width: "100%",
     maxWidth: 480,
+    border: "1px solid #e6e6e6",
+    borderRadius: 12,
+    background: "#fff",
+    padding: 16,
+    boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+  },
+  form: {
+    display: "grid",
+    gridTemplateColumns: "1fr auto",
+    gap: 8,
+    marginTop: 10,
+  },
+  input: {
+    padding: "10px 12px",
+    border: "1px solid #d5d5d5",
+    borderRadius: 8,
+    fontSize: 14,
+  },
+  button: {
+    padding: "10px 12px",
+    borderRadius: 8,
+    border: "1px solid #111",
+    background: "#111",
+    color: "#fff",
+    cursor: "pointer",
+    whiteSpace: "nowrap",
+  },
+  muted: { color: "#666" },
+  info: { color: "#0a7", fontSize: 14 },
+  error: { color: "#c00", fontSize: 14 },
+};
+
+export default AuthGate;
