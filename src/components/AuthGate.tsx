@@ -1,133 +1,105 @@
+// src/components/AuthGate.tsx
 import React, { useState } from "react";
+import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 
-/**
- * Affiche un formulaire d'email (magic link) si l'utilisateur n'est pas connecté.
- * Quand la session existe, rend simplement {children}.
- */
-const AuthGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { session, signInWithMagicLink, signOut } = useAuth();
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
-  );
-  const [message, setMessage] = useState<string>("");
+type Props = { children: React.ReactNode };
 
+/**
+ * Affiche les enfants si l'utilisateur est connecté.
+ * Sinon, montre un petit formulaire pour entrer l'email et recevoir
+ * un lien magique Supabase (passwordless).
+ */
+const AuthGate: React.FC<Props> = ({ children }) => {
+  const { session } = useAuth();
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Si déjà connecté => on laisse passer l'app
   if (session) {
-    // Déjà connecté → on montre l’app (et un petit bouton de déconnexion)
-    return (
-      <div>
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "8px 12px",
-            border: "1px solid #eee",
-            borderRadius: 12,
-            marginBottom: 12,
-          }}
-        >
-          <span>
-            Connecté comme{" "}
-            <strong>{session.user.email ?? session.user.id}</strong>
-          </span>
-          <button
-            onClick={signOut}
-            style={{
-              padding: "6px 10px",
-              borderRadius: 10,
-              border: "1px solid #bbb",
-              background: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Se déconnecter
-          </button>
-        </div>
-        {children}
-      </div>
-    );
+    return <>{children}</>;
   }
 
-  // Pas connecté → formulaire d’email
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
+    setMessage(null);
+    setErrorMsg(null);
+
+    // Redirection après clic sur le lien dans l'email.
+    // Assure-toi que cette origin est bien autorisée dans Supabase > Auth > URL Configuration.
+    const emailRedirectTo = `${window.location.origin}`;
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo },
+    });
+
+    setSending(false);
+
+    if (error) {
+      setErrorMsg(error.message);
+      return;
+    }
+    setMessage(
+      `Un lien de connexion a été envoyé à ${email}. Ouvre l'email et clique sur le lien pour terminer la connexion.`
+    );
+  };
+
   return (
-    <div
-      style={{
-        maxWidth: 440,
-        margin: "40px auto",
-        padding: 16,
-        border: "1px solid #eee",
-        borderRadius: 12,
-        background: "#fff",
-      }}
-    >
-      <h2 style={{ marginTop: 0 }}>Connexion</h2>
-      <p style={{ color: "#444" }}>
-        Entre ton adresse courriel. On t’enverra un{" "}
-        <strong>lien magique</strong> pour te connecter.
-      </p>
-
-      <label style={{ display: "block", fontWeight: 600, marginBottom: 6 }}>
-        Email
-      </label>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="ton@email.com"
-        style={{
-          width: "100%",
-          padding: "10px 12px",
-          borderRadius: 10,
-          border: "1px solid #ccc",
-        }}
-      />
-
-      <button
-        onClick={async () => {
-          setStatus("sending");
-          setMessage("");
-          try {
-            await signInWithMagicLink(email);
-            setStatus("sent");
-            setMessage(
-              "Lien envoyé ! Va cliquer le lien de connexion dans ta boîte mail."
-            );
-          } catch (e: any) {
-            setStatus("error");
-            setMessage(e?.message ?? "Erreur inattendue.");
-          }
-        }}
-        disabled={!email || status === "sending"}
-        style={{
-          marginTop: 12,
-          width: "100%",
-          padding: "10px 12px",
-          borderRadius: 10,
-          border: "1px solid #111",
-          background: "#111",
-          color: "#fff",
-          cursor: "pointer",
-        }}
-      >
-        {status === "sending" ? "Envoi en cours…" : "Envoyer le lien magique"}
-      </button>
-
-      {message && (
-        <p
-          style={{
-            marginTop: 10,
-            color: status === "error" ? "#b00020" : "#0a7",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {message}
+    <div style={styles.wrapper}>
+      <div style={styles.card}>
+        <h2 style={{ margin: "0 0 8px" }}>Connexion requise</h2>
+        <p style={styles.muted}>
+          Entre ton email pour recevoir un lien magique et accéder aux pages
+          protégées (Groupes, Concerts, Profil).
         </p>
-      )}
+
+        <form onSubmit={handleLogin} style={styles.form}>
+          <input
+            type="email"
+            required
+            placeholder="ton.email@exemple.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={styles.input}
+          />
+          <button type="submit" disabled={sending} style={styles.button}>
+            {sending ? "Envoi en cours…" : "Envoyer le lien magique"}
+          </button>
+        </form>
+
+        {message && <p style={{ ...styles.info, marginTop: 8 }}>{message}</p>}
+        {errorMsg && <p style={{ ...styles.error, marginTop: 8 }}>{errorMsg}</p>}
+
+        <details style={{ marginTop: 12 }}>
+          <summary style={styles.muted}>Aide</summary>
+          <ul style={{ marginTop: 6, paddingLeft: 18 }}>
+            <li>
+              Vérifie que l’adresse affichée est bien la tienne et regarde aussi
+              dans les spams.
+            </li>
+            <li>
+              Dans Supabase → <em>Auth → URL Configuration</em>, ajoute ton
+              domaine Vercel (<code>{typeof window !== "undefined" ? window.location.origin : "https://…vercel.app"}</code>)
+              dans <em>Redirect URLs</em>.
+            </li>
+          </ul>
+        </details>
+      </div>
     </div>
   );
 };
 
-export default AuthGate;
+const styles: Record<string, React.CSSProperties> = {
+  wrapper: {
+    display: "grid",
+    placeItems: "center",
+    minHeight: "40vh",
+    padding: 16,
+  },
+  card: {
+    width: "100%",
+    maxWidth: 480,
