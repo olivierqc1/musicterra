@@ -6,17 +6,8 @@ import { similarityMatrix } from "./data/matrix";
 import { Wheel } from "./components/Wheel";
 import { Rating } from "./components/Rating";
 
-// Contexte préférences (si tu l’as déjà)
-import { useUserPreferences } from "./context/UserPreferencesContext";
-// Auth (déjà branché dans main.tsx avec AuthProvider + AuthGate)
 import { useAuth } from "./context/AuthContext";
-
-// SUPABASE-READY PAGES (si déjà créées)
-import { Concerts } from "./components/Concerts";
-// Si tu as un composant Groups connecté à Supabase, importe-le :
-import Groups from "./components/Groups"; // sinon commente cette ligne
-// Si tu as une page Profile, importe-la :
-import Profile from "./components/Profile"; // sinon commente cette ligne
+import AuthGate from "./components/AuthGate";
 
 // ---------- Types ----------
 type GenreItem = {
@@ -27,7 +18,7 @@ type GenreItem = {
   artists: string[];
   spotify?: string;
   image?: string;
-  cityStyles?: { city: string; noteFr?: string; noteEn?: string }[]; // optionnel
+  cityStyles?: { city: string; noteFr?: string; noteEn?: string }[];
 };
 
 type CountryItem = {
@@ -38,13 +29,34 @@ type CountryItem = {
   artists: string[];
   spotify?: string;
   image?: string;
-  cityStyles?: { city: string; noteFr?: string; noteEn?: string }[]; // optionnel
+  cityStyles?: { city: string; noteFr?: string; noteEn?: string }[];
 };
 
 type Item = GenreItem | CountryItem;
 
 const isGenre = (i: Item): i is GenreItem => "subgenres" in i;
 const isCountry = (i: Item): i is CountryItem => "regions" in i;
+
+// ---------- Placeholders protégés (tu pourras remplacer plus tard) ----------
+const GroupsPlaceholder: React.FC<{ language: "fr" | "en" }> = ({ language }) => (
+  <div style={styles.card}>
+    {language === "fr"
+      ? "Ici s’afficheront tes groupes (à brancher plus tard)."
+      : "Your groups will appear here (to plug later)."}
+  </div>
+);
+
+const ConcertsPlaceholder: React.FC<{ language: "fr" | "en" }> = ({ language }) => (
+  <div style={styles.card}>
+    {language === "fr"
+      ? "Ici s’afficheront les concerts (à brancher plus tard)."
+      : "Concerts will appear here (to plug later)."}
+  </div>
+);
+
+const ProfilePlaceholder: React.FC = () => (
+  <div style={styles.card}>Profil (à brancher plus tard).</div>
+);
 
 // ---------- App ----------
 const App: React.FC = () => {
@@ -55,10 +67,6 @@ const App: React.FC = () => {
 
   const [pool, setPool] = useState<"genres" | "countries">("genres");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-
-  const { addRatingFor } = useUserPreferences?.() ?? {
-    addRatingFor: (_name: string, _score: number) => {},
-  };
 
   const { session } = useAuth();
 
@@ -82,264 +90,257 @@ const App: React.FC = () => {
     if (!selectedItem) return [];
     const name = selectedItem.name;
     const row = similarityMatrix[name] || {};
-    // Retourne un tableau [label, score] trié desc
     return Object.entries(row).sort((a, b) => b[1] - a[1]);
   }, [selectedItem]);
 
   return (
-    <div style={styles.app}>
-      {/* Header */}
-      <header style={styles.header}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 22 }}>🎵</span>
-          <h1 style={{ margin: 0 }}>Musicterra</h1>
-        </div>
+    <AuthGate>
+      <div style={styles.app}>
+        {/* Header */}
+        <header style={styles.header}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 22 }}>🎵</span>
+            <h1 style={{ margin: 0 }}>Musicterra</h1>
+          </div>
 
-        <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
+              style={styles.secondaryBtn}
+            >
+              {t("Basculer en anglais", "Switch to French")}
+            </button>
+          </div>
+        </header>
+
+        {/* Tabs */}
+        <nav style={styles.tabsBar}>
           <button
-            onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
-            style={styles.secondaryBtn}
+            style={{ ...styles.tabBtn, ...(tab === "discover" ? styles.tabActive : {}) }}
+            onClick={() => setTab("discover")}
           >
-            {t("Basculer en anglais", "Switch to French")}
+            {t("Découvrir", "Discover")}
           </button>
-        </div>
-      </header>
+          <button
+            style={{ ...styles.tabBtn, ...(tab === "groups" ? styles.tabActive : {}) }}
+            onClick={() => setTab("groups")}
+          >
+            {t("Groupes", "Groups")}
+          </button>
+          <button
+            style={{
+              ...styles.tabBtn,
+              ...(tab === "concerts" ? styles.tabActive : {}),
+            }}
+            onClick={() => setTab("concerts")}
+          >
+            {t("Concerts", "Concerts")}
+          </button>
+          <button
+            style={{ ...styles.tabBtn, ...(tab === "profile" ? styles.tabActive : {}) }}
+            onClick={() => setTab("profile")}
+          >
+            {t("Profil", "Profile")}
+          </button>
+        </nav>
 
-      {/* Tabs */}
-      <nav style={styles.tabsBar}>
-        <button
-          style={{ ...styles.tabBtn, ...(tab === "discover" ? styles.tabActive : {}) }}
-          onClick={() => setTab("discover")}
-        >
-          {t("Découvrir", "Discover")}
-        </button>
-        <button
-          style={{ ...styles.tabBtn, ...(tab === "groups" ? styles.tabActive : {}) }}
-          onClick={() => setTab("groups")}
-        >
-          {t("Groupes", "Groups")}
-        </button>
-        <button
-          style={{
-            ...styles.tabBtn,
-            ...(tab === "concerts" ? styles.tabActive : {}),
-          }}
-          onClick={() => setTab("concerts")}
-        >
-          {t("Concerts", "Concerts")}
-        </button>
-        <button
-          style={{ ...styles.tabBtn, ...(tab === "profile" ? styles.tabActive : {}) }}
-          onClick={() => setTab("profile")}
-        >
-          {t("Profil", "Profile")}
-        </button>
-      </nav>
+        {/* Content */}
+        <main style={styles.main}>
+          {/* DISCOVER */}
+          {tab === "discover" && (
+            <section style={{ display: "grid", gap: 16 }}>
+              {/* Choix du pool */}
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <label style={styles.chipLabel}>
+                  <input
+                    type="radio"
+                    name="pool"
+                    checked={pool === "genres"}
+                    onChange={() => setPool("genres")}
+                  />{" "}
+                  {t("Genres", "Genres")}
+                </label>
+                <label style={styles.chipLabel}>
+                  <input
+                    type="radio"
+                    name="pool"
+                    checked={pool === "countries"}
+                    onChange={() => setPool("countries")}
+                  />{" "}
+                  {t("Pays / Villes", "Countries / Cities")}
+                </label>
+              </div>
 
-      {/* Content */}
-      <main style={styles.main}>
-        {/* DISCOVER */}
-        {tab === "discover" && (
-          <section style={{ display: "grid", gap: 16 }}>
-            {/* Choix du pool */}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <label style={styles.chipLabel}>
-                <input
-                  type="radio"
-                  name="pool"
-                  checked={pool === "genres"}
-                  onChange={() => setPool("genres")}
-                />{" "}
-                {t("Genres", "Genres")}
-              </label>
-              <label style={styles.chipLabel}>
-                <input
-                  type="radio"
-                  name="pool"
-                  checked={pool === "countries"}
-                  onChange={() => setPool("countries")}
-                />{" "}
-                {t("Pays / Villes", "Countries / Cities")}
-              </label>
-            </div>
-
-            {/* Wheel */}
-            <div style={styles.card}>
-              <h3 style={{ marginTop: 0 }}>{t("Tourne la roue", "Spin the wheel")}</h3>
-              <Wheel
-                items={items.map((i) => i.name)}
-                onSelect={onSpin}
-                language={language}
-              />
-            </div>
-
-            {/* Résultat */}
-            {selectedItem && (
+              {/* Wheel */}
               <div style={styles.card}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "140px 1fr",
-                    gap: 16,
-                    alignItems: "flex-start",
-                  }}
-                >
-                  {/* Image */}
-                  <div>
-                    {selectedItem.image ? (
-                      <img
-                        src={selectedItem.image}
-                        alt={selectedItem.name}
-                        style={{ width: "100%", borderRadius: 12, objectFit: "cover" }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: "100%",
-                          aspectRatio: "1/1",
-                          borderRadius: 12,
-                          background: "#f2f2f2",
-                          display: "grid",
-                          placeItems: "center",
-                          color: "#888",
-                        }}
-                      >
-                        {t("Aucune image", "No image")}
-                      </div>
-                    )}
-                  </div>
+                <h3 style={{ marginTop: 0 }}>{t("Tourne la roue", "Spin the wheel")}</h3>
+                <Wheel
+                  items={items.map((i) => i.name)}
+                  onSelect={onSpin}
+                  language={language}
+                />
+              </div>
 
-                  {/* Infos */}
-                  <div>
-                    <h2 style={{ margin: "4px 0 6px" }}>{selectedItem.name}</h2>
-                    <p style={{ marginTop: 0 }}>
-                      {language === "fr"
-                        ? selectedItem.descriptionFr
-                        : selectedItem.descriptionEn}
-                    </p>
-
-                    {/* Sous-genres / Régions */}
-                    {isGenre(selectedItem) && selectedItem.subgenres?.length ? (
-                      <p style={styles.lightText}>
-                        <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
-                        {selectedItem.subgenres.join(", ")}
-                      </p>
-                    ) : null}
-
-                    {isCountry(selectedItem) && selectedItem.regions?.length ? (
-                      <p style={styles.lightText}>
-                        <strong>{t("Régions", "Regions")}:</strong>{" "}
-                        {selectedItem.regions.join(", ")}
-                      </p>
-                    ) : null}
-
-                    {/* Villes typiques (optionnel) */}
-                    {selectedItem.cityStyles?.length ? (
-                      <div style={{ marginTop: 8 }}>
-                        <strong>{t("Villes & styles", "Cities & styles")}:</strong>
-                        <ul style={{ margin: "6px 0 0 16px" }}>
-                          {selectedItem.cityStyles.map((c) => (
-                            <li key={c.city}>
-                              <em>{c.city}</em>
-                              {": "}
-                              {language === "fr" ? c.noteFr ?? "" : c.noteEn ?? ""}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : null}
-
-                    {/* Artistes */}
-                    {selectedItem.artists?.length ? (
-                      <p style={styles.lightText}>
-                        <strong>{t("Artistes clés", "Key artists")}:</strong>{" "}
-                        {selectedItem.artists.join(", ")}
-                      </p>
-                    ) : null}
-
-                    {/* Spotify */}
-                    {selectedItem.spotify && (
-                      <p style={{ marginTop: 8 }}>
-                        <a
-                          href={selectedItem.spotify}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={styles.primaryLink}
+              {/* Résultat */}
+              {selectedItem && (
+                <div style={styles.card}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "140px 1fr",
+                      gap: 16,
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    {/* Image */}
+                    <div>
+                      {selectedItem.image ? (
+                        <img
+                          src={selectedItem.image}
+                          alt={selectedItem.name}
+                          style={{ width: "100%", borderRadius: 12, objectFit: "cover" }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: "100%",
+                            aspectRatio: "1/1",
+                            borderRadius: 12,
+                            background: "#f2f2f2",
+                            display: "grid",
+                            placeItems: "center",
+                            color: "#888",
+                          }}
                         >
-                          🎧 {t("Playlist Spotify", "Spotify playlist")}
-                        </a>
-                      </p>
-                    )}
-
-                    {/* Rating */}
-                    <div style={{ marginTop: 14 }}>
-                      <Rating
-                        max={10}
-                        onRate={(score) => {
-                          addRatingFor?.(selectedItem.name, score);
-                          alert(
-                            t(
-                              `Note enregistrée: ${score}/10`,
-                              `Rating saved: ${score}/10`
-                            )
-                          );
-                        }}
-                        language={language}
-                      />
+                          {t("Aucune image", "No image")}
+                        </div>
+                      )}
                     </div>
 
-                    {/* Affinités (matrice) */}
-                    {similarityBoost.length > 0 && (
-                      <div style={{ marginTop: 12 }}>
-                        <strong>{t("Affinités", "Similarities")}:</strong>
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
-                          {similarityBoost.slice(0, 8).map(([label, score]) => (
-                            <span key={label} style={styles.badge}>
-                              {label} • {Math.round(score * 100)}%
-                            </span>
-                          ))}
+                    {/* Infos */}
+                    <div>
+                      <h2 style={{ margin: "4px 0 6px" }}>{selectedItem.name}</h2>
+                      <p style={{ marginTop: 0 }}>
+                        {language === "fr"
+                          ? selectedItem.descriptionFr
+                          : selectedItem.descriptionEn}
+                      </p>
+
+                      {/* Sous-genres / Régions */}
+                      {isGenre(selectedItem) && selectedItem.subgenres?.length ? (
+                        <p style={styles.lightText}>
+                          <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
+                          {selectedItem.subgenres.join(", ")}
+                        </p>
+                      ) : null}
+
+                      {isCountry(selectedItem) && selectedItem.regions?.length ? (
+                        <p style={styles.lightText}>
+                          <strong>{t("Régions", "Regions")}:</strong>{" "}
+                          {selectedItem.regions.join(", ")}
+                        </p>
+                      ) : null}
+
+                      {/* Villes typiques (optionnel) */}
+                      {selectedItem.cityStyles?.length ? (
+                        <div style={{ marginTop: 8 }}>
+                          <strong>{t("Villes & styles", "Cities & styles")}:</strong>
+                          <ul style={{ margin: "6px 0 0 16px" }}>
+                            {selectedItem.cityStyles.map((c) => (
+                              <li key={c.city}>
+                                <em>{c.city}</em>
+                                {": "}
+                                {language === "fr" ? c.noteFr ?? "" : c.noteEn ?? ""}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
+                      ) : null}
+
+                      {/* Artistes */}
+                      {selectedItem.artists?.length ? (
+                        <p style={styles.lightText}>
+                          <strong>{t("Artistes clés", "Key artists")}:</strong>{" "}
+                          {selectedItem.artists.join(", ")}
+                        </p>
+                      ) : null}
+
+                      {/* Spotify */}
+                      {selectedItem.spotify && (
+                        <p style={{ marginTop: 8 }}>
+                          <a
+                            href={selectedItem.spotify}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={styles.primaryLink}
+                          >
+                            🎧 {t("Playlist Spotify", "Spotify playlist")}
+                          </a>
+                        </p>
+                      )}
+
+                      {/* Rating */}
+                      <div style={{ marginTop: 14 }}>
+                        <Rating
+                          onRate={(score: number) => {
+                            console.log("rating saved:", selectedItem.name, score);
+                            alert(
+                              t(
+                                `Note enregistrée: ${score}/10`,
+                                `Rating saved: ${score}/10`
+                              )
+                            );
+                          }}
+                          language={language}
+                        />
                       </div>
-                    )}
+
+                      {/* Affinités (matrice) */}
+                      {similarityBoost.length > 0 && (
+                        <div style={{ marginTop: 12 }}>
+                          <strong>{t("Affinités", "Similarities")}:</strong>
+                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
+                            {similarityBoost.slice(0, 8).map(([label, score]) => (
+                              <span key={label} style={styles.badge}>
+                                {label} • {Math.round(score * 100)}%
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </section>
-        )}
+              )}
+            </section>
+          )}
 
-        {/* GROUPS (protégé) */}
-        {tab === "groups" && (
-          session ? (
-            <Groups language={language} />
-          ) : (
-            <Locked language={language} what="groupes" />
-          )
-        )}
+          {/* GROUPS (protégé) */}
+          {tab === "groups" &&
+            (session ? (
+              <GroupsPlaceholder language={language} />
+            ) : (
+              <Locked language={language} what="groupes" />
+            ))}
 
-        {/* CONCERTS (protégé) */}
-        {tab === "concerts" && (
-          session ? (
-            <Concerts language={language} />
-          ) : (
-            <Locked language={language} what="concerts" />
-          )
-        )}
+          {/* CONCERTS (protégé) */}
+          {tab === "concerts" &&
+            (session ? (
+              <ConcertsPlaceholder language={language} />
+            ) : (
+              <Locked language={language} what="concerts" />
+            ))}
 
-        {/* PROFILE (protégé) */}
-        {tab === "profile" && (
-          session ? (
-            <Profile />
-          ) : (
-            <Locked language={language} what="profil" />
-          )
-        )}
-      </main>
+          {/* PROFILE (protégé) */}
+          {tab === "profile" &&
+            (session ? <ProfilePlaceholder /> : <Locked language={language} what="profil" />)}
+        </main>
 
-      <footer style={styles.footer}>
-        <small>© {new Date().getFullYear()} Musicterra</small>
-      </footer>
-    </div>
+        <footer style={styles.footer}>
+          <small>© {new Date().getFullYear()} Musicterra</small>
+        </footer>
+      </div>
+    </AuthGate>
   );
 };
 
@@ -421,6 +422,3 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 export default App;
-
-
-
