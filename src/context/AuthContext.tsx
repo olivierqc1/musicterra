@@ -1,84 +1,79 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "../lib/supabase.js";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
-type Session = Awaited<ReturnType<SupabaseClient["auth"]["getSession"]>>["data"]["session"];
-
-type Profile = {
-  id: string;
-  display_name: string | null;
-  bio: string | null;
-  location_city: string | null;
-  location_country: string | null;
-  genres: string[] | null;
-};
-
-type AuthCtx = {
+// Définition du type de contexte
+interface AuthContextType {
   session: Session | null;
-  profile: Profile | null;
-  signInWithMagicLink: (email: string) => Promise<void>;
+  user: User | null;
+  loading: boolean;
+  signInWithEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
-};
+}
 
-const Ctx = createContext<AuthCtx>({
-  session: null,
-  profile: null,
-  signInWithMagicLink: async () => {},
-  signOut: async () => {},
-});
+// Création du contexte
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Provider
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
-      setSession(data.session ?? null);
+    // Récupère la session existante
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setLoading(false);
     });
-    const { data: sub } = supabase.auth.onAuthStateChange(
-      (_event: string, s: Session | null) => setSession(s)
-    );
-    return () => sub.subscription.unsubscribe();
+
+    // Écoute les changements (connexion / déconnexion)
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      const uid = session?.user?.id;
-      if (!uid) { setProfile(null); return; }
+  // Fonction de connexion
+  const signInWithEmail = async (email: string) => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    setLoading(false);
 
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, display_name, bio, location_city, location_country, genres")
-        .eq("id", uid)
-        .maybeSingle();
-
-      if (data) {
-        setProfile(data as Profile);
-      } else {
-        const dflt: Partial<Profile> = {
-          display_name: session?.user?.email ?? null,
-          bio: null,
-          location_city: null,
-          location_country: null,
-          genres: [],
-        };
-        await supabase.from("profiles").insert({ id: uid, ...dflt });
-        setProfile({ id: uid, ...dflt } as Profile);
-      }
-    })();
-  }, [session]);
-
-  const signInWithMagicLink = async (email: string) => {
-    await supabase.auth.signInWithOtp({ email });
+    if (error) {
+      console.error("Erreur connexion:", error.message);
+      alert("Impossible d’envoyer le lien de connexion.");
+    } else {
+      alert("Un lien magique a été envoyé à ton email !");
+    }
   };
 
-  const signOut = async () => { await supabase.auth.signOut(); };
+  // Fonction de déconnexion
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+  };
 
   return (
-    <Ctx.Provider value={{ session, profile, signInWithMagicLink, signOut }}>
+    <AuthContext.Provider
+      value={{
+        session,
+        user: session?.user ?? null,
+        loading,
+        signInWithEmail,
+        signOut,
+      }}
+    >
       {children}
-    </Ctx.Provider>
+    </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(Ctx);
+// Hook utilitaire
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth doit être utilisé dans AuthProvider");
+  return ctx;
+};
