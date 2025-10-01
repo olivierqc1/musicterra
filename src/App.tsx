@@ -286,28 +286,25 @@ const App: React.FC = () => {
         )}
 
         {/* GROUPS */}
-        {tab === "groups" &&
-          (session ? (
+        {tab === "groups" && (
+          <AuthGate mode="inline" language={language}>
             <Groups language={language} />
-          ) : (
-            <AuthGate mode="inline" language={language} />
-          ))}
+          </AuthGate>
+        )}
 
         {/* CONCERTS */}
-        {tab === "concerts" &&
-          (session ? (
+        {tab === "concerts" && (
+          <AuthGate mode="inline" language={language}>
             <Concerts language={language} />
-          ) : (
-            <AuthGate mode="inline" language={language} />
-          ))}
+          </AuthGate>
+        )}
 
         {/* PROFILE */}
-        {tab === "profile" &&
-          (session ? (
+        {tab === "profile" && (
+          <AuthGate mode="inline" language={language}>
             <Profile language={language} />
-          ) : (
-            <AuthGate mode="inline" language={language} />
-          ))}
+          </AuthGate>
+        )}
       </main>
 
       <footer style={styles.footer}>
