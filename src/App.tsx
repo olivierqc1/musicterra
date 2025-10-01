@@ -1,24 +1,19 @@
+// src/App.tsx
 import React, { useMemo, useState } from "react";
 import { genres } from "./data/genres";
 import { countries } from "./data/countries";
 import { similarityMatrix } from "./data/matrix";
 
 import { Wheel } from "./components/Wheel";
-import { Rating } from "./components/Rating";
-
-// Contexte préférences (si tu l’as déjà)
-import { useUserPreferences } from "./context/UserPreferencesContext";
-// Auth (déjà branché dans main.tsx avec AuthProvider)
-import { useAuth } from "./context/AuthContext";
-// Écran de connexion email (magic link)
+import Rating from "./components/Rating";
+import Profile from "./components/Profile";
 import AuthGate from "./components/AuthGate";
+import Groups from "./components/Groups";
+import Concerts from "./components/Concerts";
 
-// Si tu as déjà ces composants, tu peux garder les imports ; sinon, commente-les.
-// import Groups from "./components/Groups";
-// import Concerts from "./components/Concerts";
-// import Profile from "./components/Profile";
+import { useAuth } from "./context/AuthContext";
 
-// ---------- Types ----------
+// Types
 type GenreItem = {
   name: string;
   descriptionFr: string;
@@ -27,7 +22,6 @@ type GenreItem = {
   artists: string[];
   spotify?: string;
   image?: string;
-  cityStyles?: { city: string; noteFr?: string; noteEn?: string }[]; // optionnel
 };
 
 type CountryItem = {
@@ -38,7 +32,7 @@ type CountryItem = {
   artists: string[];
   spotify?: string;
   image?: string;
-  cityStyles?: { city: string; noteFr?: string; noteEn?: string }[]; // optionnel
+  cities?: any[];
 };
 
 type Item = GenreItem | CountryItem;
@@ -46,43 +40,35 @@ type Item = GenreItem | CountryItem;
 const isGenre = (i: Item): i is GenreItem => "subgenres" in i;
 const isCountry = (i: Item): i is CountryItem => "regions" in i;
 
-// ---------- App ----------
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
   const [tab, setTab] = useState<"discover" | "groups" | "concerts" | "profile">(
     "discover"
   );
-
   const [pool, setPool] = useState<"genres" | "countries">("genres");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-  const prefs = useUserPreferences?.();
-  const addRatingFor =
-    prefs?.addRatingFor ?? ((_name: string, _score: number) => {});
+  const { session, profile } = useAuth();
 
-  const { session } = useAuth();
-
-  // Liste des items selon le pool
+  // Items selon le pool
   const items: Item[] = useMemo(
     () => (pool === "genres" ? (genres as Item[]) : (countries as Item[])),
     [pool]
   );
 
-  // Texte utilitaire multi-langue
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-  // Quand la roue sélectionne un item
+  // Sélection d'un item via la roue
   const onSpin = (name: string) => {
     const found = items.find((i) => i.name === name) || null;
     setSelectedItem(found);
   };
 
-  // Calcul d’affinité (boost) via la matrice
+  // Calcul d'affinité via matrice
   const similarityBoost = useMemo(() => {
     if (!selectedItem) return [];
     const name = selectedItem.name;
     const row = similarityMatrix[name] || {};
-    // Retourne un tableau [label, score] trié desc
     return Object.entries(row).sort((a, b) => b[1] - a[1]);
   }, [selectedItem]);
 
@@ -95,16 +81,16 @@ const App: React.FC = () => {
           <h1 style={{ margin: 0 }}>Musicterra</h1>
         </div>
 
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <button
             onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
             style={styles.secondaryBtn}
           >
-            {t("Basculer en anglais", "Switch to French")}
+            {t("🇬🇧 EN", "🇫🇷 FR")}
           </button>
-          {session && (
+          {session && profile && (
             <span style={{ fontSize: 12, color: "#555" }}>
-              {t("Connecté", "Signed in")}
+              {profile.display_name || profile.email}
             </span>
           )}
         </div>
@@ -113,16 +99,22 @@ const App: React.FC = () => {
       {/* Tabs */}
       <nav style={styles.tabsBar}>
         <button
-          style={{ ...styles.tabBtn, ...(tab === "discover" ? styles.tabActive : {}) }}
+          style={{
+            ...styles.tabBtn,
+            ...(tab === "discover" ? styles.tabActive : {}),
+          }}
           onClick={() => setTab("discover")}
         >
-          {t("Découvrir", "Discover")}
+          {t("🔍 Découvrir", "🔍 Discover")}
         </button>
         <button
-          style={{ ...styles.tabBtn, ...(tab === "groups" ? styles.tabActive : {}) }}
+          style={{
+            ...styles.tabBtn,
+            ...(tab === "groups" ? styles.tabActive : {}),
+          }}
           onClick={() => setTab("groups")}
         >
-          {t("Groupes", "Groups")}
+          {t("👥 Groupes", "👥 Groups")}
         </button>
         <button
           style={{
@@ -131,13 +123,16 @@ const App: React.FC = () => {
           }}
           onClick={() => setTab("concerts")}
         >
-          {t("Concerts", "Concerts")}
+          {t("🎤 Concerts", "🎤 Concerts")}
         </button>
         <button
-          style={{ ...styles.tabBtn, ...(tab === "profile" ? styles.tabActive : {}) }}
+          style={{
+            ...styles.tabBtn,
+            ...(tab === "profile" ? styles.tabActive : {}),
+          }}
           onClick={() => setTab("profile")}
         >
-          {t("Profil", "Profile")}
+          {t("👤 Profil", "👤 Profile")}
         </button>
       </nav>
 
@@ -146,7 +141,7 @@ const App: React.FC = () => {
         {/* DISCOVER */}
         {tab === "discover" && (
           <section style={{ display: "grid", gap: 16 }}>
-            {/* Choix du pool */}
+            {/* Pool selector */}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <label style={styles.chipLabel}>
                 <input
@@ -155,7 +150,7 @@ const App: React.FC = () => {
                   checked={pool === "genres"}
                   onChange={() => setPool("genres")}
                 />{" "}
-                {t("Genres", "Genres")}
+                {t("🎸 Genres", "🎸 Genres")}
               </label>
               <label style={styles.chipLabel}>
                 <input
@@ -164,13 +159,15 @@ const App: React.FC = () => {
                   checked={pool === "countries"}
                   onChange={() => setPool("countries")}
                 />{" "}
-                {t("Pays / Villes", "Countries / Cities")}
+                {t("🌍 Pays", "🌍 Countries")}
               </label>
             </div>
 
             {/* Wheel */}
             <div style={styles.card}>
-              <h3 style={{ marginTop: 0 }}>{t("Tourne la roue", "Spin the wheel")}</h3>
+              <h3 style={{ marginTop: 0 }}>
+                {t("🎡 Tourne la roue", "🎡 Spin the wheel")}
+              </h3>
               <Wheel
                 items={items.map((i) => i.name)}
                 onSelect={onSpin}
@@ -178,43 +175,26 @@ const App: React.FC = () => {
               />
             </div>
 
-            {/* Résultat */}
+            {/* Result */}
             {selectedItem && (
               <div style={styles.card}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "140px 1fr",
-                    gap: 16,
-                    alignItems: "flex-start",
-                  }}
-                >
+                <div style={styles.resultGrid}>
                   {/* Image */}
                   <div>
                     {selectedItem.image ? (
                       <img
                         src={selectedItem.image}
                         alt={selectedItem.name}
-                        style={{ width: "100%", borderRadius: 12, objectFit: "cover" }}
+                        style={styles.resultImage}
                       />
                     ) : (
-                      <div
-                        style={{
-                          width: "100%",
-                          aspectRatio: "1/1",
-                          borderRadius: 12,
-                          background: "#f2f2f2",
-                          display: "grid",
-                          placeItems: "center",
-                          color: "#888",
-                        }}
-                      >
+                      <div style={styles.noImage}>
                         {t("Aucune image", "No image")}
                       </div>
                     )}
                   </div>
 
-                  {/* Infos */}
+                  {/* Info */}
                   <div>
                     <h2 style={{ margin: "4px 0 6px" }}>{selectedItem.name}</h2>
                     <p style={{ marginTop: 0 }}>
@@ -223,7 +203,7 @@ const App: React.FC = () => {
                         : selectedItem.descriptionEn}
                     </p>
 
-                    {/* Sous-genres / Régions */}
+                    {/* Subgenres/Regions */}
                     {isGenre(selectedItem) && selectedItem.subgenres?.length ? (
                       <p style={styles.lightText}>
                         <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
@@ -238,26 +218,25 @@ const App: React.FC = () => {
                       </p>
                     ) : null}
 
-                    {/* Villes & styles (optionnel) */}
-                    {selectedItem.cityStyles?.length ? (
+                    {/* Cities */}
+                    {isCountry(selectedItem) && selectedItem.cities?.length ? (
                       <div style={{ marginTop: 8 }}>
-                        <strong>{t("Villes & styles", "Cities & styles")}:</strong>
+                        <strong>{t("Villes", "Cities")}:</strong>
                         <ul style={{ margin: "6px 0 0 16px" }}>
-                          {selectedItem.cityStyles.map((c) => (
-                            <li key={c.city}>
-                              <em>{c.city}</em>
-                              {": "}
-                              {language === "fr" ? c.noteFr ?? "" : c.noteEn ?? ""}
+                          {selectedItem.cities.map((c: any) => (
+                            <li key={c.name}>
+                              <em>{c.name}</em>
+                              {c.styles ? ` — ${c.styles.join(", ")}` : ""}
                             </li>
                           ))}
                         </ul>
                       </div>
                     ) : null}
 
-                    {/* Artistes */}
+                    {/* Artists */}
                     {selectedItem.artists?.length ? (
                       <p style={styles.lightText}>
-                        <strong>{t("Artistes clés", "Key artists")}:</strong>{" "}
+                        <strong>{t("Artistes", "Artists")}:</strong>{" "}
                         {selectedItem.artists.join(", ")}
                       </p>
                     ) : null}
@@ -276,28 +255,21 @@ const App: React.FC = () => {
                       </p>
                     )}
 
-                    {/* Rating */}
+                    {/* Rating Component */}
                     <div style={{ marginTop: 14 }}>
                       <Rating
+                        itemType={pool === "genres" ? "genre" : "country"}
+                        itemName={selectedItem.name}
                         max={10}
-                        onRate={(score: number) => {
-                          addRatingFor(selectedItem.name, score);
-                          alert(
-                            t(
-                              `Note enregistrée: ${score}/10`,
-                              `Rating saved: ${score}/10`
-                            )
-                          );
-                        }}
                         language={language}
                       />
                     </div>
 
-                    {/* Affinités (matrice) */}
+                    {/* Similarities */}
                     {similarityBoost.length > 0 && (
                       <div style={{ marginTop: 12 }}>
                         <strong>{t("Affinités", "Similarities")}:</strong>
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
+                        <div style={styles.badgeContainer}>
                           {similarityBoost.slice(0, 8).map(([label, score]) => (
                             <span key={label} style={styles.badge}>
                               {label} • {Math.round(score * 100)}%
@@ -313,39 +285,29 @@ const App: React.FC = () => {
           </section>
         )}
 
-        {/* GROUPS (protégé) */}
-        {tab === "groups" && (
-          session ? (
-            // Remplace par <Groups language={language} /> si tu as le composant
-            <div style={styles.card}>
-              {t("Groupes — bientôt disponible", "Groups — coming soon")}
-            </div>
+        {/* GROUPS */}
+        {tab === "groups" &&
+          (session ? (
+            <Groups language={language} />
           ) : (
-            <AuthGate />
-          )
-        )}
+            <AuthGate mode="inline" language={language} />
+          ))}
 
-        {/* CONCERTS (protégé) */}
-        {tab === "concerts" && (
-          session ? (
-            // Remplace par <Concerts language={language} /> si tu as le composant
-            <div style={styles.card}>
-              {t("Concerts — bientôt disponible", "Concerts — coming soon")}
-            </div>
+        {/* CONCERTS */}
+        {tab === "concerts" &&
+          (session ? (
+            <Concerts language={language} />
           ) : (
-            <AuthGate />
-          )
-        )}
+            <AuthGate mode="inline" language={language} />
+          ))}
 
-        {/* PROFILE (protégé) */}
-        {tab === "profile" && (
-          session ? (
-            // Remplace par <Profile /> si tu as le composant
-            <div style={styles.card}>Profile — coming soon</div>
+        {/* PROFILE */}
+        {tab === "profile" &&
+          (session ? (
+            <Profile language={language} />
           ) : (
-            <AuthGate />
-          )
-        )}
+            <AuthGate mode="inline" language={language} />
+          ))}
       </main>
 
       <footer style={styles.footer}>
@@ -355,7 +317,7 @@ const App: React.FC = () => {
   );
 };
 
-// ---------- Styles ----------
+// Styles
 const styles: Record<string, React.CSSProperties> = {
   app: { maxWidth: 1080, margin: "0 auto", padding: "12px 16px" },
   header: {
@@ -363,6 +325,8 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 12,
+    flexWrap: "wrap",
+    gap: 12,
   },
   tabsBar: {
     display: "flex",
@@ -378,8 +342,10 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid #ddd",
     background: "#fff",
     cursor: "pointer",
+    fontSize: 14,
+    fontWeight: 500,
   },
-  tabActive: { borderColor: "#111", background: "#111", color: "#fff" },
+  tabActive: { borderColor: "#667eea", background: "#667eea", color: "#fff" },
   main: { display: "grid", gap: 12, alignItems: "start" },
   card: {
     border: "1px solid #e7e7e7",
@@ -387,21 +353,51 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 14,
     background: "#fff",
   },
-  lightText: { color: "#444", marginTop: 4 },
+  resultGrid: {
+    display: "grid",
+    gridTemplateColumns: "140px 1fr",
+    gap: 16,
+    alignItems: "flex-start",
+  },
+  resultImage: {
+    width: "100%",
+    borderRadius: 12,
+    objectFit: "cover",
+    aspectRatio: "1/1",
+  },
+  noImage: {
+    width: "100%",
+    aspectRatio: "1/1",
+    borderRadius: 12,
+    background: "#f2f2f2",
+    display: "grid",
+    placeItems: "center",
+    color: "#888",
+    fontSize: 12,
+  },
+  lightText: { color: "#444", marginTop: 4, fontSize: 14 },
   chipLabel: {
     padding: "6px 10px",
     border: "1px solid #ddd",
     borderRadius: 999,
     background: "#fff",
     cursor: "pointer",
+    fontSize: 14,
   },
   primaryLink: {
     textDecoration: "none",
-    border: "1px solid #111",
+    border: "1px solid #667eea",
     color: "#fff",
-    background: "#111",
+    background: "#667eea",
     padding: "8px 10px",
     borderRadius: 10,
+    display: "inline-block",
+  },
+  badgeContainer: {
+    display: "flex",
+    gap: 8,
+    flexWrap: "wrap",
+    marginTop: 6,
   },
   badge: {
     padding: "4px 8px",
@@ -416,6 +412,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid #bbb",
     background: "#fff",
     cursor: "pointer",
+    fontSize: 13,
   },
   footer: { marginTop: 18, textAlign: "center", color: "#777" },
 };
