@@ -2,18 +2,21 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getAllRatings } from "../lib/ratings";
-import type { Rating } from "../context/AuthContext";
+import { runFullDiagnostic } from "../lib/setupHelper";
+import type { Rating } from "../lib/ratings";
 
 interface ProfileProps {
   language?: "fr" | "en";
 }
 
 const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
-  const { profile, updateProfile, signOut } = useAuth();
+  const { profile, updateProfile, signOut, session, refreshProfile } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [diagnostic, setDiagnostic] = useState<any>(null);
+  const [showDiagnostic, setShowDiagnostic] = useState(false);
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
@@ -33,6 +36,24 @@ const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
     }
   };
 
+  const handleDiagnostic = async () => {
+    setLoading(true);
+    try {
+      const result = await runFullDiagnostic();
+      setDiagnostic(result);
+      setShowDiagnostic(true);
+      
+      // Si profil créé, rafraîchir
+      if (result.canProceed && result.recommendation.includes("créé")) {
+        await refreshProfile();
+      }
+    } catch (error) {
+      console.error("Erreur diagnostic:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSaveProfile = async () => {
     if (!profile) return;
 
@@ -42,10 +63,19 @@ const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
         display_name: displayName || undefined,
         preferred_language: language,
       });
+
       setEditMode(false);
       alert(t("✅ Profil mis à jour", "✅ Profile updated"));
     } catch (error: any) {
-      alert(t("❌ Erreur : ", "❌ Error: ") + error.message);
+      // Si erreur, lancer le diagnostic
+      console.error("Erreur mise à jour:", error);
+      alert(
+        t(
+          "❌ Erreur de sauvegarde. Clique sur 'Diagnostic' pour plus d'infos.",
+          "❌ Save error. Click 'Diagnostic' for more info."
+        )
+      );
+      await handleDiagnostic();
     } finally {
       setLoading(false);
     }
@@ -55,6 +85,9 @@ const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
     return (
       <div style={styles.card}>
         <p>{t("Chargement du profil...", "Loading profile...")}</p>
+        <button onClick={handleDiagnostic} style={styles.diagnosticButton}>
+          {t("🔍 Lancer le diagnostic", "🔍 Run diagnostic")}
+        </button>
       </div>
     );
   }
@@ -71,17 +104,114 @@ const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
 
   return (
     <div style={{ display: "grid", gap: 16 }}>
+      {/* Panneau de diagnostic */}
+      {showDiagnostic && diagnostic && (
+        <div
+          style={{
+            ...styles.card,
+            border: diagnostic.canProceed
+              ? "2px solid #10b981"
+              : "2px solid #f59e0b",
+            background: diagnostic.canProceed ? "#ecfdf5" : "#fffbeb",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 12,
+            }}
+          >
+            <h4 style={{ margin: 0 }}>
+              {t("🔍 Résultat du diagnostic", "🔍 Diagnostic result")}
+            </h4>
+            <button
+              onClick={() => setShowDiagnostic(false)}
+              style={styles.closeButton}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div style={{ marginBottom: 12, fontWeight: 600 }}>
+            {diagnostic.recommendation}
+          </div>
+
+          <details>
+            <summary style={{ cursor: "pointer", fontSize: 13 }}>
+              {t("Détails techniques", "Technical details")}
+            </summary>
+            <div style={{ marginTop: 8, fontSize: 12, fontFamily: "monospace" }}>
+              {diagnostic.results.map((r: any, i: number) => (
+                <div key={i} style={{ marginBottom: 8 }}>
+                  <strong>
+                    {r.status === "ok" ? "✅" : r.status === "warning" ? "⚠️" : "❌"}{" "}
+                    {r.message}
+                  </strong>
+                  {r.details && (
+                    <pre
+                      style={{
+                        fontSize: 10,
+                        overflow: "auto",
+                        background: "#f9fafb",
+                        padding: 8,
+                        borderRadius: 6,
+                        marginTop: 4,
+                      }}
+                    >
+                      {JSON.stringify(r.details, null, 2)}
+                    </pre>
+                  )}
+                </div>
+              ))}
+            </div>
+          </details>
+
+          {!diagnostic.canProceed && (
+            <div style={{ marginTop: 12, fontSize: 13 }}>
+              <strong>
+                {t("📝 Action requise:", "📝 Action required:")}
+              </strong>
+              <p style={{ margin: "6px 0 0" }}>
+                {t(
+                  "Va sur le dashboard Supabase et crée la table 'profiles' avec le script SQL fourni dans la documentation.",
+                  "Go to Supabase dashboard and create the 'profiles' table with the SQL script from the documentation."
+                )}
+              </p>
+            </div>
+          )}
+
+          <button
+            onClick={handleDiagnostic}
+            style={styles.diagnosticButton}
+            disabled={loading}
+          >
+            {loading
+              ? t("⏳ Analyse...", "⏳ Analyzing...")
+              : t("🔄 Re-diagnostiquer", "🔄 Re-diagnose")}
+          </button>
+        </div>
+      )}
+
       {/* Carte profil */}
       <div style={styles.card}>
-        <h3 style={{ marginTop: 0 }}>
-          {t("👤 Mon profil", "👤 My profile")}
-        </h3>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <h3 style={{ margin: 0 }}>
+            {t("👤 Mon profil", "👤 My profile")}
+          </h3>
+          <button
+            onClick={handleDiagnostic}
+            style={{ ...styles.diagnosticButton, padding: "6px 12px", fontSize: 12 }}
+            disabled={loading}
+          >
+            {t("🔍 Diagnostic", "🔍 Diagnostic")}
+          </button>
+        </div>
 
         <div style={{ display: "grid", gap: 12 }}>
           <div>
-            <label style={styles.label}>
-              {t("Email", "Email")}
-            </label>
+            <label style={styles.label}>{t("Email", "Email")}</label>
             <input
               type="text"
               value={profile.email}
@@ -107,10 +237,7 @@ const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
           <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
             {!editMode ? (
               <>
-                <button
-                  onClick={() => setEditMode(true)}
-                  style={styles.primaryButton}
-                >
+                <button onClick={() => setEditMode(true)} style={styles.primaryButton}>
                   {t("✏️ Modifier", "✏️ Edit")}
                 </button>
                 <button onClick={signOut} style={styles.dangerButton}>
@@ -152,27 +279,19 @@ const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
         <div style={styles.statsGrid}>
           <div style={styles.statCard}>
             <div style={styles.statNumber}>{ratings.length}</div>
-            <div style={styles.statLabel}>
-              {t("Notes totales", "Total ratings")}
-            </div>
+            <div style={styles.statLabel}>{t("Notes totales", "Total ratings")}</div>
           </div>
           <div style={styles.statCard}>
             <div style={styles.statNumber}>{genreRatings.length}</div>
-            <div style={styles.statLabel}>
-              {t("Genres notés", "Genres rated")}
-            </div>
+            <div style={styles.statLabel}>{t("Genres notés", "Genres rated")}</div>
           </div>
           <div style={styles.statCard}>
             <div style={styles.statNumber}>{countryRatings.length}</div>
-            <div style={styles.statLabel}>
-              {t("Pays notés", "Countries rated")}
-            </div>
+            <div style={styles.statLabel}>{t("Pays notés", "Countries rated")}</div>
           </div>
           <div style={styles.statCard}>
             <div style={styles.statNumber}>{avgScore}/10</div>
-            <div style={styles.statLabel}>
-              {t("Note moyenne", "Average score")}
-            </div>
+            <div style={styles.statLabel}>{t("Note moyenne", "Average score")}</div>
           </div>
         </div>
       </div>
@@ -265,6 +384,23 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 14,
     fontWeight: 600,
     cursor: "pointer",
+  },
+  diagnosticButton: {
+    padding: "10px 16px",
+    border: "1px solid #667eea",
+    borderRadius: 8,
+    background: "#fff",
+    color: "#667eea",
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  closeButton: {
+    background: "none",
+    border: "none",
+    fontSize: 18,
+    cursor: "pointer",
+    padding: 4,
   },
   statsGrid: {
     display: "grid",
