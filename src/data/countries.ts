@@ -37,7 +37,32 @@ export const countries: Item[] = [
   spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4xuWVBs4FgJ",
   image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Antigua_Guatemala_Street.jpg"
 },
-
+{
+  name: 'Honduras',
+  descriptionFr: "Berceau du Punta garifuna, scène côtière caribéenne et pop locale.",
+  descriptionEn: "Home of Garifuna Punta, Caribbean coastal scene and local pop.",
+  regions: ['Tegucigalpa', 'San Pedro Sula', 'La Ceiba (côte Garifuna)'],
+  artists: ['Banda Blanca', 'Aurelio Martínez', 'Guillermo Anderson'],
+  spotify:  "https://open.spotify.com/playlist/37i9dQZEVXbJp9wcIM9Eo5?si=zm2HGF7ZQvmd293uoV-k9w&pi=WBaEUBloQdqzH",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Honduras_Bay_Islands_Caribbean.jpg",
+  cityStyles: [
+    {
+      city: 'La Ceiba',
+      noteFr: "Cœur du Punta et des rythmes garifuna.",
+      noteEn: "Heart of Punta and Garifuna rhythms."
+    },
+    {
+      city: 'Tegucigalpa',
+      noteFr: "Pop/rock local, scènes indie.",
+      noteEn: "Local pop/rock, indie scenes."
+    },
+    {
+      city: 'San Pedro Sula',
+      noteFr: "Mix urbain: pop latine, fusion punta-rock.",
+      noteEn: "Urban mix: Latin pop, punta-rock fusion."
+    }
+  ]
+},
   {
   name: 'Spain',
   descriptionFr: "Flamenco, musiques gitanes, pop/rock et électronica — fortes racines andalouses.",
