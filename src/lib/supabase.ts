@@ -1,7 +1,13 @@
-// src/lib/supabase.js
-import { createClient } from "@supabase/supabase-js";
+// src/lib/supabase.ts
+import { createClient } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL;
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-export const supabase = createClient(url, anon);
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ Variables Supabase manquantes!')
+  console.error('VITE_SUPABASE_URL:', supabaseUrl)
+  console.error('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Présente' : 'MANQUANTE')
+}
+
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '')
