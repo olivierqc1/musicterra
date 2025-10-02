@@ -64,6 +64,9 @@ const seed: SimMatrix = {
   Guatemala: { Marimba: 0.7, FusionLatino: 0.6, Spain: 0.3 },
   Marimba:   { Guatemala: 0.7 },
   FusionLatino: { Guatemala: 0.6, Spain: 0.4 },
+  // --- Honduras & genre Punta ---
+Honduras: { Punta: 0.9, Reggae: 0.3, Guatemala: 0.4, "United States": 0.25 },
+Punta:    { Honduras: 0.9, Reggae: 0.25 },
 
   // (Option) petits liens transverses utiles
   // FusionLatino peut aussi se rapprocher de Rock/Pop selon tes données :
