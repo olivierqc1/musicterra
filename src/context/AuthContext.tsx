@@ -31,6 +31,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Créer un profil si inexistant
+  const ensureProfile = async (userId: string, email: string) => {
+    try {
+      // Vérifier si le profil existe
+      const { data: existing, error: selectError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (selectError) {
+        console.error("Erreur vérification profil:", selectError);
+        return;
+      }
+
+      // Si n'existe pas, le créer
+      if (!existing) {
+        console.log("Création du profil pour:", email);
+        
+        const { error: insertError } = await supabase
+          .from("profiles")
+          .insert({
+            id: userId,
+            email: email,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+
+        if (insertError) {
+          console.error("Erreur création profil:", insertError);
+          throw insertError;
+        }
+        
+        console.log("✅ Profil créé automatiquement pour", email);
+      } else {
+        console.log("Profil existe déjà pour:", email);
+      }
+    } catch (error) {
+      console.error("Erreur ensureProfile:", error);
+    }
+  };
+
   // Charger le profil depuis Supabase
   const loadProfile = async (userId: string) => {
     try {
@@ -40,28 +82,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq("id", userId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Erreur chargement profil:", error);
+        return;
+      }
+      
       setProfile(data as UserProfile);
+      console.log("✅ Profil chargé:", data);
     } catch (error) {
-      console.error("Erreur chargement profil:", error);
+      console.error("Erreur loadProfile:", error);
     }
   };
 
   useEffect(() => {
     // Récupère la session existante
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       setSession(data.session);
       if (data.session?.user) {
-        loadProfile(data.session.user.id);
+        await ensureProfile(data.session.user.id, data.session.user.email!);
+        await loadProfile(data.session.user.id);
       }
       setLoading(false);
     });
 
     // Écoute les changements d'authentification
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log("Auth state changed:", _event, session?.user?.email);
       setSession(session);
+      
       if (session?.user) {
-        loadProfile(session.user.id);
+        await ensureProfile(session.user.id, session.user.email!);
+        await loadProfile(session.user.id);
       } else {
         setProfile(null);
       }
@@ -84,10 +135,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) throw error;
-      alert("✉️ Un lien magique a été envoyé à ton email !");
+      console.log("✉️ Magic link envoyé à:", email);
     } catch (error: any) {
       console.error("Erreur connexion:", error);
-      alert("❌ Erreur : " + error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -98,6 +149,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
     setSession(null);
     setProfile(null);
+    console.log("👋 Déconnecté");
   };
 
   // Mettre à jour le profil
@@ -116,6 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) throw error;
       setProfile(data as UserProfile);
+      console.log("✅ Profil mis à jour:", data);
     } catch (error) {
       console.error("Erreur mise à jour profil:", error);
       throw error;
