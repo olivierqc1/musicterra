@@ -150,7 +150,22 @@ export const genres: Item[] = [
   spotify: "https://open.spotify.com/playlist/37i9dQZF1DX1s9knjP51Oa",
   image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Latin_Fusion_Band.jpg"
 },
-
+{
+  name: 'Punta',
+  descriptionFr: "Rythme afro-caribéen garifuna d’Amérique centrale, dansé et festif.",
+  descriptionEn: "Afro-Caribbean Garifuna rhythm from Central America, dance-oriented and festive.",
+  subgenres: ['Punta Rock', 'Paranda'],
+  artists: ['Banda Blanca', 'Aurelio Martínez'],
+  spotify: "https://open.spotify.com/playlist/3yhOjgQDnOKcw4ICzwFaPC?si=EqIQcS9oRvK0_MZXgMVG9w&pi=Qt5TWBnORs2gh",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Garifuna_dancers_Belize.jpg",
+  cityStyles: [
+    {
+      city: 'La Ceiba',
+      noteFr: "Punta traditionnel et moderne (punta rock).",
+      noteEn: "Traditional and modern (punta rock)."
+    }
+  ]
+}
 ];
 
 
