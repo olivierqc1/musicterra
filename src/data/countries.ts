@@ -512,6 +512,352 @@ export const countries = [
     ]
   }
 ];
+// src/data/countries.ts
+// Europe – v1 (26 pays). Ajoute/édite librement.
+
+export type Country = {
+  name: string;
+  descriptionFr: string;
+  descriptionEn: string;
+  regions?: string[];
+  artists: string[];
+  spotify?: string;
+  image?: string;
+  cityStyles?: { city: string; noteFr?: string; noteEn?: string }[];
+};
+
+export const countries: Country[] = [
+  // --- UNITED KINGDOM ---
+  {
+    name: 'United Kingdom',
+    descriptionFr: "Berceau pop/rock moderne, grime, drum & bass, garage.",
+    descriptionEn: "Birthplace of modern pop/rock, grime, drum & bass, garage.",
+    regions: ['London', 'Manchester', 'Bristol', 'Liverpool'],
+    artists: ['The Beatles', 'The Rolling Stones', 'Skepta'],
+    spotify: "https://open.spotify.com/search/United%20Kingdom%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/c/cd/London_Skyline_%28cropped%29.jpg",
+    cityStyles: [
+      { city: 'London', noteFr: "Grime, UK garage, DnB.", noteEn: "Grime, UK garage, DnB." },
+      { city: 'Manchester', noteFr: "Britpop, indie.", noteEn: "Britpop, indie." },
+      { city: 'Bristol', noteFr: "Trip-hop, bass music.", noteEn: "Trip-hop, bass music." }
+    ]
+  },
+
+  // --- IRELAND ---
+  {
+    name: 'Ireland',
+    descriptionFr: "Folk celtique, rock/indie, tradition et modernité.",
+    descriptionEn: "Celtic folk, indie/rock, tradition and modernity.",
+    regions: ['Dublin', 'Cork', 'Galway'],
+    artists: ['U2', 'The Cranberries', 'Enya'],
+    spotify: "https://open.spotify.com/search/Ireland%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Dublin_General_Post_Office_2018.jpg",
+    cityStyles: [
+      { city: 'Dublin', noteFr: "Folk/rock celtique.", noteEn: "Celtic folk/rock." }
+    ]
+  },
+
+  // --- FRANCE ---
+  {
+    name: 'France',
+    descriptionFr: "Chanson, rap FR, électro (French Touch), jazz.",
+    descriptionEn: "Chanson, French rap, electronic (French Touch), jazz.",
+    regions: ['Île-de-France', 'Marseille', 'Lyon'],
+    artists: ['Édith Piaf', 'Daft Punk', 'MC Solaar'],
+    spotify: "https://open.spotify.com/search/France%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Paris_from_the_Tour_Saint-Jacques_2011.jpg",
+    cityStyles: [
+      { city: 'Paris', noteFr: "Chanson, électro.", noteEn: "Chanson, electronic." },
+      { city: 'Marseille', noteFr: "Rap FR.", noteEn: "French rap." }
+    ]
+  },
+
+  // --- SPAIN ---
+  {
+    name: 'Spain',
+    descriptionFr: "Flamenco, pop urbaine, musiques latines.",
+    descriptionEn: "Flamenco, urban pop, Latin sounds.",
+    regions: ['Andalucía', 'Catalunya', 'Madrid'],
+    artists: ['Paco de Lucía', 'Rosalía'],
+    spotify: "https://open.spotify.com/search/Spain%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/d/db/Alhambra.jpg",
+    cityStyles: [
+      { city: 'Sevilla', noteFr: "Flamenco traditionnel.", noteEn: "Traditional flamenco." },
+      { city: 'Barcelona', noteFr: "Fusion/indé.", noteEn: "Fusion/indie." }
+    ]
+  },
+
+  // --- PORTUGAL ---
+  {
+    name: 'Portugal',
+    descriptionFr: "Fado, afro-lusophone (Lisbonne), pop moderne.",
+    descriptionEn: "Fado, Afro-Lusophone (Lisbon), modern pop.",
+    regions: ['Lisboa', 'Porto'],
+    artists: ['Amália Rodrigues', 'Mariza'],
+    spotify: "https://open.spotify.com/search/Portugal%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Lisbon_Panorama.jpg",
+    cityStyles: [
+      { city: 'Lisboa', noteFr: "Fado, kuduro club.", noteEn: "Fado, club kuduro." }
+    ]
+  },
+
+  // --- ITALY ---
+  {
+    name: 'Italy',
+    descriptionFr: "Canzone, italo disco, opéra, rap italien.",
+    descriptionEn: "Canzone, italo disco, opera, Italian rap.",
+    regions: ['Roma', 'Milano', 'Napoli'],
+    artists: ['Lucio Battisti', 'Måneskin'],
+    spotify: "https://open.spotify.com/search/Italy%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg",
+    cityStyles: [
+      { city: 'Milano', noteFr: "Italo disco, pop.", noteEn: "Italo disco, pop." },
+      { city: 'Napoli', noteFr: "Canzone napolitaine.", noteEn: "Neapolitan song." }
+    ]
+  },
+
+  // --- GERMANY ---
+  {
+    name: 'Germany',
+    descriptionFr: "Techno (Berlin), krautrock, pop/rock.",
+    descriptionEn: "Techno (Berlin), krautrock, pop/rock.",
+    regions: ['Berlin', 'Hamburg', 'Cologne'],
+    artists: ['Kraftwerk', 'Paul Kalkbrenner', 'Scorpions'],
+    spotify: "https://open.spotify.com/search/Germany%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Berlin_Skyline_Fernsehturm_2015.jpg",
+    cityStyles: [
+      { city: 'Berlin', noteFr: "Techno minimale/indus.", noteEn: "Minimal/industrial techno." }
+    ]
+  },
+
+  // --- NETHERLANDS ---
+  {
+    name: 'Netherlands',
+    descriptionFr: "EDM/house, gabber/hardcore, pop.",
+    descriptionEn: "EDM/house, gabber/hardcore, pop.",
+    regions: ['Amsterdam', 'Rotterdam', 'Utrecht'],
+    artists: ['Tiesto', 'Armin van Buuren'],
+    spotify: "https://open.spotify.com/search/Netherlands%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/1/12/Keizersgracht_Reguliersgracht_Amsterdam.jpg",
+    cityStyles: [
+      { city: 'Amsterdam', noteFr: "House/EDM.", noteEn: "House/EDM." },
+      { city: 'Rotterdam', noteFr: "Gabber/hardcore.", noteEn: "Gabber/hardcore." }
+    ]
+  },
+
+  // --- BELGIUM ---
+  {
+    name: 'Belgium',
+    descriptionFr: "New beat, techno, pop FR/NL.",
+    descriptionEn: "New beat, techno, French/Dutch pop.",
+    regions: ['Bruxelles', 'Antwerpen', 'Gent'],
+    artists: ['Stromae', 'Soulwax'],
+    spotify: "https://open.spotify.com/search/Belgium%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Grand_Place_Brussels.jpg",
+    cityStyles: [
+      { city: 'Bruxelles', noteFr: "New beat, électro-pop.", noteEn: "New beat, electro-pop." }
+    ]
+  },
+
+  // --- LUXEMBOURG ---
+  {
+    name: 'Luxembourg',
+    descriptionFr: "Petite scène pop/rock/électro, carrefour culturel.",
+    descriptionEn: "Small pop/rock/electronic scene, cultural crossroads.",
+    regions: ['Luxembourg City', 'Esch-sur-Alzette'],
+    artists: ['Rome', 'Tuys'],
+    spotify: "https://open.spotify.com/search/Luxembourg%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Luxembourg_City_Skyline.jpg"
+  },
+
+  // --- SWITZERLAND ---
+  {
+    name: 'Switzerland',
+    descriptionFr: "Pop multilingue, techno/house, rock alpin.",
+    descriptionEn: "Multilingual pop, techno/house, alpine rock.",
+    regions: ['Zürich', 'Genève', 'Lausanne'],
+    artists: ['Yello', 'Sophie Hunger'],
+    spotify: "https://open.spotify.com/search/Switzerland%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/80/Z%C3%BCrich_-_Uetliberg_-_Skyline.jpg"
+  },
+
+  // --- AUSTRIA ---
+  {
+    name: 'Austria',
+    descriptionFr: "Vienne classique, électronique, pop germanophone.",
+    descriptionEn: "Classical Vienna, electronic, German-language pop.",
+    regions: ['Wien', 'Salzburg', 'Graz'],
+    artists: ['Falco', 'Kruder & Dorfmeister'],
+    spotify: "https://open.spotify.com/search/Austria%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Wien_Skyline.jpg"
+  },
+
+  // --- DENMARK ---
+  {
+    name: 'Denmark',
+    descriptionFr: "Pop scandinave, indie, électronique.",
+    descriptionEn: "Scandi pop, indie, electronic.",
+    regions: ['Copenhagen', 'Aarhus'],
+    artists: ['Aqua', 'MØ'],
+    spotify: "https://open.spotify.com/search/Denmark%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/0/00/Copenhagen_Skyline_2014.jpg"
+  },
+
+  // --- SWEDEN ---
+  {
+    name: 'Sweden',
+    descriptionFr: "Scandi pop, EDM, metal mélodique.",
+    descriptionEn: "Scandi pop, EDM, melodic metal.",
+    regions: ['Stockholm', 'Gothenburg'],
+    artists: ['ABBA', 'Avicii', 'In Flames'],
+    spotify: "https://open.spotify.com/search/Sweden%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Stockholm_skyline.jpg",
+    cityStyles: [
+      { city: 'Stockholm', noteFr: "Pop suédoise, EDM.", noteEn: "Swedish pop, EDM." },
+      { city: 'Gothenburg', noteFr: "Death metal mélodique.", noteEn: "Melodic death metal." }
+    ]
+  },
+
+  // --- NORWAY ---
+  {
+    name: 'Norway',
+    descriptionFr: "Black metal, pop/indie nordique.",
+    descriptionEn: "Black metal, Nordic pop/indie.",
+    regions: ['Oslo', 'Bergen'],
+    artists: ['A-ha', 'Mayhem', 'Aurora'],
+    spotify: "https://open.spotify.com/search/Norway%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Oslo_skyline.jpg",
+    cityStyles: [
+      { city: 'Oslo', noteFr: "Black metal, indé.", noteEn: "Black metal, indie." }
+    ]
+  },
+
+  // --- FINLAND ---
+  {
+    name: 'Finland',
+    descriptionFr: "Metal symphonique/power, rock nordique.",
+    descriptionEn: "Symphonic/power metal, Nordic rock.",
+    regions: ['Helsinki', 'Tampere'],
+    artists: ['Nightwish', 'HIM', 'Children of Bodom'],
+    spotify: "https://open.spotify.com/search/Finland%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Helsinki_Skyline_2.jpg",
+    cityStyles: [
+      { city: 'Helsinki', noteFr: "Metal symphonique/power.", noteEn: "Symphonic/power metal." }
+    ]
+  },
+
+  // --- ICELAND ---
+  {
+    name: 'Iceland',
+    descriptionFr: "Indie/expérimental, ambient, folk nordique.",
+    descriptionEn: "Indie/experimental, ambient, Nordic folk.",
+    regions: ['Reykjavík', 'Akureyri'],
+    artists: ['Björk', 'Sigur Rós'],
+    spotify: "https://open.spotify.com/search/Iceland%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Reykjavik_Skyline.jpg"
+  },
+
+  // --- POLAND ---
+  {
+    name: 'Poland',
+    descriptionFr: "Hip-hop PL, indie/rock, jazz vibrant.",
+    descriptionEn: "Polish hip-hop, indie/rock, vibrant jazz.",
+    regions: ['Warszawa', 'Kraków', 'Gdańsk'],
+    artists: ['Taco Hemingway', 'Penderecki'],
+    spotify: "https://open.spotify.com/search/Poland%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/7/70/Warsaw_skyline_2019.jpg"
+  },
+
+  // --- CZECHIA ---
+  {
+    name: 'Czechia',
+    descriptionFr: "Rock alternatif, jazz contemporain, folk.",
+    descriptionEn: "Alternative rock, contemporary jazz, folk.",
+    regions: ['Praha', 'Brno'],
+    artists: ['Plastic People of the Universe'],
+    spotify: "https://open.spotify.com/search/Czech%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/a/a1/Prague_skyline_view.jpg"
+  },
+
+  // --- SLOVAKIA ---
+  {
+    name: 'Slovakia',
+    descriptionFr: "Pop/rock, folk carpathique, hip-hop SK.",
+    descriptionEn: "Pop/rock, Carpathian folk, Slovak hip-hop.",
+    regions: ['Bratislava', 'Košice'],
+    artists: ['IMT Smile'],
+    spotify: "https://open.spotify.com/search/Slovakia%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/25/Bratislava_skyline.jpg"
+  },
+
+  // --- HUNGARY ---
+  {
+    name: 'Hungary',
+    descriptionFr: "Csárdás/folk, pop-rock, scène électronique.",
+    descriptionEn: "Csárdás/folk, pop-rock, electronic scene.",
+    regions: ['Budapest', 'Debrecen'],
+    artists: ['Omega', 'Zoltán Kodály'],
+    spotify: "https://open.spotify.com/search/Hungary%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Budapest_skyline.jpg"
+  },
+
+  // --- ROMANIA ---
+  {
+    name: 'Romania',
+    descriptionFr: "Manele, folk roumain, pop/rock moderne.",
+    descriptionEn: "Manele, Romanian folk, modern pop/rock.",
+    regions: ['București', 'Cluj-Napoca', 'Iași'],
+    artists: ['Goran Bregović (régionnel)', 'Inna'],
+    spotify: "https://open.spotify.com/search/Romania%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Bucharest_Skyline.jpg"
+  },
+
+  // --- BULGARIA ---
+  {
+    name: 'Bulgaria',
+    descriptionFr: "Chalga/pop-folk, chœurs bulgares, rock/pop.",
+    descriptionEn: "Chalga/pop-folk, Bulgarian choirs, rock/pop.",
+    regions: ['Sofia', 'Plovdiv', 'Varna'],
+    artists: ['Azis', 'Le Mystère des Voix Bulgares'],
+    spotify: "https://open.spotify.com/search/Bulgaria%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Sofia_Skyline_2017.jpg"
+  },
+
+  // --- GREECE ---
+  {
+    name: 'Greece',
+    descriptionFr: "Rébétiko, laïko, pop grecque, méditerranéen.",
+    descriptionEn: "Rebetiko, laiko, Greek pop, Mediterranean.",
+    regions: ['Athens', 'Thessaloniki'],
+    artists: ['Mikis Theodorakis', 'Haris Alexiou'],
+    spotify: "https://open.spotify.com/search/Greece%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Acropolis_Athens.jpg",
+    cityStyles: [
+      { city: 'Athens', noteFr: "Rébétiko/laïko.", noteEn: "Rebetiko/laiko." }
+    ]
+  },
+
+  // --- MALTA ---
+  {
+    name: 'Malta',
+    descriptionFr: "Pop méditerranéenne, indie/électro émergente.",
+    descriptionEn: "Mediterranean pop, emerging indie/electronic.",
+    regions: ['Valletta', 'Sliema'],
+    artists: ['Ira Losco'],
+    spotify: "https://open.spotify.com/search/Malta%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/98/Valletta_Skyline.jpg"
+  },
+
+  // --- CYPRUS ---
+  {
+    name: 'Cyprus',
+    descriptionFr: "Pop/rock grecque/chypriote, musiques levantines.",
+    descriptionEn: "Greek/Cypriot pop/rock, Levantine influences.",
+    regions: ['Nicosia', 'Limassol'],
+    artists: ['Anna Vissi'],
+    spotify: "https://open.spotify.com/search/Cyprus%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/1/10/Nicosia_Skyline.jpg"
+  },
   {
   name: 'Spain',
   descriptionFr: "Flamenco, musiques gitanes, pop/rock et électronica — fortes racines andalouses.",
