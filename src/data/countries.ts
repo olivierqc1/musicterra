@@ -898,6 +898,240 @@ export const countries: Country[] = [
     }
   ]
 },
+  // --- ESTONIA ---
+{
+  name: 'Estonia',
+  descriptionFr: "Scène électronique/folk nordique, chœurs riches.",
+  descriptionEn: "Nordic electronic/folk scene, rich choirs.",
+  regions: ['Tallinn', 'Tartu'],
+  artists: ['Arvo Pärt', 'NOËP'],
+  spotify: "https://open.spotify.com/search/Estonia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8f/Tallinn_Skyline_2021.jpg",
+  cityStyles: [
+    { city: 'Tallinn', noteFr: "Électro minimal/ambiant.", noteEn: "Minimal/ambient electronic." }
+  ]
+},
+
+// --- LATVIA ---
+{
+  name: 'Latvia',
+  descriptionFr: "Chœurs baltes, pop/électro émergente.",
+  descriptionEn: "Baltic choirs, emerging pop/electronic.",
+  regions: ['Riga', 'Liepāja'],
+  artists: ['Instrumenti', 'Brainstorm'],
+  spotify: "https://open.spotify.com/search/Latvia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/43/Riga_skyline_2013.jpg"
+},
+
+// --- LITHUANIA ---
+{
+  name: 'Lithuania',
+  descriptionFr: "Folk baltique, hip-hop/pop moderne.",
+  descriptionEn: "Baltic folk, modern hip-hop/pop.",
+  regions: ['Vilnius', 'Kaunas'],
+  artists: ['The Roop', 'Jurga'],
+  spotify: "https://open.spotify.com/search/Lithuania%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/25/Vilnius_Skyline.jpg"
+},
+
+// --- UKRAINE ---
+{
+  name: 'Ukraine',
+  descriptionFr: "Folk slave/électronique, rock et pop actuelle.",
+  descriptionEn: "Slavic folk/electronic blends, rock and current pop.",
+  regions: ['Kyiv', 'Lviv', 'Odesa', 'Kharkiv'],
+  artists: ['DakhaBrakha', 'Jamala', 'Okean Elzy'],
+  spotify: "https://open.spotify.com/search/Ukraine%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/14/Kyiv_Skyline_2017.jpg",
+  cityStyles: [
+    { city: 'Kyiv', noteFr: "Fusion folk/électro.", noteEn: "Folk/electronic fusion." }
+  ]
+},
+
+// --- BELARUS ---
+{
+  name: 'Belarus',
+  descriptionFr: "Pop/rock de l’Est, touches électroniques.",
+  descriptionEn: "Eastern pop/rock with electronic touches.",
+  regions: ['Minsk', 'Hrodna'],
+  artists: ['LSP', 'Max Korzh'],
+  spotify: "https://open.spotify.com/search/Belarus%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/33/Minsk_skyline.jpg"
+},
+
+// --- MOLDOVA ---
+{
+  name: 'Moldova',
+  descriptionFr: "Folk moldave/roumain, pop/électro récente.",
+  descriptionEn: "Moldovan/Romanian folk, recent pop/electronic.",
+  regions: ['Chișinău', 'Bălți'],
+  artists: ['Zdob și Zdub', 'Carla’s Dreams'],
+  spotify: "https://open.spotify.com/search/Moldova%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Chisinau_skyline.jpg"
+},
+
+// --- SLOVENIA ---
+{
+  name: 'Slovenia',
+  descriptionFr: "Électro/indie alpin, pop alternative.",
+  descriptionEn: "Alpine electro/indie, alternative pop.",
+  regions: ['Ljubljana', 'Maribor'],
+  artists: ['Laibach', 'Melodrom'],
+  spotify: "https://open.spotify.com/search/Slovenia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Ljubljana_Skyline.jpg"
+},
+
+// --- CROATIA ---
+{
+  name: 'Croatia',
+  descriptionFr: "Pop adriatique, rock alternatif, klapa.",
+  descriptionEn: "Adriatic pop, alternative rock, klapa singing.",
+  regions: ['Zagreb', 'Split', 'Dubrovnik'],
+  artists: ['Parni Valjak', 'Severina'],
+  spotify: "https://open.spotify.com/search/Croatia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Zagreb_skyline.jpg",
+  cityStyles: [
+    { city: 'Dalmatia', noteFr: "Klapa (polyphonies).", noteEn: "Klapa (a cappella choirs)." }
+  ]
+},
+
+// --- BOSNIA AND HERZEGOVINA ---
+{
+  name: 'Bosnia and Herzegovina',
+  descriptionFr: "Sevdah (blues balkanique), rock/alt.",
+  descriptionEn: "Sevdah (Balkan blues), rock/alt.",
+  regions: ['Sarajevo', 'Mostar'],
+  artists: ['Amira Medunjanin', 'Dubioza Kolektiv'],
+  spotify: "https://open.spotify.com/search/Bosnia%20and%20Herzegovina%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8b/Sarajevo_Skyline.jpg"
+},
+
+// --- SERBIA ---
+{
+  name: 'Serbia',
+  descriptionFr: "Trubaci (fanfares), turbo-folk, rock/électro.",
+  descriptionEn: "Trubaci brass, turbo-folk, rock/electronic.",
+  regions: ['Beograd', 'Novi Sad', 'Niš'],
+  artists: ['Goran Bregović', 'Emir Kusturica & No Smoking Orchestra'],
+  spotify: "https://open.spotify.com/search/Serbia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Belgrade_Skyline.jpg",
+  cityStyles: [
+    { city: 'Guča', noteFr: "Festival fanfares/truba.", noteEn: "Brass/truba festival." }
+  ]
+},
+
+// --- MONTENEGRO ---
+{
+  name: 'Montenegro',
+  descriptionFr: "Pop adriatique, influences balkaniques.",
+  descriptionEn: "Adriatic pop with Balkan influences.",
+  regions: ['Podgorica', 'Kotor'],
+  artists: ['Sergej Ćetković'],
+  spotify: "https://open.spotify.com/search/Montenegro%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Kotor_Bay_Montenegro.jpg"
+},
+
+// --- NORTH MACEDONIA ---
+{
+  name: 'North Macedonia',
+  descriptionFr: "Folk macédonienne, pop/rock, scène balkanique.",
+  descriptionEn: "Macedonian folk, pop/rock, Balkan scene.",
+  regions: ['Skopje', 'Ohrid'],
+  artists: ['Toše Proeski'],
+  spotify: "https://open.spotify.com/search/North%20Macedonia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Skopje_Skyline.jpg"
+},
+
+// --- ALBANIA ---
+{
+  name: 'Albania',
+  descriptionFr: "Iso-polyphonie, pop moderne, rap albanais.",
+  descriptionEn: "Iso-polyphony, modern pop, Albanian rap.",
+  regions: ['Tirana', 'Shkodër'],
+  artists: ['Dua Lipa (diaspora)', 'Noizy'],
+  spotify: "https://open.spotify.com/search/Albania%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/52/Tirana_Skyline.jpg"
+},
+
+// --- KOSOVO ---
+{
+  name: 'Kosovo',
+  descriptionFr: "Pop/rap kosovar, scène diasporique.",
+  descriptionEn: "Kosovar pop/rap, strong diaspora scene.",
+  regions: ['Prishtina', 'Prizren'],
+  artists: ['Rita Ora (diaspora)', 'Capital T'],
+  spotify: "https://open.spotify.com/search/Kosovo%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Pristina_Skyline.jpg"
+},
+
+// --- ANDORRA ---
+{
+  name: 'Andorra',
+  descriptionFr: "Petite scène pop/folk pyrénéenne.",
+  descriptionEn: "Small Pyrenean pop/folk scene.",
+  regions: ['Andorra la Vella'],
+  artists: ['Anonymous (Eurovision)'],
+  spotify: "https://open.spotify.com/search/Andorra%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Andorra_la_Vella_Skyline.jpg"
+},
+
+// --- MONACO ---
+{
+  name: 'Monaco',
+  descriptionFr: "Micro-scène pop/chanson, influence française/italienne.",
+  descriptionEn: "Micro pop/chanson scene with FR/IT influence.",
+  regions: ['Monte-Carlo'],
+  artists: ['Léo Ferré (lien historique)'],
+  spotify: "https://open.spotify.com/search/Monaco%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Monaco_Skyline.jpg"
+},
+
+// --- SAN MARINO ---
+{
+  name: 'San Marino',
+  descriptionFr: "Très petite scène pop/rock, Eurovision ponctuel.",
+  descriptionEn: "Very small pop/rock scene, occasional Eurovision.",
+  regions: ['Città di San Marino'],
+  artists: ['Valentina Monetta'],
+  spotify: "https://open.spotify.com/search/San%20Marino%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/San_Marino_Skyline.jpg"
+},
+
+// --- LIECHTENSTEIN ---
+{
+  name: 'Liechtenstein',
+  descriptionFr: "Micro-scène alpine pop/rock.",
+  descriptionEn: "Micro alpine pop/rock scene.",
+  regions: ['Vaduz'],
+  artists: ['Elisabeth Gunawan (classique, ex.)'],
+  spotify: "https://open.spotify.com/search/Liechtenstein%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Vaduz_Skyline.jpg"
+},
+
+// --- VATICAN CITY ---
+{
+  name: 'Vatican City',
+  descriptionFr: "Chant liturgique, chœurs sacrés.",
+  descriptionEn: "Liturgical chant, sacred choirs.",
+  regions: ['Città del Vaticano'],
+  artists: ['Chœur de la Chapelle Sixtine'],
+  spotify: "https://open.spotify.com/search/Vatican%20choir",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Vatican_City_Skyline.jpg"
+},
+
+// --- TURKEY (partie européenne aussi) ---
+{
+  name: 'Turkey',
+  descriptionFr: "Arabesque, pop turque, anatolian rock/psych.",
+  descriptionEn: "Arabesk, Turkish pop, Anatolian rock/psych.",
+  regions: ['Istanbul', 'Ankara', 'Izmir'],
+  artists: ['Barış Manço', 'Selda Bağcan', 'Sezen Aksu'],
+  spotify: "https://open.spotify.com/search/Turkey%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/b/b9/Istanbul_Skyline_from_Galata_Tower.jpg",
+  cityStyles: [
+    { city: 'Istanbul', noteFr: "Anatolian rock/psych, pop moderne.", noteEn: "Anatolian rock/psych, modern pop." }
+  ]
+},
 
   {
     name: 'Brazil',
