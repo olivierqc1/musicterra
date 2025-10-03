@@ -269,4 +269,43 @@ export const cityStyleBoosts: { [country: string]: { [genre: string]: number } }
   Suriname: { Kaseko: 0.6, Kawina: 0.5 },
   Guyana: { Chutney: 0.6, Calypso: 0.3 },
   "French Guiana": { Zouk: 0.4 }
+  // ======= BALTICS =======
+  Estonia:  { "Baltic Choral (Estonia/Latvia/Lithuania)": 0.9, "Baltic Indie (Baltics)": 0.6, Latvia: 0.35, Lithuania: 0.35, Finland: 0.25 },
+  Latvia:   { "Baltic Choral (Estonia/Latvia/Lithuania)": 0.9, "Baltic Indie (Baltics)": 0.6, Estonia: 0.35, Lithuania: 0.35 },
+  Lithuania:{ "Baltic Choral (Estonia/Latvia/Lithuania)": 0.9, "Baltic Indie (Baltics)": 0.6, Latvia: 0.35, Poland: 0.25 },
+
+  // ======= UKRAINE / BELARUS / MOLDOVA =======
+  Ukraine:  { "Ukrainian Folk Fusion": 0.95, Poland: 0.25, Romania: 0.25 },
+  Belarus:  { "Post-Soviet Pop (Belarus/Moldova)": 0.85, Russia: 0.3 /* si tu ajoutes Russia plus tard */, Lithuania: 0.25 },
+  Moldova:  { "Post-Soviet Pop (Belarus/Moldova)": 0.85, Romania: 0.35, Ukraine: 0.3 },
+
+  "Ukrainian Folk Fusion": { "Baltic Choral (Estonia/Latvia/Lithuania)": 0.25, "Hungarian Folk Fusion (Hungary)": 0.2 },
+  "Post-Soviet Pop (Belarus/Moldova)": { "Polish Hip-Hop (Poland)": 0.2, "Czech Alt Rock (Czechia)": 0.2 },
+
+  // ======= BALKANS OUEST & SUD =======
+  Slovenia: { "Adriatic Pop (Slovenia/Croatia/Montenegro)": 0.85, Croatia: 0.35, Austria: 0.25 },
+  Croatia:  { "Adriatic Pop (Slovenia/Croatia/Montenegro)": 0.9, "Klapa (Croatia)": 0.95, Slovenia: 0.35, Bosnia: 0.3, Montenegro: 0.3, Italy: 0.25 },
+  "Bosnia and Herzegovina": { "Sevdah (Bosnia)": 0.95, Serbia: 0.3, Croatia: 0.3 },
+  Serbia:   { "Turbo-Folk (Serbia/Balkans)": 0.9, "Truba Brass (Serbia)": 0.85, "Bosnia and Herzegovina": 0.3, Montenegro: 0.3, NorthMacedonia: 0.3 },
+  Montenegro:{ "Adriatic Pop (Slovenia/Croatia/Montenegro)": 0.85, Serbia: 0.3, Croatia: 0.3 },
+  NorthMacedonia: { "Macedonian Folk Pop": 0.9, Serbia: 0.3, Greece: 0.25, Bulgaria: 0.25 },
+  Albania:  { "Albanian Pop/Rap": 0.9, Kosovo: 0.4, NorthMacedonia: 0.25, Greece: 0.25 },
+  Kosovo:   { "Kosovar Pop/Rap": 0.9, Albania: 0.4, NorthMacedonia: 0.25, Serbia: 0.25 },
+
+  "Sevdah (Bosnia)": { "Macedonian Folk Pop": 0.25, "Rebetiko (Greece)": 0.2 },
+  "Turbo-Folk (Serbia/Balkans)": { "Chalga (Bulgaria)": 0.3, "Laïko (Greece)": 0.2 },
+  "Truba Brass (Serbia)": { "Balkan Brass": 0.4 /* ajoute ce genre si tu veux le détailler */ },
+  "Klapa (Croatia)": { "Adriatic Pop (Slovenia/Croatia/Montenegro)": 0.3 },
+
+  // ======= MICRO-ÉTATS =======
+  Andorra:  { "Mediterranean Chanson (Andorra/Monaco/San Marino)": 0.9, Spain: 0.3, France: 0.3 },
+  Monaco:   { "Mediterranean Chanson (Andorra/Monaco/San Marino)": 0.9, France: 0.35, Italy: 0.3 },
+  "San Marino": { "Mediterranean Chanson (Andorra/Monaco/San Marino)": 0.9, Italy: 0.35 },
+  Liechtenstein: { "Lux Pop (Luxembourg)": 0.2, Switzerland: 0.3, Austria: 0.3 },
+  "Vatican City": { Choral: 0.9 /* si tu ajoutes un genre choral sacré */ },
+
+  // ======= TURKEY =======
+  Turkey: { "Anatolian Rock/Psych (Turkey)": 0.95, "Arabesk Pop (Turkey)": 0.9, Greece: 0.3, Bulgaria: 0.25 },
+  "Anatolian Rock/Psych (Turkey)": { "Krautrock (Germany)": 0.25, Psychedelic: 0.3 /* si tu ajoutes un genre générique Psychedelic */ },
+  "Arabesk Pop (Turkey)": { "Laïko (Greece)": 0.25 }
 };
