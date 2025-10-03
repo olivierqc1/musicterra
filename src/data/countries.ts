@@ -1132,6 +1132,216 @@ export const countries: Country[] = [
     { city: 'Istanbul', noteFr: "Anatolian rock/psych, pop moderne.", noteEn: "Anatolian rock/psych, modern pop." }
   ]
 },
+  // ======== MOYEN-ORIENT ========
+{
+  name: 'Israel',
+  descriptionFr: "Scènes pop/rock/électro et courant mizrahi.",
+  descriptionEn: "Pop/rock/electronic scenes and Mizrahi current.",
+  regions: ['Tel Aviv', 'Jerusalem', 'Haifa'],
+  artists: ['Infected Mushroom', 'Eyal Golan', 'Noga Erez'],
+  spotify: "https://open.spotify.com/search/israel%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/06/Tel_Aviv_Skyline.jpg"
+},
+{
+  name: 'Palestine',
+  descriptionFr: "Rap/indé, oud et dabke modernes.",
+  descriptionEn: "Rap/indie, oud and modern dabke.",
+  regions: ['Ramallah', 'Gaza', 'Bethlehem'],
+  artists: ['DAM', 'Le Trio Joubran'],
+  spotify: "https://open.spotify.com/search/palestinian%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Ramallah_skyline.jpg"
+},
+{
+  name: 'Lebanon',
+  descriptionFr: "Pop arabe, tarab moderne, scène Beyrouth.",
+  descriptionEn: "Arabic pop, modern tarab, Beirut scene.",
+  regions: ['Beirut', 'Tripoli'],
+  artists: ['Fairuz', 'Mashrou’ Leila'],
+  spotify: "https://open.spotify.com/search/lebanon%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/82/Beirut_Skyline.jpg"
+},
+{
+  name: 'Syria',
+  descriptionFr: "Dabke, tarab, tradition maqâm.",
+  descriptionEn: "Dabke, tarab, maqam tradition.",
+  regions: ['Damascus', 'Aleppo'],
+  artists: ['Omar Souleyman', 'Sabah Fakhri'],
+  spotify: "https://open.spotify.com/search/syrian%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Damascus_Skyline.jpg"
+},
+{
+  name: 'Jordan',
+  descriptionFr: "Dabke, rock/indé émergent à Amman.",
+  descriptionEn: "Dabke, emerging indie/rock in Amman.",
+  regions: ['Amman', 'Irbid'],
+  artists: ['Ayloul'],
+  spotify: "https://open.spotify.com/search/jordan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Amman_Skyline.jpg"
+},
+{
+  name: 'Iraq',
+  descriptionFr: "Maqâm irakien, pop/rap récent.",
+  descriptionEn: "Iraqi maqam, recent pop/rap.",
+  regions: ['Baghdad', 'Basra', 'Erbil'],
+  artists: ['Ilham al-Madfai'],
+  spotify: "https://open.spotify.com/search/iraqi%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/18/Baghdad_Skyline.jpg"
+},
+{
+  name: 'Iran',
+  descriptionFr: "Musique persane (dastgâh), pop/rock moderne.",
+  descriptionEn: "Persian classical (dastgah), modern pop/rock.",
+  regions: ['Tehran', 'Isfahan', 'Shiraz'],
+  artists: ['Shajarian', 'Googoosh', 'Kiosk'],
+  spotify: "https://open.spotify.com/search/iranian%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/44/Tehran_Skyline.jpg"
+},
+{
+  name: 'Saudi Arabia',
+  descriptionFr: "Khaleeji pop/folk, scène moderne à Riyad/Jeddah.",
+  descriptionEn: "Khaleeji pop/folk, modern scene in Riyadh/Jeddah.",
+  regions: ['Riyadh', 'Jeddah', 'Dammam'],
+  artists: ['Mohammed Abdu'],
+  spotify: "https://open.spotify.com/search/saudi%20arabia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/65/Riyadh_skyline.jpg"
+},
+{
+  name: 'United Arab Emirates',
+  descriptionFr: "Scène club/DJ internationale + khaleeji moderne.",
+  descriptionEn: "International club/DJ scene + modern Khaleeji.",
+  regions: ['Dubai', 'Abu Dhabi', 'Sharjah'],
+  artists: ['DJ Bliss'],
+  spotify: "https://open.spotify.com/search/uae%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Dubai_Skyline_2015.jpg"
+},
+{
+  name: 'Qatar',
+  descriptionFr: "Khaleeji pop, scène en développement.",
+  descriptionEn: "Khaleeji pop, developing scene.",
+  regions: ['Doha'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/qatar%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Doha_Skyline.jpg"
+},
+{
+  name: 'Bahrain',
+  descriptionFr: "Khaleeji, percussions du Golfe, pop locale.",
+  descriptionEn: "Khaleeji, Gulf percussion, local pop.",
+  regions: ['Manama'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/bahrain%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/14/Manama_skyline.jpg"
+},
+{
+  name: 'Kuwait',
+  descriptionFr: "Khaleeji, tradition de luth/oud et percussions.",
+  descriptionEn: "Khaleeji, oud/percussion traditions.",
+  regions: ['Kuwait City'],
+  artists: ['Nawal El Kuwaitia'],
+  spotify: "https://open.spotify.com/search/kuwait%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/09/Kuwait_City_Skyline.jpg"
+},
+{
+  name: 'Oman',
+  descriptionFr: "Khaleeji+influences africaines de la côte.",
+  descriptionEn: "Khaleeji + East African coastal influences.",
+  regions: ['Muscat', 'Salalah'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/oman%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Muscat_Skyline.jpg"
+},
+{
+  name: 'Yemen',
+  descriptionFr: "Hadrami/outh, chant modal.",
+  descriptionEn: "Hadrami/oud, modal singing.",
+  regions: ['Sana’a', 'Aden', 'Mukalla'],
+  artists: ['Abu Bakr Salem'],
+  spotify: "https://open.spotify.com/search/yemen%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Sanaa_Skyline.jpg"
+},
+{
+  name: 'Armenia',
+  descriptionFr: "Folk/duduk, chœurs, fusion moderne.",
+  descriptionEn: "Folk/duduk, choirs, modern fusion.",
+  regions: ['Yerevan', 'Gyumri'],
+  artists: ['Jivan Gasparyan'],
+  spotify: "https://open.spotify.com/search/armenia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Yerevan_Skyline.jpg"
+},
+{
+  name: 'Azerbaijan',
+  descriptionFr: "Mugham (art modal), jazz-mugham.",
+  descriptionEn: "Mugham (modal art), jazz-mugham fusions.",
+  regions: ['Baku', 'Ganja'],
+  artists: ['Alim Qasimov'],
+  spotify: "https://open.spotify.com/search/azerbaijan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Baku_Skyline.jpg"
+},
+{
+  name: 'Georgia',
+  descriptionFr: "Polyphonies, folk, rock/électro émergents.",
+  descriptionEn: "Polyphony, folk, emerging rock/electronic.",
+  regions: ['Tbilisi', 'Batumi'],
+  artists: ['Rustavi Choir', 'Katie Melua'],
+  spotify: "https://open.spotify.com/search/georgia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Tbilisi_Skyline.jpg"
+},
+
+// ======== ASIE CENTRALE ========
+{
+  name: 'Kazakhstan',
+  descriptionFr: "Q-Pop, dombra folk, hip-hop/électro émergents.",
+  descriptionEn: "Q-Pop, dombra folk, emerging hip-hop/electronic.",
+  regions: ['Almaty', 'Astana'],
+  artists: ['Ninety One', 'Dimash Kudaibergen'],
+  spotify: "https://open.spotify.com/search/kazakhstan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/12/Almaty_skyline.jpg"
+},
+{
+  name: 'Uzbekistan',
+  descriptionFr: "Shashmaqam, folk, pop ouzbèke.",
+  descriptionEn: "Shashmaqam, folk, Uzbek pop.",
+  regions: ['Tashkent', 'Bukhara', 'Samarkand'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/uzbekistan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Registan_Samarqand.jpg"
+},
+{
+  name: 'Kyrgyzstan',
+  descriptionFr: "Komuz folk, épopées/manas, pop moderne.",
+  descriptionEn: "Komuz folk, manas epics, modern pop.",
+  regions: ['Bishkek', 'Osh'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/kyrgyz%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Bishkek_Ala-Too_Square.jpg"
+},
+{
+  name: 'Tajikistan',
+  descriptionFr: "Shashmaqam (avec Ouzbékistan), folk pamiri.",
+  descriptionEn: "Shashmaqam (with Uzbekistan), Pamiri folk.",
+  regions: ['Dushanbe', 'Khorog'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/tajikistan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Dushanbe_Skyline.jpg"
+},
+{
+  name: 'Turkmenistan',
+  descriptionFr: "Dutar folk, traditions sahariennes/des steppes.",
+  descriptionEn: "Dutar folk, steppe/desert traditions.",
+  regions: ['Ashgabat', 'Mary'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/turkmen%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/38/Ashgabat_Skyline.jpg"
+},
+{
+  name: 'Afghanistan',
+  descriptionFr: "Ghazal/rubab, folk, pop/rap diasporique.",
+  descriptionEn: "Ghazal/rubab, folk, diaspora pop/rap.",
+  regions: ['Kabul', 'Herat', 'Mazar-i-Sharif'],
+  artists: ['Ustad Mohammad Omar', 'Qais Essar'],
+  spotify: "https://open.spotify.com/search/afghanistan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Kabul_skyline.jpg"
+},
 
   {
     name: 'Brazil',
