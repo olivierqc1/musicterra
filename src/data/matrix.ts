@@ -508,4 +508,50 @@ Mauritius:  { "Sega (Mauritius)": 0.95 },
 "Kizomba/Semba (Angola)": {},
 "Salegy/Tsapiky (Madagascar)": {},
 "Sega (Mauritius)": {},
+// ===== CANADA =====
+Canada: {
+  "Chanson Québécoise (Canada)": 0.9,
+  "Canadian Indie (Canada)": 0.85,
+  "Canadian Hip-Hop (Canada)": 0.75,
+  "Celtic des Maritimes (Canada)": 0.7,
+  "Canadian Country (Canada)": 0.7,
+  France: 0.35,
+  "United States": 0.4
+},
+"Chanson Québécoise (Canada)": { "Canadian Indie (Canada)": 0.25 },
+"Canadian Indie (Canada)": { "Canadian Hip-Hop (Canada)": 0.2 },
+"Canadian Hip-Hop (Canada)": {},
+"Canadian Country (Canada)": {},
+"Inuit Throat Singing (Canada)": { "Dranyen Folk (Bhutan)": 0.1 /* lointain, garde ou retire */ },
+"Celtic des Maritimes (Canada)": {},
+
+// ===== OCÉANIE =====
+Australia: {
+  "Aussie Rock (Australia)": 0.9,
+  "Aussie Indie (Australia)": 0.85,
+  "Didgeridoo/Aboriginal Trad (Australia)": 0.75,
+  NewZealand: 0.3
+},
+"Aussie Rock (Australia)": { "Aussie Indie (Australia)": 0.35 },
+"Aussie Indie (Australia)": {},
+"Didgeridoo/Aboriginal Trad (Australia)": {},
+
+"New Zealand": {
+  "Kiwi Pop/Indie (New Zealand)": 0.9,
+  "Waiata Māori (New Zealand)": 0.8,
+  Australia: 0.3
+},
+"Kiwi Pop/Indie (New Zealand)": {},
+"Waiata Māori (New Zealand)": {},
+
+"Papua New Guinea": { "Stringband (Melanesia)": 0.9 },
+Fiji: { "Vude (Fiji)": 0.9, "Pacific Island Reggae (Polynesia/Melanesia)": 0.6 },
+Samoa: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.7, "Stringband (Melanesia)": 0.3 },
+Tonga: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.7 },
+"Solomon Islands": { "Stringband (Melanesia)": 0.9, "Pacific Island Reggae (Polynesia/Melanesia)": 0.5 },
+Vanuatu: { "Stringband (Melanesia)": 0.9 },
+
+"Pacific Island Reggae (Polynesia/Melanesia)": { "Stringband (Melanesia)": 0.2 },
+"Stringband (Melanesia)": {},
+"Vude (Fiji)": {},
 };
