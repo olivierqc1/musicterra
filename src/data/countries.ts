@@ -137,6 +137,179 @@ export const countries: Item[] = [
     { city: 'Azuero', noteFr: "Tamborito et típico panaméno.", noteEn: "Tamborito and típico panameño." }
   ]
 },
+  // --- ARGENTINA ---
+{
+  name: 'Argentina',
+  descriptionFr: "Tango à Buenos Aires, rock nacional et folklore andin au nord-ouest.",
+  descriptionEn: "Tango in Buenos Aires, rock nacional, and Andean folk in the northwest.",
+  regions: ['Buenos Aires', 'Córdoba', 'Salta/Jujuy'],
+  artists: ['Astor Piazzolla', 'Soda Stereo', 'Mercedes Sosa'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbMMy2roB9myp?si=2SxHCDdkSrS_43zX676P2A&pi=URJUkrM_Q-6zT",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/ObeliscoBA2015.2.jpg",
+  cityStyles: [
+    { city: 'Buenos Aires', noteFr: "Tango et rock nacional.", noteEn: "Tango and rock nacional." },
+    { city: 'Salta', noteFr: "Folklore andin (zamba, chacarera).", noteEn: "Andean folk (zamba, chacarera)." }
+  ]
+},
+
+// --- CHILE ---
+{
+  name: 'Chile',
+  descriptionFr: "Cueca nationale, Nueva Canción et scènes indie/électro à Santiago.",
+  descriptionEn: "National cueca, Nueva Canción, and indie/electronic scenes in Santiago.",
+  regions: ['Santiago', 'Valparaíso', 'Concepción'],
+  artists: ['Violeta Parra', 'Los Bunkers', 'Los Jaivas'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbL0GavIqMTeb?si=sLacnVLtRg6lRK9EombM8w&pi=Z_K79HauR7SOV",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Santiago_de_Chile_cityscape.jpg",
+  cityStyles: [
+    { city: 'Santiago', noteFr: "Indie/électro, rap chileno.", noteEn: "Indie/electronic, Chilean rap." },
+    { city: 'Valparaíso', noteFr: "Folk et fusion côtière.", noteEn: "Coastal folk/fusion." }
+  ]
+},
+
+// --- COLOMBIA ---
+{
+  name: 'Colombia',
+  descriptionFr: "Cumbia et vallenato sur la côte caraïbe, champeta urbaine.",
+  descriptionEn: "Cumbia and vallenato on the Caribbean coast, urban champeta.",
+  regions: ['Barranquilla', 'Cartagena', 'Bogotá'],
+  artists: ['Carlos Vives', 'Joe Arroyo', 'Totó la Momposina'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbOa2lmxNORXQ?si=v6nbVtxDSqeDHPdit0m41Q&pi=jlnspvm-Suqbc",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Cartagena_de_Indias%2C_Ciudad_Amurallada.jpg",
+  cityStyles: [
+    { city: 'Barranquilla', noteFr: "Cumbia/vallenato.", noteEn: "Cumbia/vallenato." },
+    { city: 'Cartagena', noteFr: "Champeta urbaine.", noteEn: "Urban champeta." }
+  ]
+},
+
+// --- PERU ---
+{
+  name: 'Peru',
+  descriptionFr: "Huayno andin, chicha (cumbia andine) et festejo afro-péruvien.",
+  descriptionEn: "Andean huayno, chicha (Andean cumbia) and Afro-Peruvian festejo.",
+  regions: ['Lima', 'Cusco', 'Arequipa'],
+  artists: ['Los Mirlos', 'Chabuca Granda', 'Eva Ayllón'],
+  spotify: "https://open.spotify.com/playlist/4HTamTCbToETP2AdO9XqQu?si=Zu2AxPyaSvm1-kHnX96IwQ&pi=Wg14xJfGQlizY",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Lima_City_Skyline.jpg",
+  cityStyles: [
+    { city: 'Lima', noteFr: "Chicha urbaine et festejo.", noteEn: "Urban chicha and festejo." },
+    { city: 'Cusco', noteFr: "Huayno et musique andine.", noteEn: "Huayno and Andean music." }
+  ]
+},
+
+// --- BOLIVIA ---
+{
+  name: 'Bolivia',
+  descriptionFr: "Morenada, caporales et tinku dans la riche tradition andine.",
+  descriptionEn: "Morenada, caporales, and tinku in a rich Andean tradition.",
+  regions: ['La Paz', 'Cochabamba', 'Oruro'],
+  artists: ['Los Kjarkas', 'Bonny Lovy'],
+  spotify: "https://open.spotify.com/playlist/2zvn0gdOKh4xiMTqn9CVAk?si=lHMglPHQTBOuoZPhTgDo8g",
+  image: "https://upload.wikimedia.org/wikipedia/commons/f/f6/La_Paz_Bolivia.jpg",
+  cityStyles: [
+    { city: 'Oruro', noteFr: "Carnaval : morenada/caporales.", noteEn: "Carnival: morenada/caporales." }
+  ]
+},
+
+// --- ECUADOR ---
+{
+  name: 'Ecuador',
+  descriptionFr: "Pasillo romantique, bomba del Chota et música montubia.",
+  descriptionEn: "Romantic pasillo, bomba del Chota, and montubio folk.",
+  regions: ['Quito', 'Guayaquil', 'Valle del Chota'],
+  artists: ['Julio Jaramillo', 'Mirella Cesa'],
+  spotify: "https://open.spotify.com/playlist/2w8Fn0VtirkCefHUUW0YsP?si=KEKLV7acQ1OSw2QspXLxAw",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/45/Quito_Panoramic.jpg",
+  cityStyles: [
+    { city: 'Quito', noteFr: "Pasillo/tradition andine.", noteEn: "Pasillo/Andean tradition." },
+    { city: 'Valle del Chota', noteFr: "Bomba afro-équatorienne.", noteEn: "Afro-Ecuadorian bomba." }
+  ]
+},
+
+// --- PARAGUAY ---
+{
+  name: 'Paraguay',
+  descriptionFr: "Guarania et polka paraguaya (harpe paraguayenne).",
+  descriptionEn: "Guarania and Paraguayan polka (Paraguayan harp).",
+  regions: ['Asunción', 'Encarnación', 'Ciudad del Este'],
+  artists: ['Agustín Barrios', 'Luis Alberto del Paraná'],
+  spotify: "https://open.spotify.com/playlist/5yj4ed1rnEU9bbKdc1Vb47?si=GsAYgE4pTCSWiws6rxcnig",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Asuncion_skyline.jpg",
+  cityStyles: [
+    { city: 'Asunción', noteFr: "Guarania/polka paraguaya.", noteEn: "Guarania/Paraguayan polka." }
+  ]
+},
+
+// --- URUGUAY ---
+{
+  name: 'Uruguay',
+  descriptionFr: "Candombe afro-uruguayen, murga et rock rioplatense.",
+  descriptionEn: "Afro-Uruguayan candombe, murga, and Río de la Plata rock.",
+  regions: ['Montevideo', 'Punta del Este', 'Canelones'],
+  artists: ['Rubén Rada', 'La Vela Puerca'],
+  spotify: "https://open.spotify.com/playlist/0G4oEhrEK1KpoQVXcTkJBl?si=6rG2jHvOSp-L0EmDD5Yxsg",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Montevideo_Panorama.jpg",
+  cityStyles: [
+    { city: 'Montevideo', noteFr: "Candombe/murga.", noteEn: "Candombe/murga." }
+  ]
+},
+
+// --- VENEZUELA ---
+{
+  name: 'Venezuela',
+  descriptionFr: "Joropo des Llanos, gaitas zulianas et pop tropicale.",
+  descriptionEn: "Llanos joropo, Zulian gaita, and tropical pop.",
+  regions: ['Caracas', 'Maracaibo', 'Barquisimeto'],
+  artists: ['Simón Díaz', 'Guaco'],
+  spotify: "https://open.spotify.com/playlist/1EbVc8fl9r51zeZNYiHFvB?si=_HaHWXSURnyDD1dQg58B7w",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Caracas_Skyline.jpg",
+  cityStyles: [
+    { city: 'Los Llanos', noteFr: "Joropo (arpa cuatro maracas).", noteEn: "Joropo (harp cuatro maracas)." },
+    { city: 'Maracaibo', noteFr: "Gaita zuliana.", noteEn: "Gaita zuliana." }
+  ]
+},
+
+// --- GUYANA ---
+{
+  name: 'Guyana',
+  descriptionFr: "Scène indo-caribéenne (chutney), soca et influences reggae.",
+  descriptionEn: "Indo-Caribbean chutney scene, soca and reggae influences.",
+  regions: ['Georgetown', 'Linden', 'Berbice'],
+  artists: ['Terry Gajraj'],
+  spotify: "https://open.spotify.com/playlist/5WrJyWv7owAxRv26rLlCJw?si=IgtRih2NSCWmXvMib4rxWA",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/79/Georgetown_Guyana_Stabroek.jpg",
+  cityStyles: [
+    { city: 'Georgetown', noteFr: "Chutney/soca/reggae mix.", noteEn: "Chutney/soca/reggae mix." }
+  ]
+},
+
+// --- SURINAME ---
+{
+  name: 'Suriname',
+  descriptionFr: "Kaseko (créole), kawina et influences kaseko-jazz.",
+  descriptionEn: "Creole Kaseko, Kawina, and kaseko-jazz influences.",
+  regions: ['Paramaribo', 'Nickerie', 'Commewijne'],
+  artists: ['Lieve Hugo'],
+  spotify: "https://open.spotify.com/playlist/16Ihulxx1iYmMlcU8BWVEF?si=DAmA0f3MRfKx157y1luA6g&pi=k4uUDhNRRwCzP",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Paramaribo_Centrum.jpg",
+  cityStyles: [
+    { city: 'Paramaribo', noteFr: "Kaseko/kawina.", noteEn: "Kaseko/kawina." }
+  ]
+},
+
+// --- FRENCH GUIANA (Guyane) ---
+{
+  name: 'French Guiana',
+  descriptionFr: "Kasékò, aléké et biguine créole en Amazonie française.",
+  descriptionEn: "Kasékò, aléké, and Creole biguine in French Amazonia.",
+  regions: ['Cayenne', 'Kourou', 'Saint-Laurent-du-Maroni'],
+  artists: ['Tina Ly'],
+  // spotify: "",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/56/Centre_Cayenne.jpg",
+  cityStyles: [
+    { city: 'Cayenne', noteFr: "Kasékò/aléké.", noteEn: "Kasékò/aléké." }
+  ]
+},
   {
   name: 'Spain',
   descriptionFr: "Flamenco, musiques gitanes, pop/rock et électronica — fortes racines andalouses.",
