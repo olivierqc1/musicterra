@@ -1716,6 +1716,283 @@ export const countries: Country[] = [
   spotify: "https://open.spotify.com/search/timor%20leste%20music",
   image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Timor_Leste_Hills.jpg"
     },
+  // ===== AFRIQUE DU NORD =====
+{
+  name: 'Morocco',
+  descriptionFr: "Gnawa, chaabi, folk amazigh; scènes électro/cinéma.",
+  descriptionEn: "Gnawa, chaabi, Amazigh folk; electronic/cinema scenes.",
+  regions: ['Casablanca', 'Marrakesh', 'Fès'],
+  artists: ['Maâlem Mahmoud Guinia', 'Nass El Ghiwane'],
+  spotify: "https://open.spotify.com/search/morocco%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/08/Casablanca_Skyline.jpg"
+},
+{
+  name: 'Algeria',
+  descriptionFr: "Raï (Oran), chaabi (Alger), rock/rap contemporains.",
+  descriptionEn: "Raï (Oran), chaabi (Algiers), contemporary rock/rap.",
+  regions: ['Oran', 'Algiers', 'Constantine'],
+  artists: ['Cheb Khaled', 'Dahmane El Harrachi'],
+  spotify: "https://open.spotify.com/search/algeria%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Algiers_Skyline.jpg"
+},
+{
+  name: 'Tunisia',
+  descriptionFr: "Malouf andalou, mezoued, pop moderne.",
+  descriptionEn: "Andalusian malouf, mezoued, modern pop.",
+  regions: ['Tunis', 'Sfax'],
+  artists: ['Rachidia Ensemble'],
+  spotify: "https://open.spotify.com/search/tunisia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Tunis_Skyline.jpg"
+},
+{
+  name: 'Libya',
+  descriptionFr: "Ma’luf/chaabi, pop arabe locale.",
+  descriptionEn: "Ma’luf/chaabi and local Arabic pop.",
+  regions: ['Tripoli', 'Benghazi'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/libya%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/93/Tripoli_Skyline.jpg"
+},
+{
+  name: 'Egypt',
+  descriptionFr: "Mahraganat, shaabi, pop arabe et tarab classique.",
+  descriptionEn: "Mahraganat, shaabi, Arabic pop and classical tarab.",
+  regions: ['Cairo', 'Alexandria'],
+  artists: ['Umm Kulthum', 'Amr Diab'],
+  spotify: "https://open.spotify.com/search/egypt%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Cairo_Skyline.jpg"
+},
+
+// ===== AFRIQUE DE L’OUEST =====
+{
+  name: 'Nigeria',
+  descriptionFr: "Afrobeat (Fela), Afrobeats, juju, fuji.",
+  descriptionEn: "Afrobeat (Fela), Afrobeats, juju, fuji.",
+  regions: ['Lagos', 'Abuja', 'Ibadan'],
+  artists: ['Fela Kuti', 'Wizkid', 'Burna Boy'],
+  spotify: "https://open.spotify.com/search/nigeria%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Lagos_Island_skyline.jpg"
+},
+{
+  name: 'Ghana',
+  descriptionFr: "Highlife, hiplife, azonto; afro-fusion.",
+  descriptionEn: "Highlife, hiplife, azonto; afro-fusion.",
+  regions: ['Accra', 'Kumasi'],
+  artists: ['E.T. Mensah', 'Reggie Rockstone'],
+  spotify: "https://open.spotify.com/search/ghana%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/80/Accra_skyline.jpg"
+},
+{
+  name: 'Senegal',
+  descriptionFr: "Mbalax (sabar), hip-hop, mbalax-pop.",
+  descriptionEn: "Mbalax (sabar), hip-hop, mbalax-pop.",
+  regions: ['Dakar', 'Saint-Louis'],
+  artists: ['Youssou N’Dour'],
+  spotify: "https://open.spotify.com/search/senegal%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Dakar_Skyline.jpg"
+},
+{
+  name: 'Mali',
+  descriptionFr: "Desert blues, griots mandingues, kora.",
+  descriptionEn: "Desert blues, Manding griots, kora.",
+  regions: ['Bamako', 'Timbuktu'],
+  artists: ['Ali Farka Touré', 'Toumani Diabaté'],
+  spotify: "https://open.spotify.com/search/mali%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Bamako_skyline.jpg"
+},
+{
+  name: 'Ivory Coast',
+  descriptionFr: "Coupé-décalé, zouglou, pop/rap abidjanais.",
+  descriptionEn: "Coupé-décalé, zouglou, Abidjan pop/rap.",
+  regions: ['Abidjan', 'Bouaké'],
+  artists: ['DJ Arafat', 'Magic System'],
+  spotify: "https://open.spotify.com/search/ivory%20coast%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/69/Abidjan_skyline.jpg"
+},
+{
+  name: 'Guinea',
+  descriptionFr: "Percussions mandingues, voix puissantes.",
+  descriptionEn: "Mande percussion traditions, powerful vocals.",
+  regions: ['Conakry'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/guinea%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Conakry.jpg"
+},
+{
+  name: 'Gambia',
+  descriptionFr: "Kora/griots, afro-pop locale.",
+  descriptionEn: "Kora/griot traditions, local afro-pop.",
+  regions: ['Banjul'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/gambia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/25/Banjul_Skyline.jpg"
+},
+{
+  name: 'Benin',
+  descriptionFr: "Afro-funk/vodun, highlife/afrobeat historiques.",
+  descriptionEn: "Afro-funk/vodun, historic highlife/afrobeat.",
+  regions: ['Cotonou'],
+  artists: ["Angélique Kidjo"],
+  spotify: "https://open.spotify.com/search/benin%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Cotonou.jpg"
+},
+{
+  name: 'Togo',
+  descriptionFr: "Afro-funk/électro locale.",
+  descriptionEn: "Local afro-funk/electro.",
+  regions: ['Lomé'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/togo%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Lome_Togo.jpg"
+},
+{
+  name: 'Burkina Faso',
+  descriptionFr: "Folk mossi, balafon/guitares, rap Ouaga.",
+  descriptionEn: "Mossi folk, balafon/guitars, Ouaga rap.",
+  regions: ['Ouagadougou', 'Bobo-Dioulasso'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/burkina%20faso%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Ouagadougou_downtown.jpg"
+},
+{
+  name: 'Niger',
+  descriptionFr: "Blues touareg/sahel, tendences takamba.",
+  descriptionEn: "Tuareg/Sahel blues, takamba tendencies.",
+  regions: ['Niamey', 'Agadez'],
+  artists: ["Bombino"],
+  spotify: "https://open.spotify.com/search/niger%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Niamey_skyline.jpg"
+},
+{
+  name: 'Cape Verde',
+  descriptionFr: "Morna, coladeira, funaná.",
+  descriptionEn: "Morna, coladeira, funaná.",
+  regions: ['Mindelo', 'Praia'],
+  artists: ['Cesária Évora'],
+  spotify: "https://open.spotify.com/search/cape%20verde%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/68/Mindelo_Cape_Verde.jpg"
+},
+
+// ===== AFRIQUE CENTRALE =====
+{
+  name: 'DR Congo',
+  descriptionFr: "Rumba congolaise, soukous/ndombolo, rumba moderne.",
+  descriptionEn: "Congolese rumba, soukous/ndombolo, modern rumba.",
+  regions: ['Kinshasa', 'Goma'],
+  artists: ['Franco', 'Fally Ipupa'],
+  spotify: "https://open.spotify.com/search/congo%20rumba",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Kinshasa_Skyline.jpg"
+},
+{
+  name: 'Republic of the Congo',
+  descriptionFr: "Rumba congolaise (Brazzaville), soukous.",
+  descriptionEn: "Congo-Brazzaville rumba, soukous.",
+  regions: ['Brazzaville', 'Pointe-Noire'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/congo%20brazzaville%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Brazzaville_skyline.jpg"
+},
+{
+  name: 'Cameroon',
+  descriptionFr: "Makossa, bikutsi, afro-pop/rap.",
+  descriptionEn: "Makossa, bikutsi, afro-pop/rap.",
+  regions: ['Douala', 'Yaoundé'],
+  artists: ['Manu Dibango'],
+  spotify: "https://open.spotify.com/search/cameroon%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Douala_Skyline.jpg"
+},
+{
+  name: 'Gabon',
+  descriptionFr: "Afro-pop et traditions fang.",
+  descriptionEn: "Afro-pop and Fang traditions.",
+  regions: ['Libreville'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/gabon%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/02/Libreville_skyline.jpg"
+},
+
+// ===== AFRIQUE AUSTRALE =====
+{
+  name: 'South Africa',
+  descriptionFr: "Amapiano, gqom, kwaito, jazz/rock SA.",
+  descriptionEn: "Amapiano, gqom, kwaito, SA jazz/rock.",
+  regions: ['Johannesburg', 'Cape Town', 'Durban'],
+  artists: ['Kabza De Small', 'Hugh Masekela'],
+  spotify: "https://open.spotify.com/search/south%20africa%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Johannesburg_Skyline.jpg"
+},
+{
+  name: 'Zimbabwe',
+  descriptionFr: "Chimurenga/mbira, sungura.",
+  descriptionEn: "Chimurenga/mbira, sungura.",
+  regions: ['Harare', 'Bulawayo'],
+  artists: ["Thomas Mapfumo"],
+  spotify: "https://open.spotify.com/search/zimbabwe%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Harare_skyline.jpg"
+},
+{
+  name: 'Zambia',
+  descriptionFr: "Kalindula, zedbeats modernes.",
+  descriptionEn: "Kalindula, modern zedbeats.",
+  regions: ['Lusaka'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/zambia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Lusaka_skyline.jpg"
+},
+{
+  name: 'Namibia',
+  descriptionFr: "Shambo, scènes afropop/house.",
+  descriptionEn: "Shambo, afropop/house scenes.",
+  regions: ['Windhoek'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/namibia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Windhoek_skyline.jpg"
+},
+{
+  name: 'Botswana',
+  descriptionFr: "House/Kwaaito local, folk setswana.",
+  descriptionEn: "Local house/kwaito, Setswana folk.",
+  regions: ['Gaborone'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/botswana%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7d/Gaborone_skyline.jpg"
+},
+{
+  name: 'Mozambique',
+  descriptionFr: "Marrabenta, afro-pop/rap Maputo.",
+  descriptionEn: "Marrabenta, Maputo afro-pop/rap.",
+  regions: ['Maputo'],
+  artists: ['Fany Pfumo'],
+  spotify: "https://open.spotify.com/search/mozambique%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/99/Maputo_skyline.jpg"
+},
+{
+  name: 'Angola',
+  descriptionFr: "Kuduro, kizomba/semba.",
+  descriptionEn: "Kuduro, kizomba/semba.",
+  regions: ['Luanda'],
+  artists: ['Bonga'],
+  spotify: "https://open.spotify.com/search/angola%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Luanda_skyline.jpg"
+},
+{
+  name: 'Madagascar',
+  descriptionFr: "Salegy/tsapiky, folk malgache.",
+  descriptionEn: "Salegy/tsapiky and Malagasy folk.",
+  regions: ['Antananarivo', 'Toliara'],
+  artists: ['Jaojoby', "D’Gary"],
+  spotify: "https://open.spotify.com/search/madagascar%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Antananarivo_skyline.jpg"
+},
+{
+  name: 'Mauritius',
+  descriptionFr: "Sega, seggae, pop créole.",
+  descriptionEn: "Sega, seggae, Creole pop.",
+  regions: ['Port Louis'],
+  artists: ['Ti Frère'],
+  spotify: "https://open.spotify.com/search/mauritius%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Port_Louis_Skyline.jpg"
+},
 ];
 
 
