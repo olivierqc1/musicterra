@@ -310,6 +310,208 @@ export const countries: Item[] = [
     { city: 'Cayenne', noteFr: "Kasékò/aléké.", noteEn: "Kasékò/aléké." }
   ]
 },
+  // src/data/countries.ts
+// Pays & territoires des Caraïbes (avec liens Spotify par pays)
+
+export const countries = [
+  // --- JAMAICA ---
+  {
+    name: 'Jamaica',
+    descriptionFr: "Racines du reggae, dancehall, ska et rocksteady.",
+    descriptionEn: "Roots of reggae, dancehall, ska and rocksteady.",
+    regions: ['Kingston', 'Montego Bay', 'St. Ann'],
+    artists: ['Bob Marley', 'Peter Tosh', 'Vybz Kartel'],
+    spotify: "https://open.spotify.com/search/Jamaica%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Kingston_Jamaica_skyline.jpg",
+    cityStyles: [
+      { city: 'Kingston', noteFr: "Reggae, dancehall, studios historiques.", noteEn: "Reggae, dancehall, historic studios." }
+    ]
+  },
+
+  // --- TRINIDAD & TOBAGO ---
+  {
+    name: 'Trinidad & Tobago',
+    descriptionFr: "Soca, calypso, steelpan; Carnaval de Trinidad.",
+    descriptionEn: "Soca, calypso, steelpan; Trinidad Carnival.",
+    regions: ['Port of Spain', 'San Fernando', 'Scarborough'],
+    artists: ['Machel Montano', 'Calypso Rose'],
+    spotify: "https://open.spotify.com/search/Trinidad%20and%20Tobago%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/27/Port_of_Spain_Downtown.jpg",
+    cityStyles: [
+      { city: 'Port of Spain', noteFr: "Soca/calypso, steelpan (Panorama).", noteEn: "Soca/calypso, steelpan (Panorama)." }
+    ]
+  },
+
+  // --- BARBADOS ---
+  {
+    name: 'Barbados',
+    descriptionFr: "Soca, bashment soca et spouge classique.",
+    descriptionEn: "Soca, bashment soca and classic spouge.",
+    regions: ['Bridgetown', 'Oistins', 'Saint Michael'],
+    artists: ['Rihanna', 'The Merrymen'],
+    spotify: "https://open.spotify.com/search/Barbados%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Barbados_Bridgetown.jpg",
+    cityStyles: [
+      { city: 'Bridgetown', noteFr: "Bashment soca, spouge.", noteEn: "Bashment soca, spouge." }
+    ]
+  },
+
+  // --- BAHAMAS ---
+  {
+    name: 'Bahamas',
+    descriptionFr: "Junkanoo, rake-n-scrape et influences calypso.",
+    descriptionEn: "Junkanoo, rake-n-scrape and calypso influences.",
+    regions: ['Nassau', 'Freeport'],
+    artists: ['The Baha Men'],
+    spotify: "https://open.spotify.com/search/Bahamas%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Nassau_Bahamas_downtown.jpg",
+    cityStyles: [
+      { city: 'Nassau', noteFr: "Junkanoo carnavalesque.", noteEn: "Carnival-style Junkanoo." }
+    ]
+  },
+
+  // --- CUBA ---
+  {
+    name: 'Cuba',
+    descriptionFr: "Son cubano, rumba, timba; source majeure de la salsa.",
+    descriptionEn: "Son cubano, rumba, timba; major source of salsa.",
+    regions: ['La Habana', 'Santiago de Cuba', 'Matanzas'],
+    artists: ['Buena Vista Social Club', 'Los Van Van', 'Celia Cruz'],
+    spotify: "https://open.spotify.com/search/Cuba%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Havana_Cuba.jpg",
+    cityStyles: [
+      { city: 'La Habana', noteFr: "Son/timba; salsa cubaine.", noteEn: "Son/timba; Cuban salsa." },
+      { city: 'Matanzas', noteFr: "Rumba traditionnelle.", noteEn: "Traditional rumba." }
+    ]
+  },
+
+  // --- DOMINICAN REPUBLIC ---
+  {
+    name: 'Dominican Republic',
+    descriptionFr: "Merengue, bachata et scène dembow.",
+    descriptionEn: "Merengue, bachata and dembow scene.",
+    regions: ['Santo Domingo', 'Santiago de los Caballeros', 'La Romana'],
+    artists: ['Juan Luis Guerra', 'Aventura', 'El Alfa'],
+    spotify: "https://open.spotify.com/search/Dominican%20Republic%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/58/Santo_Domingo_Skyline.jpg",
+    cityStyles: [
+      { city: 'Santo Domingo', noteFr: "Merengue, bachata, dembow.", noteEn: "Merengue, bachata, dembow." }
+    ]
+  },
+
+  // --- HAITI ---
+  {
+    name: 'Haiti',
+    descriptionFr: "Compas (konpa), mizik rasin et rara.",
+    descriptionEn: "Compas (konpa), mizik rasin and rara.",
+    regions: ['Port-au-Prince', 'Cap-Haïtien', 'Jacmel'],
+    artists: ['Tabou Combo', 'Carimi', 'Boukan Ginen'],
+    spotify: "https://open.spotify.com/search/Haiti%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Port-au-Prince.jpg",
+    cityStyles: [
+      { city: 'Port-au-Prince', noteFr: "Compas/kadans moderne.", noteEn: "Modern compas/kadans." },
+      { city: 'Jacmel', noteFr: "Rara/carnaval.", noteEn: "Rara/carnival." }
+    ]
+  },
+
+  // --- PUERTO RICO ---
+  {
+    name: 'Puerto Rico',
+    descriptionFr: "Salsa dura, reggaetón moderne et plena/bomba.",
+    descriptionEn: "Salsa dura, modern reggaetón and plena/bomba.",
+    regions: ['San Juan', 'Ponce', 'Bayamón'],
+    artists: ['Héctor Lavoe', 'Bad Bunny', 'Calle 13'],
+    spotify: "https://open.spotify.com/search/Puerto%20Rico%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/7/7e/San_Juan_Puerto_Rico.jpg",
+    cityStyles: [
+      { city: 'San Juan', noteFr: "Reggaetón, salsa urbaine.", noteEn: "Reggaetón, urban salsa." }
+    ]
+  },
+
+  // --- GUADELOUPE ---
+  {
+    name: 'Guadeloupe',
+    descriptionFr: "Zouk et gwoka; traditions créoles.",
+    descriptionEn: "Zouk and gwoka; Creole traditions.",
+    regions: ['Pointe-à-Pitre', 'Basse-Terre'],
+    artists: ['Kassavʼ', 'Admiral T'],
+    spotify: "https://open.spotify.com/search/Guadeloupe%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Pointe-a-Pitre_Guadeloupe.jpg",
+    cityStyles: [
+      { city: 'Pointe-à-Pitre', noteFr: "Zouk moderne, gwoka urbain.", noteEn: "Modern zouk, urban gwoka." }
+    ]
+  },
+
+  // --- MARTINIQUE ---
+  {
+    name: 'Martinique',
+    descriptionFr: "Zouk, biguine et bèlè.",
+    descriptionEn: "Zouk, biguine and bèlè.",
+    regions: ['Fort-de-France', 'Le Lamentin'],
+    artists: ['Kassavʼ', 'Jocelyne Béroard'],
+    spotify: "https://open.spotify.com/search/Martinique%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fort-de-France_Martinique.jpg",
+    cityStyles: [
+      { city: 'Fort-de-France', noteFr: "Zouk/biguine.", noteEn: "Zouk/biguine." }
+    ]
+  },
+
+  // --- SAINT LUCIA ---
+  {
+    name: 'Saint Lucia',
+    descriptionFr: "Dennery Segment (soca locale) énergique.",
+    descriptionEn: "High-energy local soca (Dennery Segment).",
+    regions: ['Castries', 'Vieux Fort'],
+    artists: ['Machel Montano (influence régionale)', 'Freezy'],
+    spotify: "https://open.spotify.com/search/Saint%20Lucia%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Castries_St_Lucia.jpg",
+    cityStyles: [
+      { city: 'Castries', noteFr: "Dennery segment soca.", noteEn: "Dennery segment soca." }
+    ]
+  },
+
+  // --- GRENADA ---
+  {
+    name: 'Grenada',
+    descriptionFr: "Jab Jab soca et calypso local.",
+    descriptionEn: "Jab Jab soca and local calypso.",
+    regions: ["St. George's", 'Gouyave'],
+    artists: ['Tallpree'],
+    spotify: "https://open.spotify.com/search/Grenada%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/22/St._Georges_Grenada.jpg",
+    cityStyles: [
+      { city: "St. George's", noteFr: "Jab Jab (Carnaval).", noteEn: "Jab Jab (Carnival)." }
+    ]
+  },
+
+  // --- ANTIGUA & BARBUDA ---
+  {
+    name: 'Antigua & Barbuda',
+    descriptionFr: "Benna traditionnelle et soca.",
+    descriptionEn: "Traditional benna and soca.",
+    regions: ['St. John’s'],
+    artists: ['Burning Flames'],
+    spotify: "https://open.spotify.com/search/Antigua%20and%20Barbuda%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/82/St_Johns_Antigua.jpg",
+    cityStyles: [
+      { city: "St. John's", noteFr: "Benna/soca.", noteEn: "Benna/soca." }
+    ]
+  },
+
+  // --- CURAÇAO ---
+  {
+    name: 'Curaçao',
+    descriptionFr: "Tumba et tambú en Papiamentu.",
+    descriptionEn: "Tumba and tambú in Papiamentu.",
+    regions: ['Willemstad'],
+    artists: ['Izaline Calister'],
+    spotify: "https://open.spotify.com/search/Curacao%20music",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/64/Willemstad_Curacao.jpg",
+    cityStyles: [
+      { city: 'Willemstad', noteFr: "Tumba/tambú.", noteEn: "Tumba/tambú." }
+    ]
+  }
+];
   {
   name: 'Spain',
   descriptionFr: "Flamenco, musiques gitanes, pop/rock et électronica — fortes racines andalouses.",
