@@ -1,22 +1,26 @@
-Honduras: { Punta: 0.6, Reggae: 0.2 },
-Costa Rica: { "Calypso Limonense": 0.6, Reggae: 0.2 },
-Nicaragua:  { "Palo de Mayo": 0.6 },
-Honduras: { "Punta": 0.6, Reggae: 0.2 },
-El Salvador: { Xuc: 0.6 },
-Panama: { Tamborito: 0.5, "Típico panameño": 0.5, "Reggaetón (Panamá)": 0.4 },
-Argentina: { Tango: 0.5, "Rock Nacional (AR)": 0.3 },
-Chile: { Cueca: 0.4, "Nueva Canción": 0.3 },
-Colombia: { "Cumbia (CO)": 0.5, Vallenato: 0.4, Champeta: 0.3 },
-Peru: { Huayno: 0.5, "Chicha (PE)": 0.4, Festejo: 0.3 },
-Bolivia: { Morenada: 0.45, Caporales: 0.35 },
-Ecuador: { "Pasillo (EC)": 0.4, "Bomba del Chota": 0.35 },
-Paraguay: { Guarania: 0.45, "Polka Paraguaya": 0.35 },
-Uruguay: { "Candombe (UY)": 0.5, "Murga (UY)": 0.35 },
-Venezuela: { Joropo: 0.5, "Gaita Zuliana": 0.35 },
-Guyana: { "Chutney (GY)": 0.45 },
-Suriname: { Kaseko: 0.45 },
-French Guiana: { Kasékò: 0.45 },
-// ---- Middle East ----
+// src/data/cityStyleBoosts.ts
+// Boosts par pays pour affiner les recommandations
+
+export const cityStyleBoosts: { [country: string]: { [genre: string]: number } } = {
+  Honduras: { Punta: 0.6, Reggae: 0.2 },
+  "Costa Rica": { "Calypso Limonense": 0.6, Reggae: 0.2 },
+  Nicaragua: { "Palo de Mayo": 0.6 },
+  "El Salvador": { Xuc: 0.6 },
+  Panama: { Tamborito: 0.5, "Típico panameño": 0.5, "Reggaetón (Panamá)": 0.4 },
+  Argentina: { Tango: 0.5, "Rock Nacional (AR)": 0.3 },
+  Chile: { Cueca: 0.4, "Nueva Canción": 0.3 },
+  Colombia: { "Cumbia (CO)": 0.5, Vallenato: 0.4, Champeta: 0.3 },
+  Peru: { Huayno: 0.5, "Chicha (PE)": 0.4, Festejo: 0.3 },
+  Bolivia: { Morenada: 0.45, Caporales: 0.35 },
+  Ecuador: { "Pasillo (EC)": 0.4, "Bomba del Chota": 0.35 },
+  Paraguay: { Guarania: 0.45, "Polka Paraguaya": 0.35 },
+  Uruguay: { "Candombe (UY)": 0.5, "Murga (UY)": 0.35 },
+  Venezuela: { Joropo: 0.5, "Gaita Zuliana": 0.35 },
+  Guyana: { "Chutney (GY)": 0.45 },
+  Suriname: { Kaseko: 0.45 },
+  "French Guiana": { Kasékò: 0.45 },
+
+  // ---- Middle East ----
   Israel: { "Mizrahi Pop (Israel)": 0.6 },
   Palestine: { "Dabke (Levant)": 0.6, "Tarab (Levant/Arab World)": 0.4 },
   Lebanon: { "Tarab (Levant/Arab World)": 0.6, "Dabke (Levant)": 0.5 },
@@ -42,7 +46,8 @@ French Guiana: { Kasékò: 0.45 },
   Tajikistan: { "Shashmaqam (Uzbekistan/Tajikistan)": 0.6, "Tajik Pamiri Folk": 0.6 },
   Turkmenistan: { "Turkmen Dutar Folk": 0.7 },
   Afghanistan: { "Afghan Ghazal/Rubab": 0.7 },
-// ---- East Asia ----
+
+  // ---- East Asia ----
   Japan: { "J-Pop (Japan)": 0.6, "City Pop (Japan)": 0.6, "Enka (Japan)": 0.5 },
   "South Korea": { "K-Pop (Korea)": 0.7, "K-Hip-Hop (Korea)": 0.5, "Trot (Korea)": 0.5 },
   China: { "Mandopop (China/Taiwan)": 0.6, "Chinese Classical/Guqin (China)": 0.5 },
@@ -70,66 +75,69 @@ French Guiana: { Kasékò: 0.45 },
   Laos: { "Lao Lam (Laos)": 0.6 },
   Myanmar: { "Burmese Pop (Myanmar)": 0.6, "Hsaing Waing (Myanmar)": 0.5 },
   Brunei: { "Brunei Malay Pop (Brunei)": 0.6 },
-  Timor-Leste: { "Timor-Leste Tebe-Dai (Timor)": 0.6 }
-// ---- North Africa ----
-Morocco: { "Gnawa (Morocco)": 0.6, "Chaabi (Maghreb)": 0.4 },
-Algeria: { "Raï (Algeria)": 0.7, "Chaabi (Maghreb)": 0.4 },
-Tunisia: { "Malouf/Andalusi (Tunisia)": 0.7, "Chaabi (Maghreb)": 0.3 },
-Libya: { "Malouf/Andalusi (Tunisia)": 0.2 },
-Egypt: { "Mahraganat (Egypt)": 0.7, "Shaabi (Egypt)": 0.5 },
+  "Timor-Leste": { "Timor-Leste Tebe-Dai (Timor)": 0.6 },
 
-// ---- West Africa ----
-Nigeria: { "Afrobeats (Nigeria/Ghana)": 0.7, "Afrobeat (Nigeria, 70s)": 0.5, "Juju (Nigeria)": 0.5, "Fuji (Nigeria)": 0.5 },
-Ghana: { "Highlife (Ghana)": 0.7, "Hiplife (Ghana)": 0.6, "Afrobeats (Nigeria/Ghana)": 0.5 },
-Senegal: { "Mbalax (Senegal)": 0.7 },
-Mali: { "Desert Blues (Sahel)": 0.6 },
-"Ivory Coast": { "Coupé-Décalé (Côte d’Ivoire)": 0.7, "Zouglou (Côte d’Ivoire)": 0.6 },
-Guinea: {},
-Gambia: {},
-Benin: {},
-Togo: {},
-"Burkina Faso": {},
-Niger: { "Desert Blues (Sahel)": 0.6 },
-"Cape Verde": { "Funaná/Morna (Cape Verde)": 0.7 },
+  // ---- North Africa ----
+  Morocco: { "Gnawa (Morocco)": 0.6, "Chaabi (Maghreb)": 0.4 },
+  Algeria: { "Raï (Algeria)": 0.7, "Chaabi (Maghreb)": 0.4 },
+  Tunisia: { "Malouf/Andalusi (Tunisia)": 0.7, "Chaabi (Maghreb)": 0.3 },
+  Libya: { "Malouf/Andalusi (Tunisia)": 0.2 },
+  Egypt: { "Mahraganat (Egypt)": 0.7, "Shaabi (Egypt)": 0.5 },
 
-// ---- Central Africa ----
-"DR Congo": { "Rumba Congolaise (DRC/RC)": 0.7, "Soukous/Ndombolo (DRC)": 0.6 },
-"Republic of the Congo": { "Rumba Congolaise (DRC/RC)": 0.6 },
-Cameroon: { "Makossa (Cameroon)": 0.6, "Bikutsi (Cameroon)": 0.6 },
-Gabon: {},
+  // ---- West Africa ----
+  Nigeria: { "Afrobeats (Nigeria/Ghana)": 0.7, "Afrobeat (Nigeria, 70s)": 0.5, "Juju (Nigeria)": 0.5, "Fuji (Nigeria)": 0.5 },
+  Ghana: { "Highlife (Ghana)": 0.7, "Hiplife (Ghana)": 0.6, "Afrobeats (Nigeria/Ghana)": 0.5 },
+  Senegal: { "Mbalax (Senegal)": 0.7 },
+  Mali: { "Desert Blues (Sahel)": 0.6 },
+  "Ivory Coast": { "Coupé-Décalé (Côte d'Ivoire)": 0.7, "Zouglou (Côte d'Ivoire)": 0.6 },
+  Guinea: {},
+  Gambia: {},
+  Benin: {},
+  Togo: {},
+  "Burkina Faso": {},
+  Niger: { "Desert Blues (Sahel)": 0.6 },
+  "Cape Verde": { "Funaná/Morna (Cape Verde)": 0.7 },
 
-// ---- Southern Africa ----
-"South Africa": { "Amapiano (South Africa)": 0.7, "Gqom (South Africa)": 0.6, "Kwaito (South Africa)": 0.6, "Township Jazz (South Africa)": 0.5, "Maskandi (South Africa)": 0.5 },
-Zimbabwe: {},
-Zambia: {},
-Namibia: {},
-Botswana: {},
-Mozambique: { "Marrabenta (Mozambique)": 0.7 },
-Angola: { "Kuduro (Angola)": 0.7, "Kizomba/Semba (Angola)": 0.6 },
-Madagascar: { "Salegy/Tsapiky (Madagascar)": 0.7 },
-Mauritius: { "Sega (Mauritius)": 0.7 },
-// ---- Canada ----
-Canada: {
-  "Chanson Québécoise (Canada)": 0.6,
-  "Canadian Indie (Canada)": 0.5,
-  "Canadian Hip-Hop (Canada)": 0.4,
-  "Celtic des Maritimes (Canada)": 0.4,
-  "Canadian Country (Canada)": 0.4
-},
+  // ---- Central Africa ----
+  "DR Congo": { "Rumba Congolaise (DRC/RC)": 0.7, "Soukous/Ndombolo (DRC)": 0.6 },
+  "Republic of the Congo": { "Rumba Congolaise (DRC/RC)": 0.6 },
+  Cameroon: { "Makossa (Cameroon)": 0.6, "Bikutsi (Cameroon)": 0.6 },
+  Gabon: {},
 
-// ---- Océanie ----
-Australia: {
-  "Aussie Rock (Australia)": 0.6,
-  "Aussie Indie (Australia)": 0.5,
-  "Didgeridoo/Aboriginal Trad (Australia)": 0.5
-},
-"New Zealand": {
-  "Kiwi Pop/Indie (New Zealand)": 0.6,
-  "Waiata Māori (New Zealand)": 0.5
-},
-"Papua New Guinea": { "Stringband (Melanesia)": 0.6 },
-Fiji: { "Vude (Fiji)": 0.6, "Pacific Island Reggae (Polynesia/Melanesia)": 0.5 },
-Samoa: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.6 },
-Tonga: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.6 },
-"Solomon Islands": { "Stringband (Melanesia)": 0.6, "Pacific Island Reggae (Polynesia/Melanesia)": 0.4 },
-Vanuatu: { "Stringband (Melanesia)": 0.6 }
+  // ---- Southern Africa ----
+  "South Africa": { "Amapiano (South Africa)": 0.7, "Gqom (South Africa)": 0.6, "Kwaito (South Africa)": 0.6, "Township Jazz (South Africa)": 0.5, "Maskandi (South Africa)": 0.5 },
+  Zimbabwe: {},
+  Zambia: {},
+  Namibia: {},
+  Botswana: {},
+  Mozambique: { "Marrabenta (Mozambique)": 0.7 },
+  Angola: { "Kuduro (Angola)": 0.7, "Kizomba/Semba (Angola)": 0.6 },
+  Madagascar: { "Salegy/Tsapiky (Madagascar)": 0.7 },
+  Mauritius: { "Sega (Mauritius)": 0.7 },
+
+  // ---- Canada ----
+  Canada: {
+    "Chanson Québécoise (Canada)": 0.6,
+    "Canadian Indie (Canada)": 0.5,
+    "Canadian Hip-Hop (Canada)": 0.4,
+    "Celtic des Maritimes (Canada)": 0.4,
+    "Canadian Country (Canada)": 0.4
+  },
+
+  // ---- Oceania ----
+  Australia: {
+    "Aussie Rock (Australia)": 0.6,
+    "Aussie Indie (Australia)": 0.5,
+    "Didgeridoo/Aboriginal Trad (Australia)": 0.5
+  },
+  "New Zealand": {
+    "Kiwi Pop/Indie (New Zealand)": 0.6,
+    "Waiata Māori (New Zealand)": 0.5
+  },
+  "Papua New Guinea": { "Stringband (Melanesia)": 0.6 },
+  Fiji: { "Vude (Fiji)": 0.6, "Pacific Island Reggae (Polynesia/Melanesia)": 0.5 },
+  Samoa: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.6 },
+  Tonga: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.6 },
+  "Solomon Islands": { "Stringband (Melanesia)": 0.6, "Pacific Island Reggae (Polynesia/Melanesia)": 0.4 },
+  Vanuatu: { "Stringband (Melanesia)": 0.6 }
+};
