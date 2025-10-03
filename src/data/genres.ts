@@ -1393,5 +1393,354 @@ export const genres: Item[] = [
   spotify: "https://open.spotify.com/search/yemeni%20music",
   image: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Oud_instrument.jpg"
 },
+// ========= EAST ASIA =========
+{
+  name: "J-Pop (Japan)",
+  descriptionFr: "Pop japonaise moderne, refrains accrocheurs, idols.",
+  descriptionEn: "Modern Japanese pop with catchy hooks and idol culture.",
+  artists: ["Hikaru Utada", "Perfume"],
+  spotify: "https://open.spotify.com/search/j-pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "City Pop (Japan)",
+  descriptionFr: "Pop japonaise 70s–80s, grooves sophistiqués, revival mondial.",
+  descriptionEn: "70s–80s Japanese pop with smooth grooves; global revival.",
+  artists: ["Tatsuro Yamashita", "Mariya Takeuchi"],
+  spotify: "https://open.spotify.com/search/city%20pop%20japan",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Enka (Japan)",
+  descriptionFr: "Ballades traditionnelles japonaises, vibrato expressif.",
+  descriptionEn: "Traditional Japanese ballads with expressive vibrato.",
+  artists: ["Hibari Misora"],
+  spotify: "https://open.spotify.com/search/enka",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "K-Pop (Korea)",
+  descriptionFr: "Pop sud-coréenne, chorégraphies, production léchée.",
+  descriptionEn: "South Korean pop — choreography and polished production.",
+  artists: ["BTS", "BLACKPINK"],
+  spotify: "https://open.spotify.com/search/k-pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "K-Hip-Hop (Korea)",
+  descriptionFr: "Hip-hop coréen, scènes underground et mainstream.",
+  descriptionEn: "Korean hip-hop with both underground and mainstream scenes.",
+  artists: ["Jay Park", "Epik High"],
+  spotify: "https://open.spotify.com/search/k%20hip%20hop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Trot (Korea)",
+  descriptionFr: "Style rétro coréen, signatures rythmiques particulières.",
+  descriptionEn: "Retro Korean style with distinctive rhythmic signatures.",
+  artists: ["Jang Yoon-jeong"],
+  spotify: "https://open.spotify.com/search/korean%20trot",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/80/Microphone_1920s.jpg"
+},
+{
+  name: "Mandopop (China/Taiwan)",
+  descriptionFr: "Pop chinoise (mandarin), ballades à gros refrains.",
+  descriptionEn: "Mandarin pop with big ballads and radio hooks.",
+  artists: ["Jay Chou", "Jolin Tsai"],
+  spotify: "https://open.spotify.com/search/mandopop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Cantopop (Hong Kong)",
+  descriptionFr: "Pop cantonaise iconique, glamour et mélodies.",
+  descriptionEn: "Iconic Cantonese pop with glam and melodies.",
+  artists: ["Leslie Cheung", "Anita Mui"],
+  spotify: "https://open.spotify.com/search/cantopop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Chinese Classical/Guqin (China)",
+  descriptionFr: "Musique classique chinoise, guqin, guzheng, erhu.",
+  descriptionEn: "Chinese classical traditions: guqin, guzheng, erhu.",
+  artists: ["Liu Fang"],
+  spotify: "https://open.spotify.com/search/chinese%20guqin",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Guqin.jpg"
+},
+{
+  name: "Taipei Indie (Taiwan)",
+  descriptionFr: "Indie/folk/électro de Taïwan, scène créative.",
+  descriptionEn: "Taiwan indie/folk/electronic — vibrant creative scene.",
+  artists: ["Elephant Gym", "Sunset Rollercoaster"],
+  spotify: "https://open.spotify.com/search/taiwan%20indie",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Mongolian Throat Singing (Mongolia)",
+  descriptionFr: "Chant diphonique khoomei, timbres de steppe.",
+  descriptionEn: "Khoomei throat singing with steppe timbres.",
+  artists: ["Huun-Huur-Tu", "The HU"],
+  spotify: "https://open.spotify.com/search/mongolian%20throat%20singing",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Steppe_landscape.jpg"
+},
+
+// ========= SOUTH ASIA =========
+{
+  name: "Bollywood (India)",
+  descriptionFr: "Musique de films hindi : orchestration, dance, romance.",
+  descriptionEn: "Hindi film music: orchestration, dance, romance.",
+  artists: ["AR Rahman", "Arijit Singh"],
+  spotify: "https://open.spotify.com/search/bollywood",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/48/Film_reel_icon.png"
+},
+{
+  name: "Hindustani Classical (India)",
+  descriptionFr: "Musique classique du nord de l’Inde (ragas, talas).",
+  descriptionEn: "North Indian classical (ragas, talas).",
+  artists: ["Ravi Shankar", "Zakir Hussain"],
+  spotify: "https://open.spotify.com/search/hindustani%20classical",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/33/Sitar.jpg"
+},
+{
+  name: "Carnatic (India)",
+  descriptionFr: "Musique classique du sud de l’Inde, virtuosité vocale.",
+  descriptionEn: "South Indian classical with vocal virtuosity.",
+  artists: ["M.S. Subbulakshmi"],
+  spotify: "https://open.spotify.com/search/carnatic",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/45/Veena.jpg"
+},
+{
+  name: "Bhangra (Punjab)",
+  descriptionFr: "Danse/beat pendjab, dhol, pop mondiale.",
+  descriptionEn: "Punjabi dance/beat with dhol; global pop.",
+  artists: ["Diljit Dosanjh"],
+  spotify: "https://open.spotify.com/search/bhangra",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Dhol.jpg"
+},
+{
+  name: "Qawwali (Pakistan)",
+  descriptionFr: "Chant soufi extatique, harmonium et percussions.",
+  descriptionEn: "Sufi devotional ecstatic singing with harmonium.",
+  artists: ["Nusrat Fateh Ali Khan"],
+  spotify: "https://open.spotify.com/search/qawwali",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Coke Studio Pop (Pakistan)",
+  descriptionFr: "Fusions pop/folk/classique amplifiées par Coke Studio.",
+  descriptionEn: "Pop/folk/classical fusions popularized by Coke Studio.",
+  artists: ["Strings", "Atif Aslam"],
+  spotify: "https://open.spotify.com/search/pakistan%20coke%20studio",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Baul (Bangladesh)",
+  descriptionFr: "Tradition mystique bengalie, voix et ektara.",
+  descriptionEn: "Mystic Bengali tradition with vocal/ektara.",
+  artists: ["Purna Das Baul"],
+  spotify: "https://open.spotify.com/search/baul%20bangla",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/31/Ektara.jpg"
+},
+{
+  name: "Baila (Sri Lanka)",
+  descriptionFr: "Musique festive sri-lankaise d’influence lusophone.",
+  descriptionEn: "Festive Sri Lankan music with Lusophone influence.",
+  artists: ["W.D. Amaradeva"],
+  spotify: "https://open.spotify.com/search/baila%20sri%20lanka",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Nepali Folk (Nepal)",
+  descriptionFr: "Folk népalais : sarangi, flûte bansuri, voix haut perchées.",
+  descriptionEn: "Nepali folk: sarangi, bansuri flute, high registers.",
+  artists: ["Kutumba"],
+  spotify: "https://open.spotify.com/search/nepali%20folk",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/80/Nepal_mountains.jpg"
+},
+{
+  name: "Dranyen Folk (Bhutan)",
+  descriptionFr: "Folk bhoutanais, luth dranyen, chants rituels.",
+  descriptionEn: "Bhutanese folk with dranyen lute and ritual songs.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/bhutan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/80/Bhutan_landscape.jpg"
+},
+{
+  name: "Boduberu (Maldives)",
+  descriptionFr: "Percussions/chant de groupe des Maldives.",
+  descriptionEn: "Group drumming/singing from the Maldives.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/boduberu%20maldives",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Maldives_beach.jpg"
+},
+
+// ========= SOUTHEAST ASIA =========
+{
+  name: "Gamelan (Indonesia)",
+  descriptionFr: "Ensembles de métallophones/gongs, Java/Bali.",
+  descriptionEn: "Ensembles of metallophones/gongs, Java/Bali.",
+  artists: ["Gamelan Gong Kebyar"],
+  spotify: "https://open.spotify.com/search/gamelan",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Gamelan_instruments_Bali.jpg"
+},
+{
+  name: "Dangdut (Indonesia)",
+  descriptionFr: "Pop dansante indonésienne, tablas/synthés.",
+  descriptionEn: "Dancey Indonesian pop with tablas/synths.",
+  artists: ["Rhoma Irama"],
+  spotify: "https://open.spotify.com/search/dangdut",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Kroncong (Indonesia)",
+  descriptionFr: "Style indo-portugais ancien, ukulélés/luths.",
+  descriptionEn: "Old Indo-Portuguese style with ukuleles/lutes.",
+  artists: ["Waldjinah"],
+  spotify: "https://open.spotify.com/search/kroncong",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Malay Pop (Malaysia)",
+  descriptionFr: "Pop malaisienne contemporaine.",
+  descriptionEn: "Contemporary Malaysian pop.",
+  artists: ["Yuna"],
+  spotify: "https://open.spotify.com/search/malaysian%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Nasyid (Malaysia)",
+  descriptionFr: "Chant religieux/pop spirituel malais.",
+  descriptionEn: "Malay religious/spiritual pop singing.",
+  artists: ["Raihan"],
+  spotify: "https://open.spotify.com/search/nasyid",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "OPM Pop/Rock (Philippines)",
+  descriptionFr: "Original Pinoy Music — pop/rock locale.",
+  descriptionEn: "Original Pinoy Music — local pop/rock.",
+  artists: ["Eraserheads", "Ben&Ben"],
+  spotify: "https://open.spotify.com/search/opm%20philippines",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Kundiman (Philippines)",
+  descriptionFr: "Chanson philippine traditionnelle, ballades romantiques.",
+  descriptionEn: "Traditional Filipino songs; romantic ballads.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/kundiman",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Thai Pop (Thailand)",
+  descriptionFr: "Pop thaï actuelle, mélodique/dansante.",
+  descriptionEn: "Modern Thai pop, melodic and danceable.",
+  artists: ["Tilly Birds"],
+  spotify: "https://open.spotify.com/search/thai%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Luk Thung (Thailand)",
+  descriptionFr: "Country/pop thaï, thématiques rurales.",
+  descriptionEn: "Thai country/pop with rural themes.",
+  artists: ["Pumpuang Duangjan"],
+  spotify: "https://open.spotify.com/search/luk%20thung",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Mor Lam (Isan)",
+  descriptionFr: "Chant/khene de l’Isan (NE Thaïlande/Laos).",
+  descriptionEn: "Isan/Laos vocal & khene traditions.",
+  artists: ["XiaoYen (trad.)"],
+  spotify: "https://open.spotify.com/search/mor%20lam",
+  image: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Khene.jpg"
+},
+{
+  name: "V-Pop (Vietnam)",
+  descriptionFr: "Pop vietnamienne moderne.",
+  descriptionEn: "Modern Vietnamese pop.",
+  artists: ["Sơn Tùng M-TP"],
+  spotify: "https://open.spotify.com/search/v-pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Nhạc Vàng (Vietnam)",
+  descriptionFr: "Ballades vietnamiennes classiques.",
+  descriptionEn: "Classic Vietnamese ballads.",
+  artists: ["Khánh Ly"],
+  spotify: "https://open.spotify.com/search/nhac%20vang",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Khmer Oldies (Cambodia)",
+  descriptionFr: "Pop/rock khmer 60s–70s (golden era).",
+  descriptionEn: "Cambodian 60s–70s pop/rock (golden era).",
+  artists: ["Sinn Sisamouth", "Ros Serey Sothea"],
+  spotify: "https://open.spotify.com/search/khmer%20oldies",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Cambodian Rock (Cambodia)",
+  descriptionFr: "Rock khmer revival inspiré des 60s–70s.",
+  descriptionEn: "Khmer rock revival inspired by the 60s–70s.",
+  artists: ["Dengue Fever"],
+  spotify: "https://open.spotify.com/search/cambodian%20rock",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Lao Lam (Laos)",
+  descriptionFr: "Chant/lao lam, khene, formes traditionnelles.",
+  descriptionEn: "Lao lam singing, khene, traditional forms.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/lao%20lam",
+  image: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Khene.jpg"
+},
+{
+  name: "Burmese Pop (Myanmar)",
+  descriptionFr: "Pop birmane moderne + influences tradi.",
+  descriptionEn: "Modern Burmese pop + traditional influences.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/myanmar%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Hsaing Waing (Myanmar)",
+  descriptionFr: "Ensembles de percussions/gongs traditionnels.",
+  descriptionEn: "Traditional percussion/gong ensembles.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/hsaing%20waing",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Burmese_Music_Ensemble.jpg"
+},
+{
+  name: "Mandopop SG (Singapore)",
+  descriptionFr: "Scène mandopop singapourienne.",
+  descriptionEn: "Singaporean mandopop scene.",
+  artists: ["JJ Lin"],
+  spotify: "https://open.spotify.com/search/mandopop%20singapore",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Singapore_skyline.jpg"
+},
+{
+  name: "Thai-Isan Fusion (Thailand/Laos)",
+  descriptionFr: "Fusion pop de mor lam/luk thung et beats modernes.",
+  descriptionEn: "Pop fusion of mor lam/luk thung with modern beats.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/isan%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Brunei Malay Pop (Brunei)",
+  descriptionFr: "Pop malaise de Brunei, scène locale.",
+  descriptionEn: "Bruneian Malay pop, local scene.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/brunei%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Timor-Leste Tebe-Dai (Timor)",
+  descriptionFr: "Chant/danse communautaire timoraise.",
+  descriptionEn: "Community singing/dance from Timor-Leste.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/tebe%20dai",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Timor_Leste_Hills.jpg"
+    },
 
 
