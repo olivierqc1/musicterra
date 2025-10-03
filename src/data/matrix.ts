@@ -308,4 +308,46 @@ export const cityStyleBoosts: { [country: string]: { [genre: string]: number } }
   Turkey: { "Anatolian Rock/Psych (Turkey)": 0.95, "Arabesk Pop (Turkey)": 0.9, Greece: 0.3, Bulgaria: 0.25 },
   "Anatolian Rock/Psych (Turkey)": { "Krautrock (Germany)": 0.25, Psychedelic: 0.3 /* si tu ajoutes un genre générique Psychedelic */ },
   "Arabesk Pop (Turkey)": { "Laïko (Greece)": 0.25 }
+
+// ===== MOYEN-ORIENT =====
+  Israel:  { "Mizrahi Pop (Israel)": 0.9, "Tarab (Levant/Arab World)": 0.3, Palestine: 0.3, Lebanon: 0.25 },
+  Palestine:{ "Dabke (Levant)": 0.9, "Tarab (Levant/Arab World)": 0.4, Israel: 0.3, Jordan: 0.3, Lebanon: 0.25 },
+  Lebanon: { "Tarab (Levant/Arab World)": 0.9, "Dabke (Levant)": 0.6, Syria: 0.35, Palestine: 0.25 },
+  Syria:   { "Dabke (Levant)": 0.9, "Tarab (Levant/Arab World)": 0.6, Lebanon: 0.35, Jordan: 0.3 },
+  Jordan:  { "Dabke (Levant)": 0.85, "Tarab (Levant/Arab World)": 0.3, Palestine: 0.3, Syria: 0.3 },
+  Iraq:    { "Tarab (Levant/Arab World)": 0.3, "Kurdish Folk": 0.5, Iran: 0.3 },
+  Iran:    { "Persian Traditional (Iran)": 0.95, "Iranian Pop/Rock (Iran)": 0.8, Iraq: 0.3, Armenia: 0.25, Azerbaijan: 0.25 },
+  "Saudi Arabia": { "Khaleeji Pop (Gulf)": 0.9, "Tarab (Levant/Arab World)": 0.2, Kuwait: 0.35, Bahrain: 0.3, Qatar: 0.3, UAE: 0.35, Oman: 0.35, Yemen: 0.35 },
+  "United Arab Emirates": { "Khaleeji Pop (Gulf)": 0.85, Qatar: 0.35, "Saudi Arabia": 0.35, Oman: 0.3 },
+  Qatar:   { "Khaleeji Pop (Gulf)": 0.85, "United Arab Emirates": 0.35, "Saudi Arabia": 0.3, Bahrain: 0.3 },
+  Bahrain: { "Khaleeji Pop (Gulf)": 0.85, "Saudi Arabia": 0.3, Qatar: 0.3, Kuwait: 0.3 },
+  Kuwait:  { "Khaleeji Pop (Gulf)": 0.85, "Saudi Arabia": 0.35, Bahrain: 0.3 },
+  Oman:    { "Khaleeji Pop (Gulf)": 0.8, Yemen: 0.35, "United Arab Emirates": 0.3, "Saudi Arabia": 0.3 },
+  Yemen:   { "Yemeni Hadrami": 0.9, Oman: 0.35, "Saudi Arabia": 0.35 },
+
+  Armenia:    { "Armenian Duduk/Folk": 0.95, Georgia: 0.3, Iran: 0.25 },
+  Azerbaijan: { "Azeri Mugham (Azerbaijan)": 0.95, Iran: 0.25, Georgia: 0.25, Turkey: 0.25 },
+  Georgia:    { "Georgian Polyphony (Georgia)": 0.95, Armenia: 0.3, Azerbaijan: 0.25, Turkey: 0.25 },
+
+  "Mizrahi Pop (Israel)": { "Khaleeji Pop (Gulf)": 0.25, "Tarab (Levant/Arab World)": 0.2 },
+  "Dabke (Levant)": { "Tarab (Levant/Arab World)": 0.3 },
+  "Kurdish Folk": { "Persian Traditional (Iran)": 0.25, Turkey: 0.2 },
+
+  // ===== ASIE CENTRALE =====
+  Kazakhstan:   { "Q-Pop (Kazakhstan)": 0.9, "Kazakh Dombra Folk": 0.8, Uzbekistan: 0.3, Kyrgyzstan: 0.3, Russia: 0.25 },
+  Uzbekistan:   { "Shashmaqam (Uzbekistan/Tajikistan)": 0.95, Kazakhstan: 0.3, Tajikistan: 0.35, Turkmenistan: 0.25 },
+  Kyrgyzstan:   { "Kyrgyz Komuz Folk": 0.95, Kazakhstan: 0.3, Tajikistan: 0.25 },
+  Tajikistan:   { "Shashmaqam (Uzbekistan/Tajikistan)": 0.9, "Tajik Pamiri Folk": 0.8, Uzbekistan: 0.35, Kyrgyzstan: 0.25 },
+  Turkmenistan: { "Turkmen Dutar Folk": 0.95, Uzbekistan: 0.25, Iran: 0.25 },
+  Afghanistan:  { "Afghan Ghazal/Rubab": 0.95, Iran: 0.25, Tajikistan: 0.25, Pakistan: 0.2 /* si tu ajoutes Pakistan plus tard */ },
+
+  // Liens genres ↔ genres (proximité)
+  "Persian Traditional (Iran)": { "Armenian Duduk/Folk": 0.25, "Azeri Mugham (Azerbaijan)": 0.3 },
+  "Azeri Mugham (Azerbaijan)":  { "Persian Traditional (Iran)": 0.3, "Tarab (Levant/Arab World)": 0.2 },
+  "Georgian Polyphony (Georgia)": { "Baltic Choral (Estonia/Latvia/Lithuania)": 0.25 },
+  "Q-Pop (Kazakhstan)": { "Scandi Pop (Sweden)": 0.15 }, // si “Scandi Pop (Sweden)” existe
+  "Shashmaqam (Uzbekistan/Tajikistan)": { "Persian Traditional (Iran)": 0.25 },
+  "Afghan Ghazal/Rubab": { "Persian Traditional (Iran)": 0.3 },
+  "Khaleeji Pop (Gulf)": { "Mizrahi Pop (Israel)": 0.25 },
+  "Yemeni Hadrami": { "Tarab (Levant/Arab World)": 0.2 }
 };
