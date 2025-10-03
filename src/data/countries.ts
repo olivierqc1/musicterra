@@ -263,7 +263,7 @@ export const countries: Item[] = [
     cityStyles: [
       { city: 'Cayenne', noteFr: "Kasékò/aléké.", noteEn: "Kasékò/aléké." }
     ]
-  }
+  },
 ];
 // ——— CARAÏBES ———
   {
