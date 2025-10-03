@@ -70,4 +70,41 @@ French Guiana: { Kasékò: 0.45 },
   Laos: { "Lao Lam (Laos)": 0.6 },
   Myanmar: { "Burmese Pop (Myanmar)": 0.6, "Hsaing Waing (Myanmar)": 0.5 },
   Brunei: { "Brunei Malay Pop (Brunei)": 0.6 },
-  "Timor-Leste": { "Timor-Leste Tebe-Dai (Timor)": 0.6 }
+  Timor-Leste: { "Timor-Leste Tebe-Dai (Timor)": 0.6 }
+// ---- North Africa ----
+Morocco: { "Gnawa (Morocco)": 0.6, "Chaabi (Maghreb)": 0.4 },
+Algeria: { "Raï (Algeria)": 0.7, "Chaabi (Maghreb)": 0.4 },
+Tunisia: { "Malouf/Andalusi (Tunisia)": 0.7, "Chaabi (Maghreb)": 0.3 },
+Libya: { "Malouf/Andalusi (Tunisia)": 0.2 },
+Egypt: { "Mahraganat (Egypt)": 0.7, "Shaabi (Egypt)": 0.5 },
+
+// ---- West Africa ----
+Nigeria: { "Afrobeats (Nigeria/Ghana)": 0.7, "Afrobeat (Nigeria, 70s)": 0.5, "Juju (Nigeria)": 0.5, "Fuji (Nigeria)": 0.5 },
+Ghana: { "Highlife (Ghana)": 0.7, "Hiplife (Ghana)": 0.6, "Afrobeats (Nigeria/Ghana)": 0.5 },
+Senegal: { "Mbalax (Senegal)": 0.7 },
+Mali: { "Desert Blues (Sahel)": 0.6 },
+"Ivory Coast": { "Coupé-Décalé (Côte d’Ivoire)": 0.7, "Zouglou (Côte d’Ivoire)": 0.6 },
+Guinea: {},
+Gambia: {},
+Benin: {},
+Togo: {},
+"Burkina Faso": {},
+Niger: { "Desert Blues (Sahel)": 0.6 },
+"Cape Verde": { "Funaná/Morna (Cape Verde)": 0.7 },
+
+// ---- Central Africa ----
+"DR Congo": { "Rumba Congolaise (DRC/RC)": 0.7, "Soukous/Ndombolo (DRC)": 0.6 },
+"Republic of the Congo": { "Rumba Congolaise (DRC/RC)": 0.6 },
+Cameroon: { "Makossa (Cameroon)": 0.6, "Bikutsi (Cameroon)": 0.6 },
+Gabon: {},
+
+// ---- Southern Africa ----
+"South Africa": { "Amapiano (South Africa)": 0.7, "Gqom (South Africa)": 0.6, "Kwaito (South Africa)": 0.6, "Township Jazz (South Africa)": 0.5, "Maskandi (South Africa)": 0.5 },
+Zimbabwe: {},
+Zambia: {},
+Namibia: {},
+Botswana: {},
+Mozambique: { "Marrabenta (Mozambique)": 0.7 },
+Angola: { "Kuduro (Angola)": 0.7, "Kizomba/Semba (Angola)": 0.6 },
+Madagascar: { "Salegy/Tsapiky (Madagascar)": 0.7 },
+Mauritius: { "Sega (Mauritius)": 0.7 },
