@@ -284,3 +284,102 @@ export const genres: Item[] = [
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DWUjqUjZBdjJ6",
     image: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Koffi_Olomide.jpg"
   },
+// ——— Caraïbes ———
+  {
+    name: 'Salsa',
+    descriptionFr: "Genre phare des Caraïbes, fusion de son cubain et rythmes portoricains.",
+    descriptionEn: "Key Caribbean genre, fusion of Cuban son and Puerto Rican rhythms.",
+    subgenres: ['Salsa dura','Salsa romantica'],
+    subgenresRich: [
+      { name: 'Salsa dura', descriptionFr: "Sous-genre de Salsa. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Salsa. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Salsa romantica', descriptionFr: "Sous-genre de Salsa. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Salsa. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Celia Cruz','Rubén Blades','Marc Anthony'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX7ZUug1ANKRP",
+    image: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Salsa_band.jpg"
+  },
+  {
+    name: 'Merengue',
+    descriptionFr: "Musique/danse rapide de République Dominicaine.",
+    descriptionEn: "Fast-paced music/dance from the Dominican Republic.",
+    subgenres: ['Merengue típico','Merengue urbano'],
+    subgenresRich: [
+      { name: 'Merengue típico', descriptionFr: "Sous-genre de Merengue. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Merengue. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Merengue urbano', descriptionFr: "Sous-genre de Merengue. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Merengue. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Juan Luis Guerra','Wilfrido Vargas'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX9sIqqvKsjG8",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Accordion.jpg"
+  },
+  {
+    name: 'Bachata',
+    descriptionFr: "Romantisme dominicain; guitares et voix passionnées.",
+    descriptionEn: "Dominican romantic genre; guitars and passionate vocals.",
+    subgenres: ['Bachata moderna','Bachata clásica'],
+    subgenresRich: [
+      { name: 'Bachata moderna', descriptionFr: "Sous-genre de Bachata. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Bachata. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Bachata clásica', descriptionFr: "Sous-genre de Bachata. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Bachata. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Aventura','Romeo Santos'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX9jOJuUdxlrO",
+    image: "https://upload.wikimedia.org/wikipedia/commons/4/49/Acoustic_guitar_nylon.jpg"
+  },
+  {
+    name: 'Cumbia',
+    descriptionFr: "Originaire de Colombie, mais répandu dans toute l’Amérique Latine.",
+    descriptionEn: "Originating in Colombia, spread across Latin America.",
+    subgenres: ['Cumbia villera','Cumbia andina','Cumbia sonidera'],
+    subgenresRich: [
+      { name: 'Cumbia villera', descriptionFr: "Sous-genre de Cumbia. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Cumbia. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Cumbia andina', descriptionFr: "Sous-genre de Cumbia. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Cumbia. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Cumbia sonidera', descriptionFr: "Sous-genre de Cumbia. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Cumbia. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Los Ángeles Azules','Totó la Momposina'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWU4xkXueiKGW",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Cumbia_Colombia.jpg"
+  },
+  {
+    name: 'Tango',
+    descriptionFr: "Danse argentine emblématique, passion et nostalgie.",
+    descriptionEn: "Iconic Argentine dance, passion and nostalgia.",
+    subgenres: ['Tango nuevo','Tango tradicional'],
+    subgenresRich: [
+      { name: 'Tango nuevo', descriptionFr: "Sous-genre de Tango. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Tango. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Tango tradicional', descriptionFr: "Sous-genre de Tango. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Tango. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Carlos Gardel','Astor Piazzolla'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX9u7XXOp0l5L",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/52/Street_tango_Buenos_Aires.jpg"
+  },
+  ///// DÉBUT BLOC 6/6 /////
+Vietnamese ballads.",
+  artists: ["Khánh Ly"],
+  spotify: "https://open.spotify.com/search/nhac%20vang",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Khmer Oldies (Cambodia)",
+  descriptionFr: "Pop/rock khmer 60s–70s (golden era).",
+  descriptionEn: "Cambodian 60s–70s pop/rock (golden era).",
+  artists: ["Sinn Sisamouth", "Ros Serey Sothea"],
+  spotify: "https://open.spotify.com/search/khmer%20oldies",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Cambodian Rock (Cambodia)",
+...
+  artists: [],
+  spotify: "https://open.spotify.com/search/stringband%20vanuatu%20solomon",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Vude (Fiji)",
+  descriptionFr: "Pop dansante fidjienne, grooves polynésiens.",
+  descriptionEn: "Fijian dance-pop with Polynesian grooves.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/vude%20fiji",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+
+///// FIN BLOC 6/6 /////
