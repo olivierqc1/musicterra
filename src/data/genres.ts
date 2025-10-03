@@ -1116,6 +1116,134 @@ export const genres: Item[] = [
   artists: ["Anna Vissi"],
   spotify: "https://open.spotify.com/search/cyprus%20pop",
   image: "https://upload.wikimedia.org/wikipedia/commons/1/10/Nicosia_Skyline.jpg"
-}
+},
+// --- BALTICS ---
+{
+  name: "Baltic Choral (Estonia/Latvia/Lithuania)",
+  descriptionFr: "Tradition chorale balte, harmonies riches et solennelles.",
+  descriptionEn: "Baltic choral tradition with rich, solemn harmonies.",
+  subgenres: ["Song Festival Style"],
+  artists: ["Arvo Pärt", "Latvian Radio Choir"],
+  spotify: "https://open.spotify.com/search/baltic%20choir",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8f/Tallinn_Song_Festival_Grounds.jpg"
+},
+{
+  name: "Baltic Indie (Baltics)",
+  descriptionFr: "Indie/électro-pop émergente de Tallinn/Riga/Vilnius.",
+  descriptionEn: "Emerging indie/electro-pop from Tallinn/Riga/Vilnius.",
+  artists: ["Brainstorm", "NOËP", "The Roop"],
+  spotify: "https://open.spotify.com/search/baltic%20indie",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+
+// --- UKRAINE / BELARUS / MOLDOVA ---
+{
+  name: "Ukrainian Folk Fusion",
+  descriptionFr: "Fusion folk/électro/rock (polyrythmie, voix blanches).",
+  descriptionEn: "Folk/electronic/rock fusion (polyrhythms, white voice).",
+  artists: ["DakhaBrakha", "Onuka"],
+  spotify: "https://open.spotify.com/search/ukrainian%20folk%20fusion",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/14/Kyiv_Skyline_2017.jpg"
+},
+{
+  name: "Post-Soviet Pop (Belarus/Moldova)",
+  descriptionFr: "Pop/électro d'Europe de l'Est post-URSS.",
+  descriptionEn: "Post-Soviet Eastern European pop/electronic.",
+  artists: ["Max Korzh", "Carla’s Dreams"],
+  spotify: "https://open.spotify.com/search/eastern%20europe%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- SLOVENIA / CROATIA / BOSNIA & HERZEGOVINA / SERBIA / MONTENEGRO / N. MACEDONIA / ALBANIA / KOSOVO ---
+{
+  name: "Sevdah (Bosnia)",
+  descriptionFr: "Blues balkanique aux mélismes poignants.",
+  descriptionEn: "Balkan blues with poignant melismas.",
+  artists: ["Amira Medunjanin"],
+  spotify: "https://open.spotify.com/search/sevdah",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Klapa (Croatia)",
+  descriptionFr: "Polyphonies a cappella dalmates.",
+  descriptionEn: "Dalmatian a cappella polyphonies.",
+  artists: ["Klapa Cambi"],
+  spotify: "https://open.spotify.com/search/klapa%20croatia",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Turbo-Folk (Serbia/Balkans)",
+  descriptionFr: "Pop-folk balkanique avec beats club.",
+  descriptionEn: "Balkan pop-folk with club beats.",
+  artists: ["Ceca", "Jelena Karleuša"],
+  spotify: "https://open.spotify.com/search/turbo%20folk",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Truba Brass (Serbia)",
+  descriptionFr: "Fanfares balkaniques festives (Guča).",
+  descriptionEn: "Festive Balkan brass bands (Guča).",
+  artists: ["Boban Marković Orkestar"],
+  spotify: "https://open.spotify.com/search/balkan%20brass%20serbia",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Brass_instruments.jpg"
+},
+{
+  name: "Adriatic Pop (Slovenia/Croatia/Montenegro)",
+  descriptionFr: "Pop adriatique ensoleillée et mélodique.",
+  descriptionEn: "Sunny, melodic Adriatic pop.",
+  artists: ["Severina", "Laibach (alt influence)"],
+  spotify: "https://open.spotify.com/search/adriatic%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Macedonian Folk Pop",
+  descriptionFr: "Pop/folk macédonienne, timbres orientalisants.",
+  descriptionEn: "Macedonian pop/folk with Oriental tinges.",
+  artists: ["Toše Proeski"],
+  spotify: "https://open.spotify.com/search/macedonian%20folk%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Albanian Pop/Rap",
+  descriptionFr: "Pop/rap moderne (scène locale + diaspora).",
+  descriptionEn: "Modern pop/rap (local + diaspora).",
+  artists: ["Noizy", "Dua Lipa (diaspora)"],
+  spotify: "https://open.spotify.com/search/albanian%20rap%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Kosovar Pop/Rap",
+  descriptionFr: "Pop/rap kosovar, proche de la scène albanaise.",
+  descriptionEn: "Kosovar pop/rap, close to Albanian scene.",
+  artists: ["Capital T", "Rita Ora (diaspora)"],
+  spotify: "https://open.spotify.com/search/kosovo%20rap%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- MICRO-ÉTATS & TURQUIE ---
+{
+  name: "Mediterranean Chanson (Andorra/Monaco/San Marino)",
+  descriptionFr: "Micro-scènes mêlant pop/chanson méditerranéenne.",
+  descriptionEn: "Micro-scenes blending Mediterranean pop/chanson.",
+  artists: ["Anonymous (Andorra)", "Valentina Monetta (SM)"],
+  spotify: "https://open.spotify.com/search/mediterranean%20chanson",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Anatolian Rock/Psych (Turkey)",
+  descriptionFr: "Rock psyché turc 60s–70s et revival moderne.",
+  descriptionEn: "Turkish psych rock 60s–70s and modern revival.",
+  artists: ["Barış Manço", "Altın Gün", "Selda Bağcan"],
+  spotify: "https://open.spotify.com/search/anatolian%20rock",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/26/Electric_guitar_closeup.jpg"
+},
+{
+  name: "Arabesk Pop (Turkey)",
+  descriptionFr: "Pop turque mélodramatique, maqâms orientaux.",
+  descriptionEn: "Dramatic Turkish pop with Oriental maqams.",
+  artists: ["Orhan Gencebay", "Müslüm Gürses", "Sezen Aksu"],
+  spotify: "https://open.spotify.com/search/arabesk%20turkey",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+    }
 
 
