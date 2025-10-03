@@ -169,7 +169,7 @@ const seed: SimMatrix = {
   Argentina: { Tango: 0.95, "Rock Nacional": 0.9, Folklore: 0.7 },
   Uruguay:   { Candombe: 0.9, Tango: 0.6 },
   Paraguay:  { Guarania: 0.9, PolkaParaguaya: 0.8 },
-  French Guiana: { Zouk: 0.5, Brazil: 0.3 },
+  "French Guiana": { Zouk: 0.5, Brazil: 0.3 },
   Suriname:  { Kaseko: 0.9, Kawina: 0.8, Zouk: 0.3 },
   Guyana:    { Chutney: 0.8, Calypso: 0.5 },
 
