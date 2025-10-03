@@ -93,6 +93,64 @@ Panama: { Tamborito: 0.85, "Típico panameño": 0.8, "Reggaetón (Panamá)": 0.7
 Tamborito: { Panama: 0.85, "Típico panameño": 0.5 },
 "Típico panameño": { Panama: 0.8, Tamborito: 0.5 },
 "Reggaetón (Panamá)": { Panama: 0.7, Reggae: 0.25 },
+// Argentina
+Argentina: { Tango: 0.95, "Rock Nacional (AR)": 0.7, Uruguay: 0.4, Chile: 0.35 },
+Tango: { Argentina: 0.95, "Rock Nacional (AR)": 0.25 },
+"Rock Nacional (AR)": { Argentina: 0.7, Tango: 0.25 },
+
+// Chile
+Chile: { Cueca: 0.9, "Nueva Canción": 0.7, Argentina: 0.35, Peru: 0.35 },
+Cueca: { Chile: 0.9 },
+"Nueva Canción": { Chile: 0.7, Argentina: 0.3 },
+
+// Colombia
+Colombia: { "Cumbia (CO)": 0.9, Vallenato: 0.85, Champeta: 0.7, Venezuela: 0.35, Peru: 0.3 },
+"Cumbia (CO)": { Colombia: 0.9, Vallenato: 0.25, Champeta: 0.2 },
+Vallenato: { Colombia: 0.85, "Cumbia (CO)": 0.25 },
+Champeta: { Colombia: 0.7, "Cumbia (CO)": 0.2 },
+
+// Peru
+Peru: { Huayno: 0.9, "Chicha (PE)": 0.85, Festejo: 0.6, Bolivia: 0.4, Chile: 0.35, Ecuador: 0.3 },
+Huayno: { Peru: 0.9, "Chicha (PE)": 0.3 },
+"Chicha (PE)": { Peru: 0.85, Huayno: 0.3 },
+Festejo: { Peru: 0.6 },
+
+// Bolivia
+Bolivia: { Morenada: 0.85, Caporales: 0.75, Peru: 0.4 },
+Morenada: { Bolivia: 0.85, Caporales: 0.3 },
+Caporales: { Bolivia: 0.75, Morenada: 0.3 },
+
+// Ecuador
+Ecuador: { "Pasillo (EC)": 0.85, "Bomba del Chota": 0.7, Colombia: 0.35, Peru: 0.3 },
+"Pasillo (EC)": { Ecuador: 0.85 },
+"Bomba del Chota": { Ecuador: 0.7 },
+
+// Paraguay
+Paraguay: { Guarania: 0.85, "Polka Paraguaya": 0.8, Argentina: 0.35 },
+Guarania: { Paraguay: 0.85, "Polka Paraguaya": 0.3 },
+"Polka Paraguaya": { Paraguay: 0.8, Guarania: 0.3 },
+
+// Uruguay
+Uruguay: { "Candombe (UY)": 0.9, "Murga (UY)": 0.75, Argentina: 0.4 },
+"Candombe (UY)": { Uruguay: 0.9, "Murga (UY)": 0.25, Tango: 0.25 },
+"Murga (UY)": { Uruguay: 0.75, "Candombe (UY)": 0.25 },
+
+// Venezuela
+Venezuela: { Joropo: 0.9, "Gaita Zuliana": 0.75, Colombia: 0.35 },
+Joropo: { Venezuela: 0.9 },
+"Gaita Zuliana": { Venezuela: 0.75 },
+
+// Guyana
+Guyana: { "Chutney (GY)": 0.85, Suriname: 0.35, Venezuela: 0.3 },
+"Chutney (GY)": { Guyana: 0.85 },
+
+// Suriname
+Suriname: { Kaseko: 0.9, Guyana: 0.35, "French Guiana": 0.3 },
+Kaseko: { Suriname: 0.9 },
+
+// French Guiana
+"French Guiana": { Kasékò: 0.85, Suriname: 0.3 },
+Kasékò: { "French Guiana": 0.85 },
 
 export const similarityMatrix: SimMatrix = makeBidirectional(seed);
 
