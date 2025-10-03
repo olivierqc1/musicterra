@@ -63,6 +63,80 @@ export const countries: Item[] = [
     }
   ]
 },
+  // --- COSTA RICA ---
+{
+  name: 'Costa Rica',
+  descriptionFr: "Calypso limonense sur la côte Caraïbe, folk guanacasteco et scène rock/pop locale.",
+  descriptionEn: "Limonense calypso on the Caribbean coast, Guanacaste folk, and local rock/pop.",
+  regions: ['San José', 'Limón (côte caribéenne)', 'Guanacaste'],
+  artists: ['Walter Ferguson', 'Debi Nova', 'Percance'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbMZAjGMynsQX?si=M_rdM1KoRnuqbm5byld1YQ&pi=W8mSyv-PTICLp",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Sanjose_costarica.jpg",
+  cityStyles: [
+    { city: 'Limón', noteFr: "Berceau du calypso limonense.", noteEn: "Birthplace of Limonense calypso." },
+    { city: 'San José', noteFr: "Rock/indie et pop locale.", noteEn: "Local rock/indie and pop." },
+    { city: 'Guanacaste', noteFr: "Folklore et marimba.", noteEn: "Folk traditions and marimba." }
+  ]
+},
+
+// --- NICARAGUA ---
+{
+  name: 'Nicaragua',
+  descriptionFr: "Palo de Mayo (Maypole) sur la côte Atlantique, et musique traditionnelle nica.",
+  descriptionEn: "Palo de Mayo (Maypole) on the Atlantic coast, plus traditional Nica music.",
+  regions: ['Managua', 'Bluefields (Riviera Atlantique)', 'León'],
+  artists: ['Dimension Costeña', 'Camilo Zapata'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbISk8kxnzfCq?si=9tzqY5L7QAi_nyPrfB8DPA&pi=UjGXM1gdRMqCH",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/23/Bluefields_Nicaragua.jpg",
+  cityStyles: [
+    { city: 'Bluefields', noteFr: "Palo de Mayo/Maypole (danse festive).", noteEn: "Palo de Mayo / Maypole (festive dance)." },
+    { city: 'Managua', noteFr: "Pop/rock nica moderne.", noteEn: "Modern Nica pop/rock." }
+  ]
+},
+
+// --- EL SALVADOR ---
+{
+  name: 'El Salvador',
+  descriptionFr: "Xuc salvadorien et cumbia locale, scènes pop et rock émergentes.",
+  descriptionEn: "Salvadoran Xuc and local cumbia, emerging pop and rock scenes.",
+  regions: ['San Salvador', 'Santa Ana', 'San Miguel'],
+  artists: ['Paquito Palaviccini', 'Marito Rivera'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbLxoIml4MYkT?si=_yRmNtXxTWu-z1IjJRSdiA&pi=hfXJ7GJpRZSwW",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2a/San_Salvador_Panorama.jpg",
+  cityStyles: [
+    { city: 'San Salvador', noteFr: "Xuc moderne et cumbia urbaine.", noteEn: "Modern Xuc and urban cumbia." }
+  ]
+},
+
+// --- HONDURAS ---
+{
+  name: 'Honduras',
+  descriptionFr: "Berceau du Punta garifuna, scène côtière caribéenne et pop locale.",
+  descriptionEn: "Home of Garifuna Punta, Caribbean coastal scene and local pop.",
+  regions: ['Tegucigalpa', 'San Pedro Sula', 'La Ceiba (côte Garifuna)'],
+  artists: ['Banda Blanca', 'Aurelio Martínez', 'Guillermo Anderson'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbJp9wcIM9Eo5?si=iyi9jRWeRv6xjrky5u51PQ&pi=dLH9pC4mRvSzk",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Honduras_Bay_Islands_Caribbean.jpg",
+  cityStyles: [
+    { city: 'La Ceiba', noteFr: "Cœur du Punta/garifuna.", noteEn: "Heart of Punta/Garifuna." },
+    { city: 'Tegucigalpa', noteFr: "Pop/rock local, indie.", noteEn: "Local pop/rock, indie." }
+  ]
+},
+
+// --- PANAMA ---
+{
+  name: 'Panama',
+  descriptionFr: "Tamborito et típico panaméno, racines du reggaetón (scènes urbaines).",
+  descriptionEn: "Tamborito and Panamanian típico, roots of reggaetón (urban scenes).",
+  regions: ['Ciudad de Panamá', 'Colón', 'Azuero'],
+  artists: ['Samy y Sandra Sandoval', 'Rubén Blades'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZEVXbKypXHVwk1f0?si=30wIaqujQnCLrX_tlPN8og",
+  image: "https://upload.wikimedia.org/wikipedia/commons/f/fe/Panama_City_Skyline.jpg",
+  cityStyles: [
+    { city: 'Ciudad de Panamá', noteFr: "Urbain : reggaetón/latin urban.", noteEn: "Urban: reggaetón/latin urban." },
+    { city: 'Azuero', noteFr: "Tamborito et típico panaméno.", noteEn: "Tamborito and típico panameño." }
+  ]
+},
   {
   name: 'Spain',
   descriptionFr: "Flamenco, musiques gitanes, pop/rock et électronica — fortes racines andalouses.",
