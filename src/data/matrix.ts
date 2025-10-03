@@ -71,7 +71,28 @@ Punta:    { Honduras: 0.9, Reggae: 0.25 },
   // (Option) petits liens transverses utiles
   // FusionLatino peut aussi se rapprocher de Rock/Pop selon tes données :
   // FusionLatino: { Guatemala: 0.6, Spain: 0.4, Rock: 0.2 }
-};
+},
+  // --- Costa Rica & genres ---
+Costa Rica: { "Calypso Limonense": 0.9, Reggae: 0.3, Nicaragua: 0.35, Panama: 0.35 },
+"Calypso Limonense": { Costa Rica: 0.9, Reggae: 0.25, "Punta": 0.25 },
+
+// --- Nicaragua & genres ---
+Nicaragua: { "Palo de Mayo": 0.9, Costa Rica: 0.35, Honduras: 0.3, "El Salvador": 0.3, Panama: 0.3 },
+"Palo de Mayo": { Nicaragua: 0.9, "Calypso Limonense": 0.25, "Punta": 0.2 },
+
+// --- El Salvador & genres ---
+"El Salvador": { Xuc: 0.9, Honduras: 0.35, Nicaragua: 0.3, Guatemala: 0.4 },
+Xuc: { "El Salvador": 0.9, Reggae: 0.15 },
+
+// --- Honduras & genres --- (si déjà présent, fusionne/complète)
+Honduras: { Punta: 0.9, Reggae: 0.3, Guatemala: 0.4, Nicaragua: 0.3, "El Salvador": 0.3 },
+Punta: { Honduras: 0.9, Reggae: 0.25, "Calypso Limonense": 0.25, "Palo de Mayo": 0.2 },
+
+// --- Panama & genres ---
+Panama: { Tamborito: 0.85, "Típico panameño": 0.8, "Reggaetón (Panamá)": 0.7, Costa Rica: 0.35, Nicaragua: 0.3 },
+Tamborito: { Panama: 0.85, "Típico panameño": 0.5 },
+"Típico panameño": { Panama: 0.8, Tamborito: 0.5 },
+"Reggaetón (Panamá)": { Panama: 0.7, Reggae: 0.25 },
 
 export const similarityMatrix: SimMatrix = makeBidirectional(seed);
 
