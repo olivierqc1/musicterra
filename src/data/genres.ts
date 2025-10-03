@@ -2005,5 +2005,119 @@ export const genres: Item[] = [
   spotify: "https://open.spotify.com/search/funana%20morna",
   image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
 },
+// ===== CANADA =====
+{
+  name: "Chanson Québécoise (Canada)",
+  descriptionFr: "Chanson/folk francophone du Québec, textes forts.",
+  descriptionEn: "Francophone Quebec chanson/folk with strong lyrics.",
+  artists: ["Félix Leclerc", "Gilles Vigneault"],
+  spotify: "https://open.spotify.com/search/chanson%20qu%C3%A9b%C3%A9coise",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Canadian Indie (Canada)",
+  descriptionFr: "Indie/alt canadien (Montréal/Toronto/Vancouver).",
+  descriptionEn: "Canadian indie/alt (Montreal/Toronto/Vancouver scenes).",
+  artists: ["Arcade Fire", "Broken Social Scene"],
+  spotify: "https://open.spotify.com/search/canadian%20indie",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Canadian Hip-Hop (Canada)",
+  descriptionFr: "Hip-hop canadien (Toronto/Montréal), R&B fusion.",
+  descriptionEn: "Canadian hip-hop (Toronto/Montreal), R&B fusion.",
+  artists: ["Drake", "TOBi"],
+  spotify: "https://open.spotify.com/search/canadian%20hip%20hop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Canadian Country (Canada)",
+  descriptionFr: "Country canadien (Prairies/Maritimes).",
+  descriptionEn: "Canadian country (Prairies/Maritimes).",
+  artists: ["Shania Twain"],
+  spotify: "https://open.spotify.com/search/canadian%20country",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Inuit Throat Singing (Canada)",
+  descriptionFr: "Chant diphonique inuit (katajjaq), joutes vocales.",
+  descriptionEn: "Inuit throat singing (katajjaq), vocal games/duets.",
+  artists: ["Tanya Tagaq"],
+  spotify: "https://open.spotify.com/search/inuit%20throat%20singing",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Arctic_ice.jpg"
+},
+{
+  name: "Celtic des Maritimes (Canada)",
+  descriptionFr: "Fiddle/celtique des provinces atlantiques.",
+  descriptionEn: "Maritime Celtic/fiddle traditions.",
+  artists: ["Natalie MacMaster"],
+  spotify: "https://open.spotify.com/search/maritime%20celtic%20fiddle",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Violin_VL100.png"
+},
 
+// ===== OCÉANIE =====
+{
+  name: "Aussie Rock (Australia)",
+  descriptionFr: "Rock australien (pub rock/alt), gros refrains.",
+  descriptionEn: "Australian rock (pub/alt), big choruses.",
+  artists: ["AC/DC", "INXS"],
+  spotify: "https://open.spotify.com/search/australian%20rock",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Aussie Indie (Australia)",
+  descriptionFr: "Indie/psych australien moderne.",
+  descriptionEn: "Modern Australian indie/psych.",
+  artists: ["Tame Impala", "Courtney Barnett"],
+  spotify: "https://open.spotify.com/search/australian%20indie",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Didgeridoo/Aboriginal Trad (Australia)",
+  descriptionFr: "Traditions aborigènes, didgeridoo, chants cérémoniels.",
+  descriptionEn: "Aboriginal traditions, didgeridoo, ceremonial songs.",
+  artists: ["William Barton"],
+  spotify: "https://open.spotify.com/search/didgeridoo",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Didgeridoo_aboriginal.jpg"
+},
+{
+  name: "Kiwi Pop/Indie (New Zealand)",
+  descriptionFr: "Pop/indie néo-zélandaise (Aotearoa).",
+  descriptionEn: "New Zealand pop/indie (Aotearoa).",
+  artists: ["Lorde", "The Beths"],
+  spotify: "https://open.spotify.com/search/new%20zealand%20indie",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Microphone_Sound.jpg"
+},
+{
+  name: "Waiata Māori (New Zealand)",
+  descriptionFr: "Chants/poésie māori (waiata), haka non musical à part.",
+  descriptionEn: "Māori song/poetry (waiata); haka is separate performative art.",
+  artists: ["Maisey Rika"],
+  spotify: "https://open.spotify.com/search/maori%20waiata",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Pacific Island Reggae (Polynesia/Melanesia)",
+  descriptionFr: "Reggae insulaire (Fidji, Samoa, Tonga, Salomon, Vanuatu).",
+  descriptionEn: "Island reggae across Fiji, Samoa, Tonga, Solomons, Vanuatu.",
+  artists: ["J Boog", "Fiji"],
+  spotify: "https://open.spotify.com/search/island%20reggae%20pacific",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/30/Reggae_guitar.jpg"
+},
+{
+  name: "Stringband (Melanesia)",
+  descriptionFr: "Guitares/chœurs traditionnels (PNG, Vanuatu, Salomon).",
+  descriptionEn: "Traditional guitars/choral stringband (PNG, Vanuatu, Solomons).",
+  artists: [],
+  spotify: "https://open.spotify.com/search/stringband%20vanuatu%20solomon",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Vude (Fiji)",
+  descriptionFr: "Pop dansante fidjienne, grooves polynésiens.",
+  descriptionEn: "Fijian dance-pop with Polynesian grooves.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/vude%20fiji",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
 
