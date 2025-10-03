@@ -166,6 +166,82 @@ export const genres: Item[] = [
     }
   ]
 }
+  // --- Limonense Calypso (Costa Rica) ---
+{
+  name: 'Calypso Limonense',
+  descriptionFr: "Calypso afro-caribéen de Limón (Costa Rica), narratif et festif.",
+  descriptionEn: "Afro-Caribbean calypso from Limón (Costa Rica), narrative and festive.",
+  subgenres: [],
+  artists: ['Walter Ferguson'],
+  spotify: "https://open.spotify.com/playlist/27X0TfNiQuoOFFT3XjARWH?si=rjI-PYmgT5yTKkAFfZ3puA&pi=YoWfftKoThiOI",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/33/Limon_Costa_Rica.jpg"
+},
+
+// --- Palo de Mayo / Maypole (Nicaragua) ---
+{
+  name: 'Palo de Mayo',
+  descriptionFr: "Danse/musique festive de la côte Atlantique nicaraguayenne (Maypole).",
+  descriptionEn: "Festive dance/music from Nicaragua’s Atlantic coast (Maypole).",
+  subgenres: [],
+  artists: ['Dimension Costeña'],
+  spotify: "https://open.spotify.com/playlist/6Z1thlZ037D6CswrkkiMtI?si=LnpWeVvBRFOgud-Z0bNeQQ&pi=kdv1nuWLTe2Qp",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Bluefields_Maypole.jpg"
+},
+
+// --- Xuc (El Salvador) ---
+{
+  name: 'Xuc',
+  descriptionFr: "Genre salvadorien entraînant, proche de la cumbia, né pour la danse.",
+  descriptionEn: "Lively Salvadoran genre, cumbia-adjacent and dance-focused.",
+  subgenres: [],
+  artists: ['Paquito Palaviccini'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1E8PbiHCbKHdCN?si=kdrFrX0GSU6PF9u3JBTymg&pi=XYD8CDcbTQWXw",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/San_Salvador_Dance.jpg"
+},
+
+// --- Punta (Honduras / Garifuna) ---
+{
+  name: 'Punta',
+  descriptionFr: "Rythme afro-caribéen garifuna d’Amérique centrale, dansé et festif.",
+  descriptionEn: "Afro-Caribbean Garifuna rhythm from Central America, dance-oriented and festive.",
+  subgenres: ['Punta Rock', 'Paranda'],
+  artists: ['Banda Blanca', 'Aurelio Martínez'],
+  spotify: "https://open.spotify.com/playlist/3yhOjgQDnOKcw4ICzwFaPC?si=YilmXQ84QuG1zrQjC27nLA&pi=2Z86grXPQvmGp",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Garifuna_dancers_Belize.jpg"
+},
+
+// --- Tamborito (Panama) ---
+{
+  name: 'Tamborito',
+  descriptionFr: "Danse/chant traditionnel panaméen, percussions et chœurs.",
+  descriptionEn: "Traditional Panamanian dance/song with percussion and choral response.",
+  subgenres: [],
+  artists: ['Samy y Sandra Sandoval'],
+  spotify: "https://open.spotify.com/playlist/3e9lGa5hjYaoXjn4XZxSOH?si=EL5c5ScxQpGQn_zzZ4X1QQ",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Tamborito_Panama.jpg"
+},
+
+// --- Típico Panameño ---
+{
+  name: 'Típico panameño',
+  descriptionFr: "Musique folklorique dansée (accordéon, percussions), très populaire au Panama.",
+  descriptionEn: "Popular Panamanian folk dance music (accordion, percussion).",
+  subgenres: [],
+  artists: ['Samy y Sandra Sandoval'],
+  spotify: "https://open.spotify.com/playlist/3bGfr6tkKWZtS6YoE7MZUu?si=SKAHDuFYSgelh4OrWoIW-w",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1c/Panama_Tipico.jpg"
+},
+
+// --- Reggaetón (Panamá) ---
+{
+  name: 'Reggaetón (Panamá)',
+  descriptionFr: "Scène urbaine panaméenne, parmi les racines historiques du reggaetón.",
+  descriptionEn: "Panamanian urban scene, among the historical roots of reggaetón.",
+  subgenres: [],
+  artists: ['El General'],
+  spotify: "https://open.spotify.com/playlist/5dSNRnhAMz7Uw3io5UUEQ2?si=_rrRrOkySIWiDhTa4oV7AA",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5d/Panama_City_urban.jpg"
+},
 ];
 
 
