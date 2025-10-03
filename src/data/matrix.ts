@@ -350,4 +350,91 @@ export const cityStyleBoosts: { [country: string]: { [genre: string]: number } }
   "Afghan Ghazal/Rubab": { "Persian Traditional (Iran)": 0.3 },
   "Khaleeji Pop (Gulf)": { "Mizrahi Pop (Israel)": 0.25 },
   "Yemeni Hadrami": { "Tarab (Levant/Arab World)": 0.2 }
+// ===== EAST ASIA =====
+  Japan: { "J-Pop (Japan)": 0.9, "City Pop (Japan)": 0.85, "Enka (Japan)": 0.8 },
+  "J-Pop (Japan)": { "City Pop (Japan)": 0.4 },
+  "City Pop (Japan)": { "J-Pop (Japan)": 0.4 },
+  "Enka (Japan)": {},
+
+  "South Korea": { "K-Pop (Korea)": 0.95, "K-Hip-Hop (Korea)": 0.8, "Trot (Korea)": 0.7 },
+  "K-Pop (Korea)": { "K-Hip-Hop (Korea)": 0.35 },
+  "K-Hip-Hop (Korea)": {},
+  "Trot (Korea)": {},
+
+  China: { "Mandopop (China/Taiwan)": 0.9, "Chinese Classical/Guqin (China)": 0.8, HongKong: 0.3, Taiwan: 0.35 },
+  HongKong: { "Cantopop (Hong Kong)": 0.95, China: 0.3, Macau: 0.2 /* si tu ajoutes plus tard */ },
+  Taiwan: { "Mandopop (China/Taiwan)": 0.9, "Taipei Indie (Taiwan)": 0.7, China: 0.35 },
+  "Mandopop (China/Taiwan)": { "Cantopop (Hong Kong)": 0.25, "J-Pop (Japan)": 0.2 },
+  "Cantopop (Hong Kong)": { "Mandopop (China/Taiwan)": 0.25 },
+
+  Mongolia: { "Mongolian Throat Singing (Mongolia)": 0.95 },
+
+  // ===== SOUTH ASIA =====
+  India: { "Bollywood (India)": 0.9, "Hindustani Classical (India)": 0.85, "Carnatic (India)": 0.85, "Bhangra (Punjab)": 0.7 },
+  "Bollywood (India)": { "Bhangra (Punjab)": 0.3 },
+  "Hindustani Classical (India)": { "Qawwali (Pakistan)": 0.25 },
+  "Carnatic (India)": {},
+  "Bhangra (Punjab)": { "Bollywood (India)": 0.3 },
+
+  Pakistan: { "Qawwali (Pakistan)": 0.95, "Coke Studio Pop (Pakistan)": 0.85, India: 0.3 },
+  "Qawwali (Pakistan)": { "Hindustani Classical (India)": 0.25 },
+  "Coke Studio Pop (Pakistan)": { "Qawwali (Pakistan)": 0.25 },
+
+  Bangladesh: { "Baul (Bangladesh)": 0.9, India: 0.25 },
+  "Baul (Bangladesh)": {},
+
+  "Sri Lanka": { "Baila (Sri Lanka)": 0.9, India: 0.25 },
+  "Baila (Sri Lanka)": {},
+
+  Nepal: { "Nepali Folk (Nepal)": 0.9, India: 0.25 },
+  "Nepali Folk (Nepal)": {},
+
+  Bhutan: { "Dranyen Folk (Bhutan)": 0.9, Nepal: 0.25 },
+  "Dranyen Folk (Bhutan)": {},
+
+  Maldives: { "Boduberu (Maldives)": 0.9 },
+  "Boduberu (Maldives)": {},
+
+  // ===== SOUTHEAST ASIA =====
+  Indonesia: { "Gamelan (Indonesia)": 0.95, "Dangdut (Indonesia)": 0.85, "Kroncong (Indonesia)": 0.8 },
+  "Gamelan (Indonesia)": {},
+  "Dangdut (Indonesia)": { "Kroncong (Indonesia)": 0.25 },
+  "Kroncong (Indonesia)": {},
+
+  Malaysia: { "Malay Pop (Malaysia)": 0.9, "Nasyid (Malaysia)": 0.8 },
+  "Malay Pop (Malaysia)": {},
+  "Nasyid (Malaysia)": {},
+
+  Singapore: { "Mandopop SG (Singapore)": 0.9, "Malay Pop (Malaysia)": 0.3 },
+  "Mandopop SG (Singapore)": { "Mandopop (China/Taiwan)": 0.25 },
+
+  Philippines: { "OPM Pop/Rock (Philippines)": 0.9, "Kundiman (Philippines)": 0.8 },
+  "OPM Pop/Rock (Philippines)": {},
+  "Kundiman (Philippines)": {},
+
+  Thailand: { "Thai Pop (Thailand)": 0.9, "Luk Thung (Thailand)": 0.85, "Mor Lam (Isan)": 0.85 },
+  "Thai Pop (Thailand)": { "Thai-Isan Fusion (Thailand/Laos)": 0.25 },
+  "Luk Thung (Thailand)": { "Mor Lam (Isan)": 0.35 },
+  "Mor Lam (Isan)": { "Lao Lam (Laos)": 0.35 },
+
+  Vietnam: { "V-Pop (Vietnam)": 0.9, "Nhạc Vàng (Vietnam)": 0.85 },
+  "V-Pop (Vietnam)": {},
+  "Nhạc Vàng (Vietnam)": {},
+
+  Cambodia: { "Khmer Oldies (Cambodia)": 0.9, "Cambodian Rock (Cambodia)": 0.85 },
+  "Khmer Oldies (Cambodia)": { "Cambodian Rock (Cambodia)": 0.35 },
+  "Cambodian Rock (Cambodia)": {},
+
+  Laos: { "Lao Lam (Laos)": 0.9, Thailand: 0.3 },
+  "Lao Lam (Laos)": { "Mor Lam (Isan)": 0.35 },
+
+  Myanmar: { "Burmese Pop (Myanmar)": 0.85, "Hsaing Waing (Myanmar)": 0.85 },
+  "Burmese Pop (Myanmar)": {},
+  "Hsaing Waing (Myanmar)": {},
+
+  Brunei: { "Brunei Malay Pop (Brunei)": 0.9, Malaysia: 0.3 },
+  "Brunei Malay Pop (Brunei)": {},
+
+  "Timor-Leste": { "Timor-Leste Tebe-Dai (Timor)": 0.9, Indonesia: 0.25 },
+  "Timor-Leste Tebe-Dai (Timor)": {},
 };
