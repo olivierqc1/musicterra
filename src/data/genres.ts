@@ -1742,5 +1742,268 @@ export const genres: Item[] = [
   spotify: "https://open.spotify.com/search/tebe%20dai",
   image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Timor_Leste_Hills.jpg"
     },
+// ========== AFRIQUE DU NORD ==========
+{
+  name: "Raï (Algeria)",
+  descriptionFr: "Genre algérien né à Oran, chants populaires et rythmes dansants.",
+  descriptionEn: "Algerian genre from Oran, popular singing and danceable grooves.",
+  artists: ["Cheb Khaled", "Cheb Mami"],
+  spotify: "https://open.spotify.com/search/rai%20algeria",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Chaabi (Maghreb)",
+  descriptionFr: "Style populaire urbain du Maghreb (Alger/ Casablanca).",
+  descriptionEn: "Urban popular style of the Maghreb (Algiers/Casablanca).",
+  artists: ["Dahmane El Harrachi"],
+  spotify: "https://open.spotify.com/search/chaabi%20maghreb",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Gnawa (Morocco)",
+  descriptionFr: "Transe marocaine (guembri, qraqeb), héritage subsaharien.",
+  descriptionEn: "Moroccan trance (guembri, qraqeb) with Sub-Saharan roots.",
+  artists: ["Maâlem Mahmoud Guinia"],
+  spotify: "https://open.spotify.com/search/gnawa",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/83/Gnawa_musicians.jpg"
+},
+{
+  name: "Malouf/Andalusi (Tunisia)",
+  descriptionFr: "Musique andalouse savante, luth/violon, modes arabo-andalous.",
+  descriptionEn: "Andalusian classical tradition with Arab-Andalusian modes.",
+  artists: ["Rachidia Ensemble"],
+  spotify: "https://open.spotify.com/search/malouf%20andalusi",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Oud_instrument.jpg"
+},
+{
+  name: "Mahraganat (Egypt)",
+  descriptionFr: "Électro de rue du Caire, autotune, beats trap/shaabi.",
+  descriptionEn: "Cairo street electro with autotune and trap/shaabi beats.",
+  artists: ["Oka Wi Ortega", "Hamo Bika"],
+  spotify: "https://open.spotify.com/search/mahraganat",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Shaabi (Egypt)",
+  descriptionFr: "Pop populaire égyptienne, claviers et percussions.",
+  descriptionEn: "Egyptian popular music with keyboards and percussion.",
+  artists: ["Ahmed Adaweyah"],
+  spotify: "https://open.spotify.com/search/shaabi%20egypt",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+
+// ========== AFRIQUE DE L’OUEST ==========
+{
+  name: "Afrobeat (Nigeria, 70s)",
+  descriptionFr: "Fusions funk/jazz de Fela Kuti, cuivres et grooves étendus.",
+  descriptionEn: "Fela Kuti’s funk/jazz fusions with long horn-driven grooves.",
+  artists: ["Fela Kuti"],
+  spotify: "https://open.spotify.com/search/afrobeat%20fela",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Afrobeats (Nigeria/Ghana)",
+  descriptionFr: "Pop ouest-africaine moderne (Afro-pop/hip-hop/dancehall).",
+  descriptionEn: "Modern West African pop (Afro-pop/hip-hop/dancehall).",
+  artists: ["Wizkid", "Burna Boy", "Davido"],
+  spotify: "https://open.spotify.com/search/afrobeats",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Highlife (Ghana)",
+  descriptionFr: "Guitares polyrythmiques, cuivres, ambiance dansante.",
+  descriptionEn: "Polyrhythmic guitars, horns, danceable feel.",
+  artists: ["E.T. Mensah"],
+  spotify: "https://open.spotify.com/search/highlife%20ghana",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Hiplife (Ghana)",
+  descriptionFr: "Rap ghanéen sur instrumentaux highlife/afro-pop.",
+  descriptionEn: "Ghanaian rap over highlife/afro-pop instrumentals.",
+  artists: ["Reggie Rockstone"],
+  spotify: "https://open.spotify.com/search/hiplife",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Juju (Nigeria)",
+  descriptionFr: "Musique yoruba à guitares et percussions parlantes.",
+  descriptionEn: "Yoruba guitar music with talking drums.",
+  artists: ["King Sunny Adé"],
+  spotify: "https://open.spotify.com/search/juju%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Dhol.jpg"
+},
+{
+  name: "Fuji (Nigeria)",
+  descriptionFr: "Chant yoruba et percussions, héritage were/ajisari.",
+  descriptionEn: "Yoruba vocal percussion style with were/ajisari roots.",
+  artists: ["Wasiu Ayinde Marshall"],
+  spotify: "https://open.spotify.com/search/fuji%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Mbalax (Senegal)",
+  descriptionFr: "Style de Dakar (sabar), voix puissantes et guitares.",
+  descriptionEn: "Dakar style (sabar drums), powerful vocals and guitars.",
+  artists: ["Youssou N’Dour"],
+  spotify: "https://open.spotify.com/search/mbalax",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2c/African_drums.jpg"
+},
+{
+  name: "Desert Blues (Sahel)",
+  descriptionFr: "Guitares touareg/sahel, transe et modalité.",
+  descriptionEn: "Tuareg/Sahel guitars with trancey modal sound.",
+  artists: ["Tinariwen", "Ali Farka Touré"],
+  spotify: "https://open.spotify.com/search/desert%20blues",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Sahara_desert.jpg"
+},
+{
+  name: "Coupé-Décalé (Côte d’Ivoire)",
+  descriptionFr: "Club ivoirien, percussions numériques et slogans.",
+  descriptionEn: "Ivorian club style with digital percussion and chants.",
+  artists: ["DJ Arafat"],
+  spotify: "https://open.spotify.com/search/coupe%20decale",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Zouglou (Côte d’Ivoire)",
+  descriptionFr: "Chant choral urbain et rythmes entraînants.",
+  descriptionEn: "Urban choral singing with driving rhythms.",
+  artists: ["Magic System"],
+  spotify: "https://open.spotify.com/search/zouglou",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Afro-Cuban/Marabenta (Cape Verde/Mozambique)",
+  descriptionFr: "Mélanges afro-atlantiques (classer selon pays).",
+  descriptionEn: "Afro-Atlantic blends (categorize per country).",
+  artists: [],
+  spotify: "https://open.spotify.com/search/afro%20atlantic%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+
+// ========== AFRIQUE CENTRALE ==========
+{
+  name: "Rumba Congolaise (DRC/RC)",
+  descriptionFr: "Rumba/soukous d’Afrique centrale, guitares liquides.",
+  descriptionEn: "Central African rumba/soukous with liquid guitars.",
+  artists: ["Franco", "Tabu Ley Rochereau"],
+  spotify: "https://open.spotify.com/search/rumba%20congolaise",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Soukous/Ndombolo (DRC)",
+  descriptionFr: "Tempo rapide, guitares étincelantes, danse ndombolo.",
+  descriptionEn: "Fast tempos, sparkling guitars, ndombolo dance.",
+  artists: ["Koffi Olomidé", "Fally Ipupa"],
+  spotify: "https://open.spotify.com/search/soukous%20ndombolo",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Makossa (Cameroon)",
+  descriptionFr: "Style de Douala, lignes de basse marquantes.",
+  descriptionEn: "Douala style with notable bass lines.",
+  artists: ["Manu Dibango"],
+  spotify: "https://open.spotify.com/search/makossa",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2c/African_drums.jpg"
+},
+{
+  name: "Bikutsi (Cameroon)",
+  descriptionFr: "Rythmes 6/8, danse et guitare percussive.",
+  descriptionEn: "6/8 rhythms with percussive guitars and dance focus.",
+  artists: ["Les Têtes Brûlées"],
+  spotify: "https://open.spotify.com/search/bikutsi",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+
+// ========== AFRIQUE AUSTRALE ==========
+{
+  name: "Kwaito (South Africa)",
+  descriptionFr: "House lent + rap/chant township (90s).",
+  descriptionEn: "Slowed house with township rap/sing (90s).",
+  artists: ["Mandoza"],
+  spotify: "https://open.spotify.com/search/kwaito",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Amapiano (South Africa)",
+  descriptionFr: "Deep-house sud-africain : log-drums, pianos, grooves.",
+  descriptionEn: "South African deep-house with log-drums and pianos.",
+  artists: ["Kabza De Small", "DJ Maphorisa"],
+  spotify: "https://open.spotify.com/search/amapiano",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Gqom (South Africa)",
+  descriptionFr: "House minimaliste et sombre de Durban.",
+  descriptionEn: "Minimal, dark Durban house sound.",
+  artists: ["DJ Lag"],
+  spotify: "https://open.spotify.com/search/gqom",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Township Jazz (South Africa)",
+  descriptionFr: "Jazz sud-africain, marabi/kwela, héritage anti-apartheid.",
+  descriptionEn: "SA jazz with marabi/kwela roots, anti-apartheid heritage.",
+  artists: ["Hugh Masekela", "Abdullah Ibrahim"],
+  spotify: "https://open.spotify.com/search/south%20african%20jazz",
+  image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Jazz_band.jpg"
+},
+{
+  name: "Maskandi (South Africa)",
+  descriptionFr: "Musique zouloue à guitare picking et chant narratif.",
+  descriptionEn: "Zulu guitar picking music with narrative vocals.",
+  artists: ["Phuzekhemisi"],
+  spotify: "https://open.spotify.com/search/maskandi",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Marrabenta (Mozambique)",
+  descriptionFr: "Pop urbaine de Maputo, guitares et rythmes rapides.",
+  descriptionEn: "Maputo urban pop with quick guitar rhythms.",
+  artists: ["Fany Pfumo"],
+  spotify: "https://open.spotify.com/search/marrabenta",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Kuduro (Angola)",
+  descriptionFr: "Électro frénétique d’Angola, danse et samples.",
+  descriptionEn: "Angolan frenetic electro with dance/samples.",
+  artists: ["Buraka Som Sistema"],
+  spotify: "https://open.spotify.com/search/kuduro",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Kizomba/Semba (Angola)",
+  descriptionFr: "Danse/romance, tempo lent (kizomba) et racines semba.",
+  descriptionEn: "Romantic dance (kizomba) with semba roots.",
+  artists: ["Bonga"],
+  spotify: "https://open.spotify.com/search/kizomba%20semba",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
+{
+  name: "Sega (Mauritius)",
+  descriptionFr: "Musique/danse créoles de l’île Maurice.",
+  descriptionEn: "Creole music/dance from Mauritius.",
+  artists: ["Ti Frère"],
+  spotify: "https://open.spotify.com/search/sega%20mauritius",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Salegy/Tsapiky (Madagascar)",
+  descriptionFr: "Styles malgaches à guitares rapides et polyrythmies.",
+  descriptionEn: "Malagasy fast-guitar styles with polyrhythms.",
+  artists: ["Jaojoby", "D’Gary"],
+  spotify: "https://open.spotify.com/search/salegy%20tsapiky",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg"
+},
+{
+  name: "Funaná/Morna (Cape Verde)",
+  descriptionFr: "Styles cap-verdiens : funaná dansant, morna mélancolique.",
+  descriptionEn: "Cape Verdean styles: dancey funaná, melancholic morna.",
+  artists: ["Cesária Évora"],
+  spotify: "https://open.spotify.com/search/funana%20morna",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Vinyl_record.png"
+},
 
 
