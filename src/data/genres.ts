@@ -1245,5 +1245,153 @@ export const genres: Item[] = [
   spotify: "https://open.spotify.com/search/arabesk%20turkey",
   image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
     }
+// ======== MOYEN-ORIENT ========
+{
+  name: "Tarab (Levant/Arab World)",
+  descriptionFr: "Esthétique vocale arabe (maqâm, longue improvisation, émotions intenses).",
+  descriptionEn: "Classical Arabic vocal art (maqam, long improvisations, emotional depth).",
+  subgenres: ["Muwashah", "Mawwal"],
+  artists: ["Umm Kulthum", "Fairuz"],
+  spotify: "https://open.spotify.com/search/tarab%20arabic",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Dabke (Levant)",
+  descriptionFr: "Danse/rythme levantins (Syrie, Liban, Palestine, Jordanie) au beat entraînant.",
+  descriptionEn: "Levantine dance/beat (Syria, Lebanon, Palestine, Jordan) with driving rhythm.",
+  artists: ["Omar Souleyman", "Le Trio Joubran"],
+  spotify: "https://open.spotify.com/search/dabke",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Traditional_Middle_Eastern_dance.jpg"
+},
+{
+  name: "Mizrahi Pop (Israel)",
+  descriptionFr: "Pop israélienne aux influences moyen-orientales/mediterranéennes.",
+  descriptionEn: "Israeli pop with Middle Eastern/Mediterranean influences.",
+  artists: ["Eyal Golan", "Sarit Hadad"],
+  spotify: "https://open.spotify.com/search/mizrahi%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Khaleeji Pop (Gulf)",
+  descriptionFr: "Pop du Golfe (Arabie Saoudite, Koweït, Bahreïn, Qatar, EAU, Oman).",
+  descriptionEn: "Gulf pop (Saudi, Kuwait, Bahrain, Qatar, UAE, Oman).",
+  artists: ["Rashed Al-Majed", "Ahlam"],
+  spotify: "https://open.spotify.com/search/khaleeji%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Persian Traditional (Iran)",
+  descriptionFr: "Musique savante persane (dastgâh, târ, setâr, santoor).",
+  descriptionEn: "Classical Persian music (dastgah, tar, setar, santoor).",
+  artists: ["Mohammad-Reza Shajarian", "Kayhan Kalhor"],
+  spotify: "https://open.spotify.com/search/persian%20traditional",
+  image: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Tar_%28Persian_instrument%29.jpg"
+},
+{
+  name: "Iranian Pop/Rock (Iran)",
+  descriptionFr: "Pop/rock iranien moderne, souvent mélodique et introspectif.",
+  descriptionEn: "Modern Iranian pop/rock, often melodic and introspective.",
+  artists: ["Googoosh", "Kiosk"],
+  spotify: "https://open.spotify.com/search/iranian%20rock%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Kurdish Folk",
+  descriptionFr: "Traditions kurdes (dengbêj, tembûr), transfrontalières.",
+  descriptionEn: "Kurdish traditions (dengbej, tembur), cross-border.",
+  artists: ["Şivan Perwer", "Aynur Doğan"],
+  spotify: "https://open.spotify.com/search/kurdish%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Armenian Duduk/Folk",
+  descriptionFr: "Folk arménien, timbre du duduk, mélancolie et modalité.",
+  descriptionEn: "Armenian folk with duduk’s timbre, modal/melancholic.",
+  artists: ["Jivan Gasparyan", "Sayat-Nova"],
+  spotify: "https://open.spotify.com/search/armenian%20duduk",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Duduk.jpg"
+},
+{
+  name: "Azeri Mugham (Azerbaijan)",
+  descriptionFr: "Art modal/improvisé azerbaïdjanais (mugham).",
+  descriptionEn: "Azerbaijani modal/improvised art (mugham).",
+  artists: ["Alim Qasimov"],
+  spotify: "https://open.spotify.com/search/azerbaijan%20mugham",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Tar_azeri.jpg"
+},
+{
+  name: "Georgian Polyphony (Georgia)",
+  descriptionFr: "Polyphonies géorgiennes, timbres puissants et modes anciens.",
+  descriptionEn: "Georgian polyphony with powerful timbres and ancient modes.",
+  artists: ["Rustavi Choir"],
+  spotify: "https://open.spotify.com/search/georgian%20polyphony",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Tbilisi_Skyline.jpg"
+},
+
+// ======== ASIE CENTRALE ========
+{
+  name: "Q-Pop (Kazakhstan)",
+  descriptionFr: "Pop kazakh inspirée de la K-pop, chorégraphies et prod modernes.",
+  descriptionEn: "Kazakh pop inspired by K-pop with modern choreography/production.",
+  artists: ["Ninety One", "MadMen"],
+  spotify: "https://open.spotify.com/search/q-pop%20kazakhstan",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/12/Almaty_skyline.jpg"
+},
+{
+  name: "Kazakh Dombra Folk",
+  descriptionFr: "Folk kazakh centré sur la dombra (luth à deux cordes).",
+  descriptionEn: "Kazakh folk built around the two-string dombra.",
+  artists: ["Dimash (influence pop)", "Traditional dombrists"],
+  spotify: "https://open.spotify.com/search/kazakh%20dombra",
+  image: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Dombra.jpg"
+},
+{
+  name: "Shashmaqam (Uzbekistan/Tajikistan)",
+  descriptionFr: "Suite savante centre-asiatique (modes/poésie).",
+  descriptionEn: "Classical Central Asian suite (modes/poetry).",
+  artists: ["Bukhara Ensembles"],
+  spotify: "https://open.spotify.com/search/shashmaqam",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Sitar_like_lute.jpg"
+},
+{
+  name: "Kyrgyz Komuz Folk",
+  descriptionFr: "Folk kirghize autour du komuz (luth), épopées/manas.",
+  descriptionEn: "Kyrgyz folk around the komuz lute, epic/manas tradition.",
+  artists: ["Traditional komuz players"],
+  spotify: "https://open.spotify.com/search/kyrgyz%20komuz",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/31/Komuz.jpg"
+},
+{
+  name: "Tajik Pamiri Folk",
+  descriptionFr: "Musique pamirie montagnarde aux modes particuliers.",
+  descriptionEn: "Mountain Pamiri music with distinctive modes.",
+  artists: ["Badakhshan Ensemble"],
+  spotify: "https://open.spotify.com/search/pamiri%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Turkmen Dutar Folk",
+  descriptionFr: "Folk turkmène centré sur le dutar (luth à long manche).",
+  descriptionEn: "Turkmen folk built around the long-necked dutar.",
+  artists: ["Traditional dutar players"],
+  spotify: "https://open.spotify.com/search/turkmen%20dutar",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/37/Dutar.jpg"
+},
+{
+  name: "Afghan Ghazal/Rubab",
+  descriptionFr: "Ghazal afghan, rubab et tablas, poésie et modalité.",
+  descriptionEn: "Afghan ghazal with rubab and tablas, poetry and modality.",
+  artists: ["Ustad Mohammad Omar", "Qais Essar"],
+  spotify: "https://open.spotify.com/search/afghan%20rubab",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Rubab_Afghan.jpg"
+},
+{
+  name: "Yemeni Hadrami",
+  descriptionFr: "Style yéménite hadrami (oud, chant modal).",
+  descriptionEn: "Yemeni Hadrami style (oud, modal singing).",
+  artists: ["Abu Bakr Salem"],
+  spotify: "https://open.spotify.com/search/yemeni%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Oud_instrument.jpg"
+},
 
 
