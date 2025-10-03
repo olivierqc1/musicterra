@@ -1993,6 +1993,90 @@ export const countries: Country[] = [
   spotify: "https://open.spotify.com/search/mauritius%20music",
   image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Port_Louis_Skyline.jpg"
 },
+  // ===== CANADA =====
+{
+  name: 'Canada',
+  descriptionFr: "Chanson QC, indie canadien, hip-hop Toronto, traditions autochtones.",
+  descriptionEn: "Quebec chanson, Canadian indie, Toronto hip-hop, Indigenous traditions.",
+  regions: ['Montréal', 'Toronto', 'Vancouver', 'Québec', 'Halifax'],
+  artists: ['Leonard Cohen', 'Céline Dion', 'Drake', 'The Weeknd', 'Arcade Fire'],
+  spotify: "https://open.spotify.com/search/canada%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9a/Montreal_skyline_from_Mt._Royal.jpg"
+},
+
+// ===== OCÉANIE =====
+{
+  name: 'Australia',
+  descriptionFr: "Rock/indie australien, traditions aborigènes, électronique.",
+  descriptionEn: "Australian rock/indie, Aboriginal traditions, electronic.",
+  regions: ['Sydney', 'Melbourne', 'Brisbane', 'Perth'],
+  artists: ['AC/DC', 'Tame Impala'],
+  spotify: "https://open.spotify.com/search/australia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Sydney_skyline_from_the_north.jpg"
+},
+{
+  name: 'New Zealand',
+  descriptionFr: "Pop/indie NZ et chants māori (waiata).",
+  descriptionEn: "NZ pop/indie and Māori waiata.",
+  regions: ['Auckland', 'Wellington', 'Christchurch'],
+  artists: ['Lorde', 'Fat Freddy’s Drop'],
+  spotify: "https://open.spotify.com/search/new%20zealand%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/45/Auckland_skyline.jpg"
+},
+{
+  name: 'Papua New Guinea',
+  descriptionFr: "Stringband, percussions garamut, chants polyphoniques.",
+  descriptionEn: "Stringband, garamut percussion, polyphonic singing.",
+  regions: ['Port Moresby'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/papua%20new%20guinea%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/83/Port_Moresby_skyline.jpg"
+},
+{
+  name: 'Fiji',
+  descriptionFr: "Vude, island reggae, polyphonie.",
+  descriptionEn: "Vude, island reggae, polyphony.",
+  regions: ['Suva', 'Nadi'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/fiji%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Suva_skyline.jpg"
+},
+{
+  name: 'Samoa',
+  descriptionFr: "Pop polynésienne, chœurs, reggae insulaire.",
+  descriptionEn: "Polynesian pop, choral traditions, island reggae.",
+  regions: ['Apia'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/samoa%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Apia_Samoa.jpg"
+},
+{
+  name: 'Tonga',
+  descriptionFr: "Chants/chœurs polynésiens, pop contemporaine.",
+  descriptionEn: "Polynesian choral music, contemporary pop.",
+  regions: ["Nuku'alofa"],
+  artists: [],
+  spotify: "https://open.spotify.com/search/tonga%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Nukualofa.jpg"
+},
+{
+  name: 'Solomon Islands',
+  descriptionFr: "Stringband, island reggae.",
+  descriptionEn: "Stringband, island reggae.",
+  regions: ['Honiara'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/solomon%20islands%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/96/Honiara_Skyline.jpg"
+},
+{
+  name: 'Vanuatu',
+  descriptionFr: "Stringband, percussions, folk mélanésien.",
+  descriptionEn: "Stringband, percussion, Melanesian folk.",
+  regions: ['Port Vila'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/vanuatu%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Port_Vila.jpg"
+},
 ];
 
 
