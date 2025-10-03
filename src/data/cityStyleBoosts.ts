@@ -108,3 +108,28 @@ Mozambique: { "Marrabenta (Mozambique)": 0.7 },
 Angola: { "Kuduro (Angola)": 0.7, "Kizomba/Semba (Angola)": 0.6 },
 Madagascar: { "Salegy/Tsapiky (Madagascar)": 0.7 },
 Mauritius: { "Sega (Mauritius)": 0.7 },
+// ---- Canada ----
+Canada: {
+  "Chanson Québécoise (Canada)": 0.6,
+  "Canadian Indie (Canada)": 0.5,
+  "Canadian Hip-Hop (Canada)": 0.4,
+  "Celtic des Maritimes (Canada)": 0.4,
+  "Canadian Country (Canada)": 0.4
+},
+
+// ---- Océanie ----
+Australia: {
+  "Aussie Rock (Australia)": 0.6,
+  "Aussie Indie (Australia)": 0.5,
+  "Didgeridoo/Aboriginal Trad (Australia)": 0.5
+},
+"New Zealand": {
+  "Kiwi Pop/Indie (New Zealand)": 0.6,
+  "Waiata Māori (New Zealand)": 0.5
+},
+"Papua New Guinea": { "Stringband (Melanesia)": 0.6 },
+Fiji: { "Vude (Fiji)": 0.6, "Pacific Island Reggae (Polynesia/Melanesia)": 0.5 },
+Samoa: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.6 },
+Tonga: { "Pacific Island Reggae (Polynesia/Melanesia)": 0.6 },
+"Solomon Islands": { "Stringband (Melanesia)": 0.6, "Pacific Island Reggae (Polynesia/Melanesia)": 0.4 },
+Vanuatu: { "Stringband (Melanesia)": 0.6 }
