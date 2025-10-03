@@ -206,4 +206,81 @@ export const genres: Item[] = [
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4ju6R7t8J7Q",
     image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Christina_Shusho.jpg"
   },
-  
+  // ——— Afrique de l’Ouest et Centrale ———
+  {
+    name: 'Afrobeat',
+    descriptionFr: "Genre nigérian lancé par Fela Kuti : rythmes complexes, cuivres et messages politiques.",
+    descriptionEn: "Nigerian genre pioneered by Fela Kuti: complex rhythms, horns and political messages.",
+    subgenres: ['Afrobeat Classique','Afro-fusion','Naija'],
+    subgenresRich: [
+      { name: 'Afrobeat Classique', descriptionFr: "Sous-genre de Afrobeat. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Afrobeat. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Afro-fusion', descriptionFr: "Sous-genre de Afrobeat. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Afrobeat. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Naija', descriptionFr: "Sous-genre de Afrobeat. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Afrobeat. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Fela Kuti','Tony Allen','Burna Boy'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYkaDif7Ztbp",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Fela_Kuti.jpg"
+  },
+  {
+    name: 'Coupé-Décalé',
+    descriptionFr: "Né en Côte d’Ivoire et popularisé à Paris : ambiance festive, percussions électroniques.",
+    descriptionEn: "Originated in Côte d’Ivoire and popularized in Paris: party vibe with electronic percussion.",
+    subgenres: ['Coupé Décalé Classique','New Coupé Décalé'],
+    subgenresRich: [
+      { name: 'Coupé Décalé Classique', descriptionFr: "Sous-genre de Coupé-Décalé. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Coupé-Décalé. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'New Coupé Décalé', descriptionFr: "Sous-genre de Coupé-Décalé. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Coupé-Décalé. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['DJ Arafat','Debordo Leekunfa'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX2VYjzZZsF3C",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/56/DJ_Arafat.jpg"
+  },
+  {
+    name: 'Zouglou',
+    descriptionFr: "Mouvement ivoirien des années 90, critique sociale sur rythmes dansants.",
+    descriptionEn: "Ivorian movement from the 1990s, social criticism on danceable rhythms.",
+    subgenres: ['Zouglou Classique'],
+    subgenresRich: [
+      { name: 'Zouglou Classique', descriptionFr: "Sous-genre de Zouglou. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Zouglou. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Magic System'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DXdEN2uwCw6kV",
+    image: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Magic_System.jpg"
+  },
+  {
+    name: 'Highlife',
+    descriptionFr: "Originaire du Ghana et du Nigéria; guitares jazzy, cuivres et groove africain.",
+    descriptionEn: "From Ghana and Nigeria; jazzy guitars, horns and African groove.",
+    subgenres: ['Palmwine Highlife','Dance Band Highlife'],
+    subgenresRich: [
+      { name: 'Palmwine Highlife', descriptionFr: "Sous-genre de Highlife. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Highlife. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Dance Band Highlife', descriptionFr: "Sous-genre de Highlife. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Highlife. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['E.T. Mensah','Osibisa'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWXzDsC3jppjE",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/84/Osibisa.jpg"
+  },
+  {
+    name: 'Makossa',
+    descriptionFr: "Genre camerounais aux rythmes entraînants, popularisé par Manu Dibango.",
+    descriptionEn: "Cameroonian genre with catchy rhythms, popularized by Manu Dibango.",
+    subgenres: ['Makossa Moderne'],
+    subgenresRich: [
+      { name: 'Makossa Moderne', descriptionFr: "Sous-genre de Makossa. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Makossa. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Manu Dibango'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWVzZlRWgqAGH",
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/32/Manu_Dibango.jpg"
+  },
+  {
+    name: 'Ndombolo',
+    descriptionFr: "Musique dansante de la RDC, héritière du soukous.",
+    descriptionEn: "Dance music from DRC, heir of soukous.",
+    subgenres: ['Ndombolo Rapide','Ndombolo Lent'],
+    subgenresRich: [
+      { name: 'Ndombolo Rapide', descriptionFr: "Sous-genre de Ndombolo. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Ndombolo. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" },
+      { name: 'Ndombolo Lent', descriptionFr: "Sous-genre de Ndombolo. Brève description automatique à personnaliser.", descriptionEn: "Subgenre of Ndombolo. Short auto-generated description to customize.", spotify: "https://open.spotify.com/playlist/XXXX" }
+    ],
+    artists: ['Koffi Olomidé','Werrason'],
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWUjqUjZBdjJ6",
+    image: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Koffi_Olomide.jpg"
+  },
