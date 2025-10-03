@@ -472,6 +472,296 @@ export const genres: Item[] = [
   spotify:"https://open.spotify.com/playlist/37i9dQZF1EIeOlAvJLiYgJ?si=mXL9Ol6PQeOA3UmTLQOu0g",
   image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Drums_set.jpg"
 },
+  // --- JAMAICA ---
+{
+  name: "Reggae (Jamaica)",
+  descriptionFr: "Le reggae à la source : racines, messages sociaux, basses profondes.",
+  descriptionEn: "Reggae at the source: roots, social messages, heavy bass.",
+  subgenres: ["Roots", "Dub", "Lovers Rock"],
+  artists: ["Bob Marley", "Peter Tosh", "Burning Spear"],
+  spotify: "https://open.spotify.com/search/reggae%20jamaica",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Bob-Marley.jpg"
+},
+{
+  name: "Dancehall (Jamaica)",
+  descriptionFr: "Riddims numériques, flows rapides, culture sound system.",
+  descriptionEn: "Digital riddims, fast flows, sound system culture.",
+  subgenres: ["Bashment", "New School"],
+  artists: ["Vybz Kartel", "Sean Paul", "Shabba Ranks"],
+  spotify: "https://open.spotify.com/search/dancehall%20jamaica",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/27/Sound_system_JA.jpg"
+},
+{
+  name: "Ska (Jamaica)",
+  descriptionFr: "Précurseur de rocksteady/reggae, contre-temps et cuivres.",
+  descriptionEn: "Precursor to rocksteady/reggae, off-beat and horns.",
+  subgenres: ["1st Wave", "2 Tone"],
+  artists: ["The Skatalites"],
+  spotify: "https://open.spotify.com/search/ska%20jamaica",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Ska_band.jpg"
+},
+{
+  name: "Rocksteady (Jamaica)",
+  descriptionFr: "Tempo médian, harmonies vocales; pont vers le reggae.",
+  descriptionEn: "Mid-tempo vocals; a bridge to reggae.",
+  artists: ["Alton Ellis"],
+  spotify: "https://open.spotify.com/search/rocksteady%20jamaica",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Vinyl_records.jpg"
+},
+{
+  name: "Mento (Jamaica)",
+  descriptionFr: "Folk jamaïcain pré-ska, acoustique, souvent humoristique.",
+  descriptionEn: "Pre-ska Jamaican folk, acoustic and often humorous.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/mento%20jamaica",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Acoustic_guitar_close.jpg"
+},
+
+// --- TRINIDAD & TOBAGO ---
+{
+  name: "Calypso (TT)",
+  descriptionFr: "Narration satirique, call-and-response, emblème culturel.",
+  descriptionEn: "Satirical storytelling, call-and-response, cultural emblem.",
+  artists: ["Mighty Sparrow", "Calypso Rose", "Lord Kitchener"],
+  spotify: "https://open.spotify.com/search/calypso%20trinidad",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Steelpan_Carnival.jpg"
+},
+{
+  name: "Soca (TT)",
+  descriptionFr: "Calypso modernisé pour le Carnaval: énergie, hooks, fête.",
+  descriptionEn: "Modernized calypso for Carnival: energy, hooks, party.",
+  subgenres: ["Power Soca", "Groovy Soca"],
+  artists: ["Machel Montano", "Kes"],
+  spotify: "https://open.spotify.com/search/soca%20trinidad",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Trinidad_Carnival.jpg"
+},
+{
+  name: "Steelpan (TT)",
+  descriptionFr: "Orchestres de pans; compétitions Panorama.",
+  descriptionEn: "Steel orchestras; Panorama competitions.",
+  artists: ["Desperadoes Steel Orchestra"],
+  spotify: "https://open.spotify.com/search/steelpan%20trinidad",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Steelpan_instruments.jpg"
+},
+
+// --- BARBADOS ---
+{
+  name: "Bashment Soca (Barbados)",
+  descriptionFr: "Version plus crue/club de la soca, née à la Barbade.",
+  descriptionEn: "Raw/club-oriented soca variant from Barbados.",
+  artists: ["Lil Rick"],
+  spotify: "https://open.spotify.com/search/bashment%20soca%20barbados",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Barbados_Bridgetown.jpg"
+},
+{
+  name: "Spouge (Barbados)",
+  descriptionFr: "Style 60–70s mêlant ska/calypso; patrimoine barbadien.",
+  descriptionEn: "1960–70s style blending ska/calypso; Barbadian heritage.",
+  artists: ["The Merrymen"],
+  spotify: "https://open.spotify.com/search/spouge%20barbados",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Vinyl_records.jpg"
+},
+
+// --- BAHAMAS ---
+{
+  name: "Junkanoo (Bahamas)",
+  descriptionFr: "Fête de rue carnavalesque, percussions et cuivres.",
+  descriptionEn: "Carnival street festival with percussion and brass.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/junkanoo%20bahamas",
+  image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Nassau_Bahamas_downtown.jpg"
+},
+{
+  name: "Rake-n-Scrape (Bahamas)",
+  descriptionFr: "Musique traditionnelle à scie musicale et accordéon.",
+  descriptionEn: "Traditional music with saw and accordion.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/rake%20n%20scrape%20bahamas",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Accordion.jpg"
+},
+
+// --- CUBA ---
+{
+  name: "Son Cubano (Cuba)",
+  descriptionFr: "Tres, bongos, clave — fondation de la salsa.",
+  descriptionEn: "Tres, bongos, clave — foundation of salsa.",
+  artists: ["Compay Segundo", "Buena Vista Social Club"],
+  spotify: "https://open.spotify.com/search/son%20cubano%20cuba",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/23/Tres_cubano.jpg"
+},
+{
+  name: "Rumba (Cuba)",
+  descriptionFr: "Guaguancó/Yambú/Columbia; percussions et chant.",
+  descriptionEn: "Guaguancó/Yambú/Columbia; percussion and vocals.",
+  subgenres: ["Guaguancó", "Yambú", "Columbia"],
+  artists: ["Los Muñequitos de Matanzas"],
+  spotify: "https://open.spotify.com/search/rumba%20cubana",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Cuban_rumba_drums.jpg"
+},
+{
+  name: "Timba (Cuba)",
+  descriptionFr: "Pop cubaine hyper-rythmée, cuivres, breaks complexes.",
+  descriptionEn: "Hyper-rhythmic Cuban pop with horns and complex breaks.",
+  artists: ["Los Van Van", "NG La Banda"],
+  spotify: "https://open.spotify.com/search/timba%20cuba",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Trumpet_section.jpg"
+},
+{
+  name: "Salsa (Cuba/PR)",
+  descriptionFr: "Mosaïque afro-caribéenne/NY, héritière du son cubain.",
+  descriptionEn: "Afro-Caribbean/NY mosaic, heir to Cuban son.",
+  subgenres: ["Salsa dura", "Salsa romántica"],
+  artists: ["Celia Cruz", "Héctor Lavoe"],
+  spotify: "https://open.spotify.com/search/salsa%20cuba%20puerto%20rico",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Salsa_band.jpg"
+},
+
+// --- DOMINICAN REPUBLIC ---
+{
+  name: "Merengue (DR)",
+  descriptionFr: "Rythme rapide, accordéon/cuivres; danse nationale.",
+  descriptionEn: "Fast rhythm, accordion/brass; national dance.",
+  artists: ["Juan Luis Guerra", "Wilfrido Vargas"],
+  spotify: "https://open.spotify.com/search/merengue%20dominican%20republic",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Accordion.jpg"
+},
+{
+  name: "Bachata (DR)",
+  descriptionFr: "Guitares, romantisme, danse sociale populaire.",
+  descriptionEn: "Guitar-based, romantic, popular social dance.",
+  artists: ["Aventura", "Romeo Santos"],
+  spotify: "https://open.spotify.com/search/bachata%20dominican%20republic",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/49/Acoustic_guitar_nylon.jpg"
+},
+{
+  name: "Dembow (DR)",
+  descriptionFr: "Beat minimal, base du reggaetón moderne en RD.",
+  descriptionEn: "Minimal beat, backbone of modern DR reggaetón.",
+  artists: ["El Alfa"],
+  spotify: "https://open.spotify.com/search/dembow%20dominican%20republic",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- PUERTO RICO ---
+{
+  name: "Reggaetón (PR)",
+  descriptionFr: "Urbain latino né PR/Panama : dembow, rap chanté.",
+  descriptionEn: "Latino urban born PR/Panama: dembow, sung rap.",
+  subgenres: ["Latin Trap"],
+  artists: ["Daddy Yankee", "Bad Bunny"],
+  spotify: "https://open.spotify.com/search/reggaeton%20puerto%20rico",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5d/Puerto_Rico_Urban.jpg"
+},
+{
+  name: "Bomba/Plena (PR)",
+  descriptionFr: "Traditions afro-portoricaines, tambours et danse.",
+  descriptionEn: "Afro-Puerto Rican traditions with drums and dance.",
+  artists: ["Los Pleneros de la 21"],
+  spotify: "https://open.spotify.com/search/bomba%20plena%20puerto%20rico",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Drums_set.jpg"
+},
+
+// --- HAITI ---
+{
+  name: "Compas (Haiti)",
+  descriptionFr: "Groove binaire, guitares et sections de cuivres.",
+  descriptionEn: "Binary groove, guitars and brass sections.",
+  subgenres: ["Kadans", "Compas direct"],
+  artists: ["Tabou Combo", "Carimi"],
+  spotify: "https://open.spotify.com/search/compas%20konpa%20haiti",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Brass_band.jpg"
+},
+{
+  name: "Rara (Haiti)",
+  descriptionFr: "Processions carnavalesques, cornes, percussions.",
+  descriptionEn: "Carnival processions, horns, percussion.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/rara%20haiti",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Drums_set.jpg"
+},
+{
+  name: "Mizik Rasin (Haiti)",
+  descriptionFr: "Fusion vodou/rock, années 80-90.",
+  descriptionEn: "Vodou/rock fusion from the 80s-90s.",
+  artists: ["Boukan Ginen", "RAM"],
+  spotify: "https://open.spotify.com/search/mizik%20rasin%20haiti",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/10/Charango.jpg"
+},
+
+// --- GUADELOUPE / MARTINIQUE ---
+{
+  name: "Zouk (GP/MQ)",
+  descriptionFr: "Zouk love et rétro Kassavʼ; ADN des Antilles FR.",
+  descriptionEn: "Zouk love and classic Kassavʼ; French Antilles DNA.",
+  subgenres: ["Zouk Love", "Retro Zouk"],
+  artists: ["Kassavʼ"],
+  spotify: "https://open.spotify.com/search/zouk%20guadeloupe%20martinique",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Salsa_band.jpg"
+},
+{
+  name: "Gwoka (Guadeloupe)",
+  descriptionFr: "Tambours ka, chant créole et danse traditionnelle.",
+  descriptionEn: "Ka drums, Creole singing and traditional dance.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/gwoka%20guadeloupe",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Drums_set.jpg"
+},
+{
+  name: "Biguine (Martinique)",
+  descriptionFr: "Jazz créole historique de Martinique.",
+  descriptionEn: "Historic Creole jazz from Martinique.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/biguine%20martinique",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Saxophone.jpg"
+},
+
+// --- SAINT LUCIA ---
+{
+  name: "Dennery Segment (Saint Lucia)",
+  descriptionFr: "Soca locale à haut tempo et hooks efficaces.",
+  descriptionEn: "Local soca with high tempo and punchy hooks.",
+  artists: ["Freezy"],
+  spotify: "https://open.spotify.com/search/dennery%20segment%20saint%20lucia",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- GRENADA ---
+{
+  name: "Jab Jab Soca (Grenada)",
+  descriptionFr: "Soca sombre, sifflets, tambours; esprit carnaval.",
+  descriptionEn: "Darker soca with whistles and drums; carnival spirit.",
+  artists: ["Tallpree"],
+  spotify: "https://open.spotify.com/search/jab%20jab%20soca%20grenada",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Drums_set.jpg"
+},
+
+// --- ANTIGUA & BARBUDA ---
+{
+  name: "Benna (Antigua)",
+  descriptionFr: "Chant folk créole, ancêtre local du calypso.",
+  descriptionEn: "Creole folk chant, local ancestor of calypso.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/benna%20antigua",
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Acoustic_guitar_close.jpg"
+},
+
+// --- CURAÇAO ---
+{
+  name: "Tumba (Curaçao)",
+  descriptionFr: "Musique de carnaval avec groove afro-caribéen.",
+  descriptionEn: "Carnival music with Afro-Caribbean groove.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/tumba%20curacao",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Brass_band.jpg"
+},
+{
+  name: "Tambú (Curaçao)",
+  descriptionFr: "Chant/percussions d’héritage afro; cérémonies.",
+  descriptionEn: "Afro-heritage vocal/percussion; ceremonies.",
+  artists: [],
+  spotify: "https://open.spotify.com/search/tambu%20curacao",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Drums_set.jpg"
+    },
 ];
 
 
