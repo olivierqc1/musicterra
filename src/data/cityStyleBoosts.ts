@@ -1,6 +1,6 @@
 Honduras: { Punta: 0.6, Reggae: 0.2 },
 Costa Rica: { "Calypso Limonense": 0.6, Reggae: 0.2 },
 Nicaragua:  { "Palo de Mayo": 0.6 },
-"Honduras": { "Punta": 0.6, Reggae: 0.2 },
-"El Salvador": { Xuc: 0.6 },
+Honduras: { "Punta": 0.6, Reggae: 0.2 },
+El Salvador: { Xuc: 0.6 },
 Panama: { Tamborito: 0.5, "Típico panameño": 0.5, "Reggaetón (Panamá)": 0.4 },
