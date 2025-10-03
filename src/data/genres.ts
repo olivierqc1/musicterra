@@ -763,5 +763,359 @@ export const genres: Item[] = [
   image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Drums_set.jpg"
     },
 ];
+// --- UNITED KINGDOM ---
+{
+  name: "Grime (UK)",
+  descriptionFr: "Rap UK ~140 BPM, MCs incisifs, basses lourdes.",
+  descriptionEn: "UK rap at ~140 BPM, sharp MCs, heavy bass.",
+  subgenres: ["Road rap", "Drill UK"],
+  artists: ["Skepta", "Wiley", "Stormzy"],
+  spotify: "https://open.spotify.com/search/grime%20uk",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/76/Stormzy_Glastonbury_2019.jpg"
+},
+{
+  name: "UK Garage (UK)",
+  descriptionFr: "Garage/2-step, voix hachées, swing syncopé.",
+  descriptionEn: "Garage/2-step, chopped vocals, syncopated swing.",
+  artists: ["Artful Dodger", "MJ Cole"],
+  spotify: "https://open.spotify.com/search/uk%20garage",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Drum & Bass (UK)",
+  descriptionFr: "Breakbeats rapides, basses profondes.",
+  descriptionEn: "Fast breakbeats, deep basslines.",
+  artists: ["Goldie", "Andy C"],
+  spotify: "https://open.spotify.com/search/drum%20and%20bass%20uk",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Britpop (UK)",
+  descriptionFr: "Pop/rock 90s à mélodies accrocheuses.",
+  descriptionEn: "90s pop/rock with catchy melodies.",
+  artists: ["Oasis", "Blur", "Pulp"],
+  spotify: "https://open.spotify.com/search/britpop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Oasis_2005.jpg"
+},
+
+// --- IRELAND ---
+{
+  name: "Celtic Folk (Ireland)",
+  descriptionFr: "Trad irlandaise : fiddles, tin whistle, bodhrán.",
+  descriptionEn: "Irish trad: fiddles, tin whistle, bodhrán.",
+  artists: ["The Chieftains", "The Dubliners"],
+  spotify: "https://open.spotify.com/search/irish%20traditional%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/85/Irish_fiddle.jpg"
+},
+{
+  name: "Irish Indie (Ireland)",
+  descriptionFr: "Rock/indie aux mélodies mélancoliques.",
+  descriptionEn: "Indie/rock with melancholic melodies.",
+  artists: ["The Cranberries", "Fontaines D.C."],
+  spotify: "https://open.spotify.com/search/irish%20indie",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+
+// --- FRANCE ---
+{
+  name: "French Touch (France)",
+  descriptionFr: "House FR 90s-00s : filtres, samples disco.",
+  descriptionEn: "90s-00s French house: filters, disco samples.",
+  artists: ["Daft Punk", "Justice", "Cassius"],
+  spotify: "https://open.spotify.com/search/french%20touch",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Synthesizer2.jpg"
+},
+{
+  name: "Chanson (France)",
+  descriptionFr: "Texte/voix au centre, héritage poétique.",
+  descriptionEn: "Lyric-centered, poetic heritage.",
+  artists: ["Brel", "Brassens", "Barbara"],
+  spotify: "https://open.spotify.com/search/chanson%20fran%C3%A7aise",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Rap Français (France)",
+  descriptionFr: "Rap francophone : poésie urbaine, flows variés.",
+  descriptionEn: "French-language rap: urban poetry, varied flows.",
+  artists: ["IAM", "PNL", "Booba"],
+  spotify: "https://open.spotify.com/search/rap%20fran%C3%A7ais",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- SPAIN ---
+{
+  name: "Flamenco (Spain)",
+  descriptionFr: "Art andalou : chant, guitare, palmas, duende.",
+  descriptionEn: "Andalusian art: vocals, guitar, palmas, duende.",
+  artists: ["Paco de Lucía", "Camarón de la Isla", "Niña Pastori"],
+  spotify: "https://open.spotify.com/search/flamenco%20spain",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Flamenco_guitar.jpg"
+},
+{
+  name: "Flamenco Pop (Spain)",
+  descriptionFr: "Fusion flamenco avec pop/urbain.",
+  descriptionEn: "Flamenco fused with pop/urban.",
+  artists: ["Rosalía", "Niña Pastori"],
+  spotify: "https://open.spotify.com/search/flamenco%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+
+// --- PORTUGAL ---
+{
+  name: "Fado (Portugal)",
+  descriptionFr: "Chant mélancolique, guitare portugaise.",
+  descriptionEn: "Melancholic singing with Portuguese guitar.",
+  artists: ["Amália Rodrigues", "Mariza"],
+  spotify: "https://open.spotify.com/search/fado%20portugal",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Portuguese_guitar.jpg"
+},
+{
+  name: "Kuduro (Lisboa)",
+  descriptionFr: "Club afro-lusophone venu d’Angola, scène lisboète.",
+  descriptionEn: "Afro-Lusophone club sound from Angola via Lisbon.",
+  artists: ["Buraka Som Sistema"],
+  spotify: "https://open.spotify.com/search/kuduro%20lisbon",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- ITALY ---
+{
+  name: "Italo Disco (Italy)",
+  descriptionFr: "Disco/électro 80s : synthés, hooks mélodiques.",
+  descriptionEn: "80s disco/electro: synth lines, melodic hooks.",
+  artists: ["Gazebo", "Sabrina"],
+  spotify: "https://open.spotify.com/search/italo%20disco",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Synthesizer2.jpg"
+},
+{
+  name: "Canzone (Italy)",
+  descriptionFr: "Chanson italienne, mélodie et émotion.",
+  descriptionEn: "Italian songcraft, melody and emotion.",
+  artists: ["Lucio Battisti", "Mina"],
+  spotify: "https://open.spotify.com/search/canzone%20italiana",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Italo Rap (Italy)",
+  descriptionFr: "Rap italien, mélodique/urbain.",
+  descriptionEn: "Italian rap, melodic/urban.",
+  artists: ["Sfera Ebbasta", "Marracash"],
+  spotify: "https://open.spotify.com/search/rap%20italiano",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- GERMANY ---
+{
+  name: "Techno (Germany)",
+  descriptionFr: "Techno berlinoise : minimale, indus, hypnotique.",
+  descriptionEn: "Berlin techno: minimal, industrial, hypnotic.",
+  artists: ["Ben Klock", "Paul Kalkbrenner"],
+  spotify: "https://open.spotify.com/search/berlin%20techno",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Berlin_Television_Tower.jpg"
+},
+{
+  name: "Krautrock (Germany)",
+  descriptionFr: "Rock expérimental 70s, motorik, synthés.",
+  descriptionEn: "70s experimental rock, motorik beats, synths.",
+  artists: ["Can", "Neu!", "Faust"],
+  spotify: "https://open.spotify.com/search/krautrock",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Vinyl_records.jpg"
+},
+
+// --- NETHERLANDS ---
+{
+  name: "Dutch House (Netherlands)",
+  descriptionFr: "EDM/house néerlandais, drops massifs.",
+  descriptionEn: "Dutch EDM/house with massive drops.",
+  artists: ["Tiesto", "Hardwell", "Afrojack"],
+  spotify: "https://open.spotify.com/search/dutch%20house",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Gabber (Netherlands)",
+  descriptionFr: "Hardcore techno ultra-rapide, kicks saturés.",
+  descriptionEn: "Ultra-fast hardcore techno with distorted kicks.",
+  artists: ["Rotterdam Terror Corps"],
+  spotify: "https://open.spotify.com/search/gabber%20rotterdam",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+
+// --- BELGIUM ---
+{
+  name: "New Beat (Belgium)",
+  descriptionFr: "Électro lente/acid des clubs belges fin 80s.",
+  descriptionEn: "Slow/acid club sound from late-80s Belgium.",
+  artists: ["Confetti's", "Front 242 (influence EBM)"],
+  spotify: "https://open.spotify.com/search/new%20beat%20belgium",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "EBM (Belgium)",
+  descriptionFr: "Electronic Body Music : pulsations sombres/indus.",
+  descriptionEn: "Electronic Body Music: dark/industrial pulses.",
+  artists: ["Front 242"],
+  spotify: "https://open.spotify.com/search/ebm%20belgium",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Synthesizer2.jpg"
+},
+
+// --- LUXEMBOURG / SWITZERLAND / AUSTRIA ---
+{
+  name: "Lux Pop (Luxembourg)",
+  descriptionFr: "Pop/rock/électro d’un carrefour culturel.",
+  descriptionEn: "Pop/rock/electronic from a cultural crossroads.",
+  artists: ["Rome", "Tuys"],
+  spotify: "https://open.spotify.com/search/Luxembourg%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Luxembourg_City_Skyline.jpg"
+},
+{
+  name: "Swiss House (Switzerland)",
+  descriptionFr: "House/techno helvète, finesse sonore.",
+  descriptionEn: "Swiss house/techno with sonic finesse.",
+  artists: ["Yello", "Ellen Allien (in CH scenes)"],
+  spotify: "https://open.spotify.com/search/swiss%20house",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/80/Z%C3%BCrich_-_Uetliberg_-_Skyline.jpg"
+},
+{
+  name: "Vienna Downtempo (Austria)",
+  descriptionFr: "Down/nu-jazz viennois, grooves feutrés.",
+  descriptionEn: "Viennese down/nu-jazz with cozy grooves.",
+  artists: ["Kruder & Dorfmeister"],
+  spotify: "https://open.spotify.com/search/kruder%20dorfmeister",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Wien_Skyline.jpg"
+},
+
+// --- DENMARK / SWEDEN / NORWAY / FINLAND / ICELAND ---
+{
+  name: "Nordic Pop (Denmark)",
+  descriptionFr: "Pop scandinave claire, hooks efficaces.",
+  descriptionEn: "Clean Scandinavian pop with strong hooks.",
+  artists: ["MØ", "Aqua"],
+  spotify: "https://open.spotify.com/search/denmark%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/00/Copenhagen_Skyline_2014.jpg"
+},
+{
+  name: "Scandi Pop (Sweden)",
+  descriptionFr: "Pop nordique à hooks imparables, prod léchée.",
+  descriptionEn: "Nordic pop with irresistible hooks and slick production.",
+  artists: ["ABBA", "Tove Lo", "Robyn"],
+  spotify: "https://open.spotify.com/search/swedish%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/27/ABBA_-_TopPop_1974_5.png"
+},
+{
+  name: "Melodic Death Metal (Sweden)",
+  descriptionFr: "Death metal mélodique de Göteborg.",
+  descriptionEn: "Gothenburg melodic death metal.",
+  artists: ["In Flames", "At the Gates"],
+  spotify: "https://open.spotify.com/search/melodic%20death%20metal%20sweden",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Metallica_Live.jpg"
+},
+{
+  name: "Black Metal (Norway)",
+  descriptionFr: "Extrême, atmosphérique, scène norvégienne culte.",
+  descriptionEn: "Extreme, atmospheric, seminal Norwegian scene.",
+  artists: ["Mayhem", "Emperor", "Darkthrone"],
+  spotify: "https://open.spotify.com/search/black%20metal%20norway",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Metallica_Live.jpg"
+},
+{
+  name: "Power Metal (Finland)",
+  descriptionFr: "Chœurs épiques, orchestration, vitesse.",
+  descriptionEn: "Epic choirs, orchestration, speed.",
+  artists: ["Nightwish", "Stratovarius"],
+  spotify: "https://open.spotify.com/search/power%20metal%20finland",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Metallica_Live.jpg"
+},
+{
+  name: "Icelandic Post-Rock (Iceland)",
+  descriptionFr: "Post-rock/ambient éthéré, textures vastes.",
+  descriptionEn: "Ethereal post-rock/ambient with vast textures.",
+  artists: ["Sigur Rós"],
+  spotify: "https://open.spotify.com/search/post%20rock%20iceland",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Reykjavik_Skyline.jpg"
+},
+
+// --- POLAND / CZECHIA / SLOVAKIA / HUNGARY ---
+{
+  name: "Polish Hip-Hop (Poland)",
+  descriptionFr: "Rap polonais : introspectif, boom bap/trap.",
+  descriptionEn: "Polish rap: introspective, boom bap/trap.",
+  artists: ["Taco Hemingway", "Quebonafide"],
+  spotify: "https://open.spotify.com/search/polish%20hip%20hop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Czech Alt Rock (Czechia)",
+  descriptionFr: "Rock alternatif tchèque, contre-culture.",
+  descriptionEn: "Czech alternative rock, counterculture roots.",
+  artists: ["Plastic People of the Universe"],
+  spotify: "https://open.spotify.com/search/czech%20alternative%20rock",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Slovak Pop Rock (Slovakia)",
+  descriptionFr: "Pop-rock slovaque, scènes locales.",
+  descriptionEn: "Slovak pop-rock, local scenes.",
+  artists: ["IMT Smile"],
+  spotify: "https://open.spotify.com/search/slovak%20pop%20rock",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Rock_concert.jpg"
+},
+{
+  name: "Hungarian Folk Fusion (Hungary)",
+  descriptionFr: "Csárdás/folk mélangé à pop/électro.",
+  descriptionEn: "Csárdás/folk blended with pop/electronic.",
+  artists: ["Muzsikás", "Parno Graszt"],
+  spotify: "https://open.spotify.com/search/hungarian%20folk",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+
+// --- ROMANIA / BULGARIA / GREECE / MALTA / CYPRUS ---
+{
+  name: "Manele (Romania)",
+  descriptionFr: "Pop urbaine roumaine aux influences orientales.",
+  descriptionEn: "Romanian urban pop with Oriental influences.",
+  artists: ["Tzancă Uraganu", "Florin Salam"],
+  spotify: "https://open.spotify.com/search/manele%20romania",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/DJ_turntable.jpg"
+},
+{
+  name: "Chalga (Bulgaria)",
+  descriptionFr: "Pop-folk bulgare, mélismes orientaux.",
+  descriptionEn: "Bulgarian pop-folk with Oriental melismas.",
+  artists: ["Azis"],
+  spotify: "https://open.spotify.com/search/chalga%20bulgaria",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Rebetiko (Greece)",
+  descriptionFr: "Blues grec urbain, bouzouki, poésie mélancolique.",
+  descriptionEn: "Greek urban blues, bouzouki, melancholic poetry.",
+  artists: ["Vassilis Tsitsanis", "Markos Vamvakaris"],
+  spotify: "https://open.spotify.com/search/rebetiko%20greece",
+  image: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Bouzouki_modern.jpg"
+},
+{
+  name: "Laïko (Greece)",
+  descriptionFr: "Pop grecque issue du rébétiko, très populaire.",
+  descriptionEn: "Greek pop stemming from rebetiko, very popular.",
+  artists: ["Anna Vissi", "Giorgos Mazonakis"],
+  spotify: "https://open.spotify.com/search/laiko%20greek",
+  image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Microphone_classic.jpg"
+},
+{
+  name: "Maltese Pop (Malta)",
+  descriptionFr: "Pop méditerranéenne, scène émergente.",
+  descriptionEn: "Mediterranean pop, emerging scene.",
+  artists: ["Ira Losco"],
+  spotify: "https://open.spotify.com/search/malta%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/98/Valletta_Skyline.jpg"
+},
+{
+  name: "Cypriot Pop (Cyprus)",
+  descriptionFr: "Pop chypriote/grecque, influences levantines.",
+  descriptionEn: "Cypriot/Greek pop with Levantine touches.",
+  artists: ["Anna Vissi"],
+  spotify: "https://open.spotify.com/search/cyprus%20pop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/10/Nicosia_Skyline.jpg"
+}
 
 
