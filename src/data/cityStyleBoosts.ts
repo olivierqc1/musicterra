@@ -41,4 +41,33 @@ French Guiana: { Kasékò: 0.45 },
   Kyrgyzstan: { "Kyrgyz Komuz Folk": 0.7 },
   Tajikistan: { "Shashmaqam (Uzbekistan/Tajikistan)": 0.6, "Tajik Pamiri Folk": 0.6 },
   Turkmenistan: { "Turkmen Dutar Folk": 0.7 },
-  Afghanistan: { "Afghan Ghazal/Rubab": 0.7 }
+  Afghanistan: { "Afghan Ghazal/Rubab": 0.7 },
+// ---- East Asia ----
+  Japan: { "J-Pop (Japan)": 0.6, "City Pop (Japan)": 0.6, "Enka (Japan)": 0.5 },
+  "South Korea": { "K-Pop (Korea)": 0.7, "K-Hip-Hop (Korea)": 0.5, "Trot (Korea)": 0.5 },
+  China: { "Mandopop (China/Taiwan)": 0.6, "Chinese Classical/Guqin (China)": 0.5 },
+  HongKong: { "Cantopop (Hong Kong)": 0.7 },
+  Taiwan: { "Mandopop (China/Taiwan)": 0.6, "Taipei Indie (Taiwan)": 0.5 },
+  Mongolia: { "Mongolian Throat Singing (Mongolia)": 0.7 },
+
+  // ---- South Asia ----
+  India: { "Bollywood (India)": 0.6, "Hindustani Classical (India)": 0.5, "Carnatic (India)": 0.5, "Bhangra (Punjab)": 0.4 },
+  Pakistan: { "Qawwali (Pakistan)": 0.6, "Coke Studio Pop (Pakistan)": 0.5 },
+  Bangladesh: { "Baul (Bangladesh)": 0.6 },
+  "Sri Lanka": { "Baila (Sri Lanka)": 0.6 },
+  Nepal: { "Nepali Folk (Nepal)": 0.6 },
+  Bhutan: { "Dranyen Folk (Bhutan)": 0.6 },
+  Maldives: { "Boduberu (Maldives)": 0.6 },
+
+  // ---- Southeast Asia ----
+  Indonesia: { "Gamelan (Indonesia)": 0.7, "Dangdut (Indonesia)": 0.6, "Kroncong (Indonesia)": 0.5 },
+  Malaysia: { "Malay Pop (Malaysia)": 0.6, "Nasyid (Malaysia)": 0.5 },
+  Singapore: { "Mandopop SG (Singapore)": 0.6 },
+  Philippines: { "OPM Pop/Rock (Philippines)": 0.6, "Kundiman (Philippines)": 0.5 },
+  Thailand: { "Thai Pop (Thailand)": 0.6, "Luk Thung (Thailand)": 0.6, "Mor Lam (Isan)": 0.6 },
+  Vietnam: { "V-Pop (Vietnam)": 0.6, "Nhạc Vàng (Vietnam)": 0.5 },
+  Cambodia: { "Khmer Oldies (Cambodia)": 0.6, "Cambodian Rock (Cambodia)": 0.5 },
+  Laos: { "Lao Lam (Laos)": 0.6 },
+  Myanmar: { "Burmese Pop (Myanmar)": 0.6, "Hsaing Waing (Myanmar)": 0.5 },
+  Brunei: { "Brunei Malay Pop (Brunei)": 0.6 },
+  "Timor-Leste": { "Timor-Leste Tebe-Dai (Timor)": 0.6 }
