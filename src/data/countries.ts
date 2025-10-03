@@ -1495,6 +1495,227 @@ export const countries: Country[] = [
       { name: 'Musanze', styles: ['Gospel', 'Afropop'] }
     ]
   }
+  // ===== EAST ASIA =====
+{
+  name: 'Japan',
+  descriptionFr: "J-Pop, City Pop, enka; rock/électro créatifs.",
+  descriptionEn: "J-Pop, City Pop, enka; creative rock/electronic.",
+  regions: ['Tokyo', 'Osaka', 'Kyoto'],
+  artists: ['Hikaru Utada', 'Tatsuro Yamashita'],
+  spotify: "https://open.spotify.com/search/japan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/18/Tokyo_Tower_and_around_Skyscrapers.jpg"
+},
+{
+  name: 'South Korea',
+  descriptionFr: "K-Pop, hip-hop, R&B et trot.",
+  descriptionEn: "K-Pop, hip-hop, R&B and trot.",
+  regions: ['Seoul', 'Busan'],
+  artists: ['BTS', 'BLACKPINK', 'Epik High'],
+  spotify: "https://open.spotify.com/search/korea%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/09/Seoul_Skyline_2019.jpg"
+},
+{
+  name: 'China',
+  descriptionFr: "Mandopop, traditions (guqin/guzheng), rock chinois.",
+  descriptionEn: "Mandopop, classical (guqin/guzheng), Chinese rock.",
+  regions: ['Beijing', 'Shanghai', 'Chengdu'],
+  artists: ['Faye Wong', 'Cui Jian'],
+  spotify: "https://open.spotify.com/search/china%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Shanghai_Skyline%2C_2017.jpg"
+},
+{
+  name: 'Hong Kong',
+  descriptionFr: "Cantopop iconique; pop/rock cantonais.",
+  descriptionEn: "Iconic Cantopop; Cantonese pop/rock.",
+  regions: ['Hong Kong Island', 'Kowloon'],
+  artists: ['Leslie Cheung', 'Eason Chan'],
+  spotify: "https://open.spotify.com/search/hong%20kong%20cantopop",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Hong_Kong_Skyline_Restitch_-_Dec_2007.jpg"
+},
+{
+  name: 'Taiwan',
+  descriptionFr: "Mandopop, indie/électro Taipei.",
+  descriptionEn: "Mandopop, Taipei indie/electronic.",
+  regions: ['Taipei', 'Kaohsiung'],
+  artists: ['Jay Chou', 'Jolin Tsai'],
+  spotify: "https://open.spotify.com/search/taiwan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Taipei_101_2020.jpg"
+},
+{
+  name: 'Mongolia',
+  descriptionFr: "Chant diphonique khoomei; rock folk.",
+  descriptionEn: "Khoomei throat singing; folk rock.",
+  regions: ['Ulaanbaatar'],
+  artists: ['The HU'],
+  spotify: "https://open.spotify.com/search/mongolia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Ulaanbaatar_skyline.jpg"
+},
+
+// ===== SOUTH ASIA =====
+{
+  name: 'India',
+  descriptionFr: "Bollywood, hindoustani, carnatique, bhangra.",
+  descriptionEn: "Bollywood, Hindustani, Carnatic, Bhangra.",
+  regions: ['Mumbai', 'Delhi', 'Chennai', 'Kolkata'],
+  artists: ['AR Rahman', 'Ravi Shankar'],
+  spotify: "https://open.spotify.com/search/india%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Mumbai_Skyline_at_Night.jpg"
+},
+{
+  name: 'Pakistan',
+  descriptionFr: "Qawwali, Coke Studio fusions.",
+  descriptionEn: "Qawwali, Coke Studio fusions.",
+  regions: ['Lahore', 'Karachi', 'Islamabad'],
+  artists: ['Nusrat Fateh Ali Khan', 'Atif Aslam'],
+  spotify: "https://open.spotify.com/search/pakistan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Badshahi_Masjid_Sunset.jpg"
+},
+{
+  name: 'Bangladesh',
+  descriptionFr: "Baul, pop/rock moderne.",
+  descriptionEn: "Baul, modern pop/rock.",
+  regions: ['Dhaka', 'Chittagong'],
+  artists: ['Purna Das Baul'],
+  spotify: "https://open.spotify.com/search/bangladesh%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/2/23/Dhaka_Skyline.jpg"
+},
+{
+  name: 'Sri Lanka',
+  descriptionFr: "Baila, pop/folklore moderne.",
+  descriptionEn: "Baila, modern pop/folk.",
+  regions: ['Colombo', 'Kandy'],
+  artists: ['W.D. Amaradeva'],
+  spotify: "https://open.spotify.com/search/sri%20lanka%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/b/bb/Colombo_Skyline.jpg"
+},
+{
+  name: 'Nepal',
+  descriptionFr: "Folk népalais, pop/rock Kathmandu.",
+  descriptionEn: "Nepali folk, Kathmandu pop/rock.",
+  regions: ['Kathmandu', 'Pokhara'],
+  artists: ['Kutumba'],
+  spotify: "https://open.spotify.com/search/nepal%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9b/Kathmandu_skyline.jpg"
+},
+{
+  name: 'Bhutan',
+  descriptionFr: "Folk dranyen, chants rituels.",
+  descriptionEn: "Dranyen folk, ritual songs.",
+  regions: ['Thimphu', 'Paro'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/bhutan%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Thimphu_Skyline.jpg"
+},
+{
+  name: 'Maldives',
+  descriptionFr: "Boduberu percussif; pop insulaire.",
+  descriptionEn: "Percussive Boduberu; island pop.",
+  regions: ['Malé'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/maldives%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Male%2C_Maldives.jpg"
+},
+
+// ===== SOUTHEAST ASIA =====
+{
+  name: 'Indonesia',
+  descriptionFr: "Gamelan, dangdut, kroncong.",
+  descriptionEn: "Gamelan, dangdut, kroncong.",
+  regions: ['Jakarta', 'Yogyakarta', 'Bali'],
+  artists: ['Rhoma Irama', 'Gamelan Gong Kebyar'],
+  spotify: "https://open.spotify.com/search/indonesia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/93/Jakarta_Skyline_Part_2.jpg"
+},
+{
+  name: 'Malaysia',
+  descriptionFr: "Pop malaise, nasyid, joget.",
+  descriptionEn: "Malay pop, nasyid, joget.",
+  regions: ['Kuala Lumpur', 'Penang'],
+  artists: ['Yuna', 'Raihan'],
+  spotify: "https://open.spotify.com/search/malaysia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/KL_Skyline_Petronas.jpg"
+},
+{
+  name: 'Singapore',
+  descriptionFr: "Mandopop SG, scène multi-ethnique.",
+  descriptionEn: "Mandopop SG, multi-ethnic scene.",
+  regions: ['Singapore'],
+  artists: ['JJ Lin'],
+  spotify: "https://open.spotify.com/search/singapore%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Singapore_skyline.jpg"
+},
+{
+  name: 'Philippines',
+  descriptionFr: "OPM pop/rock, kundiman.",
+  descriptionEn: "OPM pop/rock, kundiman.",
+  regions: ['Manila', 'Cebu', 'Davao'],
+  artists: ['Eraserheads', "Ben&Ben"],
+  spotify: "https://open.spotify.com/search/philippines%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/14/Manila_Skyline_View.jpg"
+},
+{
+  name: 'Thailand',
+  descriptionFr: "Thai pop, luk thung, mor lam.",
+  descriptionEn: "Thai pop, luk thung, mor lam.",
+  regions: ['Bangkok', 'Chiang Mai', 'Isan'],
+  artists: ['Tilly Birds', 'Pumpuang Duangjan'],
+  spotify: "https://open.spotify.com/search/thailand%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Bangkok_Skytrain_skyline.jpg"
+},
+{
+  name: 'Vietnam',
+  descriptionFr: "V-Pop, nhạc vàng.",
+  descriptionEn: "V-Pop, nhạc vàng.",
+  regions: ['Hanoi', 'Ho Chi Minh City'],
+  artists: ['Sơn Tùng M-TP', 'Khánh Ly'],
+  spotify: "https://open.spotify.com/search/vietnam%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Ho_Chi_Minh_City_Skyline.jpg"
+},
+{
+  name: 'Cambodia',
+  descriptionFr: "Khmer oldies, Cambodian rock (revival).",
+  descriptionEn: "Khmer oldies, Cambodian rock (revival).",
+  regions: ['Phnom Penh', 'Siem Reap'],
+  artists: ['Sinn Sisamouth', 'Dengue Fever'],
+  spotify: "https://open.spotify.com/search/cambodia%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Phnom_Penh_Skyline.jpg"
+},
+{
+  name: 'Laos',
+  descriptionFr: "Lao lam, khene, folk.",
+  descriptionEn: "Lao lam, khene, folk.",
+  regions: ['Vientiane', 'Luang Prabang'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/laos%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Vientiane_Skyline.jpg"
+},
+{
+  name: 'Myanmar',
+  descriptionFr: "Pop birmane, hsaing waing tradi.",
+  descriptionEn: "Burmese pop, traditional hsaing waing.",
+  regions: ['Yangon', 'Mandalay'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/myanmar%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Yangon_Skyline.jpg"
+},
+{
+  name: 'Brunei',
+  descriptionFr: "Pop malaise locale.",
+  descriptionEn: "Local Malay pop.",
+  regions: ['Bandar Seri Begawan'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/brunei%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Bandar_Seri_Begawan_Skyline.jpg"
+},
+{
+  name: 'Timor-Leste',
+  descriptionFr: "Tebe-dai, chant/danse communautaire.",
+  descriptionEn: "Tebe-dai, communal singing/dance.",
+  regions: ['Dili', 'Baucau'],
+  artists: [],
+  spotify: "https://open.spotify.com/search/timor%20leste%20music",
+  image: "https://upload.wikimedia.org/wikipedia/commons/8/86/Timor_Leste_Hills.jpg"
+    },
 ];
 
 
