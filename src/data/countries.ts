@@ -264,7 +264,7 @@ export const countries: Item[] = [
       { city: 'Cayenne', noteFr: "Kasékò/aléké.", noteEn: "Kasékò/aléké." }
     ]
   },
-],
+
 // ——— CARAÏBES ———
   {
     name: 'Jamaica',
