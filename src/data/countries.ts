@@ -416,7 +416,7 @@ export const countries: Item[] = [
     name: 'Antigua & Barbuda',
     descriptionFr: "Benna traditionnelle et soca.",
     descriptionEn: "Traditional benna and soca.",
-    regions: ['St. John's'],
+    regions: ["'St. John's'"],
     artists: ['Burning Flames'],
     spotify: "https://open.spotify.com/search/Antigua%20and%20Barbuda%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/8/82/St_Johns_Antigua.jpg",
