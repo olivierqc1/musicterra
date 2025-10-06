@@ -404,7 +404,7 @@ export const countries: Item[] = [
     name: 'Grenada',
     descriptionFr: "Jab Jab soca et calypso local.",
     descriptionEn: "Jab Jab soca and local calypso.",
-    regions: ["St. George's", 'Gouyave'],
+    regions: ["St. George's", "Gouyave"],
     artists: ['Tallpree'],
     spotify: "https://open.spotify.com/search/Grenada%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/2/22/St._Georges_Grenada.jpg",
