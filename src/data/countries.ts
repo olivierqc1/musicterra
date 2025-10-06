@@ -1057,7 +1057,7 @@ export const countries: Item[] = [
     name: 'Yemen',
     descriptionFr: "Hadrami/outh, chant modal.",
     descriptionEn: "Hadrami/oud, modal singing.",
-    regions: ['Sana'a', 'Aden', 'Mukalla'],
+    regions: ["Sana'a", 'Aden', 'Mukalla'],
     artists: ['Abu Bakr Salem'],
     spotify: "https://open.spotify.com/search/yemen%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Sanaa_Skyline.jpg"
