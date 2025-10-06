@@ -1,21 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { searchArtistEvents, BandsintownEvent, formatEventDate, getEventCity } from '../services/bandsintown';
+import { searchEventsByCity, searchEventsByLocation, filterMusicEvents, TicketmasterEvent } from '../services/ticketmaster';
 import { markConcertStatus, getUserConcertStatus } from '../services/concerts';
 import { useAuth } from '../context/AuthContext';
 import ConcertReview from './ConcertReview';
 import ConcertFeed from './ConcertFeed';
+import LocationSelector from './LocationSelector';
 
 interface Props {
   language: 'fr' | 'en';
   suggestedArtists?: string[];
 }
 
+type CombinedEvent = {
+  id: string;
+  name: string;
+  artistName: string;
+  venueName: string;
+  city: string;
+  date: string;
+  time?: string;
+  url: string;
+  source: 'bandsintown' | 'ticketmaster';
+  raw: BandsintownEvent | TicketmasterEvent;
+};
+
 export default function Concerts({ language, suggestedArtists = [] }: Props) {
-  const [query, setQuery] = useState('');
-  const [events, setEvents] = useState<BandsintownEvent[]>([]);
+  const [searchMode, setSearchMode] = useState<'artist' | 'location'>('artist');
+  const [artistQuery, setArtistQuery] = useState('');
+  const [events, setEvents] = useState<CombinedEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [userStatuses, setUserStatuses] = useState<Record<string, any>>({});
-  const [reviewingEvent, setReviewingEvent] = useState<BandsintownEvent | null>(null);
+  const [reviewingEvent, setReviewingEvent] = useState<CombinedEvent | null>(null);
   const [view, setView] = useState<'search' | 'feed'>('search');
 
   const { session } = useAuth();
@@ -34,16 +50,63 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     setUserStatuses(statuses);
   };
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
+  useEffect(() => {
+    if (events.length > 0 && session) {
+      loadUserStatuses();
+    }
+  }, [events, session]);
+
+  const handleArtistSearch = async () => {
+    if (!artistQuery.trim()) return;
     
     setLoading(true);
     try {
-      const results = await searchArtistEvents(query);
-      setEvents(results);
-      if (results.length > 0) {
-        await loadUserStatuses();
+      const bandsintownEvents = await searchArtistEvents(artistQuery);
+      const combined = bandsintownEvents.map(e => ({
+        id: e.id,
+        name: e.lineup.join(', '),
+        artistName: e.lineup[0] || artistQuery,
+        venueName: e.venue.name,
+        city: getEventCity(e),
+        date: e.datetime,
+        url: e.url,
+        source: 'bandsintown' as const,
+        raw: e
+      }));
+      setEvents(combined);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  };
+
+  const handleLocationSearch = async (city: string, coords?: { lat: number; lng: number }) => {
+    setLoading(true);
+    try {
+      let ticketmasterEvents: TicketmasterEvent[] = [];
+      
+      if (coords) {
+        ticketmasterEvents = await searchEventsByLocation(coords.lat, coords.lng, 50);
+      } else {
+        ticketmasterEvents = await searchEventsByCity(city);
       }
+
+      const musicEvents = filterMusicEvents(ticketmasterEvents);
+      
+      const combined = musicEvents.map(e => ({
+        id: e.id,
+        name: e.name,
+        artistName: e._embedded?.attractions?.[0]?.name || e.name,
+        venueName: e._embedded?.venues?.[0]?.name || 'Venue',
+        city: e._embedded?.venues?.[0]?.city?.name || city,
+        date: e.dates.start.localDate,
+        time: e.dates.start.localTime,
+        url: e.url,
+        source: 'ticketmaster' as const,
+        raw: e
+      }));
+
+      setEvents(combined);
     } catch (err) {
       console.error(err);
     }
@@ -51,7 +114,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
   };
 
   const handleMarkStatus = async (
-    event: BandsintownEvent, 
+    event: CombinedEvent,
     status: 'going' | 'interested' | 'attended'
   ) => {
     if (!session) {
@@ -65,13 +128,12 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     }
 
     try {
-      const city = getEventCity(event);
       await markConcertStatus(
         event.id,
-        event.lineup[0] || 'Concert',
-        event.datetime,
-        event.venue.name,
-        city,
+        event.artistName,
+        event.date,
+        event.venueName,
+        event.city,
         status
       );
       await loadUserStatuses();
@@ -81,8 +143,8 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     }
   };
 
-  const isEventPast = (event: BandsintownEvent) => {
-    return new Date(event.datetime) < new Date();
+  const isEventPast = (event: CombinedEvent) => {
+    return new Date(event.date) < new Date();
   };
 
   return (
@@ -114,66 +176,104 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
           <div style={styles.card}>
             <h2>{t('🎤 Concerts à venir', '🎤 Upcoming concerts')}</h2>
             
-            {/* Recherche par artiste seulement */}
-            <div style={{ display: 'flex', gap: 8 }}>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t('Nom d\'artiste...', 'Artist name...')}
-                style={styles.input}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              />
-              <button onClick={handleSearch} style={styles.primaryBtn} disabled={loading}>
-                {loading ? '...' : t('Chercher', 'Search')}
-              </button>
+            {/* Search mode toggle */}
+            <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+              <label style={styles.radioLabel}>
+                <input
+                  type="radio"
+                  checked={searchMode === 'artist'}
+                  onChange={() => setSearchMode('artist')}
+                />
+                {t('Par artiste', 'By artist')}
+              </label>
+              <label style={styles.radioLabel}>
+                <input
+                  type="radio"
+                  checked={searchMode === 'location'}
+                  onChange={() => setSearchMode('location')}
+                />
+                {t('Par localisation', 'By location')}
+              </label>
             </div>
 
-            {/* Suggestions basées sur découverte */}
-            {suggestedArtists.length > 0 && events.length === 0 && (
-              <div style={{ marginTop: 12 }}>
-                <p style={{ fontSize: 14, color: '#555', marginBottom: 8 }}>
-                  {t('Suggestions basées sur ta découverte:', 'Suggestions based on your discovery:')}
-                </p>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  {suggestedArtists.slice(0, 5).map(artist => (
-                    <button
-                      key={artist}
-                      onClick={() => {
-                        setQuery(artist);
-                        setTimeout(() => handleSearch(), 100);
-                      }}
-                      style={styles.suggestionBtn}
-                    >
-                      {artist}
-                    </button>
-                  ))}
+            {/* Artist search */}
+            {searchMode === 'artist' && (
+              <>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input
+                    type="text"
+                    value={artistQuery}
+                    onChange={(e) => setArtistQuery(e.target.value)}
+                    placeholder={t('Nom d\'artiste...', 'Artist name...')}
+                    style={styles.input}
+                    onKeyDown={(e) => e.key === 'Enter' && handleArtistSearch()}
+                  />
+                  <button onClick={handleArtistSearch} style={styles.primaryBtn} disabled={loading}>
+                    {loading ? '...' : t('Chercher', 'Search')}
+                  </button>
                 </div>
-              </div>
+
+                {/* Suggestions */}
+                {suggestedArtists.length > 0 && events.length === 0 && (
+                  <div style={{ marginTop: 12 }}>
+                    <p style={{ fontSize: 14, color: '#555', marginBottom: 8 }}>
+                      {t('Suggestions:', 'Suggestions:')}
+                    </p>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      {suggestedArtists.slice(0, 5).map(artist => (
+                        <button
+                          key={artist}
+                          onClick={() => {
+                            setArtistQuery(artist);
+                            setTimeout(() => handleArtistSearch(), 100);
+                          }}
+                          style={styles.suggestionBtn}
+                        >
+                          {artist}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Location search */}
+            {searchMode === 'location' && (
+              <LocationSelector
+                onLocationSelect={handleLocationSearch}
+                language={language}
+              />
             )}
           </div>
 
-          {/* Résultats */}
-          {events.length > 0 && (
+          {/* Results */}
+          {loading && (
+            <div style={{ textAlign: 'center', padding: 20 }}>
+              <p>{t('Recherche en cours...', 'Searching...')}</p>
+            </div>
+          )}
+
+          {events.length > 0 && !loading && (
             <div style={styles.card}>
               <h3>
-                {events.length} {t('concert(s) à venir', 'upcoming concert(s)')}
+                {events.length} {t('concert(s) trouvé(s)', 'concert(s) found')}
               </h3>
               <div style={{ display: 'grid', gap: 12 }}>
                 {events.map((event) => {
                   const userStatus = userStatuses[event.id];
                   const isPast = isEventPast(event);
-                  const city = getEventCity(event);
 
                   return (
                     <div key={event.id} style={styles.eventCard}>
                       <div style={{ flex: 1 }}>
-                        <strong>{event.lineup.join(', ')}</strong>
+                        <strong>{event.artistName}</strong>
                         <p style={{ margin: '4px 0', fontSize: 14, color: '#555' }}>
-                          📍 {event.venue.name}, {city}
+                          📍 {event.venueName}, {event.city}
                         </p>
                         <p style={{ margin: '4px 0', fontSize: 14, color: '#555' }}>
-                          📅 {formatEventDate(event.datetime, language)}
+                          📅 {new Date(event.date).toLocaleDateString(language)}
+                          {event.time && ` • ${event.time}`}
                         </p>
 
                         {/* Status badge */}
@@ -241,31 +341,18 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                             onClick={() => setReviewingEvent(event)}
                             style={styles.actionBtn}
                           >
-                            {t('Modifier avis', 'Edit review')}
+                            {t('Modifier', 'Edit')}
                           </button>
                         )}
 
-                        {/* Lien billets */}
-                        {event.offers?.[0]?.url && (
-                          <a 
-                            href={event.offers[0].url} 
-                            target="_blank" 
-                            rel="noreferrer"
-                            style={styles.linkBtn}
-                          >
-                            {t('Billets', 'Tickets')} →
-                          </a>
-                        )}
-                        {!event.offers?.[0]?.url && event.url && (
-                          <a 
-                            href={event.url} 
-                            target="_blank" 
-                            rel="noreferrer"
-                            style={styles.linkBtn}
-                          >
-                            {t('Infos', 'Info')} →
-                          </a>
-                        )}
+                        <a 
+                          href={event.url} 
+                          target="_blank" 
+                          rel="noreferrer"
+                          style={styles.linkBtn}
+                        >
+                          {t('Billets', 'Tickets')} →
+                        </a>
                       </div>
                     </div>
                   );
@@ -274,9 +361,9 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
             </div>
           )}
 
-          {events.length === 0 && !loading && query && (
+          {events.length === 0 && !loading && (artistQuery || searchMode === 'location') && (
             <p style={{ textAlign: 'center', color: '#777' }}>
-              {t('Aucun concert trouvé pour cet artiste', 'No concerts found for this artist')}
+              {t('Aucun concert trouvé', 'No concerts found')}
             </p>
           )}
         </>
@@ -291,7 +378,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
       {reviewingEvent && (
         <ConcertReview
           eventId={reviewingEvent.id}
-          eventName={reviewingEvent.lineup.join(', ')}
+          eventName={reviewingEvent.artistName}
           onClose={() => setReviewingEvent(null)}
           onSuccess={async () => {
             await loadUserStatuses();
@@ -324,6 +411,12 @@ const styles: Record<string, React.CSSProperties> = {
     borderColor: '#667eea', 
     background: '#667eea', 
     color: '#fff' 
+  },
+  radioLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    cursor: 'pointer'
   },
   input: { 
     flex: 1, 
