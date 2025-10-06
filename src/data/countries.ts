@@ -959,7 +959,7 @@ export const countries: Item[] = [
     descriptionFr: "Pop arabe, tarab moderne, scène Beyrouth.",
     descriptionEn: "Arabic pop, modern tarab, Beirut scene.",
     regions: ['Beirut', 'Tripoli'],
-    artists: ['Fairuz', 'Mashrou' Leila'],
+    artists: ["Fairuz", "Mashrou' Leila"],
     spotify: "https://open.spotify.com/search/lebanon%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/8/82/Beirut_Skyline.jpg"
   },
