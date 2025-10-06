@@ -789,7 +789,7 @@ export const countries: Item[] = [
     descriptionFr: "Folk moldave/roumain, pop/électro récente.",
     descriptionEn: "Moldovan/Romanian folk, recent pop/electronic.",
     regions: ['Chișinău', 'Bălți'],
-    artists: ['Zdob și Zdub', 'Carla's Dreams'],
+    artists: ['Zdob și Zdub', "'Carla's Dreams'"],
     spotify: "https://open.spotify.com/search/Moldova%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Chisinau_skyline.jpg"
   },
