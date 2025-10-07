@@ -1,445 +1,262 @@
-// src/components/Profile.tsx
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
-import { getAllRatings } from "../lib/ratings";
-import { runFullDiagnostic } from "../lib/setupHelper";
-import type { Rating } from "../lib/ratings";
+import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
+import { getProfile, getUserGroups, Profile as ProfileType } from '../services/profile';
+import ProfileEdit from './ProfileEdit';
+import ProfileSearch from './ProfileSearch';
 
-interface ProfileProps {
-  language?: "fr" | "en";
+interface Props {
+  language: 'fr' | 'en';
 }
 
-const Profile: React.FC<ProfileProps> = ({ language = "fr" }) => {
-  const { profile, updateProfile, signOut, session, refreshProfile } = useAuth();
-  const [displayName, setDisplayName] = useState("");
-  const [ratings, setRatings] = useState<Rating[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [diagnostic, setDiagnostic] = useState<any>(null);
-  const [showDiagnostic, setShowDiagnostic] = useState(false);
+export default function Profile({ language }: Props) {
+  const { session } = useAuth();
+  const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [view, setView] = useState<'profile' | 'search'>('profile');
 
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
 
   useEffect(() => {
-    if (profile) {
-      setDisplayName(profile.display_name || "");
-      loadRatings();
+    if (session) {
+      loadProfile();
+      loadGroups();
     }
-  }, [profile]);
+  }, [session]);
 
-  const loadRatings = async () => {
-    try {
-      const data = await getAllRatings();
-      setRatings(data);
-    } catch (error) {
-      console.error("Erreur chargement notes:", error);
-    }
-  };
-
-  const handleDiagnostic = async () => {
+  const loadProfile = async () => {
+    if (!session) return;
     setLoading(true);
-    try {
-      const result = await runFullDiagnostic();
-      setDiagnostic(result);
-      setShowDiagnostic(true);
-      
-      // Si profil créé, rafraîchir
-      if (result.canProceed && result.recommendation.includes("créé")) {
-        await refreshProfile();
-      }
-    } catch (error) {
-      console.error("Erreur diagnostic:", error);
-    } finally {
-      setLoading(false);
-    }
+    const data = await getProfile(session.user.id);
+    setProfile(data);
+    setLoading(false);
   };
 
-  const handleSaveProfile = async () => {
-    if (!profile) return;
-
-    try {
-      setLoading(true);
-      await updateProfile({
-        display_name: displayName || undefined,
-        preferred_language: language,
-      });
-
-      setEditMode(false);
-      alert(t("✅ Profil mis à jour", "✅ Profile updated"));
-    } catch (error: any) {
-      // Si erreur, lancer le diagnostic
-      console.error("Erreur mise à jour:", error);
-      alert(
-        t(
-          "❌ Erreur de sauvegarde. Clique sur 'Diagnostic' pour plus d'infos.",
-          "❌ Save error. Click 'Diagnostic' for more info."
-        )
-      );
-      await handleDiagnostic();
-    } finally {
-      setLoading(false);
-    }
+  const loadGroups = async () => {
+    if (!session) return;
+    const data = await getUserGroups(session.user.id);
+    setGroups(data);
   };
 
-  if (!profile) {
-    return (
-      <div style={styles.card}>
-        <p>{t("Chargement du profil...", "Loading profile...")}</p>
-        <button onClick={handleDiagnostic} style={styles.diagnosticButton}>
-          {t("🔍 Lancer le diagnostic", "🔍 Run diagnostic")}
-        </button>
-      </div>
-    );
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  if (loading) {
+    return <p>{t('Chargement...', 'Loading...')}</p>;
   }
 
-  // Statistiques
-  const genreRatings = ratings.filter((r) => r.item_type === "genre");
-  const countryRatings = ratings.filter((r) => r.item_type === "country");
-  const avgScore =
-    ratings.length > 0
-      ? Math.round(
-          (ratings.reduce((sum, r) => sum + r.score, 0) / ratings.length) * 10
-        ) / 10
-      : 0;
+  if (!profile) {
+    return <p>{t('Erreur de chargement du profil', 'Error loading profile')}</p>;
+  }
 
   return (
-    <div style={{ display: "grid", gap: 16 }}>
-      {/* Panneau de diagnostic */}
-      {showDiagnostic && diagnostic && (
-        <div
+    <div style={{ display: 'grid', gap: 16 }}>
+      {/* Toggle view */}
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button
+          onClick={() => setView('profile')}
           style={{
-            ...styles.card,
-            border: diagnostic.canProceed
-              ? "2px solid #10b981"
-              : "2px solid #f59e0b",
-            background: diagnostic.canProceed ? "#ecfdf5" : "#fffbeb",
+            ...styles.tabBtn,
+            ...(view === 'profile' ? styles.tabActive : {})
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 12,
-            }}
-          >
-            <h4 style={{ margin: 0 }}>
-              {t("🔍 Résultat du diagnostic", "🔍 Diagnostic result")}
-            </h4>
-            <button
-              onClick={() => setShowDiagnostic(false)}
-              style={styles.closeButton}
-            >
-              ✕
-            </button>
-          </div>
+          {t('Mon profil', 'My profile')}
+        </button>
+        <button
+          onClick={() => setView('search')}
+          style={{
+            ...styles.tabBtn,
+            ...(view === 'search' ? styles.tabActive : {})
+          }}
+        >
+          {t('Rechercher', 'Search')}
+        </button>
+      </div>
 
-          <div style={{ marginBottom: 12, fontWeight: 600 }}>
-            {diagnostic.recommendation}
-          </div>
-
-          <details>
-            <summary style={{ cursor: "pointer", fontSize: 13 }}>
-              {t("Détails techniques", "Technical details")}
-            </summary>
-            <div style={{ marginTop: 8, fontSize: 12, fontFamily: "monospace" }}>
-              {diagnostic.results.map((r: any, i: number) => (
-                <div key={i} style={{ marginBottom: 8 }}>
-                  <strong>
-                    {r.status === "ok" ? "✅" : r.status === "warning" ? "⚠️" : "❌"}{" "}
-                    {r.message}
-                  </strong>
-                  {r.details && (
-                    <pre
-                      style={{
-                        fontSize: 10,
-                        overflow: "auto",
-                        background: "#f9fafb",
-                        padding: 8,
-                        borderRadius: 6,
-                        marginTop: 4,
-                      }}
-                    >
-                      {JSON.stringify(r.details, null, 2)}
-                    </pre>
-                  )}
-                </div>
-              ))}
-            </div>
-          </details>
-
-          {!diagnostic.canProceed && (
-            <div style={{ marginTop: 12, fontSize: 13 }}>
-              <strong>
-                {t("📝 Action requise:", "📝 Action required:")}
-              </strong>
-              <p style={{ margin: "6px 0 0" }}>
-                {t(
-                  "Va sur le dashboard Supabase et crée la table 'profiles' avec le script SQL fourni dans la documentation.",
-                  "Go to Supabase dashboard and create the 'profiles' table with the SQL script from the documentation."
+      {view === 'profile' ? (
+        <>
+          {/* Profile Card */}
+          <div style={styles.card}>
+            <div style={styles.profileHeader}>
+              <img
+                src={profile.avatar_url || 'https://via.placeholder.com/100'}
+                alt="Avatar"
+                style={styles.avatar}
+              />
+              <div style={{ flex: 1 }}>
+                <h2 style={{ margin: '0 0 8px' }}>{profile.display_name}</h2>
+                {profile.location && (
+                  <p style={{ margin: '4px 0', color: '#666', fontSize: 14 }}>
+                    📍 {profile.location}
+                  </p>
                 )}
-              </p>
-            </div>
-          )}
+                {profile.bio && (
+                  <p style={{ margin: '8px 0', fontSize: 14 }}>
+                    {profile.bio}
+                  </p>
+                )}
 
-          <button
-            onClick={handleDiagnostic}
-            style={styles.diagnosticButton}
-            disabled={loading}
-          >
-            {loading
-              ? t("⏳ Analyse...", "⏳ Analyzing...")
-              : t("🔄 Re-diagnostiquer", "🔄 Re-diagnose")}
-          </button>
-        </div>
-      )}
-
-      {/* Carte profil */}
-      <div style={styles.card}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <h3 style={{ margin: 0 }}>
-            {t("👤 Mon profil", "👤 My profile")}
-          </h3>
-          <button
-            onClick={handleDiagnostic}
-            style={{ ...styles.diagnosticButton, padding: "6px 12px", fontSize: 12 }}
-            disabled={loading}
-          >
-            {t("🔍 Diagnostic", "🔍 Diagnostic")}
-          </button>
-        </div>
-
-        <div style={{ display: "grid", gap: 12 }}>
-          <div>
-            <label style={styles.label}>{t("Email", "Email")}</label>
-            <input
-              type="text"
-              value={profile.email}
-              disabled
-              style={{ ...styles.input, background: "#f5f5f5" }}
-            />
-          </div>
-
-          <div>
-            <label style={styles.label}>
-              {t("Nom d'affichage", "Display name")}
-            </label>
-            <input
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              placeholder={t("(optionnel)", "(optional)")}
-              disabled={!editMode}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            {!editMode ? (
-              <>
-                <button onClick={() => setEditMode(true)} style={styles.primaryButton}>
-                  {t("✏️ Modifier", "✏️ Edit")}
-                </button>
-                <button onClick={signOut} style={styles.dangerButton}>
-                  {t("🚪 Déconnexion", "🚪 Sign out")}
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={handleSaveProfile}
-                  disabled={loading}
-                  style={styles.primaryButton}
-                >
-                  {loading
-                    ? t("⏳ Sauvegarde...", "⏳ Saving...")
-                    : t("💾 Sauvegarder", "💾 Save")}
-                </button>
-                <button
-                  onClick={() => {
-                    setEditMode(false);
-                    setDisplayName(profile.display_name || "");
-                  }}
-                  style={styles.secondaryButton}
-                >
-                  {t("❌ Annuler", "❌ Cancel")}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Statistiques */}
-      <div style={styles.card}>
-        <h3 style={{ marginTop: 0 }}>
-          {t("📊 Mes statistiques", "📊 My statistics")}
-        </h3>
-
-        <div style={styles.statsGrid}>
-          <div style={styles.statCard}>
-            <div style={styles.statNumber}>{ratings.length}</div>
-            <div style={styles.statLabel}>{t("Notes totales", "Total ratings")}</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statNumber}>{genreRatings.length}</div>
-            <div style={styles.statLabel}>{t("Genres notés", "Genres rated")}</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statNumber}>{countryRatings.length}</div>
-            <div style={styles.statLabel}>{t("Pays notés", "Countries rated")}</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statNumber}>{avgScore}/10</div>
-            <div style={styles.statLabel}>{t("Note moyenne", "Average score")}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Liste des notes */}
-      <div style={styles.card}>
-        <h3 style={{ marginTop: 0 }}>
-          {t("⭐ Mes notes récentes", "⭐ My recent ratings")}
-        </h3>
-
-        {ratings.length === 0 ? (
-          <p style={{ color: "#888" }}>
-            {t(
-              "Aucune note pour le moment. Explore des genres et pays dans l'onglet Découvrir !",
-              "No ratings yet. Explore genres and countries in the Discover tab!"
-            )}
-          </p>
-        ) : (
-          <div style={{ display: "grid", gap: 8, marginTop: 12 }}>
-            {ratings.slice(0, 10).map((rating) => (
-              <div key={rating.id} style={styles.ratingRow}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600 }}>{rating.item_name}</div>
-                  <div style={{ fontSize: 12, color: "#666" }}>
-                    {t(
-                      rating.item_type === "genre" ? "Genre" : "Pays",
-                      rating.item_type === "genre" ? "Genre" : "Country"
+                {/* Social Links */}
+                {(profile.instagram_handle || profile.facebook_url) && (
+                  <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+                    {profile.instagram_handle && (
+                      
+                        href={`https://instagram.com/${profile.instagram_handle}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={styles.socialLink}
+                      >
+                        📷 Instagram
+                      </a>
+                    )}
+                    {profile.facebook_url && (
+                      
+                        href={profile.facebook_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={styles.socialLink}
+                      >
+                        👥 Facebook
+                      </a>
                     )}
                   </div>
-                </div>
-                <div style={styles.scoreBox}>{rating.score}/10</div>
+                )}
               </div>
-            ))}
+              <button onClick={() => setEditing(true)} style={styles.editBtn}>
+                {t('✏️ Modifier', '✏️ Edit')}
+              </button>
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* Groups */}
+          <div style={styles.card}>
+            <h3>{t('Mes groupes', 'My groups')} ({groups.length})</h3>
+            {groups.length === 0 ? (
+              <p style={{ color: '#777', fontSize: 14 }}>
+                {t('Vous n\'êtes membre d\'aucun groupe', 'You are not in any groups yet')}
+              </p>
+            ) : (
+              <div style={{ display: 'grid', gap: 10 }}>
+                {groups.map((membership) => (
+                  <div key={membership.group_id} style={styles.groupCard}>
+                    <div style={{ flex: 1 }}>
+                      <strong>{membership.groups.name}</strong>
+                      {membership.groups.description && (
+                        <p style={{ fontSize: 13, color: '#666', margin: '4px 0' }}>
+                          {membership.groups.description}
+                        </p>
+                      )}
+                    </div>
+                    <span style={styles.roleBadge}>
+                      {membership.role === 'owner' && t('👑 Admin', '👑 Admin')}
+                      {membership.role === 'member' && t('Membre', 'Member')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <button onClick={handleSignOut} style={styles.signOutBtn}>
+            {t('Se déconnecter', 'Sign out')}
+          </button>
+        </>
+      ) : (
+        <ProfileSearch language={language} />
+      )}
+
+      {/* Edit Modal */}
+      {editing && (
+        <ProfileEdit
+          currentProfile={profile}
+          onSave={() => {
+            setEditing(false);
+            loadProfile();
+          }}
+          onCancel={() => setEditing(false)}
+          language={language}
+        />
+      )}
     </div>
   );
-};
+}
 
-// Styles
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    border: "1px solid #e7e7e7",
-    borderRadius: 14,
-    padding: 20,
-    background: "#fff",
-  },
-  label: {
-    display: "block",
-    fontSize: 13,
-    fontWeight: 600,
-    marginBottom: 6,
-    color: "#444",
-  },
-  input: {
-    width: "100%",
-    padding: "10px 12px",
-    border: "1px solid #ddd",
-    borderRadius: 8,
-    fontSize: 15,
-    outline: "none",
-  },
-  primaryButton: {
-    padding: "10px 16px",
-    border: "none",
-    borderRadius: 8,
-    background: "#667eea",
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: "pointer",
-  },
-  secondaryButton: {
-    padding: "10px 16px",
-    border: "1px solid #ddd",
-    borderRadius: 8,
-    background: "#fff",
-    color: "#444",
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: "pointer",
-  },
-  dangerButton: {
-    padding: "10px 16px",
-    border: "1px solid #dc2626",
-    borderRadius: 8,
-    background: "#fef2f2",
-    color: "#dc2626",
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: "pointer",
-  },
-  diagnosticButton: {
-    padding: "10px 16px",
-    border: "1px solid #667eea",
-    borderRadius: 8,
-    background: "#fff",
-    color: "#667eea",
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: "pointer",
-  },
-  closeButton: {
-    background: "none",
-    border: "none",
-    fontSize: 18,
-    cursor: "pointer",
-    padding: 4,
-  },
-  statsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-    gap: 12,
-    marginTop: 12,
-  },
-  statCard: {
     padding: 16,
-    background: "#f8f9fa",
-    borderRadius: 10,
-    textAlign: "center",
+    background: '#fff',
+    borderRadius: 12,
+    border: '1px solid #e7e7e7'
   },
-  statNumber: {
-    fontSize: 28,
-    fontWeight: 700,
-    color: "#667eea",
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 13,
-    color: "#666",
-  },
-  ratingRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    padding: 12,
-    background: "#f8f9fa",
-    borderRadius: 8,
-  },
-  scoreBox: {
-    padding: "6px 12px",
-    background: "#667eea",
-    color: "#fff",
-    borderRadius: 6,
+  tabBtn: {
+    padding: '8px 14px',
+    background: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: 999,
+    cursor: 'pointer',
     fontSize: 14,
-    fontWeight: 600,
+    fontWeight: 500
   },
+  tabActive: {
+    background: '#667eea',
+    color: '#fff',
+    borderColor: '#667eea'
+  },
+  profileHeader: {
+    display: 'flex',
+    gap: 16,
+    alignItems: 'flex-start'
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: '50%',
+    objectFit: 'cover',
+    border: '4px solid #667eea'
+  },
+  editBtn: {
+    padding: '8px 14px',
+    background: '#f0f0f0',
+    border: '1px solid #ddd',
+    borderRadius: 8,
+    cursor: 'pointer',
+    fontSize: 14,
+    whiteSpace: 'nowrap'
+  },
+  socialLink: {
+    fontSize: 13,
+    color: '#667eea',
+    textDecoration: 'none',
+    fontWeight: 500
+  },
+  groupCard: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+    background: '#f9fafb',
+    borderRadius: 8,
+    border: '1px solid #eee'
+  },
+  roleBadge: {
+    padding: '4px 10px',
+    background: '#e0e7ff',
+    color: '#3730a3',
+    borderRadius: 999,
+    fontSize: 12,
+    fontWeight: 600
+  },
+  signOutBtn: {
+    padding: 12,
+    background: '#ef4444',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    cursor: 'pointer',
+    fontWeight: 500
+  }
 };
-
-export default Profile;
