@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { genres } from "./data/genres";
 import { countries } from "./data/countries";
 import { similarityMatrix } from "./data/matrix";
@@ -10,8 +10,11 @@ import Profile from "./components/Profile";
 import AuthGate from "./components/AuthGate";
 import Groups from "./components/Groups";
 import Concerts from "./components/Concerts";
+import EmergingArtists from "./components/EmergingArtists";
 
 import { useAuth } from "./context/AuthContext";
+import { trackAction } from "./services/userBehavior";
+import { updateStreak } from "./services/gamification";
 
 // Types
 type GenreItem = {
@@ -42,11 +45,12 @@ const isCountry = (i: Item): i is CountryItem => "regions" in i;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
-  const [tab, setTab] = useState<"discover" | "groups" | "concerts" | "profile">(
-    "discover"
-  );
+  const [tab, setTab] = useState
+    "discover" | "emerging" | "groups" | "concerts" | "profile"
+  >("discover");
   const [pool, setPool] = useState<"genres" | "countries">("genres");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [currentStreak, setCurrentStreak] = useState<number>(0);
 
   const { session, profile } = useAuth();
 
@@ -58,10 +62,24 @@ const App: React.FC = () => {
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
+  // Mettre à jour le streak à la connexion
+  useEffect(() => {
+    if (session) {
+      updateStreak(session.user.id).then(streak => {
+        setCurrentStreak(streak);
+      });
+    }
+  }, [session]);
+
   // Sélection d'un item via la roue
   const onSpin = (name: string) => {
     const found = items.find((i) => i.name === name) || null;
     setSelectedItem(found);
+
+    // Track l'action de spin
+    if (found && session) {
+      trackAction("spin", pool, found.name);
+    }
   };
 
   // Calcul d'affinité via matrice
@@ -71,6 +89,13 @@ const App: React.FC = () => {
     const row = similarityMatrix[name] || {};
     return Object.entries(row).sort((a, b) => b[1] - a[1]);
   }, [selectedItem]);
+
+  // Handler pour clic Spotify
+  const handleSpotifyClick = () => {
+    if (selectedItem && session) {
+      trackAction("click_spotify", pool, selectedItem.name);
+    }
+  };
 
   return (
     <div style={styles.app}>
@@ -82,12 +107,20 @@ const App: React.FC = () => {
         </div>
 
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {/* Streak indicator */}
+          {session && currentStreak > 0 && (
+            <div style={styles.streakBadge}>
+              🔥 {currentStreak}
+            </div>
+          )}
+
           <button
             onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
             style={styles.secondaryBtn}
           >
             {t("🇬🇧 EN", "🇫🇷 FR")}
           </button>
+
           {session && profile && (
             <span style={{ fontSize: 12, color: "#555" }}>
               {profile.display_name || profile.email}
@@ -106,6 +139,15 @@ const App: React.FC = () => {
           onClick={() => setTab("discover")}
         >
           {t("🔍 Découvrir", "🔍 Discover")}
+        </button>
+        <button
+          style={{
+            ...styles.tabBtn,
+            ...(tab === "emerging" ? styles.tabActive : {}),
+          }}
+          onClick={() => setTab("emerging")}
+        >
+          {t("🌱 Émergents", "🌱 Emerging")}
         </button>
         <button
           style={{
@@ -249,6 +291,7 @@ const App: React.FC = () => {
                           target="_blank"
                           rel="noreferrer"
                           style={styles.primaryLink}
+                          onClick={handleSpotifyClick}
                         >
                           🎧 {t("Playlist Spotify", "Spotify playlist")}
                         </a>
@@ -285,6 +328,13 @@ const App: React.FC = () => {
           </section>
         )}
 
+        {/* EMERGING ARTISTS */}
+        {tab === "emerging" && (
+          <AuthGate mode="inline" language={language}>
+            <EmergingArtists language={language} />
+          </AuthGate>
+        )}
+
         {/* GROUPS */}
         {tab === "groups" && (
           <AuthGate mode="inline" language={language}>
@@ -295,7 +345,7 @@ const App: React.FC = () => {
         {/* CONCERTS */}
         {tab === "concerts" && (
           <AuthGate mode="inline" language={language}>
-            <Concerts 
+            <Concerts
               language={language}
               suggestedArtists={selectedItem?.artists || []}
             />
@@ -327,6 +377,15 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 12,
     flexWrap: "wrap",
     gap: 12,
+  },
+  streakBadge: {
+    padding: "4px 10px",
+    background: "linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)",
+    color: "#fff",
+    borderRadius: 999,
+    fontSize: 13,
+    fontWeight: 600,
+    boxShadow: "0 2px 8px rgba(255,107,107,0.3)",
   },
   tabsBar: {
     display: "flex",
