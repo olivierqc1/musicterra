@@ -244,7 +244,7 @@ const App: React.FC = () => {
                     {/* Spotify */}
                     {selectedItem.spotify && (
                       <p style={{ marginTop: 8 }}>
-                        <a
+                        
                           href={selectedItem.spotify}
                           target="_blank"
                           rel="noreferrer"
@@ -295,7 +295,10 @@ const App: React.FC = () => {
         {/* CONCERTS */}
         {tab === "concerts" && (
           <AuthGate mode="inline" language={language}>
-            <Concerts language={language} />
+            <Concerts 
+              language={language}
+              suggestedArtists={selectedItem?.artists || []}
+            />
           </AuthGate>
         )}
 
