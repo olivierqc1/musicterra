@@ -104,7 +104,7 @@ export default function Profile({ language }: Props) {
                   <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
                     {profile.instagram_handle && (
                       
-                        href={`https://instagram.com/${profile.instagram_handle}`}
+                        href={'https://instagram.com/' + profile.instagram_handle}
                         target="_blank"
                         rel="noreferrer"
                         style={styles.socialLink}
