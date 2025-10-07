@@ -353,7 +353,4 @@ export const genres: Item[] = [
     relatedCountries: ['United States'],
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd"
   },
-  {
-    name: 'East Coast Hip-Hop',
-    descriptionFr: "Hip-hop new-yorkais originel, lyrisme complexe, beats jazz/soul. Compétition technique, culture battle.",
-    descriptionEn: "Original New York hip-hop, complex lyricism, jazz
+  
