@@ -391,5 +391,106 @@ export const genres: Item[] = [
     artists: ['AR Rahman', 'Arijit Singh', 'Lata Mangeshkar'],
     spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0XUfTFmNBRM",
     image: "https://upload.wikimedia.org/wikipedia/commons/4/48/Film_reel_icon.png"
-  }
+  },
+  // Ajoutez ces nouveaux genres dans votre tableau existant
+
+{
+  name: 'Desert Blues',
+  descriptionFr: "Blues touareg du Sahara malien, guitares hypnotiques du désert. Fusion unique de blues américain et traditions nomades.",
+  descriptionEn: "Tuareg blues from Mali's Sahara, hypnotic desert guitars. Unique fusion of American blues and nomadic traditions.",
+  subgenres: ['Touareg Rock', 'Sahel Blues', 'Tishoumaren'],
+  artists: ['Ali Farka Touré', 'Tinariwen', 'Bombino'],
+  origin: 'Mali',
+  relatedCountries: ['Mali', 'Niger', 'Algeria'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4VFhE8rDJI6",
+  image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Sahara_desert.jpg/800px-Sahara_desert.jpg"
+},
+{
+  name: 'Afrobeats',
+  descriptionFr: "Différent de l'Afrobeat de Fela! Fusion moderne nigériane de highlife, hip-hop et dancehall des années 2000.",
+  descriptionEn: "Different from Fela's Afrobeat! Modern Nigerian fusion of highlife, hip-hop and dancehall from the 2000s.",
+  subgenres: ['Naija Pop', 'Afro-fusion', 'Alte'],
+  artists: ['Wizkid', 'Burna Boy', 'Davido'],
+  origin: 'Nigeria',
+  relatedCountries: ['Nigeria', 'Ghana', 'South Africa'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX7QOv0IgJ5mg",
+  image: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Lagos_Island_skyline.jpg"
+},
+{
+  name: 'Amapiano',
+  descriptionFr: "House sud-africaine avec log drums et percussions jazzy. Né dans les townships de Pretoria vers 2012.",
+  descriptionEn: "South African house with log drums and jazzy percussion. Born in Pretoria townships around 2012.",
+  subgenres: ['Private School Amapiano', 'Sgija', 'Bacardi'],
+  artists: ['Kabza De Small', 'DJ Maphorisa', 'Focalistic'],
+  origin: 'South Africa',
+  relatedCountries: ['South Africa'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX9u7XXOp0l5L",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Johannesburg_Skyline.jpg"
+},
+{
+  name: 'City Pop',
+  descriptionFr: "Pop japonaise sophistiquée des années 70-80, fusion jazz-funk-disco. Redécouvert via Internet en 2010s.",
+  descriptionEn: "Sophisticated Japanese pop from the 70s-80s, jazz-funk-disco fusion. Rediscovered via Internet in 2010s.",
+  subgenres: ['AOR Japonais', 'Shibuya-kei'],
+  artists: ['Tatsuro Yamashita', 'Mariya Takeuchi', 'Casiopea'],
+  origin: 'Japan',
+  relatedCountries: ['Japan'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC",
+  image: "https://upload.wikimedia.org/wikipedia/commons/1/18/Tokyo_Tower_and_around_Skyscrapers.jpg"
+},
+{
+  name: 'Mbalax',
+  descriptionFr: "Fusion sénégalaise de sabar traditionnel et influences afro-cubaines des années 70. Popularisé par Youssou N'Dour.",
+  descriptionEn: "Senegalese fusion of traditional sabar and Afro-Cuban influences from the 70s. Popularized by Youssou N'Dour.",
+  subgenres: ['Sabar moderne', 'Mbalax-hip-hop'],
+  artists: ["Youssou N'Dour", 'Orchestra Baobab', 'Baaba Maal'],
+  origin: 'Senegal',
+  relatedCountries: ['Senegal', 'Gambia'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Dakar_Skyline.jpg"
+},
+{
+  name: 'Tropicália',
+  descriptionFr: "Mouvement brésilien psychédélique des années 60 fusionnant rock, bossa nova et traditions régionales.",
+  descriptionEn: "Brazilian psychedelic movement from the 60s fusing rock, bossa nova and regional traditions.",
+  subgenres: ['Tropicália moderna'],
+  artists: ['Caetano Veloso', 'Gilberto Gil', 'Os Mutantes'],
+  origin: 'Brazil',
+  relatedCountries: ['Brazil'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX7UE7qrnkvsf",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Copacabana_Beach_Rio_de_Janeiro.jpg"
+},
+{
+  name: 'Funk Carioca',
+  descriptionFr: "Funk brésilien des favelas cariocas, rythmes Miami bass rapides. Émergé dans les années 80-90.",
+  descriptionEn: "Brazilian funk from Rio's favelas, fast Miami bass rhythms. Emerged in the 80s-90s.",
+  subgenres: ['Funk Ostentação', 'Funk Melody', 'Proibidão'],
+  artists: ['MC Créu', 'Anitta', 'Ludmilla'],
+  origin: 'Brazil',
+  relatedCountries: ['Brazil'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DWZd79rJ6a7lp",
+  image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Rio_de_Janeiro_Favela.jpg"
+},
+{
+  name: 'Trap Latino',
+  descriptionFr: "Trap en espagnol, fusion reggaeton et trap américain. Émergé vers 2015 avec Bad Bunny et Anuel AA.",
+  descriptionEn: "Spanish-language trap, fusion of reggaeton and American trap. Emerged around 2015 with Bad Bunny and Anuel AA.",
+  subgenres: ['Latin Trap', 'Trap Reggaeton'],
+  artists: ['Bad Bunny', 'Anuel AA', 'Ozuna'],
+  origin: 'Puerto Rico',
+  relatedCountries: ['Puerto Rico', 'Colombia', 'Argentina'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX48TTZL62Yht",
+  image: "https://upload.wikimedia.org/wikipedia/commons/7/7e/San_Juan_Puerto_Rico.jpg"
+},
+{
+  name: 'UK Drill',
+  descriptionFr: "Dérivé du drill chicagoan mais avec accent britannique et rythmes plus sombres. Émergé à Londres vers 2012.",
+  descriptionEn: "Derived from Chicago drill but with British accent and darker rhythms. Emerged in London around 2012.",
+  subgenres: ['Brooklyn Drill', 'Irish Drill'],
+  artists: ['Headie One', 'Digga D', 'Central Cee'],
+  origin: 'United Kingdom',
+  relatedCountries: ['United Kingdom', 'United States'],
+  spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0XUfTFmNBRM",
+  image: "https://upload.wikimedia.org/wikipedia/commons/c/cd/London_Skyline_%28cropped%29.jpg"
+}
 ];
