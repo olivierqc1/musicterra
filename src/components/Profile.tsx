@@ -17,7 +17,7 @@ export default function Profile({ language }: Props) {
   const [editing, setEditing] = useState(false);
   const [view, setView] = useState<'profile' | 'search'>('profile');
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
 
   useEffect(() => {
     if (session) {
@@ -52,6 +52,8 @@ export default function Profile({ language }: Props) {
     return <p>{t('Erreur de chargement du profil', 'Error loading profile')}</p>;
   }
 
+  const sanitizeHandle = (handle: string) => handle.replace(/^@/, '').trim();
+
   return (
     <div style={{ display: 'grid', gap: 16 }}>
       {/* Toggle view */}
@@ -60,7 +62,7 @@ export default function Profile({ language }: Props) {
           onClick={() => setView('profile')}
           style={{
             ...styles.tabBtn,
-            ...(view === 'profile' ? styles.tabActive : {})
+            ...(view === 'profile' ? styles.tabActive : {}),
           }}
         >
           {t('Mon profil', 'My profile')}
@@ -69,7 +71,7 @@ export default function Profile({ language }: Props) {
           onClick={() => setView('search')}
           style={{
             ...styles.tabBtn,
-            ...(view === 'search' ? styles.tabActive : {})
+            ...(view === 'search' ? styles.tabActive : {}),
           }}
         >
           {t('Rechercher', 'Search')}
@@ -94,17 +96,15 @@ export default function Profile({ language }: Props) {
                   </p>
                 )}
                 {profile.bio && (
-                  <p style={{ margin: '8px 0', fontSize: 14 }}>
-                    {profile.bio}
-                  </p>
+                  <p style={{ margin: '8px 0', fontSize: 14 }}>{profile.bio}</p>
                 )}
 
                 {/* Social Links */}
                 {(profile.instagram_handle || profile.facebook_url) && (
                   <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
                     {profile.instagram_handle && (
-                      
-                        href={'https://instagram.com/' + profile.instagram_handle}
+                      <a
+                        href={`https://instagram.com/${sanitizeHandle(profile.instagram_handle)}`}
                         target="_blank"
                         rel="noreferrer"
                         style={styles.socialLink}
@@ -113,7 +113,7 @@ export default function Profile({ language }: Props) {
                       </a>
                     )}
                     {profile.facebook_url && (
-                      
+                      <a
                         href={profile.facebook_url}
                         target="_blank"
                         rel="noreferrer"
@@ -133,10 +133,12 @@ export default function Profile({ language }: Props) {
 
           {/* Groups */}
           <div style={styles.card}>
-            <h3>{t('Mes groupes', 'My groups')} ({groups.length})</h3>
+            <h3>
+              {t('Mes groupes', 'My groups')} ({groups.length})
+            </h3>
             {groups.length === 0 ? (
               <p style={{ color: '#777', fontSize: 14 }}>
-                {t('Vous n\'êtes membre d\'aucun groupe', 'You are not in any groups yet')}
+                {t("Vous n'êtes membre d'aucun groupe", 'You are not in any groups yet')}
               </p>
             ) : (
               <div style={{ display: 'grid', gap: 10 }}>
@@ -190,7 +192,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 16,
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7'
+    border: '1px solid #e7e7e7',
   },
   tabBtn: {
     padding: '8px 14px',
@@ -199,24 +201,24 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 999,
     cursor: 'pointer',
     fontSize: 14,
-    fontWeight: 500
+    fontWeight: 500,
   },
   tabActive: {
     background: '#667eea',
     color: '#fff',
-    borderColor: '#667eea'
+    borderColor: '#667eea',
   },
   profileHeader: {
     display: 'flex',
     gap: 16,
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: '50%',
     objectFit: 'cover',
-    border: '4px solid #667eea'
+    border: '4px solid #667eea',
   },
   editBtn: {
     padding: '8px 14px',
@@ -225,13 +227,13 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 8,
     cursor: 'pointer',
     fontSize: 14,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   socialLink: {
     fontSize: 13,
     color: '#667eea',
     textDecoration: 'none',
-    fontWeight: 500
+    fontWeight: 500,
   },
   groupCard: {
     display: 'flex',
@@ -240,7 +242,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 12,
     background: '#f9fafb',
     borderRadius: 8,
-    border: '1px solid #eee'
+    border: '1px solid #eee',
   },
   roleBadge: {
     padding: '4px 10px',
@@ -248,7 +250,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#3730a3',
     borderRadius: 999,
     fontSize: 12,
-    fontWeight: 600
+    fontWeight: 600,
   },
   signOutBtn: {
     padding: 12,
@@ -257,6 +259,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: 'none',
     borderRadius: 8,
     cursor: 'pointer',
-    fontWeight: 500
-  }
+    fontWeight: 500,
+  },
 };
+
