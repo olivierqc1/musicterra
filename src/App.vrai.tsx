@@ -45,7 +45,7 @@ const isCountry = (i: Item): i is CountryItem => "regions" in i;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
-  const [tab, setTab] = useState
+  const [tab, setTab] = useState<
     "discover" | "emerging" | "groups" | "concerts" | "profile"
   >("discover");
   const [pool, setPool] = useState<"genres" | "countries">("genres");
