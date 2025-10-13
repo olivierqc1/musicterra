@@ -18,6 +18,7 @@ interface AuthContextType {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
+  supabase: typeof supabase; // ← AJOUTÉ
   signInWithEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
@@ -189,6 +190,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user: session?.user ?? null,
         profile,
         loading,
+        supabase, // ← AJOUTÉ ICI
         signInWithEmail,
         signOut,
         updateProfile,
