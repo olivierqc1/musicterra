@@ -159,7 +159,7 @@ export default function EmergingArtists({ language }: Props) {
               {/* Actions */}
               <div style={{ display: 'flex', gap: 6 }}>
                 {artist.lastfmUrl && (
-                  
+                  <a
                     href={artist.lastfmUrl}
                     target="_blank"
                     rel="noreferrer"
