@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { searchProfiles, Profile } from '../services/profile';
-import { useNavigate } from 'react-router-dom';
 
 interface Props {
   language: 'fr' | 'en';
