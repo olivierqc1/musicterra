@@ -721,7 +721,7 @@ export const countries: Item[] = [
     regions: ['Valletta', 'Sliema'],
     artists: ['Ira Losco'],
     spotify: "https://open.spotify.com/search/Malta%20music",
-    image: "https://upload.wikimedia.org/wikipedia/c"
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Valletta_Malta.jpg"
     },
   {
     name: 'Cyprus',
