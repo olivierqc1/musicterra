@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { searchArtistEvents, BandsintownEvent, formatEventDate, getEventCity } from '../services/bandsintown';
-import { searchEventsByCity, searchEventsByLocation, filterMusicEvents, TicketmasterEvent } from '../services/ticketmaster';
 import { markConcertStatus, getUserConcertStatus } from '../services/concerts';
 import { useAuth } from '../context/AuthContext';
 import ConcertReview from './ConcertReview';
 import ConcertFeed from './ConcertFeed';
-import LocationSelector from './LocationSelector';
 
 interface Props {
   language: 'fr' | 'en';
@@ -21,12 +19,11 @@ type CombinedEvent = {
   date: string;
   time?: string;
   url: string;
-  source: 'bandsintown' | 'ticketmaster';
-  raw: BandsintownEvent | TicketmasterEvent;
+  source: 'bandsintown';
+  raw: BandsintownEvent;
 };
 
 export default function Concerts({ language, suggestedArtists = [] }: Props) {
-  const [searchMode, setSearchMode] = useState<'artist' | 'location'>('artist');
   const [artistQuery, setArtistQuery] = useState('');
   const [events, setEvents] = useState<CombinedEvent[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,6 +59,14 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     setLoading(true);
     try {
       const bandsintownEvents = await searchArtistEvents(artistQuery);
+      
+      if (bandsintownEvents.length === 0) {
+        alert(t(
+          `Aucun concert trouvé pour "${artistQuery}". Essayez un artiste plus connu comme Coldplay, The Weeknd, etc.`,
+          `No concerts found for "${artistQuery}". Try a more popular artist like Coldplay, The Weeknd, etc.`
+        ));
+      }
+      
       const combined = bandsintownEvents.map(e => ({
         id: e.id,
         name: e.lineup.join(', '),
@@ -76,39 +81,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
       setEvents(combined);
     } catch (err) {
       console.error(err);
-    }
-    setLoading(false);
-  };
-
-  const handleLocationSearch = async (city: string, coords?: { lat: number; lng: number }) => {
-    setLoading(true);
-    try {
-      let ticketmasterEvents: TicketmasterEvent[] = [];
-      
-      if (coords) {
-        ticketmasterEvents = await searchEventsByLocation(coords.lat, coords.lng, 50);
-      } else {
-        ticketmasterEvents = await searchEventsByCity(city);
-      }
-
-      const musicEvents = filterMusicEvents(ticketmasterEvents);
-      
-      const combined = musicEvents.map(e => ({
-        id: e.id,
-        name: e.name,
-        artistName: e._embedded?.attractions?.[0]?.name || e.name,
-        venueName: e._embedded?.venues?.[0]?.name || 'Venue',
-        city: e._embedded?.venues?.[0]?.city?.name || city,
-        date: e.dates.start.localDate,
-        time: e.dates.start.localTime,
-        url: e.url,
-        source: 'ticketmaster' as const,
-        raw: e
-      }));
-
-      setEvents(combined);
-    } catch (err) {
-      console.error(err);
+      alert(t('Erreur lors de la recherche', 'Error searching'));
     }
     setLoading(false);
   };
@@ -175,75 +148,45 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
         <>
           <div style={styles.card}>
             <h2>{t('🎤 Concerts à venir', '🎤 Upcoming concerts')}</h2>
+            <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+              {t('Recherche par artiste (Bandsintown)', 'Search by artist (Bandsintown)')}
+            </p>
             
-            {/* Search mode toggle */}
-            <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-              <label style={styles.radioLabel}>
-                <input
-                  type="radio"
-                  checked={searchMode === 'artist'}
-                  onChange={() => setSearchMode('artist')}
-                />
-                {t('Par artiste', 'By artist')}
-              </label>
-              <label style={styles.radioLabel}>
-                <input
-                  type="radio"
-                  checked={searchMode === 'location'}
-                  onChange={() => setSearchMode('location')}
-                />
-                {t('Par localisation', 'By location')}
-              </label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                type="text"
+                value={artistQuery}
+                onChange={(e) => setArtistQuery(e.target.value)}
+                placeholder={t('Nom d\'artiste...', 'Artist name...')}
+                style={styles.input}
+                onKeyDown={(e) => e.key === 'Enter' && handleArtistSearch()}
+              />
+              <button onClick={handleArtistSearch} style={styles.primaryBtn} disabled={loading}>
+                {loading ? '...' : t('Chercher', 'Search')}
+              </button>
             </div>
 
-            {/* Artist search */}
-            {searchMode === 'artist' && (
-              <>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <input
-                    type="text"
-                    value={artistQuery}
-                    onChange={(e) => setArtistQuery(e.target.value)}
-                    placeholder={t('Nom d\'artiste...', 'Artist name...')}
-                    style={styles.input}
-                    onKeyDown={(e) => e.key === 'Enter' && handleArtistSearch()}
-                  />
-                  <button onClick={handleArtistSearch} style={styles.primaryBtn} disabled={loading}>
-                    {loading ? '...' : t('Chercher', 'Search')}
-                  </button>
+            {/* Suggestions */}
+            {suggestedArtists.length > 0 && events.length === 0 && (
+              <div style={{ marginTop: 12 }}>
+                <p style={{ fontSize: 14, color: '#555', marginBottom: 8 }}>
+                  {t('Suggestions:', 'Suggestions:')}
+                </p>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {suggestedArtists.slice(0, 5).map(artist => (
+                    <button
+                      key={artist}
+                      onClick={() => {
+                        setArtistQuery(artist);
+                        setTimeout(() => handleArtistSearch(), 100);
+                      }}
+                      style={styles.suggestionBtn}
+                    >
+                      {artist}
+                    </button>
+                  ))}
                 </div>
-
-                {/* Suggestions */}
-                {suggestedArtists.length > 0 && events.length === 0 && (
-                  <div style={{ marginTop: 12 }}>
-                    <p style={{ fontSize: 14, color: '#555', marginBottom: 8 }}>
-                      {t('Suggestions:', 'Suggestions:')}
-                    </p>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {suggestedArtists.slice(0, 5).map(artist => (
-                        <button
-                          key={artist}
-                          onClick={() => {
-                            setArtistQuery(artist);
-                            setTimeout(() => handleArtistSearch(), 100);
-                          }}
-                          style={styles.suggestionBtn}
-                        >
-                          {artist}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-
-            {/* Location search */}
-            {searchMode === 'location' && (
-              <LocationSelector
-                onLocationSelect={handleLocationSearch}
-                language={language}
-              />
+              </div>
             )}
           </div>
 
@@ -273,7 +216,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                         </p>
                         <p style={{ margin: '4px 0', fontSize: 14, color: '#555' }}>
                           📅 {new Date(event.date).toLocaleDateString(language)}
-                          {event.time && ` • ${event.time}`}
                         </p>
 
                         {/* Status badge */}
@@ -361,9 +303,9 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
             </div>
           )}
 
-          {events.length === 0 && !loading && (artistQuery || searchMode === 'location') && (
+          {events.length === 0 && !loading && artistQuery && (
             <p style={{ textAlign: 'center', color: '#777' }}>
-              {t('Aucun concert trouvé', 'No concerts found')}
+              {t('Aucun concert trouvé. Essayez un artiste plus connu.', 'No concerts found. Try a more popular artist.')}
             </p>
           )}
         </>
@@ -411,12 +353,6 @@ const styles: Record<string, React.CSSProperties> = {
     borderColor: '#667eea', 
     background: '#667eea', 
     color: '#fff' 
-  },
-  radioLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    cursor: 'pointer'
   },
   input: { 
     flex: 1, 
