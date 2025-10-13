@@ -14,36 +14,83 @@ const AuthGate: React.FC<AuthGateProps> = ({
   language = "fr" 
 }) => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const { session, signInWithEmail, signOut } = useAuth();
+  const { session, supabase } = useAuth();
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!email || !email.includes("@")) {
       setMessage(t("❌ Email invalide", "❌ Invalid email"));
       return;
     }
 
+    if (!password || password.length < 6) {
+      setMessage(t(
+        "❌ Le mot de passe doit contenir au moins 6 caractères",
+        "❌ Password must be at least 6 characters"
+      ));
+      return;
+    }
+
     try {
       setLoading(true);
-      await signInWithEmail(email);
-      setMessage(t(
-        "✉️ Email envoyé ! Vérifie ta boîte de réception.",
-        "✉️ Email sent! Check your inbox."
-      ));
+      setMessage("");
+
+      if (isSignUp) {
+        // INSCRIPTION
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        setMessage(t(
+          "✅ Compte créé ! Tu peux maintenant te connecter.",
+          "✅ Account created! You can now sign in."
+        ));
+        setIsSignUp(false);
+        setPassword("");
+      } else {
+        // CONNEXION
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        setMessage(t("✅ Connexion réussie !", "✅ Signed in successfully!"));
+      }
+
       setEmail("");
+      setPassword("");
     } catch (err: any) {
-      setMessage(t("❌ Erreur : ", "❌ Error: ") + err.message);
+      console.error("Erreur auth:", err);
+      
+      // Messages d'erreur personnalisés
+      if (err.message?.includes("Invalid login credentials")) {
+        setMessage(t(
+          "❌ Email ou mot de passe incorrect",
+          "❌ Invalid email or password"
+        ));
+      } else if (err.message?.includes("User already registered")) {
+        setMessage(t(
+          "❌ Cet email est déjà utilisé",
+          "❌ This email is already registered"
+        ));
+      } else {
+        setMessage(t("❌ Erreur : ", "❌ Error: ") + err.message);
+      }
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleLogout = async () => {
-    await signOut();
   };
 
   // Si connecté, afficher les enfants
@@ -51,23 +98,32 @@ const AuthGate: React.FC<AuthGateProps> = ({
     return <>{children}</>;
   }
 
-  // Formulaire de connexion
+  // Formulaire de connexion/inscription
   const formContent = (
     <>
       <div style={{ marginBottom: 20 }}>
         <span style={{ fontSize: 40 }}>🎵</span>
         <h2 style={{ margin: "8px 0 4px" }}>
-          {t("Connexion à Musicterra", "Sign in to Musicterra")}
+          {isSignUp 
+            ? t("Créer un compte", "Create account")
+            : t("Connexion à Musicterra", "Sign in to Musicterra")
+          }
         </h2>
         <p style={{ color: "#666", margin: 0 }}>
-          {t(
-            "Entre ton email pour recevoir un lien de connexion magique",
-            "Enter your email to receive a magic sign-in link"
-          )}
+          {isSignUp
+            ? t(
+                "Entre ton email et choisis un mot de passe",
+                "Enter your email and choose a password"
+              )
+            : t(
+                "Entre ton email et ton mot de passe pour te connecter",
+                "Enter your email and password to sign in"
+              )
+          }
         </p>
       </div>
 
-      <form onSubmit={handleLogin} style={{ display: "grid", gap: 12 }}>
+      <form onSubmit={handleAuth} style={{ display: "grid", gap: 12 }}>
         <input
           type="email"
           value={email}
@@ -77,12 +133,44 @@ const AuthGate: React.FC<AuthGateProps> = ({
           required
           disabled={loading}
         />
+        
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={t("Mot de passe (min. 6 caractères)", "Password (min. 6 chars)")}
+          style={styles.input}
+          required
+          disabled={loading}
+          minLength={6}
+        />
+
         <button type="submit" style={styles.submitButton} disabled={loading}>
           {loading 
-            ? t("⏳ Envoi...", "⏳ Sending...") 
-            : t("📧 Envoyer le lien", "📧 Send link")}
+            ? t("⏳ Chargement...", "⏳ Loading...") 
+            : isSignUp
+              ? t("📝 Créer mon compte", "📝 Create account")
+              : t("🔑 Se connecter", "🔑 Sign in")
+          }
         </button>
       </form>
+
+      <div style={{ marginTop: 12, textAlign: "center" }}>
+        <button
+          type="button"
+          onClick={() => {
+            setIsSignUp(!isSignUp);
+            setMessage("");
+          }}
+          style={styles.toggleButton}
+          disabled={loading}
+        >
+          {isSignUp
+            ? t("Déjà un compte ? Se connecter", "Already have an account? Sign in")
+            : t("Pas de compte ? S'inscrire", "No account? Sign up")
+          }
+        </button>
+      </div>
 
       {message && (
         <div style={{
@@ -96,8 +184,8 @@ const AuthGate: React.FC<AuthGateProps> = ({
       <div style={styles.footer}>
         <small style={{ color: "#888" }}>
           {t(
-            "Le lien sera valide pendant 1 heure. Vérifie tes spams si tu ne le reçois pas.",
-            "The link will be valid for 1 hour. Check spam if you don't receive it."
+            "Ton mot de passe doit contenir au moins 6 caractères.",
+            "Your password must be at least 6 characters long."
           )}
         </small>
       </div>
@@ -162,6 +250,15 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     transition: "background 0.2s",
   },
+  toggleButton: {
+    background: "none",
+    border: "none",
+    color: "#667eea",
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "underline",
+    padding: "8px",
+  },
   message: {
     marginTop: 12,
     padding: 12,
@@ -175,16 +272,6 @@ const styles: Record<string, React.CSSProperties> = {
   messageSuccess: {
     background: "#efe",
     color: "#060",
-  },
-  logoutButton: {
-    padding: "10px 16px",
-    border: "1px solid #dc2626",
-    borderRadius: 8,
-    background: "#fef2f2",
-    color: "#dc2626",
-    fontSize: 14,
-    fontWeight: 600,
-    cursor: "pointer",
   },
   footer: {
     marginTop: 16,
