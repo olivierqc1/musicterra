@@ -286,7 +286,7 @@ const App: React.FC = () => {
                     {/* Spotify */}
                     {selectedItem.spotify && (
                       <p style={{ marginTop: 8 }}>
-                        
+                        <a
                           href={selectedItem.spotify}
                           target="_blank"
                           rel="noreferrer"
