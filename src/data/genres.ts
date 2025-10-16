@@ -569,7 +569,7 @@ export const genres: Item[] = [
     artists: ['Janet Kay', 'Carroll Thompson', 'Maxi Priest'],
     origin: 'United Kingdom',
     relatedCountries: ['United Kingdom'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX1ewVhAJ17m4"
+    spotify: "https://spotify.link/evys4qPowXb"
   },
 
   // ═══════════════════════════════════════════════════════════
