@@ -307,7 +307,7 @@ export const genres: Item[] = [
     artists: ['St Germain', 'Jazzanova', 'Bugge Wesseltoft'],
     origin: 'France',
     relatedCountries: ['France', 'United Kingdom', 'Norway'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0SM0LYsmbMT"
+    spotify: "https://spotify.link/V5HHX2uWxXb"
   },
 
   // ═══════════════════════════════════════════════════════════
