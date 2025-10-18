@@ -330,7 +330,7 @@ export const genres: Item[] = [
     artists: ['Nas', 'Wu-Tang Clan', 'A Tribe Called Quest'],
     origin: 'United States',
     relatedCountries: ['United States'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWUgX5cUT0GhA"
+    spotify: "https://spotify.link/SGbYezRFzXb"
   },
   {
     name: 'Trap',
