@@ -1,18 +1,12 @@
+// ———————————————————————————
+// Profile.tsx — MusicTerra (version propre)
+// Profil perso + Instagram + Genres + Recherche + Export JSON
+// ———————————————————————————
+
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Instagram,
-  LogOut,
-  MapPin,
-  Search,
-  Trash2,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Instagram, LogOut, MapPin, Trash2, Download } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,7 +29,7 @@ import {
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 // ───────────────────────────────
-// Types et stockage local
+// Types & storage
 // ───────────────────────────────
 interface Profile {
   fullName: string;
@@ -68,7 +62,7 @@ function saveProfile(p: Profile) {
 }
 
 // ───────────────────────────────
-// Composant de tags de genres
+// Genre tags input
 // ───────────────────────────────
 function GenreTags({
   value,
@@ -124,7 +118,7 @@ function GenreTags({
 }
 
 // ───────────────────────────────
-// Page principale du profil
+// Page principale
 // ───────────────────────────────
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile>(
@@ -164,12 +158,24 @@ export default function ProfilePage() {
 
   const isInstaConnected = profile.instagram?.connected && profile.instagram?.handle;
 
-  // Sauvegarde auto
   useEffect(() => {
     saveProfile(profile);
   }, [profile]);
 
-  // ------------------ Recherche de profils publics ------------------
+  // Export JSON
+  const exportProfile = () => {
+    const blob = new Blob([JSON.stringify(profile, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "musicterra_profile.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ——— Recherche de profils (mock) ———
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailProfile, setDetailProfile] = useState<any | null>(null);
   const [search, setSearch] = useState("");
@@ -225,461 +231,6 @@ export default function ProfilePage() {
       genres: p.genres?.length
         ? Array.from(new Set([...(prev.genres || []), ...p.genres]))
         : prev.genres,
-      instagram: p.instagram
-        ? { connected: true, handle: p.instagram }
-        : prev.instagram,
-    }));
-  };
-
-  return (
-    <div className="mx-auto max-w-5xl p-4 md:p-8 space-y-8">
-      <motion.h1
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="text-3xl font-semibold tracking-tight text-center"
-      >
-        Mon profil
-      </motion.h1>
-
-      {/* Profil utilisateur */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card className="rounded-2xl">
-          <CardHeader>
-            <CardTitle>Photo et genres</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-20 w-20 border">
-                {profile.avatarDataUrl ? (
-                  <AvatarImage
-                    src={profile.avatarDataUrl}
-                    alt={profile.fullName || "Avatar"}
-                  />
-                ) : (
-                  <AvatarFallback>
-                    {(profile.fullName || "?").slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                )}
-              </Avatar>
-              <div className="flex gap-2">
-                <Button variant="secondary" onClick={onPickAvatar}>
-                  Choisir…
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    setProfile((p) => ({ ...p, avatarDataUrl: undefined }))
-                  }
-                >
-                  Réinitialiser
-                </Button>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={onAvatarSelected}
-                />
-              </div>
-            </div>
-            <GenreTags
-              value={profile.genres}
-              onChange={(v) => setProfile((p) => ({ ...p, genres: v }))}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl">
-          <CardHeader>
-            <CardTitle>Instagram</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Label htmlFor="insta">@handle Instagram</Label>
-            <div className="flex gap-2">
-              <Input
-                id="insta"
-                placeholder="ex. olivier.music"
-                value={profile.instagram?.handle ?? ""}
-                onChange={(e) =>
-                  setProfile((p) => ({
-                    ...p,
-                    instagram: { connected: false, handle: e.target.value },
-                  }))
-                }
-              />
-              {!isInstaConnected ? (
-                <Button onClick={connectInstagram}>
-                  <Instagram className="h-4 w-4 mr-2" /> Connecter
-                </Button>
-              ) : (
-                <Button variant="destructive" onClick={disconnectInstagram}>
-                  <LogOut className="h-4 w-4 mr-2" /> Déconnecter
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recherche de profils */}
-      <Card className="rounded-2xl">
-        <CardHeader>
-          <CardTitle>Recherche de profils</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-2 mb-4">
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher par nom, pays ou genre…"
-            />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {filtered.map((p) => (
-              <Card
-                key={p.id}
-                className="cursor-pointer hover:bg-accent transition"
-                onClick={() => {
-                  setDetailProfile(p);
-                  setDetailOpen(true);
-                }}
-              >
-                <CardContent className="p-4 text-center">
-                  <h4 className="font-semibold">{p.fullName}</h4>
-                  <p className="text-sm text-muted-foreground">{p.country}</p>
-                  <div className="flex flex-wrap justify-center gap-1 mt-1">
-                    {p.genres.map((g) => (
-                      <Badge key={g} variant="secondary" className="rounded-xl">
-                        {g}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            {filtered.length === 0 && (
-              <p className="text-muted-foreground text-sm text-center">
-                Aucun profil trouvé.
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <ResponsiveProfileDetail
-        open={detailOpen}
-        onOpenChange={setDetailOpen}
-        profile={detailProfile}
-        onApply={applyProfileFromResult}
-      />
-    </div>
-  );
-}
-
-// ───────────────────────────────
-// Drawer/Dialog pour détails
-// ───────────────────────────────
-function ResponsiveProfileDetail({
-  open,
-  onOpenChange,
-  profile,
-  onApply,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  profile: any;
-  onApply: (p: any) => void;
-}) {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-  if (!profile) return null;
-
-  const DetailContent = () => (
-    <div className="flex flex-col items-center gap-3 text-center p-4">
-      <h3 className="text-lg font-semibold">{profile.fullName}</h3>
-      {profile.bio && <p className="text-sm text-muted-foreground">{profile.bio}</p>}
-      {profile.instagram && (
-        <a
-          href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:underline flex items-center gap-1"
-        >
-          <Instagram className="w-4 h-4" /> {profile.instagram}
-        </a>
-      )}
-      {profile.country && (
-        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-          <MapPin className="w-4 h-4" /> {profile.country}
-        </div>
-      )}
-      <Button variant="outline" className="mt-2" onClick={() => onApply(profile)}>
-        Importer ce profil
-      </Button>
-      <Button variant="ghost" className="mt-1" onClick={() => onOpenChange(false)}>
-        Fermer
-      </Button>
-    </div>
-  );
-
-  return isDesktop ? (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Détails du profil</DialogTitle>
-          <DialogDescription>
-            Informations de l’utilisateur sélectionné.
-          </DialogDescription>
-        </DialogHeader>
-        <DetailContent />
-      </DialogContent>
-    </Dialog>
-  ) : (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Détails du profil</DrawerTitle>
-          <DrawerDescription>
-            Informations de l’utilisateur sélectionné.
-          </DrawerDescription>
-        </DrawerHeader>
-        <DetailContent />
-      </DrawerContent>
-    </Drawer>
-  );
-      }
-// ———————————————————————————
-// Profile.tsx — MusicTerra
-// Fusion complète : profil, recherche, Instagram & export JSON
-// ———————————————————————————
-
-import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Instagram,
-  LogOut,
-  MapPin,
-  Trash2,
-  Download,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-
-// ───────────────────────────────
-// Types et stockage local
-// ───────────────────────────────
-interface Profile {
-  fullName: string;
-  username: string;
-  bio: string;
-  country: string;
-  genres: string[];
-  email?: string;
-  instagram?: { connected: boolean; handle: string };
-  avatarDataUrl?: string;
-}
-
-const STORAGE_KEY = "musicterra.profile";
-
-function loadProfile(): Profile | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Profile) : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveProfile(p: Profile) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
-  } catch (e) {
-    console.error("Erreur sauvegarde profil", e);
-  }
-}
-
-// ───────────────────────────────
-// Composant de tags de genres
-// ───────────────────────────────
-function GenreTags({
-  value,
-  onChange,
-}: {
-  value: string[];
-  onChange: (v: string[]) => void;
-}) {
-  const [input, setInput] = useState("");
-  const add = () => {
-    const v = input.trim();
-    if (!v) return;
-    if (!value.includes(v)) onChange([...value, v]);
-    setInput("");
-  };
-  const remove = (g: string) => onChange(value.filter((x) => x !== g));
-
-  return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap gap-2">
-        {value.length === 0 && (
-          <p className="text-sm text-muted-foreground">Aucun genre ajouté.</p>
-        )}
-        {value.map((g) => (
-          <Badge key={g} variant="secondary" className="px-2 py-1 rounded-xl text-sm">
-            {g}
-            <button
-              className="ml-2 opacity-60 hover:opacity-100"
-              onClick={() => remove(g)}
-              aria-label={`Retirer ${g}`}
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
-          </Badge>
-        ))}
-      </div>
-      <div className="flex gap-2">
-        <Input
-          placeholder="Ajouter un genre (Entrée)"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              add();
-            }
-          }}
-        />
-        <Button onClick={add}>Ajouter</Button>
-      </div>
-    </div>
-  );
-}
-
-// ───────────────────────────────
-// Page principale du profil
-// ───────────────────────────────
-export default function ProfilePage() {
-  const [profile, setProfile] = useState<Profile>(
-    () =>
-      loadProfile() ?? {
-        fullName: "",
-        username: "",
-        bio: "",
-        country: "",
-        genres: [],
-        instagram: { connected: false, handle: "" },
-      }
-  );
-
-  const fileRef = useRef<HTMLInputElement | null>(null);
-  const onPickAvatar = () => fileRef.current?.click();
-
-  const onAvatarSelected: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () =>
-      setProfile((p) => ({ ...p, avatarDataUrl: String(reader.result) }));
-    reader.readAsDataURL(file);
-  };
-
-  const connectInstagram = () => {
-    if (!profile.instagram?.handle) return;
-    setProfile((p) => ({
-      ...p,
-      instagram: { connected: true, handle: p.instagram?.handle ?? "" },
-    }));
-  };
-
-  const disconnectInstagram = () =>
-    setProfile((p) => ({ ...p, instagram: { connected: false, handle: "" } }));
-
-  const isInstaConnected = profile.instagram?.connected && profile.instagram?.handle;
-
-  useEffect(() => {
-    saveProfile(profile);
-  }, [profile]);
-
-  // ------------------ Export du profil JSON ------------------
-  const exportProfile = () => {
-    const blob = new Blob([JSON.stringify(profile, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "musicterra_profile.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // ------------------ Recherche de profils publics ------------------
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [detailProfile, setDetailProfile] = useState<any | null>(null);
-  const [search, setSearch] = useState("");
-
-  const mockProfiles = [
-    {
-      id: "u1",
-      fullName: "Amina F.",
-      username: "amina.fm",
-      country: "Maroc",
-      bio: "Exploratrice de musiques gnawa & jazz.",
-      genres: ["Gnawa", "Jazz", "Afrobeat"],
-      instagram: "amina.fm",
-    },
-    {
-      id: "u2",
-      fullName: "Diego Pérez",
-      username: "diegopz",
-      country: "Argentine",
-      bio: "Rock national, tango nuevo, indie.",
-      genres: ["Rock Argentin", "Tango", "Indie Rock"],
-      instagram: "diegopz",
-    },
-  ];
-
-  const filtered = mockProfiles.filter((p) => {
-    const q = search.trim().toLowerCase();
-    return (
-      p.fullName.toLowerCase().includes(q) ||
-      p.country.toLowerCase().includes(q) ||
-      p.genres.some((g) => g.toLowerCase().includes(q))
-    );
-  });
-
-  const applyProfileFromResult = (p: any) => {
-    setProfile((prev) => ({
-      ...prev,
-      fullName: p.fullName || prev.fullName,
-      username: p.username || prev.username,
-      country: p.country || prev.country,
-      bio: p.bio || prev.bio,
-      genres: Array.from(new Set([...(prev.genres || []), ...(p.genres || [])])),
       instagram: p.instagram
         ? { connected: true, handle: p.instagram }
         : prev.instagram,
@@ -828,6 +379,11 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
             ))}
+            {filtered.length === 0 && (
+              <p className="text-muted-foreground text-sm text-center">
+                Aucun profil trouvé.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -843,7 +399,7 @@ export default function ProfilePage() {
 }
 
 // ───────────────────────────────
-// Drawer/Dialog pour détails
+// Drawer / Dialog detail
 // ───────────────────────────────
 function ResponsiveProfileDetail({
   open,
@@ -912,4 +468,4 @@ function ResponsiveProfileDetail({
       </DrawerContent>
     </Drawer>
   );
-            }
+      }
