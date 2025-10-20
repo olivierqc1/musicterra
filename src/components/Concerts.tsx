@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { searchArtistEvents, BandsintownEvent, formatEventDate, getEventCity } from '../services/bandsintown';
+import { searchConcertsByArtist } from '../services/ticketmaster';
 import { markConcertStatus, getUserConcertStatus } from '../services/concerts';
 import { useAuth } from '../context/AuthContext';
 import ConcertReview from './ConcertReview';
@@ -19,8 +19,8 @@ type CombinedEvent = {
   date: string;
   time?: string;
   url: string;
-  source: 'bandsintown';
-  raw: BandsintownEvent;
+  source: 'ticketmaster';
+  raw: any;
 };
 
 export default function Concerts({ language, suggestedArtists = [] }: Props) {
@@ -58,29 +58,44 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     
     setLoading(true);
     try {
-      const bandsintownEvents = await searchArtistEvents(artistQuery);
+      console.log('🔍 Recherche Ticketmaster pour:', artistQuery);
       
-      if (bandsintownEvents.length === 0) {
+      const ticketmasterEvents = await searchConcertsByArtist(artistQuery);
+      
+      console.log('✅ Résultats:', ticketmasterEvents);
+      
+      if (ticketmasterEvents.length === 0) {
         alert(t(
           `Aucun concert trouvé pour "${artistQuery}". Essayez un artiste plus connu comme Coldplay, The Weeknd, etc.`,
           `No concerts found for "${artistQuery}". Try a more popular artist like Coldplay, The Weeknd, etc.`
         ));
+        setEvents([]);
+        setLoading(false);
+        return;
       }
       
-      const combined = bandsintownEvents.map(e => ({
-        id: e.id,
-        name: e.lineup.join(', '),
-        artistName: e.lineup[0] || artistQuery,
-        venueName: e.venue.name,
-        city: getEventCity(e),
-        date: e.datetime,
-        url: e.url,
-        source: 'bandsintown' as const,
-        raw: e
-      }));
+      // Formater les événements Ticketmaster
+      const combined = ticketmasterEvents.map((e: any) => {
+        const venue = e._embedded?.venues?.[0];
+        const artist = e._embedded?.attractions?.[0]?.name || artistQuery;
+        
+        return {
+          id: e.id,
+          name: e.name,
+          artistName: artist,
+          venueName: venue?.name || 'Lieu inconnu',
+          city: venue?.city?.name || '',
+          date: e.dates?.start?.localDate || '',
+          time: e.dates?.start?.localTime,
+          url: e.url,
+          source: 'ticketmaster' as const,
+          raw: e
+        };
+      });
+      
       setEvents(combined);
     } catch (err) {
-      console.error(err);
+      console.error('❌ Erreur recherche:', err);
       alert(t('Erreur lors de la recherche', 'Error searching'));
     }
     setLoading(false);
@@ -149,7 +164,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
           <div style={styles.card}>
             <h2>{t('🎤 Concerts à venir', '🎤 Upcoming concerts')}</h2>
             <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
-              {t('Recherche par artiste (Bandsintown)', 'Search by artist (Bandsintown)')}
+              {t('Recherche par artiste (Ticketmaster)', 'Search by artist (Ticketmaster)')}
             </p>
             
             <div style={{ display: 'flex', gap: 8 }}>
@@ -216,6 +231,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                         </p>
                         <p style={{ margin: '4px 0', fontSize: 14, color: '#555' }}>
                           📅 {new Date(event.date).toLocaleDateString(language)}
+                          {event.time && ` • ${event.time}`}
                         </p>
 
                         {/* Status badge */}
