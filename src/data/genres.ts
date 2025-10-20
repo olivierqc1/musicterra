@@ -29575,7 +29575,7 @@ export const genres: Item[] = [
     origin: '',
     relatedCountries: [],
     spotify: ""
-  }
+  },
   //
   // ======================================================================
   // 📃 Additional subgenre definitions for genres detected from your CSV
