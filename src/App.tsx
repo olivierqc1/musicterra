@@ -2,6 +2,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { genres } from "./data/genres";
 import { countries } from "./data/countries";
+import { years } from "./data/years";
 import { similarityMatrix } from "./data/matrix";
 
 import { Wheel } from "./components/Wheel";
@@ -38,27 +39,45 @@ type CountryItem = {
   cities?: any[];
 };
 
-type Item = GenreItem | CountryItem;
+type YearItem = {
+  name: string;
+  year: number;
+  descriptionFr: string;
+  descriptionEn: string;
+  spotify?: string;
+  image?: string;
+};
+
+type Item = GenreItem | CountryItem | YearItem;
 
 const isGenre = (i: Item): i is GenreItem => "subgenres" in i;
 const isCountry = (i: Item): i is CountryItem => "regions" in i;
+const isYear = (i: Item): i is YearItem => "year" in i;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
   const [tab, setTab] = useState<
     "discover" | "emerging" | "groups" | "concerts" | "profile"
   >("discover");
-  const [pool, setPool] = useState<"genres" | "countries">("genres");
+  const [pool, setPool] = useState<"genres" | "countries" | "years">("genres");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
 
   const { session, profile } = useAuth();
 
   // Items selon le pool
-  const items: Item[] = useMemo(
-    () => (pool === "genres" ? (genres as Item[]) : (countries as Item[])),
-    [pool]
-  );
+  const items: Item[] = useMemo(() => {
+    if (pool === "genres") return genres as Item[];
+    if (pool === "countries") return countries as Item[];
+    // Transformer les années en Items
+    return years.map(y => ({
+      name: String(y.year),
+      year: y.year,
+      descriptionFr: y.descriptionFr,
+      descriptionEn: y.descriptionEn,
+      spotify: y.spotify,
+    })) as Item[];
+  }, [pool]);
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
@@ -203,6 +222,15 @@ const App: React.FC = () => {
                 />{" "}
                 {t("🌍 Pays", "🌍 Countries")}
               </label>
+              <label style={styles.chipLabel}>
+                <input
+                  type="radio"
+                  name="pool"
+                  checked={pool === "years"}
+                  onChange={() => setPool("years")}
+                />{" "}
+                {t("📅 Années", "📅 Years")}
+              </label>
             </div>
 
             {/* Wheel */}
@@ -238,7 +266,17 @@ const App: React.FC = () => {
 
                   {/* Info */}
                   <div>
-                    <h2 style={{ margin: "4px 0 6px" }}>{selectedItem.name}</h2>
+                    {/* Titre - adapté selon le type */}
+                    {isYear(selectedItem) ? (
+                      <h2 style={{ margin: "4px 0 6px" }}>
+                        {selectedItem.year}
+                      </h2>
+                    ) : (
+                      <h2 style={{ margin: "4px 0 6px" }}>
+                        {selectedItem.name}
+                      </h2>
+                    )}
+
                     <p style={{ marginTop: 0 }}>
                       {language === "fr"
                         ? selectedItem.descriptionFr
@@ -275,8 +313,8 @@ const App: React.FC = () => {
                       </div>
                     ) : null}
 
-                    {/* Artists */}
-                    {selectedItem.artists?.length ? (
+                    {/* Artists - ne pas afficher pour les années */}
+                    {!isYear(selectedItem) && selectedItem.artists?.length ? (
                       <p style={styles.lightText}>
                         <strong>{t("Artistes", "Artists")}:</strong>{" "}
                         {selectedItem.artists.join(", ")}
@@ -298,10 +336,16 @@ const App: React.FC = () => {
                       </p>
                     )}
 
-                    {/* Rating Component */}
+                    {/* Rating Component - adapter le itemType */}
                     <div style={{ marginTop: 14 }}>
                       <Rating
-                        itemType={pool === "genres" ? "genre" : "country"}
+                        itemType={
+                          pool === "genres" 
+                            ? "genre" 
+                            : pool === "countries"
+                            ? "country"
+                            : "genre"
+                        }
                         itemName={selectedItem.name}
                         max={10}
                         language={language}
@@ -347,7 +391,11 @@ const App: React.FC = () => {
           <AuthGate mode="inline" language={language}>
             <Concerts
               language={language}
-              suggestedArtists={selectedItem?.artists || []}
+              suggestedArtists={
+                selectedItem && !isYear(selectedItem)
+                  ? selectedItem.artists || []
+                  : []
+              }
             />
           </AuthGate>
         )}
