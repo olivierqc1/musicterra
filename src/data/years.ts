@@ -1,183 +1,89 @@
-export interface YearItem {
-  year: number;
-  descriptionFr: string;
-  descriptionEn: string;
-  majorEvents: string[];
-  emergingGenres: string[];
-  topArtists: string[];
-  culturalContext: string;
-  spotify?: string;
-  image?: string;
-}
+// ———————————————————————————
+// years.ts — MusicTerra (1950 → 2025)
+// ———————————————————————————
 
-export const years: YearItem[] = [
-  {
-    year: 1954,
-    descriptionFr: "Naissance du Rock'n'Roll avec 'Rock Around the Clock'. Elvis signe chez Sun Records. Premier festival de Newport Jazz.",
-    descriptionEn: "Birth of Rock'n'Roll with 'Rock Around the Clock'. Elvis signs with Sun Records. First Newport Jazz Festival.",
-    majorEvents: [
-      "Bill Haley - Rock Around the Clock",
-      "Elvis Presley signe chez Sun Records",
-      "Premier festival de Newport Jazz"
-    ],
-    emergingGenres: ["Rock'n'Roll", "Rockabilly"],
-    topArtists: ["Elvis Presley", "Bill Haley", "Chuck Berry"],
-    culturalContext: "Post-guerre, boom économique américain, naissance de la culture jeune",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DXaQk1f3SUEHx",
-    image: "https://upload.wikimedia.org/wikipedia/commons/6/66/Elvis_Presley_1954.jpg"
-  },
-  {
-    year: 1964,
-    descriptionFr: "British Invasion: Les Beatles débarquent en Amérique. Bob Dylan passe à l'électrique. Motown domine les charts.",
-    descriptionEn: "British Invasion: The Beatles arrive in America. Bob Dylan goes electric. Motown dominates charts.",
-    majorEvents: [
-      "Les Beatles au Ed Sullivan Show",
-      "Bob Dylan - The Times They Are a-Changin'",
-      "The Rolling Stones émergent"
-    ],
-    emergingGenres: ["British Rock", "Motown", "Folk Rock"],
-    topArtists: ["The Beatles", "The Rolling Stones", "The Supremes"],
-    culturalContext: "Mouvement des droits civiques, Beatlemania, révolution culturelle",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe"
-  },
-  {
-    year: 1973,
-    descriptionFr: "Naissance du Hip-Hop dans le Bronx (DJ Kool Herc). Pink Floyd - Dark Side of the Moon. Début du punk en Angleterre.",
-    descriptionEn: "Birth of Hip-Hop in the Bronx (DJ Kool Herc). Pink Floyd - Dark Side of the Moon. Punk begins in England.",
-    majorEvents: [
-      "DJ Kool Herc invente le Hip-Hop",
-      "Pink Floyd - Dark Side of the Moon",
-      "Formation des Sex Pistols"
-    ],
-    emergingGenres: ["Hip-Hop", "Punk Proto", "Progressive Rock"],
-    topArtists: ["Pink Floyd", "Led Zeppelin", "Stevie Wonder"],
-    culturalContext: "Crise pétrolière, fin de la guerre du Vietnam, contre-culture",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTJ7xPn4vNaz"
-  },
-  {
-    year: 1981,
-    descriptionFr: "Lancement de MTV. Début de l'ère synthpop. Thriller de Michael Jackson se prépare. Post-Punk au sommet.",
-    descriptionEn: "MTV launches. Synthpop era begins. Michael Jackson's Thriller in the making. Post-Punk at its peak.",
-    majorEvents: [
-      "MTV lance 'Video Killed the Radio Star'",
-      "Premiers synthétiseurs grand public",
-      "New Wave domine"
-    ],
-    emergingGenres: ["Synthpop", "New Wave", "Post-Punk"],
-    topArtists: ["Depeche Mode", "Joy Division", "Talking Heads"],
-    culturalContext: "Début ère Reagan, révolution informatique, MTV change tout",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe"
-  },
-  {
-    year: 1991,
-    descriptionFr: "Nevermind de Nirvana tue le Hair Metal. Naissance du Gangsta Rap (N.W.A). Trip-Hop émerge à Bristol.",
-    descriptionEn: "Nirvana's Nevermind kills Hair Metal. Birth of Gangsta Rap (N.W.A). Trip-Hop emerges in Bristol.",
-    majorEvents: [
-      "Nirvana - Nevermind",
-      "N.W.A - Efil4zaggin",
-      "Massive Attack - Blue Lines"
-    ],
-    emergingGenres: ["Grunge", "Gangsta Rap", "Trip-Hop"],
-    topArtists: ["Nirvana", "Pearl Jam", "N.W.A"],
-    culturalContext: "Fin guerre froide, génération X, MTV Unplugged",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l"
-  },
-  {
-    year: 1997,
-    descriptionFr: "OK Computer de Radiohead. Daft Punk - Homework lance la French Touch. Buena Vista Social Club redécouvert.",
-    descriptionEn: "Radiohead's OK Computer. Daft Punk - Homework launches French Touch. Buena Vista Social Club rediscovered.",
-    majorEvents: [
-      "Radiohead - OK Computer",
-      "Daft Punk - Homework",
-      "The Prodigy - Fat of the Land"
-    ],
-    emergingGenres: ["French Touch", "Drum & Bass", "Post-Rock"],
-    topArtists: ["Radiohead", "Daft Punk", "The Prodigy"],
-    culturalContext: "Internet se démocratise, apogée du CD, festivals électro explosent",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4JAvHpjipBk"
-  },
-  {
-    year: 2008,
-    descriptionFr: "808s & Heartbreak de Kanye change le rap. Spotify lance en Europe. Émergence du Dubstep mainstream.",
-    descriptionEn: "Kanye's 808s & Heartbreak changes rap. Spotify launches in Europe. Mainstream Dubstep emerges.",
-    majorEvents: [
-      "Kanye West - 808s & Heartbreak",
-      "Lancement de Spotify",
-      "Dubstep mainstream (Skrillex)"
-    ],
-    emergingGenres: ["Emo Rap", "Dubstep", "Electro-Pop"],
-    topArtists: ["Kanye West", "Lil Wayne", "M.I.A."],
-    culturalContext: "Crise financière, iPhone change l'écoute, fin du CD",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4JAvHpjipBk"
-  },
-  {
-    year: 2013,
-    descriptionFr: "Random Access Memories de Daft Punk. Émergence du Trap (Migos, Future). Début de l'ère du streaming.",
-    descriptionEn: "Daft Punk's Random Access Memories. Trap emerges (Migos, Future). Streaming era begins.",
-    majorEvents: [
-      "Daft Punk - Random Access Memories",
-      "Kendrick Lamar - good kid, m.A.A.d city",
-      "Trap devient dominant"
-    ],
-    emergingGenres: ["Trap", "Alt-R&B", "Indie Electro"],
-    topArtists: ["Daft Punk", "Kendrick Lamar", "Drake"],
-    culturalContext: "Streaming dépasse le téléchargement, Vine influence la musique, festivals partout",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX3rxVfibe1L0"
-  },
-  {
-    year: 2016,
-    descriptionFr: "Beyoncé - Lemonade révolutionne les albums visuels. Afrobeats devient global. Lo-fi Hip-Hop explose sur YouTube.",
-    descriptionEn: "Beyoncé's Lemonade revolutionizes visual albums. Afrobeats goes global. Lo-fi Hip-Hop explodes on YouTube.",
-    majorEvents: [
-      "Beyoncé - Lemonade",
-      "Afrobeats global (Wizkid & Drake)",
-      "Lo-fi Hip-Hop streams 24/7"
-    ],
-    emergingGenres: ["Afrobeats", "Lo-fi Hip-Hop", "Trap Latino"],
-    topArtists: ["Beyoncé", "Drake", "Wizkid"],
-    culturalContext: "TikTok emerge, playlists algorithmiques dominent, albums surprises",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd"
-  },
-  {
-    year: 2019,
-    descriptionFr: "Lil Nas X - Old Town Road casse les barrières de genre. Billie Eilish domine. Amapiano sud-africain émerge.",
-    descriptionEn: "Lil Nas X - Old Town Road breaks genre barriers. Billie Eilish dominates. South African Amapiano emerges.",
-    majorEvents: [
-      "Lil Nas X - Old Town Road",
-      "Billie Eilish - When We All Fall Asleep",
-      "Amapiano se mondialise"
-    ],
-    emergingGenres: ["Country Trap", "Dark Pop", "Amapiano"],
-    topArtists: ["Billie Eilish", "Lil Nas X", "Bad Bunny"],
-    culturalContext: "TikTok devient machine à hits, pandémie approche, concerts virtuels",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd"
-  },
-  {
-    year: 2022,
-    descriptionFr: "Renaissance de Beyoncé célèbre la house. Bad Bunny artiste le plus streamé. UK Drill domine Londres.",
-    descriptionEn: "Beyoncé's Renaissance celebrates house. Bad Bunny most streamed. UK Drill dominates London.",
-    majorEvents: [
-      "Beyoncé - Renaissance",
-      "Bad Bunny bat tous les records",
-      "Harry Styles - Harry's House"
-    ],
-    emergingGenres: ["Hyperpop", "Jersey Club", "Afro-House"],
-    topArtists: ["Bad Bunny", "Beyoncé", "Harry Styles"],
-    culturalContext: "Post-pandémie, retour des concerts, TikTok influence dominante",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd"
-  },
-  {
-    year: 2024,
-    descriptionFr: "IA générative bouleverse la création. Amapiano et Afrobeats fusionnent. Résurgence du Rock indépendant.",
-    descriptionEn: "Generative AI disrupts creation. Amapiano and Afrobeats merge. Indie Rock resurges.",
-    majorEvents: [
-      "Débat sur l'IA en musique",
-      "Fusion Afro-House globale",
-      "Retour du vinyle record"
-    ],
-    emergingGenres: ["AI-assisted Music", "Global Afro-fusion", "Neo-Rock"],
-    topArtists: ["Tyla", "Peso Pluma", "Sabrina Carpenter"],
-    culturalContext: "IA controversée, nostalgie années 2000, mondialisation des sons africains",
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"
-  }
+export const years = [
+  { year: 1950, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1951, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1952, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1953, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1954, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1955, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1956, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1957, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1958, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+  { year: 1959, descriptionFr: "Naissance du rock 'n' roll et triomphe du jazz moderne.", descriptionEn: "Birth of rock 'n' roll and the triumph of modern jazz.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWEJlAGA9gs0" },
+
+  { year: 1960, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1961, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1962, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1963, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1964, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1965, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1966, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1967, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1968, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+  { year: 1969, descriptionFr: "Révolution pop et explosion de la British Invasion.", descriptionEn: "Pop revolution and the explosion of the British Invasion.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWWzBc3TOlaAV" },
+
+  { year: 1970, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1971, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1972, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1973, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1974, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1975, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1976, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1977, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1978, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+  { year: 1979, descriptionFr: "Âge d'or du rock, du funk et du disco.", descriptionEn: "Golden age of rock, funk, and disco.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWTahIuEI9oYJ" },
+
+  { year: 1980, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1981, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1982, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1983, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1984, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1985, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1986, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1987, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1988, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+  { year: 1989, descriptionFr: "Synthpop, hip-hop et clips musicaux marquent la décennie.", descriptionEn: "Synthpop, hip-hop, and music videos define the decade.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4UtSsGT1Sbe" },
+
+  { year: 1990, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1991, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1992, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1993, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1994, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1995, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1996, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1997, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1998, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+  { year: 1999, descriptionFr: "Grunge, techno et hip-hop dominent les radios.", descriptionEn: "Grunge, techno, and hip-hop dominate the airwaves.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbTxeAdrVG2l" },
+
+  { year: 2000, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2001, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2002, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2003, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2004, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2005, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2006, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2007, descriptionFr: "Pop mondiale, indie rock et R&B électronique s’imposent.", descriptionEn: "Global pop, indie rock, and electronic R&B rise to prominence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2008, descriptionFr: "La musique numérique et les plateformes de streaming explosent.", descriptionEn: "Digital music and streaming platforms explode.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+  { year: 2009, descriptionFr: "Lady Gaga et la pop électronique dominent la scène mondiale.", descriptionEn: "Lady Gaga and electronic pop dominate the global scene.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd" },
+
+  { year: 2010, descriptionFr: "L’ère du streaming redéfinit l’industrie musicale.", descriptionEn: "The streaming era redefines the music industry.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2011, descriptionFr: "L’électro et la dance pop envahissent les festivals mondiaux.", descriptionEn: "Electro and dance pop take over global festivals.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2012, descriptionFr: "Explosion du rap moderne et des superstars mondiales.", descriptionEn: "Explosion of modern rap and global superstars.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2013, descriptionFr: "L’essor du trap et du R&B alternatif.", descriptionEn: "The rise of trap and alternative R&B.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2014, descriptionFr: "La K-pop et le hip-hop deviennent des phénomènes internationaux.", descriptionEn: "K-pop and hip-hop become international phenomena.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2015, descriptionFr: "L’afrobeat et le reggaeton gagnent en influence mondiale.", descriptionEn: "Afrobeat and reggaeton gain global influence.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2016, descriptionFr: "La trap s’impose comme le nouveau son dominant du hip-hop.", descriptionEn: "Trap becomes the dominant sound of hip-hop.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2017, descriptionFr: "Le streaming devient la principale forme d’écoute musicale.", descriptionEn: "Streaming becomes the main form of music consumption.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2018, descriptionFr: "Le hip-hop devient le genre le plus écouté au monde.", descriptionEn: "Hip-hop becomes the most streamed genre worldwide.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+  { year: 2019, descriptionFr: "La pop urbaine et les collaborations internationales dominent.", descriptionEn: "Urban pop and international collaborations dominate.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWYmmr74INQlb" },
+
+  { year: 2020, descriptionFr: "Fusion des genres et concerts virtuels pendant la pandémie.", descriptionEn: "Genre fusion and virtual concerts during the pandemic.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWZJhOVGWqUKF" },
+  { year: 2021, descriptionFr: "Les artistes indépendants prospèrent grâce aux plateformes numériques.", descriptionEn: "Independent artists thrive through digital platforms.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWZJhOVGWqUKF" },
+  { year: 2022, descriptionFr: "Retour du disco et de la funk dans la pop contemporaine.", descriptionEn: "Disco and funk make a comeback in contemporary pop.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWZJhOVGWqUKF" },
+  { year: 2023, descriptionFr: "Hyperpop, afrobeat et musique latine dominent les tendances.", descriptionEn: "Hyperpop, afrobeat, and Latin music dominate trends.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWZJhOVGWqUKF" },
+  { year: 2024, descriptionFr: "Montée des IA musicales et production collaborative mondiale.", descriptionEn: "Rise of AI-generated music and global collaborative production.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWZJhOVGWqUKF" },
+  { year: 2025, descriptionFr: "L’ère du métavers musical et de l’interaction virtuelle en direct.", descriptionEn: "The era of the musical metaverse and live virtual interaction.", spotify: "https://open.spotify.com/playlist/37i9dQZF1DWZJhOVGWqUKF" },
 ];
