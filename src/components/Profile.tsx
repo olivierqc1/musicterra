@@ -468,4 +468,231 @@ export default function ProfilePage() {
           </div>
         </CardContent>
       </Card>
-        
+        {/* ─────────────── Partie 3 (complète) ─────────────── */}
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from "@/components/ui/drawer"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { Button } from "@/components/ui/button"
+import { Instagram, Mail, MapPin } from "lucide-react"
+
+interface ResponsiveProfileDetailProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  profile: {
+    name: string
+    bio?: string
+    genre?: string
+    country?: string
+    image?: string
+    instagram?: string
+    email?: string
+    location?: string
+  } | null
+}
+
+export function ResponsiveProfileDetail({
+  open,
+  onOpenChange,
+  profile,
+}: ResponsiveProfileDetailProps) {
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+
+  if (!profile) return null
+
+  const DetailContent = () => (
+    <div className="flex flex-col items-center gap-3 text-center p-4">
+      {profile.image && (
+        <img
+          src={profile.image}
+          alt={profile.name}
+          className="w-24 h-24 rounded-full object-cover border"
+        />
+      )}
+      <h3 className="text-lg font-semibold">{profile.name}</h3>
+      {profile.bio && <p className="text-sm text-muted-foreground">{profile.bio}</p>}
+      <div className="flex items-center justify-center gap-4 mt-2">
+        {profile.instagram && (
+          <a
+            href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-sm text-primary hover:underline"
+          >
+            <Instagram className="w-4 h-4" /> @{profile.instagram.replace("@", "")}
+          </a>
+        )}
+        {profile.email && (
+          <a
+            href={`mailto:${profile.email}`}
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:underline"
+          >
+            <Mail className="w-4 h-4" /> {profile.email}
+          </a>
+        )}
+      </div>
+      {profile.location && (
+        <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground mt-2">
+          <MapPin className="w-4 h-4" /> {profile.location}
+        </div>
+      )}
+      <div className="mt-4">
+        <Button variant="outline" onClick={() => onOpenChange(false)}>
+          Fermer
+        </Button>
+      </div>
+    </div>
+  )
+
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Détails du profil</DialogTitle>
+            <DialogDescription>
+              Informations de l’utilisateur sélectionné.
+            </DialogDescription>
+          </DialogHeader>
+          <DetailContent />
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Détails du profil</DrawerTitle>
+          <DrawerDescription>
+            Informations de l’utilisateur sélectionné.
+          </DrawerDescription>
+        </DrawerHeader>
+        <DetailContent />
+      </DrawerContent>
+    </Drawer>
+  )
+      }
+      {/* ─────────────── Partie 4 (complète) ─────────────── */}
+import { useState } from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Search } from "lucide-react"
+import { ResponsiveProfileDetail } from "./ResponsiveProfileDetail"
+
+interface Profile {
+  name: string
+  bio?: string
+  genre?: string
+  country?: string
+  image?: string
+  instagram?: string
+  email?: string
+  location?: string
+}
+
+const sampleProfiles: Profile[] = [
+  {
+    name: "Sofía Reyes",
+    bio: "Chanteuse pop latino-américaine.",
+    genre: "Pop",
+    country: "Mexique",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Sofia_Reyes_2019.jpg",
+    instagram: "@sofiareyes",
+    email: "sofia@example.com",
+    location: "Mexico City",
+  },
+  {
+    name: "Omar Apollo",
+    bio: "Auteur-compositeur américain aux influences R&B et soul.",
+    genre: "Soul / R&B",
+    country: "États-Unis",
+    image: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Omar_Apollo_2022.jpg",
+    instagram: "@omarapollo",
+    email: "omar@example.com",
+    location: "Los Angeles",
+  },
+]
+
+export default function Profile() {
+  const [query, setQuery] = useState("")
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null)
+  const [open, setOpen] = useState(false)
+
+  const filteredProfiles = sampleProfiles.filter(
+    (p) =>
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.genre?.toLowerCase().includes(query.toLowerCase()) ||
+      p.country?.toLowerCase().includes(query.toLowerCase())
+  )
+
+  return (
+    <div className="p-6 max-w-3xl mx-auto space-y-6">
+      <h2 className="text-2xl font-bold text-center">Recherche de profils</h2>
+
+      <div className="flex gap-2 items-center">
+        <Input
+          placeholder="Rechercher par nom, genre ou pays..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="flex-1"
+        />
+        <Button variant="secondary">
+          <Search className="w-4 h-4" />
+        </Button>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        {filteredProfiles.length > 0 ? (
+          filteredProfiles.map((profile, idx) => (
+            <Card
+              key={idx}
+              className="cursor-pointer hover:bg-accent transition-colors"
+              onClick={() => {
+                setSelectedProfile(profile)
+                setOpen(true)
+              }}
+            >
+              <CardContent className="flex flex-col items-center p-4 text-center">
+                {profile.image && (
+                  <img
+                    src={profile.image}
+                    alt={profile.name}
+                    className="w-20 h-20 rounded-full object-cover mb-3 border"
+                  />
+                )}
+                <h3 className="font-semibold">{profile.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {profile.genre} — {profile.country}
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <p className="text-center text-muted-foreground">
+            Aucun résultat ne correspond à votre recherche.
+          </p>
+        )}
+      </div>
+
+      <ResponsiveProfileDetail
+        open={open}
+        onOpenChange={setOpen}
+        profile={selectedProfile}
+      />
+    </div>
+  )
+      }
