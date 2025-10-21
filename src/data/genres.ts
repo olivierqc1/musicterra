@@ -15,7 +15,7 @@ export const genres: Item[] = [
     relatedCountries: ['Multiple'], spotify: "https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U",
     image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Electric_guitar.jpg",
     origin: 'International',
-    
+  },  
   {
     name: 'Progressive Rock',
     descriptionFr: "Rock complexe des années 70 avec structures longues, influences classiques et jazz. Virtuosité technique et concepts albums.",
