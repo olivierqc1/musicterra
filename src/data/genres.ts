@@ -118,9 +118,10 @@ export const genres: Item[] = [
     artists: ['Metallica','Iron Maiden','Black Sabbath'],
    
     relatedCountries: ['Multiple'], spotify: "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe",
-    image: "https://upload.wikimedia.org/wikipedia/commons/9/98/Heavy_metal_band.jpg"
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/98/Heavy_metal_band.jpg",
   
-    origin: 'International',},
+    origin: 'International',
+  },
   {
     name: 'Heavy Metal',
     descriptionFr: "Metal classique des années 70-80 avec riffs puissants, solos de guitare virtuoses. Base du genre metal.",
