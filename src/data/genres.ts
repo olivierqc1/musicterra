@@ -170,7 +170,7 @@ export const genres: Item[] = [
     artists: ['Candlemass', 'Electric Wizard', 'Sleep'],
     origin: 'United Kingdom',
     relatedCountries: ['United Kingdom', 'United States'],
-    spotify: "https://open.spotify.com/playlist/37i9dQZF1DX1n8HBnb3Zif"
+    spotify: "https://spotify.link/x2C44NilEXb"
   },
   {
     name: 'Power Metal',
