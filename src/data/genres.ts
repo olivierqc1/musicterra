@@ -1324,7 +1324,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/IjH3hP8tEXb"
   },
   {
     name: 'alternative americana',
@@ -1334,7 +1334,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/W2obpkcuEXb"
   },
   {
     name: 'alternative ccm',
@@ -1344,7 +1344,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/HFQPrXduEXb"
   },
   {
     name: 'alternative country',
@@ -1354,7 +1354,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/JhqIdAfuEXb"
   },
   {
     name: 'alternative dance',
@@ -1364,7 +1364,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/tMuItrhuEXb"
   },
   {
     name: 'alternative emo',
@@ -1374,7 +1374,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/Zaa8a1iuEXb"
   },
   {
     name: 'alternative hardcore',
@@ -1384,7 +1384,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/jrVaTZluEXb"
   },
   {
     name: 'alternative hip hop',
@@ -1394,7 +1394,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/4DmxRlouEXb"
   },
   {
     name: 'alternative metal',
@@ -1404,7 +1404,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/SAnD0cruEXb"
   },
   {
     name: 'alternative metalcore',
@@ -1414,7 +1414,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/RjHBhWsuEXb"
   },
   {
     name: 'alternative pop',
@@ -1424,7 +1424,7 @@ export const genres: Item[] = [
     artists: ['Taylor Swift', 'Madonna', 'Michael Jackson'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/NDkkMZuuEXb"
   },
   {
     name: 'alternative pop rock',
@@ -1434,7 +1434,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/SLK1A5vuEXb"
   },
   {
     name: 'alternative r&b',
@@ -1444,7 +1444,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/XkAoflyuEXb"
   },
   {
     name: 'alternative rock',
@@ -1454,7 +1454,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/bdCW0lAuEXb"
   },
   {
     name: 'alternative roots rock',
@@ -1464,7 +1464,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/waKeKVDuEXb"
   },
   {
     name: 'amapiano',
