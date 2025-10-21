@@ -1884,7 +1884,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/eY4OBNDrEXb"
   },
   {
     name: 'arkansas hip hop',
@@ -1894,7 +1894,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/GvHBxhFrEXb"
   },
   {
     name: 'arkansas indie',
@@ -1904,7 +1904,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/MQWCp9GrEXb"
   },
   {
     name: 'arkansas metal',
@@ -1914,7 +1914,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/tNhVpPIrEXb"
   },
   {
     name: 'armenian folk',
@@ -1924,7 +1924,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/i2AessTrEXb"
   },
   {
     name: 'armenian hip hop',
@@ -1934,7 +1934,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/I0bV7PVrEXb"
   },
   {
     name: 'art punk',
@@ -1944,7 +1944,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/1Ejz5FXrEXb"
   },
   {
     name: 'art rock',
@@ -1954,7 +1954,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/FwMbXUYrEXb"
   },
   {
     name: 'asbury park indie',
@@ -1964,7 +1964,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/zeRLJt1rEXb"
   },
   {
     name: 'asheville indie',
@@ -1974,7 +1974,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/EkuSQg3rEXb"
   },
   {
     name: 'asian american hip hop',
@@ -1984,7 +1984,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/MsRyNXIsEXb"
   },
   {
     name: 'athens indie',
@@ -1994,7 +1994,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/TpEginKsEXb"
   },
   {
     name: 'atl hip hop',
@@ -2004,7 +2004,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/tDMjNbNsEXb"
   },
   {
     name: 'atl trap',
@@ -2014,7 +2014,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/hGQASiPsEXb"
   },
   {
     name: 'atlanta indie',
@@ -2024,7 +2024,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'United States',
     relatedCountries: ['United States'],
-    spotify: ""
+    spotify: "https://spotify.link/1F9f8HQsEXb"
   },
   {
     name: 'atlanta metal',
@@ -2034,7 +2034,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'United States',
     relatedCountries: ['United States'],
-    spotify: ""
+    spotify: "https://spotify.link/NJ0AfmSsEXb"
   },
   {
     name: 'atlanta punk',
@@ -2044,7 +2044,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'United States',
     relatedCountries: ['United States'],
-    spotify: ""
+    spotify: "https://spotify.link/HOfN274sEXb"
   },
   {
     name: 'atmospheric black metal',
@@ -2054,7 +2054,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/cVdw5OTsEXb"
   },
   {
     name: 'atmospheric doom',
@@ -2064,7 +2064,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/lrNIVO8sEXb"
   },
   {
     name: 'atmospheric post-metal',
@@ -2074,7 +2074,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/PMkCNjbtEXb"
   },
   {
     name: 'atmospheric post-rock',
@@ -2084,7 +2084,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/FcKBVIctEXb"
   },
   {
     name: 'atmospheric sludge',
