@@ -954,7 +954,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/GwdKskGqEXb"
   },
   {
     name: 'abstract beats',
@@ -964,7 +964,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/9UKWiKIqEXb"
   },
   {
     name: 'abstract hip hop',
@@ -974,7 +974,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/dH0gJcLqEXb"
   },
   {
     name: 'abstract idm',
@@ -984,7 +984,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/sjzvJNNqEXb"
   },
   {
     name: 'abstractro',
@@ -994,7 +994,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/hZaxESPqEXb"
   },
   {
     name: 'acid jazz',
@@ -1004,7 +1004,7 @@ export const genres: Item[] = [
     artists: ['Miles Davis', 'John Coltrane', 'Herbie Hancock'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/5VVSSTfrEXb"
   },
   {
     name: 'acid rock',
@@ -1014,7 +1014,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/sDTopihrEXb"
   },
   {
     name: 'acid techno',
@@ -1024,7 +1024,7 @@ export const genres: Item[] = [
     artists: ['Carl Craig', 'Jeff Mills', 'Richie Hawtin'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/v0CRs0irEXb"
   },
   {
     name: 'acidcore',
@@ -1034,7 +1034,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/avDfYokrEXb"
   },
   {
     name: 'acoustic blues',
@@ -1044,7 +1044,7 @@ export const genres: Item[] = [
     artists: ['B.B. King', 'Muddy Waters', 'Buddy Guy'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/jBfSpsmrEXb"
   },
   {
     name: 'acoustic punk',
@@ -1054,7 +1054,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/MY3p8korEXb"
   },
   {
     name: 'acoustic rock',
@@ -1074,7 +1074,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/YQ7LwiqrEXb"
   },
   {
     name: 'adelaide indie',
