@@ -1084,7 +1084,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/zA4mcuSpEXb"
   },
   {
     name: 'african metal',
@@ -1094,7 +1094,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/UWNxgWUpEXb"
   },
   {
     name: 'african reggae',
@@ -1104,7 +1104,7 @@ export const genres: Item[] = [
     artists: ['Bob Marley', 'Peter Tosh', 'Burning Spear'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/vvqAs1WpEXb"
   },
   {
     name: 'african rock',
@@ -1114,7 +1114,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/e4iKVAZpEXb"
   },
   {
     name: 'afrikaans folk',
@@ -1124,7 +1124,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/QaIkRwdqEXb"
   },
   {
     name: 'afro dancehall',
@@ -1134,7 +1134,7 @@ export const genres: Item[] = [
     artists: ['Sean Paul', 'Shabba Ranks', 'Beenie Man'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/O5sBX0eqEXb"
   },
   {
     name: 'afro-funk',
@@ -1144,7 +1144,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/UUriOWgqEXb"
   },
   {
     name: 'afrobeat',
@@ -1174,7 +1174,7 @@ export const genres: Item[] = [
     artists: ['Fela Kuti', 'Tony Allen', 'Antibalas'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/zQBd5nlqEXb"
   },
   {
     name: 'afroswing',
@@ -1184,7 +1184,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/sms5C1mqEXb"
   },
   {
     name: 'ainu folk',
@@ -1194,7 +1194,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/YxLreqoqEXb"
   },
   {
     name: 'alabama indie',
