@@ -223,9 +223,10 @@ export const genres: Item[] = [
     artists: ['Miles Davis','John Coltrane','Louis Armstrong'],
    
     relatedCountries: ['Multiple'], spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt",
-    image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Jazz_band.jpg"
+    image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Jazz_band.jpg",
   
-    origin: 'International',},
+    origin: 'International',
+  },
   {
     name: 'New Orleans Jazz',
     descriptionFr: "Jazz originel 1910s-20s, polyphonie collective, influences ragtime et blues. Trompette, clarinette, trombone.",
@@ -328,9 +329,10 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar','Jay-Z','Missy Elliott'],
    
     relatedCountries: ['Multiple'], spotify: "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd",
-    image: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Graffiti_Bronx.jpg"
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Graffiti_Bronx.jpg",
   
-    origin: 'International',},
+    origin: 'International',
+  },
   {
     name: 'Boom Bap',
     descriptionFr: "Hip-hop classique années 90, drums lourds et samples soul/funk. Son new-yorkais authentique, lyrisme complexe.",
@@ -413,9 +415,10 @@ export const genres: Item[] = [
     artists: ['B.B. King','Muddy Waters','Etta James'],
    
     relatedCountries: ['Multiple'], spotify: "https://open.spotify.com/playlist/37i9dQZF1DXd9rSDyQguIk",
-    image: "https://upload.wikimedia.org/wikipedia/commons/9/9f/BB_King_2009.jpg"
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/9f/BB_King_2009.jpg",
   
-    origin: 'International',},
+    origin: 'International',
+  },
   {
     name: 'Delta Blues',
     descriptionFr: "Blues acoustique originel du Delta Mississippi, slide guitar, son brut. Robert Johnson figure mythique.",
@@ -468,9 +471,10 @@ export const genres: Item[] = [
     artists: ['Johnny Cash','Dolly Parton','Chris Stapleton'],
    
     relatedCountries: ['Multiple'], spotify: "https://open.spotify.com/playlist/37i9dQZF1DX1lVhptIYRda",
-    image: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Nashville_Broadway.jpg"
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Nashville_Broadway.jpg",
   
-    origin: 'International',},
+    origin: 'International',
+  },
   {
     name: 'Classic Country',
     descriptionFr: "Country traditionnel années 40-70s, Nashville sound, steel guitar, fiddle. Hank Williams, Patsy Cline définissent le genre.",
@@ -533,9 +537,10 @@ export const genres: Item[] = [
     artists: ['Bob Marley','Peter Tosh','Burning Spear'],
    
     relatedCountries: ['Multiple'], spotify: "https://open.spotify.com/playlist/37i9dQZF1DXbSbnqxMTGx9",
-    image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Bob-Marley.jpg"
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Bob-Marley.jpg",
   
-    origin: 'International',},
+    origin: 'International',
+  },
   {
     name: 'Roots Reggae',
     descriptionFr: "Reggae originel années 70, messages rastafari et spirituels. Bob Marley ambassadeur mondial, conscience sociale.",
