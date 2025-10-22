@@ -22,7 +22,7 @@ const Dialog = ({
   )
 }
 
-const DialogContent = React.forwardRef
+const DialogContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
@@ -54,7 +54,7 @@ const DialogHeader = ({
 )
 DialogHeader.displayName = "DialogHeader"
 
-const DialogTitle = React.forwardRef
+const DialogTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
@@ -69,7 +69,7 @@ const DialogTitle = React.forwardRef
 ))
 DialogTitle.displayName = "DialogTitle"
 
-const DialogDescription = React.forwardRef
+const DialogDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
