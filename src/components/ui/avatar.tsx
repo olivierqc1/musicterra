@@ -16,7 +16,7 @@ const Avatar = React.forwardRef<
 ))
 Avatar.displayName = "Avatar"
 
-const AvatarImage = React.forwardRef
+const AvatarImage = React.forwardRef<
   HTMLImageElement,
   React.ImgHTMLAttributes<HTMLImageElement>
 >(({ className, ...props }, ref) => (
@@ -28,7 +28,7 @@ const AvatarImage = React.forwardRef
 ))
 AvatarImage.displayName = "AvatarImage"
 
-const AvatarFallback = React.forwardRef
+const AvatarFallback = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
