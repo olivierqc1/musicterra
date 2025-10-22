@@ -22,7 +22,7 @@ const Drawer = ({
   )
 }
 
-const DrawerContent = React.forwardRef
+const DrawerContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
@@ -48,7 +48,7 @@ const DrawerHeader = ({
 )
 DrawerHeader.displayName = "DrawerHeader"
 
-const DrawerTitle = React.forwardRef
+const DrawerTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
@@ -60,7 +60,7 @@ const DrawerTitle = React.forwardRef
 ))
 DrawerTitle.displayName = "DrawerTitle"
 
-const DrawerDescription = React.forwardRef
+const DrawerDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
