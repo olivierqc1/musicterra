@@ -1474,7 +1474,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/HOVYyeUPGXb"
   },
   {
     name: 'ambient black metal',
@@ -1484,7 +1484,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/wsQuuFWPGXb"
   },
   {
     name: 'ambient dub techno',
@@ -1494,7 +1494,7 @@ export const genres: Item[] = [
     artists: ['Carl Craig', 'Jeff Mills', 'Richie Hawtin'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/oAV0kHYPGXb"
   },
   {
     name: 'ambient folk',
@@ -1504,7 +1504,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/FHV6L3ZPGXb"
   },
   {
     name: 'ambient fusion',
@@ -1514,7 +1514,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/h485co2PGXb"
   },
   {
     name: 'ambient techno',
@@ -1524,7 +1524,7 @@ export const genres: Item[] = [
     artists: ['Carl Craig', 'Jeff Mills', 'Richie Hawtin'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/BWjCYP3PGXb"
   },
   {
     name: 'american folk revival',
@@ -1534,7 +1534,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/zfwjAG5PGXb"
   },
   {
     name: 'american grindcore',
@@ -1544,7 +1544,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/72Zvlo8PGXb"
   },
   {
     name: 'american melodeath',
@@ -1554,7 +1554,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/0KLMvPaQGXb"
   },
   {
     name: 'american metalcore',
@@ -1564,7 +1564,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/SW9VQTdQGXb"
   },
   {
     name: 'american post-rock',
@@ -1574,7 +1574,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/rxIaDehQGXb"
   },
   {
     name: 'american shoegaze',
@@ -1584,7 +1584,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/PY7oKejQGXb"
   },
   {
     name: 'anadolu rock',
@@ -1594,7 +1594,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/pr6YCPlQGXb"
   },
   {
     name: 'anarcho-punk',
@@ -1604,7 +1604,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/0uGzOcoQGXb"
   },
   {
     name: 'anime rock',
@@ -1614,7 +1614,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/6blTHFpQGXb"
   },
   {
     name: 'anime score',
@@ -1624,7 +1624,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/6CqfsjrQGXb"
   },
   {
     name: 'ann arbor indie',
@@ -1634,7 +1634,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/TwUe95sQGXb"
   },
   {
     name: 'anthem emo',
@@ -1644,7 +1644,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/6VMNKxuQGXb"
   },
   {
     name: 'anti-folk',
@@ -1654,7 +1654,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/zughO3vQGXb"
   },
   {
     name: 'antilliaanse folklore',
@@ -1664,7 +1664,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/3DR7ElzQGXb"
   },
   {
     name: 'antilliaanse rap',
@@ -1674,7 +1674,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/Sw4we0AQGXb"
   },
   {
     name: 'appalachian folk',
@@ -1684,7 +1684,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/NWFjwLDQGXb"
   },
   {
     name: 'appenzeller folk',
@@ -1694,7 +1694,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/8Ddl4IFQGXb"
   },
   {
     name: 'arab alternative',
@@ -1704,7 +1704,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/pUoFhbHQGXb"
   },
   {
     name: 'arab folk',
@@ -1714,7 +1714,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/jAsZiuIQGXb"
   },
   {
     name: 'arab metal',
@@ -1724,7 +1724,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/VfqP4NKQGXb"
   },
   {
     name: 'arab trap',
@@ -1734,7 +1734,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/xa8mL2LQGXb"
   },
   {
     name: 'arabic hip hop',
@@ -1744,7 +1744,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/gzi0ZqNQGXb"
   },
   {
     name: 'arabic jazz',
@@ -1754,7 +1754,7 @@ export const genres: Item[] = [
     artists: ['Miles Davis', 'John Coltrane', 'Herbie Hancock'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/StYCTtOQGXb"
   },
   {
     name: 'argentine alternative rock',
@@ -1764,7 +1764,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/VobWTgQQGXb"
   },
   {
     name: 'argentine hardcore',
@@ -1864,7 +1864,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/2HSwldSQGXb"
   },
   {
     name: 'arizona punk',
@@ -2174,7 +2174,7 @@ export const genres: Item[] = [
     artists: ['Taylor Swift', 'Madonna', 'Michael Jackson'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/tMWHCn2NGXb"
   },
   {
     name: 'australian alternative rock',
@@ -2184,7 +2184,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/xUGX4X3NGXb"
   },
   {
     name: 'australian americana',
@@ -2194,7 +2194,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/DQLijv6NGXb"
   },
   {
     name: 'australian black metal',
@@ -2204,7 +2204,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/RO5gcy8NGXb"
   },
   {
     name: 'australian blues',
@@ -2214,7 +2214,7 @@ export const genres: Item[] = [
     artists: ['B.B. King', 'Muddy Waters', 'Buddy Guy'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/yeTNGKaOGXb"
   },
   {
     name: 'australian country',
@@ -2224,7 +2224,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/CMSzfscOGXb"
   },
   {
     name: 'australian death metal',
@@ -2234,7 +2234,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/7lKv9FeOGXb"
   },
   {
     name: 'australian garage punk',
@@ -2244,7 +2244,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/buUahTgOGXb"
   },
   {
     name: 'australian hardcore',
@@ -2254,7 +2254,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/LTJDw5iOGXb"
   },
   {
     name: 'australian hip hop',
@@ -2264,7 +2264,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/bH8IuUkOGXb"
   },
   {
     name: 'australian indie',
@@ -2274,7 +2274,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/0jHdpwmOGXb"
   },
   {
     name: 'australian indie folk',
@@ -2284,7 +2284,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/0WgUzDoOGXb"
   },
   {
     name: 'australian indie rock',
@@ -2294,7 +2294,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/McBHlJqOGXb"
   },
   {
     name: 'australian jazz',
@@ -2304,7 +2304,7 @@ export const genres: Item[] = [
     artists: ['Miles Davis', 'John Coltrane', 'Herbie Hancock'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/HJ4lOUsOGXb"
   },
   {
     name: 'australian metal',
@@ -2314,7 +2314,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/1E6uC4uOGXb"
   },
   {
     name: 'australian metalcore',
@@ -2324,7 +2324,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/kUbYYfwOGXb"
   },
   {
     name: 'australian post-hardcore',
@@ -2334,7 +2334,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/ewwm1ozOGXb"
   },
   {
     name: 'australian post-punk',
@@ -2344,7 +2344,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/o4aIW2BOGXb"
   },
   {
     name: 'australian post-rock',
@@ -2354,7 +2354,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/0IKmSuEOGXb"
   },
   {
     name: 'australian reggae fusion',
@@ -2364,7 +2364,7 @@ export const genres: Item[] = [
     artists: ['Bob Marley', 'Peter Tosh', 'Burning Spear'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/s32fvnGOGXb"
   },
   {
     name: 'australian rock',
@@ -2374,7 +2374,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/UPcWMOHOGXb"
   },
   {
     name: 'australian rockabilly',
@@ -2384,7 +2384,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/xvcQyfJOGXb"
   },
   {
     name: 'australian shoegaze',
@@ -2394,7 +2394,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/2iPCrPKOGXb"
   },
   {
     name: 'australian ska',
@@ -2404,7 +2404,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/LszYrlMOGXb"
   },
   {
     name: 'australian techno',
@@ -2414,7 +2414,7 @@ export const genres: Item[] = [
     artists: ['Carl Craig', 'Jeff Mills', 'Richie Hawtin'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/GdOtIKNOGXb"
   },
   {
     name: 'australian thrash metal',
@@ -2424,7 +2424,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/xfX7crPOGXb"
   },
   {
     name: 'australian trap',
@@ -2434,7 +2434,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/GCdOnrROGXb"
   },
   {
     name: 'australian underground hip hop',
@@ -2444,7 +2444,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'Australia',
     relatedCountries: ['Australia'],
-    spotify: ""
+    spotify: "https://spotify.link/nsIhYUSOGXb"
   },
   {
     name: 'austrian black metal',
@@ -2454,7 +2454,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/iFLLtXaPGXb"
   },
   {
     name: 'austrian hip hop',
@@ -2464,7 +2464,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/aB0lR58OGXb"
   },
   {
     name: 'austrian indie',
@@ -2474,7 +2474,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/Zg4pz96OGXb"
   },
   {
     name: 'austrian jazz',
@@ -2484,7 +2484,7 @@ export const genres: Item[] = [
     artists: ['Miles Davis', 'John Coltrane', 'Herbie Hancock'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/QSFNxMcPGXb"
   },
   {
     name: 'austrian metal',
@@ -2494,7 +2494,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/cgHAzZdPGXb"
   },
   {
     name: 'austrian punk',
@@ -2504,7 +2504,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/TjEKrEfPGXb"
   },
   {
     name: 'austrian stoner rock',
@@ -2514,7 +2514,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/esfycqhPGXb"
   },
   {
     name: 'austrian techno',
@@ -2524,7 +2524,7 @@ export const genres: Item[] = [
     artists: ['Carl Craig', 'Jeff Mills', 'Richie Hawtin'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/TpenEZiPGXb"
   },
   {
     name: 'autonomous black metal',
@@ -2534,7 +2534,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/DfcMO1kPGXb"
   },
   {
     name: 'avant-garde black metal',
@@ -2544,7 +2544,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/nIyZfNmPGXb"
   },
   {
     name: 'avant-garde jazz',
@@ -2554,7 +2554,7 @@ export const genres: Item[] = [
     artists: ['Miles Davis', 'John Coltrane', 'Herbie Hancock'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/cFn5ZSoPGXb"
   },
   {
     name: 'avant-garde metal',
@@ -2564,7 +2564,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/X9LKQptPGXb"
   },
   {
     name: 'avant-rock',
@@ -2574,7 +2574,7 @@ export const genres: Item[] = [
     artists: ['The Beatles', 'Led Zeppelin', 'The Rolling Stones'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/yl0FLxrPGXb"
   },
   {
     name: 'azeri rap',
@@ -2584,7 +2584,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/DMKbWTuPGXb"
   },
   {
     name: 'background jazz',
@@ -2594,7 +2594,7 @@ export const genres: Item[] = [
     artists: ['Miles Davis', 'John Coltrane', 'Herbie Hancock'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/c7O510zPGXb"
   },
   {
     name: 'bahamian folk',
@@ -2604,7 +2604,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/wXkTV8BPGXb"
   },
   {
     name: 'baja indie',
@@ -2614,7 +2614,7 @@ export const genres: Item[] = [
     artists: ['Arctic Monkeys', 'The Strokes', 'Tame Impala'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/iocq7PDPGXb"
   },
   {
     name: 'balfolk',
@@ -2624,7 +2624,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/s9nRAzFPGXb"
   },
   {
     name: 'balkan folk metal',
@@ -2634,7 +2634,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/yGWuuwIPGXb"
   },
   {
     name: 'balkan hip hop',
@@ -2644,7 +2644,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/tOWga8JPGXb"
   },
   {
     name: 'balkan trap',
@@ -2654,7 +2654,7 @@ export const genres: Item[] = [
     artists: ['Kendrick Lamar', 'Nas', 'Missy Elliott'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/oqvz3TLPGXb"
   },
   {
     name: 'baltic black metal',
@@ -2664,7 +2664,7 @@ export const genres: Item[] = [
     artists: ['Metallica', 'Iron Maiden', 'Black Sabbath'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/71ApoZNPGXb"
   },
   {
     name: 'baltic folk',
@@ -2674,7 +2674,7 @@ export const genres: Item[] = [
     artists: ['Bob Dylan', 'Joni Mitchell', 'Nick Drake'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/KQW2a3PPGXb"
   },
   {
     name: 'baltic post-punk',
@@ -2684,7 +2684,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: ""
+    spotify: "https://spotify.link/PMUqnMRPGXb"
   },
   {
     name: 'baltimore hip hop',
