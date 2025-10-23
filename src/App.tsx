@@ -3,7 +3,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { genres } from "./data/genres";
 import { countries } from "./data/countries";
 import { years } from "./data/years";
-import { similarityMatrix } from "./data/matrix";
+import { matrix } from "./data/matrix";
 
 import { Wheel } from "./components/Wheel";
 import Rating from "./components/Rating";
