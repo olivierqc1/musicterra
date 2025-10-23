@@ -12,6 +12,7 @@ import AuthGate from "./components/AuthGate";
 import Groups from "./components/Groups";
 import Concerts from "./components/Concerts";
 import EmergingArtists from "./components/EmergingArtists";
+import Welcome from "./components/Welcome";
 
 import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
@@ -56,12 +57,13 @@ const isYear = (i: Item): i is YearItem => "year" in i;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
-  const [tab, setTab] = useState<
+  const [tab, setTab] = useState
     "discover" | "emerging" | "groups" | "concerts" | "profile"
   >("discover");
   const [pool, setPool] = useState<"genres" | "countries" | "years">("genres");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   const { session, profile } = useAuth();
 
@@ -69,7 +71,6 @@ const App: React.FC = () => {
   const items: Item[] = useMemo(() => {
     if (pool === "genres") return genres as Item[];
     if (pool === "countries") return countries as Item[];
-    // Transformer les années en Items
     return years.map(y => ({
       name: String(y.year),
       year: y.year,
@@ -80,6 +81,19 @@ const App: React.FC = () => {
   }, [pool]);
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+
+  // Afficher le Welcome à la première visite
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('musicterra_visited');
+    if (!hasVisited) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  const handleCloseWelcome = () => {
+    setShowWelcome(false);
+    localStorage.setItem('musicterra_visited', 'true');
+  };
 
   // Mettre à jour le streak à la connexion
   useEffect(() => {
@@ -95,7 +109,6 @@ const App: React.FC = () => {
     const found = items.find((i) => i.name === name) || null;
     setSelectedItem(found);
 
-    // Track l'action de spin
     if (found && session) {
       trackAction("spin", pool, found.name);
     }
@@ -105,7 +118,7 @@ const App: React.FC = () => {
   const similarityBoost = useMemo(() => {
     if (!selectedItem) return [];
     const name = selectedItem.name;
-    const row = similarityMatrix[name] || {};
+    const row = matrix[name] || {};
     return Object.entries(row).sort((a, b) => b[1] - a[1]);
   }, [selectedItem]);
 
@@ -117,301 +130,308 @@ const App: React.FC = () => {
   };
 
   return (
-    <div style={styles.app}>
-      {/* Header */}
-      <header style={styles.header}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 22 }}>🎵</span>
-          <h1 style={{ margin: 0 }}>Musicterra</h1>
-        </div>
+    <>
+      {/* Welcome Modal */}
+      {showWelcome && <Welcome onClose={handleCloseWelcome} language={language} />}
 
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          {/* Streak indicator */}
-          {session && currentStreak > 0 && (
-            <div style={styles.streakBadge}>
-              🔥 {currentStreak}
-            </div>
-          )}
+      <div style={styles.app}>
+        {/* Header */}
+        <header style={styles.header}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 22 }}>🎵</span>
+            <h1 style={{ margin: 0 }}>MusicTerra</h1>
+          </div>
 
-          <button
-            onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
-            style={styles.secondaryBtn}
-          >
-            {t("🇬🇧 EN", "🇫🇷 FR")}
-          </button>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            {/* Info button */}
+            <button
+              onClick={() => setShowWelcome(true)}
+              style={styles.infoBtn}
+              title={t('À propos', 'About')}
+            >
+              ℹ️
+            </button>
 
-          {session && profile && (
-            <span style={{ fontSize: 12, color: "#555" }}>
-              {profile.display_name || profile.email}
-            </span>
-          )}
-        </div>
-      </header>
-
-      {/* Tabs */}
-      <nav style={styles.tabsBar}>
-        <button
-          style={{
-            ...styles.tabBtn,
-            ...(tab === "discover" ? styles.tabActive : {}),
-          }}
-          onClick={() => setTab("discover")}
-        >
-          {t("🔍 Découvrir", "🔍 Discover")}
-        </button>
-        <button
-          style={{
-            ...styles.tabBtn,
-            ...(tab === "emerging" ? styles.tabActive : {}),
-          }}
-          onClick={() => setTab("emerging")}
-        >
-          {t("🌱 Émergents", "🌱 Emerging")}
-        </button>
-        <button
-          style={{
-            ...styles.tabBtn,
-            ...(tab === "groups" ? styles.tabActive : {}),
-          }}
-          onClick={() => setTab("groups")}
-        >
-          {t("👥 Groupes", "👥 Groups")}
-        </button>
-        <button
-          style={{
-            ...styles.tabBtn,
-            ...(tab === "concerts" ? styles.tabActive : {}),
-          }}
-          onClick={() => setTab("concerts")}
-        >
-          {t("🎤 Concerts", "🎤 Concerts")}
-        </button>
-        <button
-          style={{
-            ...styles.tabBtn,
-            ...(tab === "profile" ? styles.tabActive : {}),
-          }}
-          onClick={() => setTab("profile")}
-        >
-          {t("👤 Profil", "👤 Profile")}
-        </button>
-      </nav>
-
-      {/* Content */}
-      <main style={styles.main}>
-        {/* DISCOVER */}
-        {tab === "discover" && (
-          <section style={{ display: "grid", gap: 16 }}>
-            {/* Pool selector */}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <label style={styles.chipLabel}>
-                <input
-                  type="radio"
-                  name="pool"
-                  checked={pool === "genres"}
-                  onChange={() => setPool("genres")}
-                />{" "}
-                {t("🎸 Genres", "🎸 Genres")}
-              </label>
-              <label style={styles.chipLabel}>
-                <input
-                  type="radio"
-                  name="pool"
-                  checked={pool === "countries"}
-                  onChange={() => setPool("countries")}
-                />{" "}
-                {t("🌍 Pays", "🌍 Countries")}
-              </label>
-              <label style={styles.chipLabel}>
-                <input
-                  type="radio"
-                  name="pool"
-                  checked={pool === "years"}
-                  onChange={() => setPool("years")}
-                />{" "}
-                {t("📅 Années", "📅 Years")}
-              </label>
-            </div>
-
-            {/* Wheel */}
-            <div style={styles.card}>
-              <h3 style={{ marginTop: 0 }}>
-                {t("🎡 Tourne la roue", "🎡 Spin the wheel")}
-              </h3>
-              <Wheel
-                items={items.map((i) => i.name)}
-                onSelect={onSpin}
-                language={language}
-              />
-            </div>
-
-            {/* Result */}
-            {selectedItem && (
-              <div style={styles.card}>
-                <div style={styles.resultGrid}>
-                  {/* Image */}
-                  <div>
-                    {selectedItem.image ? (
-                      <img
-                        src={selectedItem.image}
-                        alt={selectedItem.name}
-                        style={styles.resultImage}
-                      />
-                    ) : (
-                      <div style={styles.noImage}>
-                        {t("Aucune image", "No image")}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info */}
-                  <div>
-                    {/* Titre - adapté selon le type */}
-                    {isYear(selectedItem) ? (
-                      <h2 style={{ margin: "4px 0 6px" }}>
-                        {selectedItem.year}
-                      </h2>
-                    ) : (
-                      <h2 style={{ margin: "4px 0 6px" }}>
-                        {selectedItem.name}
-                      </h2>
-                    )}
-
-                    <p style={{ marginTop: 0 }}>
-                      {language === "fr"
-                        ? selectedItem.descriptionFr
-                        : selectedItem.descriptionEn}
-                    </p>
-
-                    {/* Subgenres/Regions */}
-                    {isGenre(selectedItem) && selectedItem.subgenres?.length ? (
-                      <p style={styles.lightText}>
-                        <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
-                        {selectedItem.subgenres.join(", ")}
-                      </p>
-                    ) : null}
-
-                    {isCountry(selectedItem) && selectedItem.regions?.length ? (
-                      <p style={styles.lightText}>
-                        <strong>{t("Régions", "Regions")}:</strong>{" "}
-                        {selectedItem.regions.join(", ")}
-                      </p>
-                    ) : null}
-
-                    {/* Cities */}
-                    {isCountry(selectedItem) && selectedItem.cities?.length ? (
-                      <div style={{ marginTop: 8 }}>
-                        <strong>{t("Villes", "Cities")}:</strong>
-                        <ul style={{ margin: "6px 0 0 16px" }}>
-                          {selectedItem.cities.map((c: any) => (
-                            <li key={c.name}>
-                              <em>{c.name}</em>
-                              {c.styles ? ` — ${c.styles.join(", ")}` : ""}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : null}
-
-                    {/* Artists - ne pas afficher pour les années */}
-                    {!isYear(selectedItem) && selectedItem.artists?.length ? (
-                      <p style={styles.lightText}>
-                        <strong>{t("Artistes", "Artists")}:</strong>{" "}
-                        {selectedItem.artists.join(", ")}
-                      </p>
-                    ) : null}
-
-                    {/* Spotify */}
-                    {selectedItem.spotify && (
-                      <p style={{ marginTop: 8 }}>
-                        <a
-                          href={selectedItem.spotify}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={styles.primaryLink}
-                          onClick={handleSpotifyClick}
-                        >
-                          🎧 {t("Playlist Spotify", "Spotify playlist")}
-                        </a>
-                      </p>
-                    )}
-
-                    {/* Rating Component - adapter le itemType */}
-                    <div style={{ marginTop: 14 }}>
-                      <Rating
-                        itemType={
-                          pool === "genres" 
-                            ? "genre" 
-                            : pool === "countries"
-                            ? "country"
-                            : "genre"
-                        }
-                        itemName={selectedItem.name}
-                        max={10}
-                        language={language}
-                      />
-                    </div>
-
-                    {/* Similarities */}
-                    {similarityBoost.length > 0 && (
-                      <div style={{ marginTop: 12 }}>
-                        <strong>{t("Affinités", "Similarities")}:</strong>
-                        <div style={styles.badgeContainer}>
-                          {similarityBoost.slice(0, 8).map(([label, score]) => (
-                            <span key={label} style={styles.badge}>
-                              {label} • {Math.round(score * 100)}%
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+            {/* Streak indicator */}
+            {session && currentStreak > 0 && (
+              <div style={styles.streakBadge}>
+                🔥 {currentStreak}
               </div>
             )}
-          </section>
-        )}
 
-        {/* EMERGING ARTISTS */}
-        {tab === "emerging" && (
-          <AuthGate mode="inline" language={language}>
-            <EmergingArtists language={language} />
-          </AuthGate>
-        )}
+            <button
+              onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
+              style={styles.secondaryBtn}
+            >
+              {t("🇬🇧 EN", "🇫🇷 FR")}
+            </button>
 
-        {/* GROUPS */}
-        {tab === "groups" && (
-          <AuthGate mode="inline" language={language}>
-            <Groups language={language} />
-          </AuthGate>
-        )}
+            {session && profile && (
+              <span style={{ fontSize: 12, color: "#555" }}>
+                {profile.display_name || profile.email}
+              </span>
+            )}
+          </div>
+        </header>
 
-        {/* CONCERTS */}
-        {tab === "concerts" && (
-          <AuthGate mode="inline" language={language}>
-            <Concerts
-              language={language}
-              suggestedArtists={
-                selectedItem && !isYear(selectedItem)
-                  ? selectedItem.artists || []
-                  : []
-              }
-            />
-          </AuthGate>
-        )}
+        {/* Tabs */}
+        <nav style={styles.tabsBar}>
+          <button
+            style={{
+              ...styles.tabBtn,
+              ...(tab === "discover" ? styles.tabActive : {}),
+            }}
+            onClick={() => setTab("discover")}
+          >
+            {t("🔍 Découvrir", "🔍 Discover")}
+          </button>
+          <button
+            style={{
+              ...styles.tabBtn,
+              ...(tab === "emerging" ? styles.tabActive : {}),
+            }}
+            onClick={() => setTab("emerging")}
+          >
+            {t("🌱 Émergents", "🌱 Emerging")}
+          </button>
+          <button
+            style={{
+              ...styles.tabBtn,
+              ...(tab === "groups" ? styles.tabActive : {}),
+            }}
+            onClick={() => setTab("groups")}
+          >
+            {t("👥 Groupes", "👥 Groups")}
+          </button>
+          <button
+            style={{
+              ...styles.tabBtn,
+              ...(tab === "concerts" ? styles.tabActive : {}),
+            }}
+            onClick={() => setTab("concerts")}
+          >
+            {t("🎤 Concerts", "🎤 Concerts")}
+          </button>
+          <button
+            style={{
+              ...styles.tabBtn,
+              ...(tab === "profile" ? styles.tabActive : {}),
+            }}
+            onClick={() => setTab("profile")}
+          >
+            {t("👤 Profil", "👤 Profile")}
+          </button>
+        </nav>
 
-        {/* PROFILE */}
-        {tab === "profile" && (
-          <AuthGate mode="inline" language={language}>
-            <Profile language={language} />
-          </AuthGate>
-        )}
-      </main>
+        {/* Content */}
+        <main style={styles.main}>
+          {/* DISCOVER */}
+          {tab === "discover" && (
+            <section style={{ display: "grid", gap: 16 }}>
+              {/* Pool selector */}
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <label style={styles.chipLabel}>
+                  <input
+                    type="radio"
+                    name="pool"
+                    checked={pool === "genres"}
+                    onChange={() => setPool("genres")}
+                  />{" "}
+                  {t("🎸 Genres", "🎸 Genres")}
+                </label>
+                <label style={styles.chipLabel}>
+                  <input
+                    type="radio"
+                    name="pool"
+                    checked={pool === "countries"}
+                    onChange={() => setPool("countries")}
+                  />{" "}
+                  {t("🌍 Pays", "🌍 Countries")}
+                </label>
+                <label style={styles.chipLabel}>
+                  <input
+                    type="radio"
+                    name="pool"
+                    checked={pool === "years"}
+                    onChange={() => setPool("years")}
+                  />{" "}
+                  {t("📅 Années", "📅 Years")}
+                </label>
+              </div>
 
-      <footer style={styles.footer}>
-        <small>© {new Date().getFullYear()} Musicterra</small>
-      </footer>
-    </div>
+              {/* Wheel */}
+              <div style={styles.card}>
+                <h3 style={{ marginTop: 0 }}>
+                  {t("🎡 Tourne la roue", "🎡 Spin the wheel")}
+                </h3>
+                <Wheel
+                  items={items.map((i) => i.name)}
+                  onSelect={onSpin}
+                  language={language}
+                />
+              </div>
+
+              {/* Result */}
+              {selectedItem && (
+                <div style={styles.card}>
+                  <div style={styles.resultGrid}>
+                    {/* Image */}
+                    <div>
+                      {selectedItem.image ? (
+                        <img
+                          src={selectedItem.image}
+                          alt={selectedItem.name}
+                          style={styles.resultImage}
+                        />
+                      ) : (
+                        <div style={styles.noImage}>
+                          {t("Aucune image", "No image")}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Info */}
+                    <div>
+                      {isYear(selectedItem) ? (
+                        <h2 style={{ margin: "4px 0 6px" }}>
+                          {selectedItem.year}
+                        </h2>
+                      ) : (
+                        <h2 style={{ margin: "4px 0 6px" }}>
+                          {selectedItem.name}
+                        </h2>
+                      )}
+
+                      <p style={{ marginTop: 0 }}>
+                        {language === "fr"
+                          ? selectedItem.descriptionFr
+                          : selectedItem.descriptionEn}
+                      </p>
+
+                      {isGenre(selectedItem) && selectedItem.subgenres?.length ? (
+                        <p style={styles.lightText}>
+                          <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
+                          {selectedItem.subgenres.join(", ")}
+                        </p>
+                      ) : null}
+
+                      {isCountry(selectedItem) && selectedItem.regions?.length ? (
+                        <p style={styles.lightText}>
+                          <strong>{t("Régions", "Regions")}:</strong>{" "}
+                          {selectedItem.regions.join(", ")}
+                        </p>
+                      ) : null}
+
+                      {isCountry(selectedItem) && selectedItem.cities?.length ? (
+                        <div style={{ marginTop: 8 }}>
+                          <strong>{t("Villes", "Cities")}:</strong>
+                          <ul style={{ margin: "6px 0 0 16px" }}>
+                            {selectedItem.cities.map((c: any) => (
+                              <li key={c.name}>
+                                <em>{c.name}</em>
+                                {c.styles ? ` — ${c.styles.join(", ")}` : ""}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
+
+                      {!isYear(selectedItem) && selectedItem.artists?.length ? (
+                        <p style={styles.lightText}>
+                          <strong>{t("Artistes", "Artists")}:</strong>{" "}
+                          {selectedItem.artists.join(", ")}
+                        </p>
+                      ) : null}
+
+                      {selectedItem.spotify && (
+                        <p style={{ marginTop: 8 }}>
+                          
+                            href={selectedItem.spotify}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={styles.primaryLink}
+                            onClick={handleSpotifyClick}
+                          >
+                            🎧 {t("Playlist Spotify", "Spotify playlist")}
+                          </a>
+                        </p>
+                      )}
+
+                      <div style={{ marginTop: 14 }}>
+                        <Rating
+                          itemType={
+                            pool === "genres" 
+                              ? "genre" 
+                              : pool === "countries"
+                              ? "country"
+                              : "genre"
+                          }
+                          itemName={selectedItem.name}
+                          max={10}
+                          language={language}
+                        />
+                      </div>
+
+                      {similarityBoost.length > 0 && (
+                        <div style={{ marginTop: 12 }}>
+                          <strong>{t("Affinités", "Similarities")}:</strong>
+                          <div style={styles.badgeContainer}>
+                            {similarityBoost.slice(0, 8).map(([label, score]) => (
+                              <span key={label} style={styles.badge}>
+                                {label} • {Math.round(score * 100)}%
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* EMERGING ARTISTS */}
+          {tab === "emerging" && (
+            <AuthGate mode="inline" language={language}>
+              <EmergingArtists language={language} />
+            </AuthGate>
+          )}
+
+          {/* GROUPS */}
+          {tab === "groups" && (
+            <AuthGate mode="inline" language={language}>
+              <Groups language={language} />
+            </AuthGate>
+          )}
+
+          {/* CONCERTS */}
+          {tab === "concerts" && (
+            <AuthGate mode="inline" language={language}>
+              <Concerts
+                language={language}
+                suggestedArtists={
+                  selectedItem && !isYear(selectedItem)
+                    ? selectedItem.artists || []
+                    : []
+                }
+              />
+            </AuthGate>
+          )}
+
+          {/* PROFILE */}
+          {tab === "profile" && (
+            <AuthGate mode="inline" language={language}>
+              <Profile language={language} />
+            </AuthGate>
+          )}
+        </main>
+
+        <footer style={styles.footer}>
+          <small>© {new Date().getFullYear()} MusicTerra • {t('Découvrez la musique du monde', 'Discover world music')}</small>
+        </footer>
+      </div>
+    </>
   );
 };
 
@@ -425,6 +445,14 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 12,
     flexWrap: "wrap",
     gap: 12,
+  },
+  infoBtn: {
+    padding: "6px 10px",
+    borderRadius: 8,
+    border: "1px solid #ddd",
+    background: "#fff",
+    cursor: "pointer",
+    fontSize: 16,
   },
   streakBadge: {
     padding: "4px 10px",
