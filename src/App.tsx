@@ -57,7 +57,7 @@ const isYear = (i: Item): i is YearItem => "year" in i;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
-  const [tab, setTab] = useState
+  const [tab, setTab] = useState<
     "discover" | "emerging" | "groups" | "concerts" | "profile"
   >("discover");
   const [pool, setPool] = useState<"genres" | "countries" | "years">("genres");
@@ -345,7 +345,7 @@ const App: React.FC = () => {
 
                       {selectedItem.spotify && (
                         <p style={{ marginTop: 8 }}>
-                          
+                          <a
                             href={selectedItem.spotify}
                             target="_blank"
                             rel="noreferrer"
