@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://musicterra.xyz/sitemap.xml
+Sitemap: https://musicterra.xyz/sitemap.xml 
