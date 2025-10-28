@@ -13,6 +13,7 @@ import Groups from "./components/Groups";
 import Concerts from "./components/Concerts";
 import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
+import ResetPassword from "./components/ResetPassword";
 
 import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
@@ -57,15 +58,24 @@ const isYear = (i: Item): i is YearItem => "year" in i;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
-  const [tab, setTab] = useState<
+  const [tab, setTab] = useState
     "discover" | "emerging" | "groups" | "concerts" | "profile"
   >("discover");
   const [pool, setPool] = useState<"genres" | "countries" | "years">("genres");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [isResetPassword, setIsResetPassword] = useState(false);
 
   const { session, profile } = useAuth();
+
+  // Détecter si l'URL contient un token de reset password
+  useEffect(() => {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    if (hashParams.get('type') === 'recovery') {
+      setIsResetPassword(true);
+    }
+  }, []);
 
   // Items selon le pool
   const items: Item[] = useMemo(() => {
@@ -85,10 +95,10 @@ const App: React.FC = () => {
   // Afficher le Welcome à la première visite
   useEffect(() => {
     const hasVisited = localStorage.getItem('musicterra_visited');
-    if (!hasVisited) {
+    if (!hasVisited && !isResetPassword) {
       setShowWelcome(true);
     }
-  }, []);
+  }, [isResetPassword]);
 
   const handleCloseWelcome = () => {
     setShowWelcome(false);
@@ -128,6 +138,19 @@ const App: React.FC = () => {
       trackAction("click_spotify", pool, selectedItem.name);
     }
   };
+
+  // Si on est en mode reset password
+  if (isResetPassword) {
+    return (
+      <ResetPassword 
+        language={language} 
+        onComplete={() => {
+          setIsResetPassword(false);
+          window.location.hash = '';
+        }} 
+      />
+    );
+  }
 
   return (
     <>
