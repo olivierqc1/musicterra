@@ -27,6 +27,9 @@
     <!-- Google verification -->
     <meta name="google-site-verification" content="google531c00e69461582a" />
     
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://musicterra.xyz/" />
+    
     <!-- Schema.org markup for SEO -->
     <script type="application/ld+json">
     {
@@ -119,3 +122,26 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+```
+
+---
+
+## **Maintenant pour ton domaine Vercel :**
+
+Sur le screenshot, je vois que tu dois **configurer les DNS**. 
+
+### **Fais ceci dans Vercel :**
+
+1. **Ne clique PAS sur "Save"** pour l'instant
+2. **Scroll down** dans cette page
+3. Tu devrais voir des **instructions DNS** qui ressemblent à :
+```
+Add these DNS records to your domain:
+
+Type: A
+Name: @
+Value: 76.76.21.21
+
+Type: CNAME  
+Name: www
+Value: cname.vercel-dns.com
