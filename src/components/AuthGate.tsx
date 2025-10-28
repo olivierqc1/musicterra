@@ -1,6 +1,7 @@
 // src/components/AuthGate.tsx
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import ForgotPassword from "./ForgotPassword";
 
 interface AuthGateProps {
   children?: React.ReactNode;
@@ -16,6 +17,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { session, supabase } = useAuth();
@@ -98,6 +100,11 @@ const AuthGate: React.FC<AuthGateProps> = ({
     return <>{children}</>;
   }
 
+  // Si mode "mot de passe oublié"
+  if (showForgotPassword) {
+    return <ForgotPassword onBack={() => setShowForgotPassword(false)} language={language} />;
+  }
+
   // Formulaire de connexion/inscription
   const formContent = (
     <>
@@ -154,6 +161,19 @@ const AuthGate: React.FC<AuthGateProps> = ({
           }
         </button>
       </form>
+
+      {!isSignUp && (
+        <div style={{ marginTop: 10, textAlign: 'center' }}>
+          <button
+            type="button"
+            onClick={() => setShowForgotPassword(true)}
+            style={styles.forgotPasswordLink}
+            disabled={loading}
+          >
+            {t('Mot de passe oublié ?', 'Forgot password?')}
+          </button>
+        </div>
+      )}
 
       <div style={{ marginTop: 12, textAlign: "center" }}>
         <button
@@ -258,6 +278,15 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     textDecoration: "underline",
     padding: "8px",
+  },
+  forgotPasswordLink: {
+    background: "none",
+    border: "none",
+    color: "#999",
+    fontSize: 13,
+    cursor: "pointer",
+    textDecoration: "underline",
+    padding: "4px 8px",
   },
   message: {
     marginTop: 12,
