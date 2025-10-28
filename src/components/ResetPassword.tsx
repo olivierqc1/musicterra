@@ -3,9 +3,10 @@ import { supabase } from '../lib/supabase';
 
 interface Props {
   language: 'fr' | 'en';
+  onComplete: () => void;
 }
 
-export default function ResetPassword({ language }: Props) {
+export default function ResetPassword({ language, onComplete }: Props) {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,14 +37,13 @@ export default function ResetPassword({ language }: Props) {
 
     if (error) {
       setError(error.message);
+      setLoading(false);
     } else {
       setSuccess(true);
       setTimeout(() => {
-        window.location.href = '/';
+        onComplete();
       }, 2000);
     }
-
-    setLoading(false);
   };
 
   if (success) {
