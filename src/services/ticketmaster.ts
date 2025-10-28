@@ -50,7 +50,6 @@ export async function searchConcertsByArtist(artist: string): Promise<Ticketmast
     if (!res.ok) {
       console.error('❌ Erreur HTTP:', res.status, res.statusText);
       
-      // Si 401 = mauvaise clé API
       if (res.status === 401) {
         alert('Erreur: Clé API Ticketmaster invalide');
       }
@@ -86,7 +85,7 @@ export async function searchConcertsByArtist(artist: string): Promise<Ticketmast
       }
       
       console.log('✅ Événements trouvés (fallback):', fallbackData._embedded.events.length);
-      return fallbackData._embedded.events;
+      return fallbackData._embedded?.events || []; // ✅ FIX ICI
     }
 
     console.log('✅ Événements trouvés:', data._embedded.events.length);
@@ -96,7 +95,7 @@ export async function searchConcertsByArtist(artist: string): Promise<Ticketmast
       console.log('🎵 Premier événement:', data._embedded.events[0]);
     }
     
-    return data._embedded.events;
+    return data._embedded?.events || []; // ✅ FIX ICI
     
   } catch (err) {
     console.error('💥 Erreur complète Ticketmaster:', err);
