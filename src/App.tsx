@@ -58,7 +58,7 @@ const isYear = (i: Item): i is YearItem => "year" in i;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
-  const [tab, setTab] = useState
+  const [tab, setTab] = useState<
     "discover" | "emerging" | "groups" | "concerts" | "profile"
   >("discover");
   const [pool, setPool] = useState<"genres" | "countries" | "years">("genres");
