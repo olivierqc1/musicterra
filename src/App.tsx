@@ -377,7 +377,7 @@ const App: React.FC = () => {
                           >
                             🎧 {t("Playlist Spotify", "Spotify playlist")}
                           </a>
-                        </p>
+                        </div>
                       )}
 
                       <div style={{ marginTop: 14 }}>
