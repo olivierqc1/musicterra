@@ -1,3 +1,4 @@
+// src/components/ConcertReview.tsx
 import { useState } from 'react';
 import { submitConcertReview } from '../services/concerts';
 
@@ -14,8 +15,9 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
   const [review, setReview] = useState('');
   const [setlist, setSetlist] = useState('');
   const [loading, setLoading] = useState(false);
+  const [savedLocally, setSavedLocally] = useState(false);
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -24,15 +26,32 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
     }
 
     setLoading(true);
+
+    // ⚡ Optimistic save — sauvegarde immédiate dans le cache local
     try {
-      await submitConcertReview(eventId, rating, review, setlist);
-      onSuccess();
-      onClose();
+      localStorage.setItem(
+        `concert_review_${eventId}`,
+        JSON.stringify({ rating, review, setlist, updated_at: Date.now() })
+      );
+      setSavedLocally(true);
+
+      // 🔄 Sauvegarde en arrière-plan
+      submitConcertReview(eventId, rating, review, setlist)
+        .then(() => {
+          setSavedLocally(false);
+          onSuccess();
+          onClose();
+        })
+        .catch((err) => {
+          console.error('Erreur lors de la soumission', err);
+          alert(t('Erreur de connexion. Réessaye plus tard.', 'Connection error. Try again later.'));
+          setSavedLocally(false);
+        });
     } catch (error) {
       console.error(error);
-      alert(t('Erreur lors de la soumission', 'Error submitting review'));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -47,7 +66,7 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
           <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
             {t('Note', 'Rating')} *
           </label>
-          <div style={{ display: 'flex', gap: 4 }}>
+          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
               <button
                 key={n}
@@ -55,7 +74,8 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
                 style={{
                   ...styles.ratingBtn,
                   background: n <= rating ? '#667eea' : '#f0f0f0',
-                  color: n <= rating ? '#fff' : '#333'
+                  color: n <= rating ? '#fff' : '#333',
+                  transform: n === rating ? 'scale(1.1)' : 'scale(1)',
                 }}
               >
                 {n}
@@ -92,6 +112,13 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
           />
         </div>
 
+        {/* Status indicator */}
+        {savedLocally && (
+          <p style={{ color: '#888', fontSize: 13, marginTop: -8, marginBottom: 12 }}>
+            {t('💾 Enregistré localement — sera synchronisé en ligne', '💾 Saved locally — syncing online')}
+          </p>
+        )}
+
         {/* Actions */}
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
           <button onClick={onClose} style={styles.cancelBtn} disabled={loading}>
@@ -117,16 +144,18 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'grid',
     placeItems: 'center',
     zIndex: 1000,
-    padding: 16
+    padding: 16,
   },
   modal: {
     background: '#fff',
     borderRadius: 12,
     padding: 24,
-    maxWidth: 500,
+    maxWidth: 480,
     width: '100%',
     maxHeight: '90vh',
-    overflow: 'auto'
+    overflow: 'auto',
+    boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+    animation: 'fadeIn 0.25s ease-in-out',
   },
   ratingBtn: {
     width: 36,
@@ -136,7 +165,7 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     fontSize: 14,
     fontWeight: 600,
-    transition: 'all 0.2s'
+    transition: 'all 0.2s ease',
   },
   textarea: {
     width: '100%',
@@ -145,14 +174,14 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 8,
     fontSize: 14,
     fontFamily: 'inherit',
-    resize: 'vertical'
+    resize: 'vertical',
   },
   cancelBtn: {
     padding: '8px 16px',
     border: '1px solid #ddd',
     borderRadius: 8,
     background: '#fff',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   submitBtn: {
     padding: '8px 16px',
@@ -161,6 +190,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: '#667eea',
     color: '#fff',
     cursor: 'pointer',
-    fontWeight: 500
-  }
+    fontWeight: 500,
+    transition: 'background 0.2s',
+  },
 };
