@@ -1,3 +1,4 @@
+// src/components/EmergingArtists.tsx
 import { useState, useEffect } from 'react';
 import { getPersonalizedEmergingArtists, EmergingArtist, saveEmergingDiscovery } from '../services/emergingArtists';
 import { useAuth } from '../context/AuthContext';
@@ -11,51 +12,78 @@ export default function EmergingArtists({ language }: Props) {
   const [artists, setArtists] = useState<EmergingArtist[]>([]);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState<Set<string>>(new Set());
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
   const { session } = useAuth();
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
 
   useEffect(() => {
     loadArtists();
   }, [session]);
 
+  // ⚡ Chargement rapide avec cache local et rafraîchissement en arrière-plan
   const loadArtists = async () => {
     if (!session) return;
-    
     setLoading(true);
-    const data = await getPersonalizedEmergingArtists(session.user.id);
-    setArtists(data);
+
+    const cacheKey = `emerging_artists_${session.user.id}`;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        setArtists(parsed.data);
+        setLastUpdated(parsed.timestamp);
+        setLoading(false);
+      }
+    } catch {}
+
+    // 🔄 Rafraîchit Supabase en arrière-plan
+    try {
+      const data = await getPersonalizedEmergingArtists(session.user.id);
+      if (data?.length) {
+        setArtists(data);
+        localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
+      }
+    } catch (err) {
+      console.error('Erreur chargement artistes émergents:', err);
+    }
+
     setLoading(false);
   };
 
+  // 💾 Optimistic UI pour la sauvegarde
   const handleSave = async (artist: EmergingArtist) => {
     if (!session) return;
 
-    await saveEmergingDiscovery(artist.name, artist.mbid, artist.genres);
-    setSaved(new Set([...saved, artist.name]));
-    
-    // Track l'action
-    await trackAction('save_emerging', 'artist', artist.name, { genres: artist.genres });
+    // Réaction instantanée
+    setSaved((prev) => new Set([...prev, artist.name]));
+    try {
+      await saveEmergingDiscovery(artist.name, artist.mbid, artist.genres);
+      localStorage.setItem(`emerging_saved_${artist.name}`, 'true');
+      await trackAction('save_emerging', 'artist', artist.name, { genres: artist.genres });
+    } catch (err) {
+      console.error('Erreur saveEmergingDiscovery', err);
+    }
   };
 
-  if (!session) {
+  if (!session)
     return (
       <div style={styles.card}>
-        <p>{t('Connectez-vous pour découvrir des artistes émergents', 'Sign in to discover emerging artists')}</p>
+        <p>
+          {t('Connectez-vous pour découvrir des artistes émergents', 'Sign in to discover emerging artists')}
+        </p>
       </div>
     );
-  }
 
-  if (loading) {
+  if (loading && artists.length === 0)
     return (
       <div style={styles.loadingContainer}>
         <div style={styles.spinner}></div>
-        <p>{t('Recherche d\'artistes émergents basée sur vos goûts...', 'Finding emerging artists based on your taste...')}</p>
+        <p>{t("Recherche d'artistes émergents basée sur vos goûts...", 'Finding emerging artists based on your taste...')}</p>
       </div>
     );
-  }
 
-  if (artists.length === 0) {
+  if (artists.length === 0)
     return (
       <div style={styles.card}>
         <h3>{t('🌱 Artistes émergents', '🌱 Emerging artists')}</h3>
@@ -70,16 +98,13 @@ export default function EmergingArtists({ language }: Props) {
         </p>
       </div>
     );
-  }
 
   return (
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
         <div>
-          <h3 style={{ margin: 0 }}>
-            {t('🌱 Artistes émergents pour vous', '🌱 Emerging artists for you')}
-          </h3>
+          <h3 style={{ margin: 0 }}>{t('🌱 Artistes émergents pour vous', '🌱 Emerging artists for you')}</h3>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', margin: '4px 0 0' }}>
             {t('Découvrez-les avant tout le monde', 'Discover them before everyone else')}
           </p>
@@ -89,12 +114,18 @@ export default function EmergingArtists({ language }: Props) {
         </button>
       </div>
 
+      {lastUpdated && (
+        <p style={{ textAlign: 'center', fontSize: 12, color: '#999' }}>
+          {t('Dernière mise à jour :', 'Last updated:')} {new Date(lastUpdated).toLocaleTimeString(language)}
+        </p>
+      )}
+
       {/* Info banner */}
       <div style={styles.infoBanner}>
         <span style={{ fontSize: 20 }}>💡</span>
         <div style={{ fontSize: 13 }}>
           {t(
-            'Ces artistes ont débuté récemment et ont peu d\'auditeurs. Parfait pour être un découvreur!',
+            "Ces artistes ont débuté récemment et ont peu d'auditeurs. Parfait pour être un découvreur!",
             'These artists started recently and have few listeners. Perfect for being an early discoverer!'
           )}
         </div>
@@ -102,18 +133,19 @@ export default function EmergingArtists({ language }: Props) {
 
       {/* Grid */}
       <div style={styles.grid}>
-        {artists.map(artist => (
+        {artists.map((artist) => (
           <div key={artist.name} style={styles.artistCard}>
-            {/* Image */}
             <div style={styles.imageContainer}>
               {artist.imageUrl ? (
                 <img
                   src={artist.imageUrl}
                   alt={artist.name}
                   style={styles.artistImage}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x300?text=' + encodeURIComponent(artist.name);
-                  }}
+                  loading="lazy"
+                  onError={(e) =>
+                    ((e.target as HTMLImageElement).src =
+                      'https://via.placeholder.com/300x300?text=' + encodeURIComponent(artist.name))
+                  }
                 />
               ) : (
                 <div style={styles.noImage}>
@@ -121,22 +153,17 @@ export default function EmergingArtists({ language }: Props) {
                   <p style={{ margin: '8px 0 0', fontSize: 12 }}>{artist.name}</p>
                 </div>
               )}
-              
-              {/* Badge émergence */}
-              <div style={styles.emergenceBadge}>
-                🌱 {Math.round(artist.emergenceScore)}%
-              </div>
+
+              <div style={styles.emergenceBadge}>🌱 {Math.round(artist.emergenceScore)}%</div>
             </div>
 
             {/* Info */}
             <div style={{ padding: 12 }}>
-              <strong style={{ fontSize: 15, display: 'block', marginBottom: 6 }}>
-                {artist.name}
-              </strong>
-              
+              <strong style={{ fontSize: 15, display: 'block', marginBottom: 6 }}>{artist.name}</strong>
+
               {/* Genres */}
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
-                {artist.genres.slice(0, 3).map(genre => (
+                {artist.genres.slice(0, 3).map((genre) => (
                   <span key={genre} style={styles.genreTag}>
                     {genre}
                   </span>
@@ -145,9 +172,7 @@ export default function EmergingArtists({ language }: Props) {
 
               {/* Stats */}
               <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
-                {artist.country && (
-                  <div>📍 {artist.country}</div>
-                )}
+                {artist.country && <div>📍 {artist.country}</div>}
                 {artist.listeners !== undefined && (
                   <div>👥 {artist.listeners.toLocaleString(language)} {t('auditeurs', 'listeners')}</div>
                 )}
@@ -174,13 +199,12 @@ export default function EmergingArtists({ language }: Props) {
                   disabled={saved.has(artist.name)}
                   style={{
                     ...styles.saveBtn,
-                    ...(saved.has(artist.name) ? styles.saveBtnSaved : {})
+                    ...(saved.has(artist.name) ? styles.saveBtnSaved : {}),
                   }}
                 >
-                  {saved.has(artist.name) 
+                  {saved.has(artist.name)
                     ? t('✓ Sauvegardé', '✓ Saved')
-                    : t('Sauvegarder', 'Save')
-                  }
+                    : t('Sauvegarder', 'Save')}
                 </button>
               </div>
             </div>
@@ -188,34 +212,34 @@ export default function EmergingArtists({ language }: Props) {
         ))}
       </div>
 
-      {/* Load more hint */}
       {artists.length >= 20 && (
         <p style={{ textAlign: 'center', fontSize: 13, color: '#777' }}>
-          {t('Notez plus de genres pour découvrir encore plus d\'artistes', 'Rate more genres to discover even more artists')}
+          {t(
+            "Notez plus de genres pour découvrir encore plus d'artistes",
+            'Rate more genres to discover even more artists'
+          )}
         </p>
       )}
     </div>
   );
 }
 
+// ✅ Styles optimisés : unifiés, légers, avec ombre et transitions douces
 const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'grid',
-    gap: 16
-  },
+  container: { display: 'grid', gap: 16 },
   card: {
     padding: 20,
     background: '#fff',
     borderRadius: 12,
     border: '1px solid #e7e7e7',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   loadingContainer: {
     padding: 40,
     textAlign: 'center',
     display: 'grid',
     gap: 16,
-    placeItems: 'center'
+    placeItems: 'center',
   },
   spinner: {
     width: 40,
@@ -223,7 +247,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: '4px solid #f0f0f0',
     borderTop: '4px solid #667eea',
     borderRadius: '50%',
-    animation: 'spin 1s linear infinite'
+    animation: 'spin 1s linear infinite',
   },
   header: {
     padding: 20,
@@ -232,7 +256,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 12,
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   refreshBtn: {
     padding: '8px 12px',
@@ -241,7 +265,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 8,
     color: '#fff',
     cursor: 'pointer',
-    fontSize: 18
+    fontSize: 18,
   },
   infoBanner: {
     padding: 12,
@@ -250,12 +274,12 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 8,
     display: 'flex',
     gap: 12,
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: 16
+    gap: 16,
   },
   artistCard: {
     border: '1px solid #e7e7e7',
@@ -264,18 +288,10 @@ const styles: Record<string, React.CSSProperties> = {
     background: '#fff',
     display: 'flex',
     flexDirection: 'column',
-    transition: 'transform 0.2s, box-shadow 0.2s'
+    transition: 'transform 0.2s, box-shadow 0.2s',
   },
-  imageContainer: {
-    position: 'relative',
-    width: '100%',
-    aspectRatio: '1/1'
-  },
-  artistImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover'
-  },
+  imageContainer: { position: 'relative', width: '100%', aspectRatio: '1/1' },
+  artistImage: { width: '100%', height: '100%', objectFit: 'cover' },
   noImage: {
     width: '100%',
     height: '100%',
@@ -284,7 +300,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#999'
+    color: '#999',
   },
   emergenceBadge: {
     position: 'absolute',
@@ -296,7 +312,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 999,
     fontSize: 11,
     fontWeight: 600,
-    backdropFilter: 'blur(4px)'
+    backdropFilter: 'blur(4px)',
   },
   genreTag: {
     padding: '2px 8px',
@@ -304,7 +320,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#3730a3',
     borderRadius: 999,
     fontSize: 11,
-    fontWeight: 500
+    fontWeight: 500,
   },
   lastfmBtn: {
     flex: 1,
@@ -317,7 +333,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 13,
     fontWeight: 500,
     textAlign: 'center',
-    display: 'block'
   },
   saveBtn: {
     flex: 1,
@@ -328,10 +343,12 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 6,
     cursor: 'pointer',
     fontSize: 13,
-    fontWeight: 500
+    fontWeight: 500,
+    transition: 'all 0.2s ease',
   },
   saveBtnSaved: {
     background: '#667eea',
-    color: '#fff'
-  }
+    color: '#fff',
+    borderColor: '#667eea',
+  },
 };
