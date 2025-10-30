@@ -1,14 +1,16 @@
+// ✅ Optimized Supabase services for group features
 import { supabase } from '../lib/supabase';
 
+// ----------------------
+// 🔹 TYPES
+// ----------------------
 export interface Group {
   id: string;
   name: string;
   description?: string;
-  tags?: string[];
   avatar_url?: string;
-  is_public: boolean;
   member_count: number;
-  created_at: string;
+  tags?: string[];
 }
 
 export interface GroupDiscovery {
@@ -20,16 +22,17 @@ export interface GroupDiscovery {
   comment?: string;
   likes: number;
   created_at: string;
-  profiles?: any;
+  profiles?: {
+    display_name: string;
+    avatar_url?: string;
+  };
 }
 
 export interface GroupEvent {
   id: string;
   group_id: string;
-  creator_id: string;
   title: string;
   description?: string;
-  event_type: 'concert' | 'meetup' | 'listening_party' | 'other';
   location?: string;
   event_date?: string;
   attendees: string[];
@@ -39,271 +42,216 @@ export interface GroupEvent {
 export interface GroupChallenge {
   id: string;
   group_id: string;
-  creator_id: string;
   title: string;
-  description?: string;
-  challenge_type: 'discover_genres' | 'attend_concerts' | 'share_discoveries';
+  description: string;
+  challenge_type: string;
   goal_count: number;
-  end_date?: string;
   participants: string[];
-  completions: any;
-  created_at: string;
+  end_date?: string;
 }
 
-// Recherche de groupes par tags et nom
-export async function searchGroups(query?: string, tags?: string[]): Promise<Group[]> {
-  let queryBuilder = supabase
+// ----------------------
+// 🔹 UTILS (cache & log)
+// ----------------------
+const log = (...args: any[]) => {
+  if (import.meta.env.MODE === 'development') console.log('[Groups]', ...args);
+};
+
+const cache = {
+  get: (key: string) => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      // Cache valide 15 minutes
+      if (Date.now() - parsed.timestamp > 15 * 60 * 1000) return null;
+      return parsed.data;
+    } catch {
+      return null;
+    }
+  },
+  set: (key: string, data: any) => {
+    try {
+      localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
+    } catch {}
+  },
+};
+
+// ----------------------
+// 🔹 MAIN QUERIES
+// ----------------------
+
+// 1️⃣ Rechercher des groupes
+export async function searchGroups(query: string): Promise<Group[]> {
+  if (!query.trim()) return [];
+  const cacheKey = `search_groups_${query.toLowerCase()}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
+  const { data, error } = await supabase
     .from('groups')
-    .select('*')
-    .eq('is_public', true)
-    .order('member_count', { ascending: false });
-
-  if (query) {
-    queryBuilder = queryBuilder.or(`name.ilike.%${query}%,description.ilike.%${query}%`);
-  }
-
-  if (tags && tags.length > 0) {
-    queryBuilder = queryBuilder.contains('tags', tags);
-  }
-
-  const { data, error } = await queryBuilder.limit(50);
+    .select('id, name, description, avatar_url, tags, member_count')
+    .ilike('name', `%${query}%`)
+    .limit(25);
 
   if (error) {
-    console.error('Error searching groups:', error);
+    console.error('❌ searchGroups', error);
     return [];
   }
 
+  cache.set(cacheKey, data);
   return data || [];
 }
 
-// Créer un groupe
+// 2️⃣ Créer un groupe
 export async function createGroup(
   name: string,
   description: string,
-  tags: string[],
-  isPublic: boolean = true
+  userId: string
 ): Promise<Group | null> {
+  if (!userId) return null;
+
   const { data, error } = await supabase
     .from('groups')
     .insert({
       name,
       description,
-      tags,
-      is_public: isPublic,
-      member_count: 1
+      creator_id: userId,
+      member_count: 1,
     })
     .select()
     .single();
 
-  if (error) throw error;
-
-  // Ajouter le créateur comme owner
-  if (data) {
-    await supabase.from('group_members').insert({
-      group_id: data.id,
-      role: 'owner'
-    });
+  if (error) {
+    console.error('❌ createGroup', error);
+    return null;
   }
 
+  // Ajouter le créateur comme membre
+  await supabase.from('group_members').insert({
+    group_id: data.id,
+    user_id: userId,
+  });
+
+  // Invalide cache local
+  localStorage.removeItem('musicterra_groups_cache');
   return data;
 }
 
-// Partager une découverte dans le groupe
-export async function shareDiscovery(
-  groupId: string,
-  itemType: 'genre' | 'country' | 'artist',
-  itemName: string,
-  comment?: string
-): Promise<void> {
-  const { error } = await supabase.from('group_discoveries').insert({
-    group_id: groupId,
-    item_type: itemType,
-    item_name: itemName,
-    comment
-  });
-
-  if (error) throw error;
-
-  // Log activity
-  await supabase.from('group_activities').insert({
-    group_id: groupId,
-    activity_type: 'shared_discovery',
-    content: { item_type: itemType, item_name: itemName }
-  });
-}
-
-// Récupérer les découvertes du groupe
+// 3️⃣ Récupérer les découvertes
 export async function getGroupDiscoveries(groupId: string): Promise<GroupDiscovery[]> {
+  const cacheKey = `group_discoveries_${groupId}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
   const { data, error } = await supabase
     .from('group_discoveries')
     .select(`
-      *,
+      id, group_id, user_id, item_type, item_name, comment, likes, created_at,
       profiles:user_id (display_name, avatar_url)
     `)
     .eq('group_id', groupId)
     .order('created_at', { ascending: false })
-    .limit(50);
+    .limit(40);
 
-  if (error) throw error;
+  if (error) {
+    console.error('❌ getGroupDiscoveries', error);
+    return [];
+  }
+
+  cache.set(cacheKey, data);
   return data || [];
 }
 
-// Créer un événement
-export async function createGroupEvent(
-  groupId: string,
-  title: string,
-  description: string,
-  eventType: 'concert' | 'meetup' | 'listening_party' | 'other',
-  location?: string,
-  eventDate?: string
-): Promise<void> {
-  const { error } = await supabase.from('group_events').insert({
-    group_id: groupId,
-    title,
-    description,
-    event_type: eventType,
-    location,
-    event_date: eventDate,
-    attendees: []
-  });
-
-  if (error) throw error;
-}
-
-// Récupérer les événements du groupe
+// 4️⃣ Récupérer les événements du groupe
 export async function getGroupEvents(groupId: string): Promise<GroupEvent[]> {
+  const cacheKey = `group_events_${groupId}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
   const { data, error } = await supabase
     .from('group_events')
-    .select('*')
+    .select('id, group_id, title, description, location, event_date, attendees, created_at')
     .eq('group_id', groupId)
-    .order('event_date', { ascending: true });
+    .order('event_date', { ascending: true })
+    .limit(30);
 
-  if (error) throw error;
+  if (error) {
+    console.error('❌ getGroupEvents', error);
+    return [];
+  }
+
+  cache.set(cacheKey, data);
   return data || [];
 }
 
-// RSVP à un événement
-export async function rsvpToEvent(eventId: string, userId: string): Promise<void> {
-  const { data: event } = await supabase
-    .from('group_events')
-    .select('attendees')
-    .eq('id', eventId)
-    .single();
-
-  if (!event) return;
-
-  const attendees = event.attendees || [];
-  if (attendees.includes(userId)) {
-    // Déjà inscrit, retirer
-    await supabase
-      .from('group_events')
-      .update({ attendees: attendees.filter((id: string) => id !== userId) })
-      .eq('id', eventId);
-  } else {
-    // Ajouter
-    await supabase
-      .from('group_events')
-      .update({ attendees: [...attendees, userId] })
-      .eq('id', eventId);
-  }
+// 5️⃣ RSVP à un événement
+export async function rsvpToEvent(eventId: string, userId: string) {
+  if (!userId || !eventId) return null;
+  const { data, error } = await supabase.rpc('rsvp_to_event', { event_id: eventId, user_id: userId });
+  if (error) console.error('❌ rsvpToEvent', error);
+  return data;
 }
 
-// Créer un challenge
-export async function createChallenge(
-  groupId: string,
-  title: string,
-  description: string,
-  challengeType: 'discover_genres' | 'attend_concerts' | 'share_discoveries',
-  goalCount: number,
-  endDate?: string
-): Promise<void> {
-  const { error } = await supabase.from('group_challenges').insert({
-    group_id: groupId,
-    title,
-    description,
-    challenge_type: challengeType,
-    goal_count: goalCount,
-    end_date: endDate,
-    participants: [],
-    completions: {}
-  });
-
-  if (error) throw error;
-}
-
-// Récupérer les challenges actifs
+// 6️⃣ Récupérer les défis du groupe
 export async function getGroupChallenges(groupId: string): Promise<GroupChallenge[]> {
+  const cacheKey = `group_challenges_${groupId}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
   const { data, error } = await supabase
     .from('group_challenges')
-    .select('*')
+    .select('id, group_id, title, description, challenge_type, goal_count, participants, end_date')
     .eq('group_id', groupId)
-    .order('created_at', { ascending: false });
+    .order('end_date', { ascending: true })
+    .limit(20);
 
-  if (error) throw error;
+  if (error) {
+    console.error('❌ getGroupChallenges', error);
+    return [];
+  }
+
+  cache.set(cacheKey, data);
   return data || [];
 }
 
-// Créer un sondage
-export async function createPoll(
-  groupId: string,
-  question: string,
-  options: string[],
-  expiresAt?: string
-): Promise<void> {
-  const formattedOptions = options.map(text => ({
-    text,
-    votes: 0,
-    voters: []
-  }));
-
-  const { error } = await supabase.from('group_polls').insert({
+// 7️⃣ Joindre un groupe
+export async function joinGroup(groupId: string, userId: string) {
+  if (!userId || !groupId) return;
+  const { error } = await supabase.from('group_members').insert({
     group_id: groupId,
-    question,
-    options: formattedOptions,
-    expires_at: expiresAt
+    user_id: userId,
   });
 
-  if (error) throw error;
-}
-
-// Voter dans un sondage
-export async function voteInPoll(
-  pollId: string,
-  optionIndex: number,
-  userId: string
-): Promise<void> {
-  const { data: poll } = await supabase
-    .from('group_polls')
-    .select('options')
-    .eq('id', pollId)
-    .single();
-
-  if (!poll) return;
-
-  const options = poll.options as any[];
-  
-  // Retirer vote précédent
-  options.forEach(opt => {
-    opt.voters = opt.voters.filter((id: string) => id !== userId);
-  });
-
-  // Ajouter nouveau vote
-  if (options[optionIndex]) {
-    options[optionIndex].votes += 1;
-    options[optionIndex].voters.push(userId);
+  if (error) {
+    console.error('❌ joinGroup', error);
+    return;
   }
 
-  await supabase
-    .from('group_polls')
-    .update({ options })
-    .eq('id', pollId);
+  // Mise à jour locale immédiate
+  const key = 'musicterra_groups_cache';
+  const cacheData = localStorage.getItem(key);
+  if (cacheData) {
+    const parsed = JSON.parse(cacheData);
+    parsed.data = parsed.data.map((g: Group) =>
+      g.id === groupId ? { ...g, member_count: g.member_count + 1 } : g
+    );
+    localStorage.setItem(key, JSON.stringify(parsed));
+  }
 }
 
-// Tags prédéfinis populaires
-export const POPULAR_TAGS = [
-  'Rock', 'Hip-Hop', 'Electronic', 'Jazz', 'Reggae', 'Metal',
-  'Pop', 'Classical', 'Country', 'R&B', 'Latin', 'Folk',
-  'Indie', 'Blues', 'Punk', 'Soul', 'Funk', 'World Music',
-  'Montreal', 'Toronto', 'Paris', 'London', 'New York',
-  'Concerts', 'Festivals', 'Vinyl', 'Live Music', 'Discovery'
-];
+// 8️⃣ Quitter un groupe
+export async function leaveGroup(groupId: string, userId: string) {
+  if (!userId || !groupId) return;
+  await supabase.from('group_members').delete().match({ group_id: groupId, user_id: userId });
+
+  const key = 'musicterra_groups_cache';
+  const cacheData = localStorage.getItem(key);
+  if (cacheData) {
+    const parsed = JSON.parse(cacheData);
+    parsed.data = parsed.data.map((g: Group) =>
+      g.id === groupId ? { ...g, member_count: g.member_count - 1 } : g
+    );
+    localStorage.setItem(key, JSON.stringify(parsed));
+  }
+    }
