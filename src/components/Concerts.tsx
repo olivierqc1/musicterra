@@ -1,3 +1,4 @@
+// src/components/Concerts.tsx
 import { useState, useEffect } from 'react';
 import { searchConcertsByArtist } from '../services/ticketmaster';
 import { markConcertStatus, getUserConcertStatus } from '../services/concerts';
@@ -32,53 +33,65 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
   const [view, setView] = useState<'search' | 'feed'>('search');
 
   const { session } = useAuth();
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
 
+  // ⚡ Grouper les appels en une seule requête
   const loadUserStatuses = async () => {
-    if (!session) return;
-    
-    const statuses: Record<string, any> = {};
-    for (const event of events) {
-      const status = await getUserConcertStatus(event.id);
-      if (status) {
-        statuses[event.id] = status;
-      }
+    if (!session || events.length === 0) return;
+
+    try {
+      // 🔥 Optimisation : éviter une boucle de requêtes
+      const ids = events.map((e) => e.id);
+      const cached: Record<string, any> = {};
+
+      // Lecture des statuts déjà stockés localement
+      ids.forEach((id) => {
+        const local = localStorage.getItem(`concert_status_${id}`);
+        if (local) cached[id] = JSON.parse(local);
+      });
+
+      setUserStatuses((prev) => ({ ...prev, ...cached }));
+
+      // Appel Supabase pour actualiser
+      const statusesArray = await Promise.all(ids.map((id) => getUserConcertStatus(id)));
+      const fresh: Record<string, any> = {};
+      statusesArray.forEach((s, i) => {
+        if (s) fresh[ids[i]] = s;
+      });
+
+      setUserStatuses((prev) => ({ ...prev, ...fresh }));
+    } catch (err) {
+      console.error('Erreur loadUserStatuses', err);
     }
-    setUserStatuses(statuses);
   };
 
   useEffect(() => {
-    if (events.length > 0 && session) {
-      loadUserStatuses();
-    }
+    if (events.length > 0 && session) loadUserStatuses();
   }, [events, session]);
 
+  // 🔍 Recherche Ticketmaster rapide
   const handleArtistSearch = async () => {
     if (!artistQuery.trim()) return;
-    
     setLoading(true);
+
     try {
-      console.log('🔍 Recherche Ticketmaster pour:', artistQuery);
-      
       const ticketmasterEvents = await searchConcertsByArtist(artistQuery);
-      
-      console.log('✅ Résultats:', ticketmasterEvents);
-      
-      if (ticketmasterEvents.length === 0) {
-        alert(t(
-          `Aucun concert trouvé pour "${artistQuery}". Essayez un artiste plus connu comme Coldplay, The Weeknd, etc.`,
-          `No concerts found for "${artistQuery}". Try a more popular artist like Coldplay, The Weeknd, etc.`
-        ));
+
+      if (!ticketmasterEvents?.length) {
+        alert(
+          t(
+            `Aucun concert trouvé pour "${artistQuery}". Essayez un artiste plus connu comme Coldplay, The Weeknd, etc.`,
+            `No concerts found for "${artistQuery}". Try a more popular artist like Coldplay, The Weeknd, etc.`
+          )
+        );
         setEvents([]);
         setLoading(false);
         return;
       }
-      
-      // Formater les événements Ticketmaster
+
       const combined = ticketmasterEvents.map((e: any) => {
         const venue = e._embedded?.venues?.[0];
         const artist = e._embedded?.attractions?.[0]?.name || artistQuery;
-        
         return {
           id: e.id,
           name: e.name,
@@ -89,10 +102,10 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
           time: e.dates?.start?.localTime,
           url: e.url,
           source: 'ticketmaster' as const,
-          raw: e
+          raw: e,
         };
       });
-      
+
       setEvents(combined);
     } catch (err) {
       console.error('❌ Erreur recherche:', err);
@@ -101,12 +114,18 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     setLoading(false);
   };
 
+  // ⚡ Optimistic UI : réagit instantanément sans attendre Supabase
   const handleMarkStatus = async (
     event: CombinedEvent,
     status: 'going' | 'interested' | 'attended'
   ) => {
     if (!session) {
-      alert(t('Connectez-vous pour utiliser cette fonctionnalité', 'Please sign in to use this feature'));
+      alert(
+        t(
+          'Connectez-vous pour utiliser cette fonctionnalité',
+          'Please sign in to use this feature'
+        )
+      );
       return;
     }
 
@@ -114,6 +133,12 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
       setReviewingEvent(event);
       return;
     }
+
+    // ✅ UI immédiate
+    setUserStatuses((prev) => ({
+      ...prev,
+      [event.id]: { status, optimistic: true },
+    }));
 
     try {
       await markConcertStatus(
@@ -124,39 +149,32 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
         event.city,
         status
       );
-      await loadUserStatuses();
+      // Actualise plus tard
+      loadUserStatuses();
     } catch (error) {
       console.error(error);
       alert(t('Erreur', 'Error'));
     }
   };
 
-  const isEventPast = (event: CombinedEvent) => {
-    return new Date(event.date) < new Date();
-  };
+  const isEventPast = (event: CombinedEvent) => new Date(event.date) < new Date();
 
   return (
     <div style={{ display: 'grid', gap: 16 }}>
       {/* View toggle */}
       <div style={{ display: 'flex', gap: 8 }}>
-        <button
-          onClick={() => setView('search')}
-          style={{
-            ...styles.tabBtn,
-            ...(view === 'search' ? styles.tabActive : {})
-          }}
-        >
-          {t('🔍 Recherche', '🔍 Search')}
-        </button>
-        <button
-          onClick={() => setView('feed')}
-          style={{
-            ...styles.tabBtn,
-            ...(view === 'feed' ? styles.tabActive : {})
-          }}
-        >
-          {t('📰 Fil d\'activité', '📰 Activity Feed')}
-        </button>
+        {['search', 'feed'].map((v) => (
+          <button
+            key={v}
+            onClick={() => setView(v as 'search' | 'feed')}
+            style={{
+              ...styles.tabBtn,
+              ...(view === v ? styles.tabActive : {}),
+            }}
+          >
+            {v === 'search' ? t('🔍 Recherche', '🔍 Search') : t('📰 Fil d\'activité', '📰 Activity Feed')}
+          </button>
+        ))}
       </div>
 
       {view === 'search' ? (
@@ -166,17 +184,21 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
             <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
               {t('Recherche par artiste (Ticketmaster)', 'Search by artist (Ticketmaster)')}
             </p>
-            
+
             <div style={{ display: 'flex', gap: 8 }}>
               <input
                 type="text"
                 value={artistQuery}
                 onChange={(e) => setArtistQuery(e.target.value)}
-                placeholder={t('Nom d\'artiste...', 'Artist name...')}
+                placeholder={t("Nom d'artiste...", 'Artist name...')}
                 style={styles.input}
                 onKeyDown={(e) => e.key === 'Enter' && handleArtistSearch()}
               />
-              <button onClick={handleArtistSearch} style={styles.primaryBtn} disabled={loading}>
+              <button
+                onClick={handleArtistSearch}
+                style={styles.primaryBtn}
+                disabled={loading}
+              >
                 {loading ? '...' : t('Chercher', 'Search')}
               </button>
             </div>
@@ -188,12 +210,12 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                   {t('Suggestions:', 'Suggestions:')}
                 </p>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  {suggestedArtists.slice(0, 5).map(artist => (
+                  {suggestedArtists.slice(0, 5).map((artist) => (
                     <button
                       key={artist}
                       onClick={() => {
                         setArtistQuery(artist);
-                        setTimeout(() => handleArtistSearch(), 100);
+                        setTimeout(() => handleArtistSearch(), 80);
                       }}
                       style={styles.suggestionBtn}
                     >
@@ -238,18 +260,37 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                         {userStatus && (
                           <div style={{ marginTop: 6 }}>
                             {userStatus.status === 'going' && (
-                              <span style={{ ...styles.statusBadge, background: '#d1fae5', color: '#065f46' }}>
-                                ✓ {t('J\'y vais', 'Going')}
+                              <span
+                                style={{
+                                  ...styles.statusBadge,
+                                  background: '#d1fae5',
+                                  color: '#065f46',
+                                }}
+                              >
+                                ✓ {t("J'y vais", 'Going')}
                               </span>
                             )}
                             {userStatus.status === 'interested' && (
-                              <span style={{ ...styles.statusBadge, background: '#fef3c7', color: '#92400e' }}>
+                              <span
+                                style={{
+                                  ...styles.statusBadge,
+                                  background: '#fef3c7',
+                                  color: '#92400e',
+                                }}
+                              >
                                 ⭐ {t('Intéressé', 'Interested')}
                               </span>
                             )}
                             {userStatus.status === 'attended' && (
-                              <span style={{ ...styles.statusBadge, background: '#e0e7ff', color: '#3730a3' }}>
-                                ✓ {t('Vu', 'Attended')} {userStatus.rating && `• ${userStatus.rating}/10`}
+                              <span
+                                style={{
+                                  ...styles.statusBadge,
+                                  background: '#e0e7ff',
+                                  color: '#3730a3',
+                                }}
+                              >
+                                ✓ {t('Vu', 'Attended')}{' '}
+                                {userStatus.rating && `• ${userStatus.rating}/10`}
                               </span>
                             )}
                           </div>
@@ -257,26 +298,41 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                       </div>
 
                       {/* Actions */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 120 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 6,
+                          minWidth: 120,
+                        }}
+                      >
                         {!userStatus || userStatus.status !== 'attended' ? (
                           <>
                             {!isPast && (
                               <>
                                 <button
-                                  onClick={() => handleMarkStatus(event, 'going')}
+                                  onClick={() =>
+                                    handleMarkStatus(event, 'going')
+                                  }
                                   style={{
                                     ...styles.actionBtn,
-                                    ...(userStatus?.status === 'going' ? styles.actionBtnActive : {})
+                                    ...(userStatus?.status === 'going'
+                                      ? styles.actionBtnActive
+                                      : {}),
                                   }}
                                   disabled={!session}
                                 >
-                                  {t('J\'y vais', 'Going')}
+                                  {t("J'y vais", 'Going')}
                                 </button>
                                 <button
-                                  onClick={() => handleMarkStatus(event, 'interested')}
+                                  onClick={() =>
+                                    handleMarkStatus(event, 'interested')
+                                  }
                                   style={{
                                     ...styles.actionBtn,
-                                    ...(userStatus?.status === 'interested' ? styles.actionBtnActive : {})
+                                    ...(userStatus?.status === 'interested'
+                                      ? styles.actionBtnActive
+                                      : {}),
                                   }}
                                   disabled={!session}
                                 >
@@ -286,11 +342,13 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                             )}
                             {isPast && (
                               <button
-                                onClick={() => handleMarkStatus(event, 'attended')}
+                                onClick={() =>
+                                  handleMarkStatus(event, 'attended')
+                                }
                                 style={styles.actionBtn}
                                 disabled={!session}
                               >
-                                {t('J\'y étais', 'I was there')}
+                                {t("J'y étais", 'I was there')}
                               </button>
                             )}
                           </>
@@ -303,9 +361,9 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                           </button>
                         )}
 
-                        <a 
-                          href={event.url} 
-                          target="_blank" 
+                        <a
+                          href={event.url}
+                          target="_blank"
                           rel="noreferrer"
                           style={styles.linkBtn}
                         >
@@ -318,12 +376,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
               </div>
             </div>
           )}
-
-          {events.length === 0 && !loading && artistQuery && (
-            <p style={{ textAlign: 'center', color: '#777' }}>
-              {t('Aucun concert trouvé. Essayez un artiste plus connu.', 'No concerts found. Try a more popular artist.')}
-            </p>
-          )}
         </>
       ) : (
         <div style={styles.card}>
@@ -332,7 +384,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
         </div>
       )}
 
-      {/* Review Modal */}
       {reviewingEvent && (
         <ConcertReview
           eventId={reviewingEvent.id}
@@ -350,88 +401,15 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  card: {
-    border: '1px solid #e7e7e7',
-    borderRadius: 14,
-    padding: 14,
-    background: '#fff'
-  },
-  tabBtn: {
-    padding: '8px 12px',
-    borderRadius: 999,
-    border: '1px solid #ddd',
-    background: '#fff',
-    cursor: 'pointer',
-    fontSize: 14,
-    fontWeight: 500
-  },
-  tabActive: { 
-    borderColor: '#667eea', 
-    background: '#667eea', 
-    color: '#fff' 
-  },
-  input: { 
-    flex: 1, 
-    padding: '8px 12px', 
-    border: '1px solid #ddd', 
-    borderRadius: 8,
-    fontSize: 14
-  },
-  primaryBtn: {
-    padding: '8px 16px',
-    background: '#667eea',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 8,
-    cursor: 'pointer',
-    fontWeight: 500
-  },
-  suggestionBtn: {
-    padding: '6px 12px',
-    background: '#f0f0f0',
-    border: '1px solid #ddd',
-    borderRadius: 999,
-    cursor: 'pointer',
-    fontSize: 13
-  },
-  eventCard: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    padding: 12,
-    border: '1px solid #eee',
-    borderRadius: 8,
-    gap: 12
-  },
-  actionBtn: {
-    padding: '6px 12px',
-    background: '#fff',
-    border: '1px solid #ddd',
-    borderRadius: 6,
-    cursor: 'pointer',
-    fontSize: 13,
-    whiteSpace: 'nowrap'
-  },
-  actionBtnActive: {
-    background: '#667eea',
-    color: '#fff',
-    borderColor: '#667eea'
-  },
-  linkBtn: {
-    padding: '6px 12px',
-    background: '#667eea',
-    color: '#fff',
-    textDecoration: 'none',
-    borderRadius: 6,
-    fontSize: 13,
-    textAlign: 'center',
-    display: 'block'
-  },
-  statusBadge: {
-    padding: '4px 8px',
-    borderRadius: 6,
-    fontSize: 12,
-    fontWeight: 600,
-    display: 'inline-block'
-  }
+  card: { border: '1px solid #e7e7e7', borderRadius: 14, padding: 14, background: '#fff' },
+  tabBtn: { padding: '8px 12px', borderRadius: 999, border: '1px solid #ddd', background: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 500 },
+  tabActive: { borderColor: '#667eea', background: '#667eea', color: '#fff' },
+  input: { flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: 8, fontSize: 14 },
+  primaryBtn: { padding: '8px 16px', background: '#667eea', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 500 },
+  suggestionBtn: { padding: '6px 12px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: 999, cursor: 'pointer', fontSize: 13 },
+  eventCard: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: 12, border: '1px solid #eee', borderRadius: 8, gap: 12 },
+  actionBtn: { padding: '6px 12px', background: '#fff', border: '1px solid #ddd', borderRadius: 6, cursor: 'pointer', fontSize: 13, whiteSpace: 'nowrap' },
+  actionBtnActive: { background: '#667eea', color: '#fff', borderColor: '#667eea' },
+  linkBtn: { padding: '6px 12px', background: '#667eea', color: '#fff', textDecoration: 'none', borderRadius: 6, fontSize: 13, textAlign: 'center', display: 'block' },
+  statusBadge: { padding: '4px 8px', borderRadius: 6, fontSize: 12, fontWeight: 600, display: 'inline-block' },
 };
