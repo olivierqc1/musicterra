@@ -217,4 +217,115 @@ export default function GroupDetail({ groupId, language }: Props) {
                     <p style={styles.textLine}>
                       {t('Objectif:', 'Goal:')} {challenge.goal_count}{' '}
                       {challenge.challenge_type === 'discover_genres' && t('genres', 'genres')}
-                      {challenge.challenge_type === 'attend_concert
+                      {challenge.challenge_type === 'attend_concerts' && t('concerts', 'concerts')}
+                      {challenge.challenge_type === 'share_discoveries' && t('partages', 'shares')}
+                    </p>
+                    {challenge.end_date && (
+                      <p style={styles.metaText}>
+                        {t('Fin:', 'Ends:')}{' '}
+                        {new Date(challenge.end_date).toLocaleDateString(language)}
+                      </p>
+                    )}
+                  </div>
+                  <div style={styles.progressCircle}>
+                    <span style={{ fontSize: 20, fontWeight: 'bold' }}>
+                      {challenge.participants.length}
+                    </span>
+                    <span style={{ fontSize: 11 }}>
+                      {t('participants', 'participants')}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 🎨 Styles allégés et uniformisés
+const styles: Record<string, React.CSSProperties> = {
+  card: { padding: 16, background: '#fff', borderRadius: 12, border: '1px solid #e7e7e7' },
+  tabsContainer: { display: 'flex', gap: 8, flexWrap: 'wrap' },
+  tabBtn: {
+    padding: '8px 14px',
+    background: '#fff',
+    border: '1px solid #ddd',
+    borderRadius: 999,
+    cursor: 'pointer',
+    fontSize: 14,
+    fontWeight: 500
+  },
+  tabActive: { background: '#667eea', color: '#fff', borderColor: '#667eea' },
+  timestamp: { fontSize: 12, color: '#999', textAlign: 'center' },
+  emptyText: { color: '#777', textAlign: 'center' },
+  textLine: { fontSize: 13, color: '#555', margin: '4px 0' },
+  metaText: { fontSize: 12, color: '#999', margin: '4px 0' },
+  commentText: { margin: '4px 0', fontSize: 13, color: '#555', fontStyle: 'italic' },
+  likeCount: { fontSize: 13, color: '#667eea' },
+  discoveryCard: {
+    display: 'flex',
+    gap: 12,
+    padding: 12,
+    background: '#f9fafb',
+    borderRadius: 8,
+    alignItems: 'flex-start'
+  },
+  smallAvatar: { width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' },
+  itemBadge: {
+    padding: '2px 8px',
+    background: '#e0e7ff',
+    color: '#3730a3',
+    borderRadius: 999,
+    fontSize: 12,
+    fontWeight: 600
+  },
+  eventCard: { display: 'flex', gap: 12, padding: 12, border: '1px solid #eee', borderRadius: 8 },
+  rsvpBtn: {
+    padding: '8px 14px',
+    background: '#fff',
+    border: '1px solid #667eea',
+    color: '#667eea',
+    borderRadius: 8,
+    cursor: 'pointer',
+    fontSize: 13
+  },
+  rsvpBtnActive: { background: '#667eea', color: '#fff' },
+  challengeCard: {
+    display: 'flex',
+    gap: 12,
+    padding: 14,
+    background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+    borderRadius: 10,
+    border: '2px solid #fbbf24'
+  },
+  progressCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: '50%',
+    background: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '2px solid #fbbf24'
+  },
+  loadingContainer: {
+    textAlign: 'center',
+    padding: 40,
+    color: '#555',
+    display: 'grid',
+    gap: 12,
+    placeItems: 'center'
+  },
+  spinner: {
+    width: 40,
+    height: 40,
+    border: '4px solid #f0f0f0',
+    borderTop: '4px solid #667eea',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite'
+  }
+};
