@@ -9614,7 +9614,7 @@ export const genres: Item[] = [
     artists: ["Nightwish", "Children of Bodom", "HIM"],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: "https://open.spotify.com/search/finnish%20progressive%20metal%20official%20editorial%20playlist"
+    spotify: "https://spotify.link/fpVyd9e7SXb"
   },
   {
     name: 'finnish progressive rock',
@@ -9624,7 +9624,7 @@ export const genres: Item[] = [
     artists: ["The Rasmus"],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: "https://open.spotify.com/search/finnish%20progressive%20rock%20official%20editorial%20playlist"
+    spotify: "https://spotify.link/RcE5S2h7SXb"
   },
   {
     name: 'finnish psychedelic rock',
