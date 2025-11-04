@@ -12134,7 +12134,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: "https://open.spotify.com/search/hardcore%20playlist"
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1EIexrP9IBJXx5?si=n30Xo5ItRmq5oIiqQr9x-g&pi=oWRbKU-ORey5E"
   },
   {
     name: 'hardcore breaks',
@@ -12144,7 +12144,7 @@ export const genres: Item[] = [
     artists: ['Various Artists'],
     origin: 'International',
     relatedCountries: ['Multiple'],
-    spotify: "https://open.spotify.com/search/hardcore%20breaks%20playlist"
+    spotify: "https://open.spotify.com/playlist/37i9dQZF1EIfsO3BjPVayf?si=PubpgY2rRSem35cKNk9a7g"
   },
   {
     name: 'hardcore hip hop',
