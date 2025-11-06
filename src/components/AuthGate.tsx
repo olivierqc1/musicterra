@@ -24,6 +24,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
+  // ============ CONNEXION EMAIL/PASSWORD ============
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -49,13 +50,19 @@ const AuthGate: React.FC<AuthGateProps> = ({
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            emailRedirectTo: window.location.origin,
+            data: {
+              display_name: email.split('@')[0],
+            }
+          }
         });
 
         if (error) throw error;
 
         setMessage(t(
-          "✅ Compte créé ! Tu peux maintenant te connecter.",
-          "✅ Account created! You can now sign in."
+          "✅ Compte créé ! Vérifie ton email pour confirmer.",
+          "✅ Account created! Check your email to confirm."
         ));
         setIsSignUp(false);
         setPassword("");
@@ -69,14 +76,12 @@ const AuthGate: React.FC<AuthGateProps> = ({
         if (error) throw error;
 
         setMessage(t("✅ Connexion réussie !", "✅ Signed in successfully!"));
+        setEmail("");
+        setPassword("");
       }
-
-      setEmail("");
-      setPassword("");
     } catch (err: any) {
       console.error("Erreur auth:", err);
       
-      // Messages d'erreur personnalisés
       if (err.message?.includes("Invalid login credentials")) {
         setMessage(t(
           "❌ Email ou mot de passe incorrect",
@@ -84,8 +89,13 @@ const AuthGate: React.FC<AuthGateProps> = ({
         ));
       } else if (err.message?.includes("User already registered")) {
         setMessage(t(
-          "❌ Cet email est déjà utilisé",
-          "❌ This email is already registered"
+          "❌ Cet email est déjà utilisé. Essaie de te connecter.",
+          "❌ This email is already registered. Try signing in."
+        ));
+      } else if (err.message?.includes("Email not confirmed")) {
+        setMessage(t(
+          "❌ Vérifie ton email pour confirmer ton compte",
+          "❌ Check your email to confirm your account"
         ));
       } else {
         setMessage(t("❌ Erreur : ", "❌ Error: ") + err.message);
@@ -95,39 +105,78 @@ const AuthGate: React.FC<AuthGateProps> = ({
     }
   };
 
-  // Si connecté, afficher les enfants
+  // ============ CONNEXION INSTAGRAM ============
+  const handleInstagramLogin = async () => {
+    try {
+      setLoading(true);
+      setMessage("");
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'instagram',
+        options: {
+          redirectTo: window.location.origin,
+        }
+      });
+
+      if (error) throw error;
+      
+    } catch (err: any) {
+      console.error("Erreur Instagram:", err);
+      setMessage(t(
+        "❌ Connexion Instagram indisponible pour le moment",
+        "❌ Instagram login unavailable at the moment"
+      ));
+      setLoading(false);
+    }
+  };
+
   if (session) {
     return <>{children}</>;
   }
 
-  // Si mode "mot de passe oublié"
   if (showForgotPassword) {
     return <ForgotPassword onBack={() => setShowForgotPassword(false)} language={language} />;
   }
 
-  // Formulaire de connexion/inscription
   const formContent = (
     <>
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 20, textAlign: 'center' }}>
         <span style={{ fontSize: 40 }}>🎵</span>
         <h2 style={{ margin: "8px 0 4px" }}>
           {isSignUp 
             ? t("Créer un compte", "Create account")
-            : t("Connexion à Musicterra", "Sign in to Musicterra")
+            : t("Connexion à MusicTerra", "Sign in to MusicTerra")
           }
         </h2>
-        <p style={{ color: "#666", margin: 0 }}>
+        <p style={{ color: "#666", margin: 0, fontSize: 14 }}>
           {isSignUp
             ? t(
-                "Entre ton email et choisis un mot de passe",
-                "Enter your email and choose a password"
+                "Rejoins la communauté musicale mondiale",
+                "Join the global music community"
               )
             : t(
-                "Entre ton email et ton mot de passe pour te connecter",
-                "Enter your email and password to sign in"
+                "Retrouve tes goûts musicaux et tes découvertes",
+                "Access your musical tastes and discoveries"
               )
           }
         </p>
+      </div>
+
+      <button
+        onClick={handleInstagramLogin}
+        disabled={loading}
+        style={styles.instagramButton}
+        type="button"
+      >
+        <span style={{ fontSize: 20 }}>📸</span>
+        {t("Continuer avec Instagram", "Continue with Instagram")}
+      </button>
+
+      <div style={styles.divider}>
+        <div style={{ position: 'absolute', left: 0, right: 0, height: 1, background: '#ddd', top: '50%' }} />
+        <span style={{ position: 'relative', padding: '0 12px', background: '#fff', color: '#999', fontSize: 13 }}>
+          {t('ou', 'or')}
+        </span>
       </div>
 
       <form onSubmit={handleAuth} style={{ display: "grid", gap: 12 }}>
@@ -202,10 +251,10 @@ const AuthGate: React.FC<AuthGateProps> = ({
       )}
 
       <div style={styles.footer}>
-        <small style={{ color: "#888" }}>
+        <small style={{ color: "#888", fontSize: 12 }}>
           {t(
-            "Ton mot de passe doit contenir au moins 6 caractères.",
-            "Your password must be at least 6 characters long."
+            "En te connectant, tu acceptes nos conditions d'utilisation",
+            "By signing in, you agree to our terms of service"
           )}
         </small>
       </div>
@@ -223,7 +272,6 @@ const AuthGate: React.FC<AuthGateProps> = ({
   return <div style={styles.inlineCard}>{formContent}</div>;
 };
 
-// Styles
 const styles: Record<string, React.CSSProperties> = {
   fullpageContainer: {
     minHeight: "100vh",
@@ -242,12 +290,35 @@ const styles: Record<string, React.CSSProperties> = {
     boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
   },
   inlineCard: {
-    maxWidth: 400,
+    maxWidth: 420,
     margin: "20px auto",
     padding: 24,
     border: "1px solid #e7e7e7",
     borderRadius: 12,
     background: "#fff",
+  },
+  instagramButton: {
+    width: "100%",
+    padding: "14px 16px",
+    border: "none",
+    borderRadius: 10,
+    background: "linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)",
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "all 0.3s",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  divider: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "20px 0",
+    position: "relative" as const,
   },
   input: {
     width: "100%",
@@ -304,7 +375,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   footer: {
     marginTop: 16,
-    textAlign: "center",
+    textAlign: "center" as const,
   },
 };
 
