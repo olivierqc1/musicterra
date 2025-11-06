@@ -46,7 +46,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
       setMessage("");
 
       if (isSignUp) {
-        // INSCRIPTION
+        // ============ INSCRIPTION ============
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -61,13 +61,13 @@ const AuthGate: React.FC<AuthGateProps> = ({
         if (error) throw error;
 
         setMessage(t(
-          "✅ Compte créé ! Vérifie ton email pour confirmer.",
-          "✅ Account created! Check your email to confirm."
+          "✅ Compte créé ! Vérifie ton email pour confirmer ton compte.",
+          "✅ Account created! Check your email to confirm your account."
         ));
         setIsSignUp(false);
         setPassword("");
       } else {
-        // CONNEXION
+        // ============ CONNEXION ============
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -80,8 +80,9 @@ const AuthGate: React.FC<AuthGateProps> = ({
         setPassword("");
       }
     } catch (err: any) {
-      console.error("Erreur auth:", err);
+      console.error("❌ Erreur auth:", err);
       
+      // Messages d'erreur personnalisés
       if (err.message?.includes("Invalid login credentials")) {
         setMessage(t(
           "❌ Email ou mot de passe incorrect",
@@ -120,26 +121,36 @@ const AuthGate: React.FC<AuthGateProps> = ({
 
       if (error) throw error;
       
+      // L'utilisateur sera redirigé vers Instagram
     } catch (err: any) {
-      console.error("Erreur Instagram:", err);
+      console.error("❌ Erreur Instagram:", err);
       setMessage(t(
-        "❌ Connexion Instagram indisponible pour le moment",
-        "❌ Instagram login unavailable at the moment"
+        "❌ Connexion Instagram indisponible. Configure-la dans Supabase Dashboard.",
+        "❌ Instagram login unavailable. Configure it in Supabase Dashboard."
       ));
       setLoading(false);
     }
   };
 
+  // ============ SI CONNECTÉ ============
   if (session) {
     return <>{children}</>;
   }
 
+  // ============ MODE MOT DE PASSE OUBLIÉ ============
   if (showForgotPassword) {
-    return <ForgotPassword onBack={() => setShowForgotPassword(false)} language={language} />;
+    return (
+      <ForgotPassword 
+        onBack={() => setShowForgotPassword(false)} 
+        language={language} 
+      />
+    );
   }
 
+  // ============ FORMULAIRE ============
   const formContent = (
     <>
+      {/* HEADER */}
       <div style={{ marginBottom: 20, textAlign: 'center' }}>
         <span style={{ fontSize: 40 }}>🎵</span>
         <h2 style={{ margin: "8px 0 4px" }}>
@@ -162,23 +173,43 @@ const AuthGate: React.FC<AuthGateProps> = ({
         </p>
       </div>
 
+      {/* INSTAGRAM BUTTON */}
       <button
         onClick={handleInstagramLogin}
         disabled={loading}
-        style={styles.instagramButton}
+        style={{
+          ...styles.instagramButton,
+          opacity: loading ? 0.6 : 1,
+          cursor: loading ? 'not-allowed' : 'pointer'
+        }}
         type="button"
       >
         <span style={{ fontSize: 20 }}>📸</span>
         {t("Continuer avec Instagram", "Continue with Instagram")}
       </button>
 
+      {/* DIVIDER */}
       <div style={styles.divider}>
-        <div style={{ position: 'absolute', left: 0, right: 0, height: 1, background: '#ddd', top: '50%' }} />
-        <span style={{ position: 'relative', padding: '0 12px', background: '#fff', color: '#999', fontSize: 13 }}>
+        <div style={{ 
+          position: 'absolute', 
+          left: 0, 
+          right: 0, 
+          height: 1, 
+          background: '#ddd', 
+          top: '50%' 
+        }} />
+        <span style={{ 
+          position: 'relative', 
+          padding: '0 12px', 
+          background: '#fff', 
+          color: '#999', 
+          fontSize: 13 
+        }}>
           {t('ou', 'or')}
         </span>
       </div>
 
+      {/* EMAIL/PASSWORD FORM */}
       <form onSubmit={handleAuth} style={{ display: "grid", gap: 12 }}>
         <input
           type="email"
@@ -188,6 +219,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
           style={styles.input}
           required
           disabled={loading}
+          autoComplete="email"
         />
         
         <input
@@ -199,9 +231,18 @@ const AuthGate: React.FC<AuthGateProps> = ({
           required
           disabled={loading}
           minLength={6}
+          autoComplete={isSignUp ? "new-password" : "current-password"}
         />
 
-        <button type="submit" style={styles.submitButton} disabled={loading}>
+        <button 
+          type="submit" 
+          style={{
+            ...styles.submitButton,
+            opacity: loading ? 0.6 : 1,
+            cursor: loading ? 'not-allowed' : 'pointer'
+          }} 
+          disabled={loading}
+        >
           {loading 
             ? t("⏳ Chargement...", "⏳ Loading...") 
             : isSignUp
@@ -211,6 +252,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
         </button>
       </form>
 
+      {/* FORGOT PASSWORD */}
       {!isSignUp && (
         <div style={{ marginTop: 10, textAlign: 'center' }}>
           <button
@@ -224,6 +266,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
         </div>
       )}
 
+      {/* TOGGLE SIGNUP/SIGNIN */}
       <div style={{ marginTop: 12, textAlign: "center" }}>
         <button
           type="button"
@@ -241,6 +284,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
         </button>
       </div>
 
+      {/* MESSAGE */}
       {message && (
         <div style={{
           ...styles.message,
@@ -250,6 +294,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
         </div>
       )}
 
+      {/* FOOTER */}
       <div style={styles.footer}>
         <small style={{ color: "#888", fontSize: 12 }}>
           {t(
@@ -261,6 +306,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
     </>
   );
 
+  // ============ RENDER ============
   if (mode === "fullpage") {
     return (
       <div style={styles.fullpageContainer}>
@@ -272,6 +318,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
   return <div style={styles.inlineCard}>{formContent}</div>;
 };
 
+// ============ STYLES ============
 const styles: Record<string, React.CSSProperties> = {
   fullpageContainer: {
     minHeight: "100vh",
@@ -306,7 +353,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#fff",
     fontSize: 15,
     fontWeight: 600,
-    cursor: "pointer",
     transition: "all 0.3s",
     display: "flex",
     alignItems: "center",
@@ -338,7 +384,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#fff",
     fontSize: 15,
     fontWeight: 600,
-    cursor: "pointer",
     transition: "background 0.2s",
   },
   toggleButton: {
