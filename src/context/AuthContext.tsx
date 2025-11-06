@@ -1,209 +1,382 @@
-// src/context/AuthContext.tsx
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "../lib/supabase";
+// src/components/AuthGate.tsx
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import ForgotPassword from "./ForgotPassword";
 
-// Type pour le profil utilisateur
-export interface UserProfile {
-  id: string;
-  email: string;
-  display_name?: string;
-  preferred_language?: "fr" | "en";
-  created_at: string;
-  updated_at: string;
+interface AuthGateProps {
+  children?: React.ReactNode;
+  mode?: "inline" | "fullpage";
+  language?: "fr" | "en";
 }
 
-interface AuthContextType {
-  session: Session | null;
-  user: User | null;
-  profile: UserProfile | null;
-  loading: boolean;
-  supabase: typeof supabase; // ← AJOUTÉ
-  signInWithEmail: (email: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
-  refreshProfile: () => Promise<void>;
-}
+const AuthGate: React.FC<AuthGateProps> = ({ 
+  children,
+  mode = "inline", 
+  language = "fr" 
+}) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const { session, supabase } = useAuth();
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Créer un profil si inexistant
-  const ensureProfile = async (userId: string, email: string) => {
-    try {
-      // Vérifier si le profil existe
-      const { data: existing, error: selectError } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("id", userId)
-        .maybeSingle();
-
-      if (selectError) {
-        console.error("Erreur vérification profil:", selectError);
-        return;
-      }
-
-      // Si n'existe pas, le créer
-      if (!existing) {
-        console.log("Création du profil pour:", email);
-        
-        const { error: insertError } = await supabase
-          .from("profiles")
-          .insert({
-            id: userId,
-            email: email,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          });
-
-        if (insertError) {
-          console.error("Erreur création profil:", insertError);
-          throw insertError;
-        }
-        
-        console.log("✅ Profil créé automatiquement pour", email);
-      } else {
-        console.log("Profil existe déjà pour:", email);
-      }
-    } catch (error) {
-      console.error("Erreur ensureProfile:", error);
+  // ============ CONNEXION EMAIL/PASSWORD ============
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes("@")) {
+      setMessage(t("❌ Email invalide", "❌ Invalid email"));
+      return;
     }
-  };
 
-  // Charger le profil depuis Supabase
-  const loadProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-
-      if (error) {
-        console.error("Erreur chargement profil:", error);
-        return;
-      }
-      
-      setProfile(data as UserProfile);
-      console.log("✅ Profil chargé:", data);
-    } catch (error) {
-      console.error("Erreur loadProfile:", error);
+    if (!password || password.length < 6) {
+      setMessage(t(
+        "❌ Le mot de passe doit contenir au moins 6 caractères",
+        "❌ Password must be at least 6 characters"
+      ));
+      return;
     }
-  };
 
-  useEffect(() => {
-    // Récupère la session existante
-    supabase.auth.getSession().then(async ({ data }) => {
-      setSession(data.session);
-      if (data.session?.user) {
-        await ensureProfile(data.session.user.id, data.session.user.email!);
-        await loadProfile(data.session.user.id);
-      }
-      setLoading(false);
-    });
-
-    // Écoute les changements d'authentification
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      console.log("Auth state changed:", _event, session?.user?.email);
-      setSession(session);
-      
-      if (session?.user) {
-        await ensureProfile(session.user.id, session.user.email!);
-        await loadProfile(session.user.id);
-      } else {
-        setProfile(null);
-      }
-    });
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
-
-  // Connexion avec email (magic link)
-  const signInWithEmail = async (email: string) => {
-    setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOtp({ 
-        email,
-        options: {
-          emailRedirectTo: window.location.origin,
-        }
-      });
+      setLoading(true);
+      setMessage("");
 
-      if (error) throw error;
-      console.log("✉️ Magic link envoyé à:", email);
-    } catch (error: any) {
-      console.error("Erreur connexion:", error);
-      throw error;
+      if (isSignUp) {
+        // INSCRIPTION
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: window.location.origin,
+            data: {
+              display_name: email.split('@')[0],
+            }
+          }
+        });
+
+        if (error) throw error;
+
+        setMessage(t(
+          "✅ Compte créé ! Vérifie ton email pour confirmer.",
+          "✅ Account created! Check your email to confirm."
+        ));
+        setIsSignUp(false);
+        setPassword("");
+      } else {
+        // CONNEXION
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        setMessage(t("✅ Connexion réussie !", "✅ Signed in successfully!"));
+        setEmail("");
+        setPassword("");
+      }
+    } catch (err: any) {
+      console.error("Erreur auth:", err);
+      
+      if (err.message?.includes("Invalid login credentials")) {
+        setMessage(t(
+          "❌ Email ou mot de passe incorrect",
+          "❌ Invalid email or password"
+        ));
+      } else if (err.message?.includes("User already registered")) {
+        setMessage(t(
+          "❌ Cet email est déjà utilisé. Essaie de te connecter.",
+          "❌ This email is already registered. Try signing in."
+        ));
+      } else if (err.message?.includes("Email not confirmed")) {
+        setMessage(t(
+          "❌ Vérifie ton email pour confirmer ton compte",
+          "❌ Check your email to confirm your account"
+        ));
+      } else {
+        setMessage(t("❌ Erreur : ", "❌ Error: ") + err.message);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  // Déconnexion
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    setSession(null);
-    setProfile(null);
-    console.log("👋 Déconnecté");
-  };
-
-  // Mettre à jour le profil
-  const updateProfile = async (updates: Partial<UserProfile>) => {
-    if (!session?.user) {
-      throw new Error("Non connecté");
-    }
-
+  // ============ CONNEXION INSTAGRAM ============
+  const handleInstagramLogin = async () => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .update({ ...updates, updated_at: new Date().toISOString() })
-        .eq("id", session.user.id)
-        .select()
-        .single();
+      setLoading(true);
+      setMessage("");
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'instagram',
+        options: {
+          redirectTo: window.location.origin,
+        }
+      });
 
       if (error) throw error;
-      setProfile(data as UserProfile);
-      console.log("✅ Profil mis à jour:", data);
-    } catch (error) {
-      console.error("Erreur mise à jour profil:", error);
-      throw error;
+      
+    } catch (err: any) {
+      console.error("Erreur Instagram:", err);
+      setMessage(t(
+        "❌ Connexion Instagram indisponible pour le moment",
+        "❌ Instagram login unavailable at the moment"
+      ));
+      setLoading(false);
     }
   };
 
-  // Rafraîchir le profil
-  const refreshProfile = async () => {
-    if (session?.user) {
-      await loadProfile(session.user.id);
-    }
-  };
+  if (session) {
+    return <>{children}</>;
+  }
 
-  return (
-    <AuthContext.Provider
-      value={{
-        session,
-        user: session?.user ?? null,
-        profile,
-        loading,
-        supabase, // ← AJOUTÉ ICI
-        signInWithEmail,
-        signOut,
-        updateProfile,
-        refreshProfile,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  if (showForgotPassword) {
+    return <ForgotPassword onBack={() => setShowForgotPassword(false)} language={language} />;
+  }
+
+  const formContent = (
+    <>
+      <div style={{ marginBottom: 20, textAlign: 'center' }}>
+        <span style={{ fontSize: 40 }}>🎵</span>
+        <h2 style={{ margin: "8px 0 4px" }}>
+          {isSignUp 
+            ? t("Créer un compte", "Create account")
+            : t("Connexion à MusicTerra", "Sign in to MusicTerra")
+          }
+        </h2>
+        <p style={{ color: "#666", margin: 0, fontSize: 14 }}>
+          {isSignUp
+            ? t(
+                "Rejoins la communauté musicale mondiale",
+                "Join the global music community"
+              )
+            : t(
+                "Retrouve tes goûts musicaux et tes découvertes",
+                "Access your musical tastes and discoveries"
+              )
+          }
+        </p>
+      </div>
+
+      <button
+        onClick={handleInstagramLogin}
+        disabled={loading}
+        style={styles.instagramButton}
+        type="button"
+      >
+        <span style={{ fontSize: 20 }}>📸</span>
+        {t("Continuer avec Instagram", "Continue with Instagram")}
+      </button>
+
+      <div style={styles.divider}>
+        <div style={{ position: 'absolute', left: 0, right: 0, height: 1, background: '#ddd', top: '50%' }} />
+        <span style={{ position: 'relative', padding: '0 12px', background: '#fff', color: '#999', fontSize: 13 }}>
+          {t('ou', 'or')}
+        </span>
+      </div>
+
+      <form onSubmit={handleAuth} style={{ display: "grid", gap: 12 }}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={t("ton.email@exemple.com", "your.email@example.com")}
+          style={styles.input}
+          required
+          disabled={loading}
+        />
+        
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={t("Mot de passe (min. 6 caractères)", "Password (min. 6 chars)")}
+          style={styles.input}
+          required
+          disabled={loading}
+          minLength={6}
+        />
+
+        <button type="submit" style={styles.submitButton} disabled={loading}>
+          {loading 
+            ? t("⏳ Chargement...", "⏳ Loading...") 
+            : isSignUp
+              ? t("📝 Créer mon compte", "📝 Create account")
+              : t("🔑 Se connecter", "🔑 Sign in")
+          }
+        </button>
+      </form>
+
+      {!isSignUp && (
+        <div style={{ marginTop: 10, textAlign: 'center' }}>
+          <button
+            type="button"
+            onClick={() => setShowForgotPassword(true)}
+            style={styles.forgotPasswordLink}
+            disabled={loading}
+          >
+            {t('Mot de passe oublié ?', 'Forgot password?')}
+          </button>
+        </div>
+      )}
+
+      <div style={{ marginTop: 12, textAlign: "center" }}>
+        <button
+          type="button"
+          onClick={() => {
+            setIsSignUp(!isSignUp);
+            setMessage("");
+          }}
+          style={styles.toggleButton}
+          disabled={loading}
+        >
+          {isSignUp
+            ? t("Déjà un compte ? Se connecter", "Already have an account? Sign in")
+            : t("Pas de compte ? S'inscrire", "No account? Sign up")
+          }
+        </button>
+      </div>
+
+      {message && (
+        <div style={{
+          ...styles.message,
+          ...(message.includes("❌") ? styles.messageError : styles.messageSuccess)
+        }}>
+          {message}
+        </div>
+      )}
+
+      <div style={styles.footer}>
+        <small style={{ color: "#888", fontSize: 12 }}>
+          {t(
+            "En te connectant, tu acceptes nos conditions d'utilisation",
+            "By signing in, you agree to our terms of service"
+          )}
+        </small>
+      </div>
+    </>
   );
+
+  if (mode === "fullpage") {
+    return (
+      <div style={styles.fullpageContainer}>
+        <div style={styles.fullpageCard}>{formContent}</div>
+      </div>
+    );
+  }
+
+  return <div style={styles.inlineCard}>{formContent}</div>;
 };
 
-export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth doit être utilisé dans AuthProvider");
-  return ctx;
+const styles: Record<string, React.CSSProperties> = {
+  fullpageContainer: {
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    padding: 16,
+  },
+  fullpageCard: {
+    maxWidth: 420,
+    width: "100%",
+    padding: 32,
+    background: "#fff",
+    borderRadius: 16,
+    boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+  },
+  inlineCard: {
+    maxWidth: 420,
+    margin: "20px auto",
+    padding: 24,
+    border: "1px solid #e7e7e7",
+    borderRadius: 12,
+    background: "#fff",
+  },
+  instagramButton: {
+    width: "100%",
+    padding: "14px 16px",
+    border: "none",
+    borderRadius: 10,
+    background: "linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)",
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "all 0.3s",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  divider: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "20px 0",
+    position: "relative" as const,
+  },
+  input: {
+    width: "100%",
+    padding: "12px 14px",
+    border: "1px solid #ddd",
+    borderRadius: 8,
+    fontSize: 15,
+    outline: "none",
+    transition: "border-color 0.2s",
+  },
+  submitButton: {
+    width: "100%",
+    padding: "12px 14px",
+    border: "none",
+    borderRadius: 8,
+    background: "#667eea",
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "background 0.2s",
+  },
+  toggleButton: {
+    background: "none",
+    border: "none",
+    color: "#667eea",
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "underline",
+    padding: "8px",
+  },
+  forgotPasswordLink: {
+    background: "none",
+    border: "none",
+    color: "#999",
+    fontSize: 13,
+    cursor: "pointer",
+    textDecoration: "underline",
+    padding: "4px 8px",
+  },
+  message: {
+    marginTop: 12,
+    padding: 12,
+    borderRadius: 8,
+    fontSize: 14,
+  },
+  messageError: {
+    background: "#fee",
+    color: "#c00",
+  },
+  messageSuccess: {
+    background: "#efe",
+    color: "#060",
+  },
+  footer: {
+    marginTop: 16,
+    textAlign: "center" as const,
+  },
 };
+
+export default AuthGate;
