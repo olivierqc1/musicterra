@@ -2,6 +2,32 @@
 import { supabase } from '../lib/supabase';
 
 // ----------------------
+// 🎨 POPULAR TAGS
+// ----------------------
+export const POPULAR_TAGS = [
+  'Rock',
+  'Pop',
+  'Jazz',
+  'Électro',
+  'Hip-hop',
+  'Classique',
+  'Metal',
+  'Folk',
+  'Blues',
+  'Soul',
+  'Funk',
+  'Reggae',
+  'Country',
+  'R&B',
+  'Indie',
+  'Alternative',
+  'Punk',
+  'World Music',
+  'Latin',
+  'K-pop'
+];
+
+// ----------------------
 // 🔹 TYPES
 // ----------------------
 export interface Group {
@@ -254,4 +280,4 @@ export async function leaveGroup(groupId: string, userId: string) {
     );
     localStorage.setItem(key, JSON.stringify(parsed));
   }
-    }
+}
