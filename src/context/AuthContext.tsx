@@ -1,7 +1,7 @@
 // src/components/AuthGate.tsx
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import ForgotPassword from "../components/ForgotPassword";
+import ForgotPassword from "./ForgotPassword";
 
 interface AuthGateProps {
   children?: React.ReactNode;
