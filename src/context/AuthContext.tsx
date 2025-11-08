@@ -223,31 +223,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // ----------------------
-  // LOADER PENDANT CHARGEMENT
+  // RENDER (PAS DE LOADER - on laisse App gérer)
   // ----------------------
-  if (loading) {
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      }}>
-        <div style={{
-          padding: 40,
-          background: 'white',
-          borderRadius: 16,
-          textAlign: 'center',
-        }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🎵</div>
-          <div style={{ fontSize: 18, fontWeight: 600 }}>MusicTerra</div>
-          <div style={{ fontSize: 14, color: '#888', marginTop: 8 }}>Chargement...</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <AuthContext.Provider value={value}>
       {children}
