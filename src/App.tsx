@@ -92,13 +92,13 @@ const App: React.FC = () => {
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-  // Afficher le Welcome à la première visite
+  // Afficher le Welcome à la première visite (seulement si connecté)
   useEffect(() => {
     const hasVisited = localStorage.getItem('musicterra_visited');
-    if (!hasVisited && !isResetPassword) {
+    if (!hasVisited && !isResetPassword && session) {
       setShowWelcome(true);
     }
-  }, [isResetPassword]);
+  }, [isResetPassword, session]);
 
   const handleCloseWelcome = () => {
     setShowWelcome(false);
@@ -139,7 +139,9 @@ const App: React.FC = () => {
     }
   };
 
-  // Si on est en mode reset password
+  // ============================================
+  // 🔐 MODE RESET PASSWORD
+  // ============================================
   if (isResetPassword) {
     return (
       <ResetPassword 
@@ -152,6 +154,16 @@ const App: React.FC = () => {
     );
   }
 
+  // ============================================
+  // 🔐 FORCER LA CONNEXION POUR TOUTE L'APP
+  // ============================================
+  if (!session) {
+    return <AuthGate mode="fullpage" language={language} />;
+  }
+
+  // ============================================
+  // 🎵 APP PRINCIPALE (utilisateur connecté)
+  // ============================================
   return (
     <>
       {/* Welcome Modal */}
@@ -176,7 +188,7 @@ const App: React.FC = () => {
             </button>
 
             {/* Streak indicator */}
-            {session && currentStreak > 0 && (
+            {currentStreak > 0 && (
               <div style={styles.streakBadge}>
                 🔥 {currentStreak}
               </div>
@@ -189,7 +201,7 @@ const App: React.FC = () => {
               {t("🇬🇧 EN", "🇫🇷 FR")}
             </button>
 
-            {session && profile && (
+            {profile && (
               <span style={{ fontSize: 12, color: "#555" }}>
                 {profile.display_name || profile.email}
               </span>
@@ -248,7 +260,10 @@ const App: React.FC = () => {
 
         {/* Content */}
         <main style={styles.main}>
-          {/* DISCOVER */}
+          {/* ===================================== */}
+          {/* DISCOVER - Plus de AuthGate ici !    */}
+          {/* L'utilisateur est déjà connecté       */}
+          {/* ===================================== */}
           {tab === "discover" && (
             <section style={{ display: "grid", gap: 16 }}>
               {/* Pool selector */}
@@ -415,43 +430,32 @@ const App: React.FC = () => {
           )}
 
           {/* EMERGING ARTISTS */}
-          {tab === "emerging" && (
-            <AuthGate mode="inline" language={language}>
-              <EmergingArtists language={language} />
-            </AuthGate>
-          )}
+          {tab === "emerging" && <EmergingArtists language={language} />}
 
           {/* GROUPS */}
-          {tab === "groups" && (
-            <AuthGate mode="inline" language={language}>
-              <Groups language={language} />
-            </AuthGate>
-          )}
+          {tab === "groups" && <Groups language={language} />}
 
           {/* CONCERTS */}
           {tab === "concerts" && (
-            <AuthGate mode="inline" language={language}>
-              <Concerts
-                language={language}
-                suggestedArtists={
-                  selectedItem && !isYear(selectedItem)
-                    ? selectedItem.artists || []
-                    : []
-                }
-              />
-            </AuthGate>
+            <Concerts
+              language={language}
+              suggestedArtists={
+                selectedItem && !isYear(selectedItem)
+                  ? selectedItem.artists || []
+                  : []
+              }
+            />
           )}
 
           {/* PROFILE */}
-          {tab === "profile" && (
-            <AuthGate mode="inline" language={language}>
-              <Profile language={language} />
-            </AuthGate>
-          )}
+          {tab === "profile" && <Profile language={language} />}
         </main>
 
         <footer style={styles.footer}>
-          <small>© {new Date().getFullYear()} MusicTerra • {t('Découvrez la musique du monde', 'Discover world music')}</small>
+          <small>
+            © {new Date().getFullYear()} MusicTerra •{" "}
+            {t('Découvrez la musique du monde', 'Discover world music')}
+          </small>
         </footer>
       </div>
     </>
