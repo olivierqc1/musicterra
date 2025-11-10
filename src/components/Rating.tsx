@@ -1,4 +1,4 @@
-// src/components/Rating.tsx - VERSION ULTRA BASIQUE
+// src/components/Rating.tsx - VERSION AVEC LOCALSTORAGE
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -22,43 +22,60 @@ export const Rating: React.FC<RatingProps> = ({
   const [savedValue, setSavedValue] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
-  const { session } = useAuth();  // Seulement session, pas supabase
+  const { session } = useAuth();
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-  // Charger la note existante
+  // Clé localStorage unique par user/item
+  const getStorageKey = () => {
+    const userId = session?.user?.id || 'anonymous';
+    return `rating_${userId}_${itemType}_${itemName}`;
+  };
+
+  // Charger la note (localStorage puis Supabase)
   useEffect(() => {
     if (session) {
-      loadExistingRating();
+      loadRating();
     }
   }, [session, itemType, itemName]);
 
-  const loadExistingRating = async () => {
+  const loadRating = async () => {
     if (!session) return;
 
     try {
-      console.log("📖 Chargement note existante...");
+      // 1. Charger depuis localStorage (instantané)
+      const localKey = getStorageKey();
+      const localValue = localStorage.getItem(localKey);
       
-      const { data, error } = await supabase
-        .from('ratings')
-        .select('rating')
-        .eq('user_id', session.user.id)
-        .eq('item_type', itemType)
-        .eq('item_name', itemName)
-        .maybeSingle();
-
-      if (error) {
-        console.error("❌ Erreur chargement:", error);
-        return;
+      if (localValue) {
+        const rating = parseInt(localValue);
+        console.log("📦 Note chargée depuis localStorage:", rating);
+        setSavedValue(rating);
+        setValue(rating);
       }
 
-      if (data) {
-        console.log("✅ Note trouvée:", data.rating);
-        setSavedValue(data.rating);
-        setValue(data.rating);
+      // 2. Essayer Supabase en arrière-plan
+      try {
+        const { data, error } = await supabase
+          .from('ratings')
+          .select('rating')
+          .eq('user_id', session.user.id)
+          .eq('item_type', itemType)
+          .eq('item_name', itemName)
+          .maybeSingle();
+
+        if (!error && data) {
+          console.log("☁️ Note chargée depuis Supabase:", data.rating);
+          setSavedValue(data.rating);
+          setValue(data.rating);
+          // Sync avec localStorage
+          localStorage.setItem(localKey, String(data.rating));
+        }
+      } catch (err) {
+        console.log("⚠️ Supabase indisponible, utilisation du cache local");
       }
     } catch (err) {
-      console.error("❌ Catch loadExistingRating:", err);
+      console.error("❌ Erreur loadRating:", err);
     }
   };
 
@@ -66,58 +83,58 @@ export const Rating: React.FC<RatingProps> = ({
     console.log("🔵 handleRate appelé");
     
     if (!session) {
-      console.log("❌ Pas de session");
       setError(t("⚠️ Connecte-toi", "⚠️ Sign in"));
       return;
     }
 
     if (value === 0) {
-      console.log("❌ Value = 0");
       setError(t("⚠️ Sélectionne une note", "⚠️ Select rating"));
       return;
     }
 
     setLoading(true);
     setError("");
-    
-    console.log("1️⃣ Début sauvegarde");
-    console.log("2️⃣ User:", session.user.id);
-    console.log("3️⃣ Supabase importé existe?", !!supabase);
-    console.log("4️⃣ Supabase.from existe?", !!(supabase && supabase.from));
-    console.log("5️⃣ Type de supabase:", typeof supabase);
-    
+
     try {
-      console.log("6️⃣ Avant INSERT");
+      const localKey = getStorageKey();
       
-      // Version ultra-simple sans .select()
-      const { error: saveError } = await supabase
-        .from('ratings')
-        .insert({
-          user_id: session.user.id,
-          item_type: itemType,
-          item_name: itemName,
-          rating: value,
-        });
+      // 1. Sauvegarder IMMÉDIATEMENT dans localStorage
+      localStorage.setItem(localKey, String(value));
+      console.log("✅ Sauvegardé dans localStorage:", value);
+      setSavedValue(value);
+      if (onRated) onRated(value);
 
-      console.log("7️⃣ Après INSERT");
-      console.log("8️⃣ Error?", saveError);
+      // 2. Essayer Supabase en arrière-plan (non bloquant)
+      setTimeout(async () => {
+        try {
+          console.log("☁️ Tentative sync Supabase...");
+          
+          const { error: saveError } = await supabase
+            .from('ratings')
+            .upsert({
+              user_id: session.user.id,
+              item_type: itemType,
+              item_name: itemName,
+              rating: value,
+              updated_at: new Date().toISOString(),
+            }, {
+              onConflict: 'user_id,item_type,item_name'
+            });
 
-      if (saveError) {
-        console.error("❌ Erreur:", saveError);
-        setError("Erreur: " + saveError.message);
-      } else {
-        console.log("✅ SUCCÈS !");
-        setSavedValue(value);
-        if (onRated) onRated(value);
-      }
-      
+          if (saveError) {
+            console.warn("⚠️ Supabase sync échoué (note locale conservée):", saveError.message);
+          } else {
+            console.log("✅ Sync Supabase réussie !");
+          }
+        } catch (err: any) {
+          console.warn("⚠️ Supabase indisponible (note locale conservée)");
+        }
+      }, 100);
+
     } catch (err: any) {
-      console.error("❌ CATCH:", err);
-      console.error("❌ Message:", err.message);
-      console.error("❌ Stack:", err.stack);
+      console.error("❌ Erreur:", err);
       setError("Erreur: " + err.message);
     } finally {
-      console.log("9️⃣ Finally - loading=false");
       setLoading(false);
     }
   };
@@ -128,6 +145,7 @@ export const Rating: React.FC<RatingProps> = ({
         <div style={styles.savedBadge}>
           {t("Note enregistrée : ", "Saved: ")}
           <strong>{savedValue}/{max}</strong>
+          <span style={{ fontSize: 10, marginLeft: 4 }}>📦</span>
         </div>
       )}
 
@@ -163,6 +181,10 @@ export const Rating: React.FC<RatingProps> = ({
           ? "✅ Noté"
           : "💾 Noter"}
       </button>
+
+      <div style={{ fontSize: 10, color: '#888', marginTop: 4, textAlign: 'center' }}>
+        {t("Sauvegarde locale instantanée 📦", "Local save instant 📦")}
+      </div>
     </div>
   );
 };
