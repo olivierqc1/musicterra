@@ -81,13 +81,33 @@ export const Rating: React.FC<RatingProps> = ({
       setLoading(true);
       setError("");
 
-      console.log("📝 Sauvegarde note:", { itemType, itemName, value });
+      console.log("📝 Sauvegarde note:", { 
+        itemType, 
+        itemName, 
+        value,
+        userId: session.user.id,
+        supabaseUrl: import.meta.env.VITE_SUPABASE_URL 
+      });
 
-      // Timeout de 8 secondes
+      // Test de connexion Supabase
+      console.log("🔗 Test connexion Supabase...");
+      const { data: testData, error: testError } = await supabase
+        .from('ratings')
+        .select('count')
+        .limit(1);
+      
+      if (testError) {
+        console.error("❌ Connexion Supabase échoue:", testError);
+        throw new Error("Impossible de se connecter à Supabase: " + testError.message);
+      }
+      console.log("✅ Connexion Supabase OK");
+
+      // Timeout de 10 secondes (augmenté)
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('TIMEOUT')), 8000)
+        setTimeout(() => reject(new Error('TIMEOUT')), 10000)
       );
 
+      console.log("💾 Début upsert...");
       const savePromise = supabase
         .from('ratings')
         .upsert({
@@ -104,6 +124,8 @@ export const Rating: React.FC<RatingProps> = ({
         savePromise,
         timeoutPromise
       ]) as any;
+      
+      console.log("📥 Résultat upsert:", saveError || "OK");
 
       if (saveError) {
         console.error("❌ Erreur Supabase:", saveError);
