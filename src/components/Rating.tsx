@@ -1,4 +1,4 @@
-// src/components/Rating.tsx
+// src/components/Rating.tsx - VERSION ULTRA SIMPLE
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
@@ -36,6 +36,8 @@ export const Rating: React.FC<RatingProps> = ({
     if (!session) return;
 
     try {
+      console.log("📖 Chargement note existante...");
+      
       const { data, error } = await supabase
         .from('ratings')
         .select('rating')
@@ -50,29 +52,26 @@ export const Rating: React.FC<RatingProps> = ({
       }
 
       if (data) {
+        console.log("✅ Note trouvée:", data.rating);
         setSavedValue(data.rating);
         setValue(data.rating);
+      } else {
+        console.log("ℹ️ Pas de note existante");
       }
     } catch (err) {
-      console.error("❌ Erreur loadExistingRating:", err);
+      console.error("❌ Catch loadExistingRating:", err);
     }
   };
 
   const handleRate = async () => {
     if (!session) {
-      setError(t(
-        "⚠️ Connecte-toi pour sauvegarder",
-        "⚠️ Sign in to save"
-      ));
+      setError(t("⚠️ Connecte-toi d'abord", "⚠️ Sign in first"));
       setTimeout(() => setError(""), 3000);
       return;
     }
 
     if (value === 0) {
-      setError(t(
-        "⚠️ Sélectionne une note d'abord",
-        "⚠️ Select a rating first"
-      ));
+      setError(t("⚠️ Sélectionne une note", "⚠️ Select a rating"));
       setTimeout(() => setError(""), 3000);
       return;
     }
@@ -81,34 +80,13 @@ export const Rating: React.FC<RatingProps> = ({
       setLoading(true);
       setError("");
 
-      console.log("📝 Sauvegarde note:", { 
-        itemType, 
-        itemName, 
-        value,
-        userId: session.user.id,
-        supabaseUrl: import.meta.env.VITE_SUPABASE_URL 
-      });
+      console.log("💾 DÉBUT SAUVEGARDE");
+      console.log("User:", session.user.id);
+      console.log("Type:", itemType);
+      console.log("Item:", itemName);
+      console.log("Note:", value);
 
-      // Test de connexion Supabase
-      console.log("🔗 Test connexion Supabase...");
-      const { data: testData, error: testError } = await supabase
-        .from('ratings')
-        .select('count')
-        .limit(1);
-      
-      if (testError) {
-        console.error("❌ Connexion Supabase échoue:", testError);
-        throw new Error("Impossible de se connecter à Supabase: " + testError.message);
-      }
-      console.log("✅ Connexion Supabase OK");
-
-      // Timeout de 10 secondes (augmenté)
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('TIMEOUT')), 10000)
-      );
-
-      console.log("💾 Début upsert...");
-      const savePromise = supabase
+      const { data, error: saveError } = await supabase
         .from('ratings')
         .upsert({
           user_id: session.user.id,
@@ -118,69 +96,31 @@ export const Rating: React.FC<RatingProps> = ({
           updated_at: new Date().toISOString(),
         }, {
           onConflict: 'user_id,item_type,item_name'
-        });
+        })
+        .select();
 
-      const { error: saveError } = await Promise.race([
-        savePromise,
-        timeoutPromise
-      ]) as any;
-      
-      console.log("📥 Résultat upsert:", saveError || "OK");
+      console.log("📥 RÉSULTAT:", { data, error: saveError });
 
       if (saveError) {
-        console.error("❌ Erreur Supabase:", saveError);
-        
-        // Messages d'erreur selon le code
-        if (saveError.code === '42P01') {
-          throw new Error(t(
-            "Table 'ratings' manquante. Exécute setup_database.sql dans Supabase",
-            "Table 'ratings' missing. Run setup_database.sql in Supabase"
-          ));
-        } else if (saveError.code === '42501') {
-          throw new Error(t(
-            "Permission refusée. Active RLS dans Supabase Dashboard",
-            "Permission denied. Enable RLS in Supabase Dashboard"
-          ));
-        } else if (saveError.message?.includes('unique')) {
-          throw new Error(t(
-            "Conflit de clé unique. Réessaie.",
-            "Unique key conflict. Try again."
-          ));
-        } else {
-          throw new Error(saveError.message || "Erreur inconnue");
-        }
+        console.error("❌ ERREUR SUPABASE:", saveError);
+        throw saveError;
       }
 
       // Succès !
+      console.log("✅ SAUVEGARDÉ !");
       setSavedValue(value);
       if (onRated) onRated(value);
       
-      console.log("✅ Note sauvegardée !");
-      
     } catch (err: any) {
-      console.error("❌ Catch error:", err);
+      console.error("❌ CATCH ERROR:", err);
       
-      let errorMsg = "";
-      
-      if (err.message === 'TIMEOUT') {
-        errorMsg = t(
-          "❌ Timeout (8s). Vérifie ta connexion internet.",
-          "❌ Timeout (8s). Check your internet connection."
-        );
-      } else if (err.message.includes('fetch')) {
-        errorMsg = t(
-          "❌ Erreur réseau. Vérifie ta connexion.",
-          "❌ Network error. Check your connection."
-        );
-      } else {
-        errorMsg = t("❌ Erreur : ", "❌ Error: ") + err.message;
-      }
-      
+      let errorMsg = t("❌ Erreur : ", "❌ Error: ") + (err.message || "Inconnue");
       setError(errorMsg);
       setTimeout(() => setError(""), 8000);
       
     } finally {
       setLoading(false);
+      console.log("🏁 FIN (loading=false)");
     }
   };
 
@@ -232,19 +172,10 @@ export const Rating: React.FC<RatingProps> = ({
         <div style={styles.loginHint}>
           <small>
             {t(
-              "💡 Connecte-toi pour sauvegarder tes notes",
-              "💡 Sign in to save your ratings"
+              "💡 Connecte-toi pour sauvegarder",
+              "💡 Sign in to save"
             )}
           </small>
-        </div>
-      )}
-
-      {/* DEBUG INFO (retire ça en prod) */}
-      {import.meta.env.DEV && (
-        <div style={{ fontSize: 10, color: '#999', marginTop: 4 }}>
-          Debug: user={session?.user.id.substring(0, 8)}, 
-          type={itemType}, 
-          item={itemName}
         </div>
       )}
     </div>
