@@ -89,22 +89,22 @@ export const Rating: React.FC<RatingProps> = ({
     try {
       console.log("6️⃣ Avant INSERT");
       
-      const result = await supabase
+      // Version ultra-simple sans .select()
+      const { error: saveError } = await supabase
         .from('ratings')
         .insert({
           user_id: session.user.id,
           item_type: itemType,
           item_name: itemName,
           rating: value,
-        })
-        .select();
+        });
 
       console.log("7️⃣ Après INSERT");
-      console.log("8️⃣ Résultat complet:", JSON.stringify(result, null, 2));
+      console.log("8️⃣ Error?", saveError);
 
-      if (result.error) {
-        console.error("❌ Erreur:", result.error);
-        setError("Erreur: " + result.error.message);
+      if (saveError) {
+        console.error("❌ Erreur:", saveError);
+        setError("Erreur: " + saveError.message);
       } else {
         console.log("✅ SUCCÈS !");
         setSavedValue(value);
