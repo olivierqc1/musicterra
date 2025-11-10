@@ -1,6 +1,7 @@
-// src/components/Rating.tsx - VERSION ULTRA SIMPLE
+// src/components/Rating.tsx - VERSION ULTRA BASIQUE
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { supabase } from "../lib/supabase";
 
 interface RatingProps {
   itemType: "genre" | "country";
@@ -21,7 +22,7 @@ export const Rating: React.FC<RatingProps> = ({
   const [savedValue, setSavedValue] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
-  const { session, supabase } = useAuth();
+  const { session } = useAuth();  // Seulement session, pas supabase
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
@@ -55,8 +56,6 @@ export const Rating: React.FC<RatingProps> = ({
         console.log("✅ Note trouvée:", data.rating);
         setSavedValue(data.rating);
         setValue(data.rating);
-      } else {
-        console.log("ℹ️ Pas de note existante");
       }
     } catch (err) {
       console.error("❌ Catch loadExistingRating:", err);
@@ -64,63 +63,62 @@ export const Rating: React.FC<RatingProps> = ({
   };
 
   const handleRate = async () => {
+    console.log("🔵 handleRate appelé");
+    
     if (!session) {
-      setError(t("⚠️ Connecte-toi d'abord", "⚠️ Sign in first"));
-      setTimeout(() => setError(""), 3000);
+      console.log("❌ Pas de session");
+      setError(t("⚠️ Connecte-toi", "⚠️ Sign in"));
       return;
     }
 
     if (value === 0) {
-      setError(t("⚠️ Sélectionne une note", "⚠️ Select a rating"));
-      setTimeout(() => setError(""), 3000);
+      console.log("❌ Value = 0");
+      setError(t("⚠️ Sélectionne une note", "⚠️ Select rating"));
       return;
     }
 
+    setLoading(true);
+    setError("");
+    
+    console.log("1️⃣ Début sauvegarde");
+    console.log("2️⃣ User:", session.user.id);
+    console.log("3️⃣ Supabase importé existe?", !!supabase);
+    console.log("4️⃣ Supabase.from existe?", !!(supabase && supabase.from));
+    console.log("5️⃣ Type de supabase:", typeof supabase);
+    
     try {
-      setLoading(true);
-      setError("");
-
-      console.log("💾 DÉBUT SAUVEGARDE");
-      console.log("User:", session.user.id);
-      console.log("Type:", itemType);
-      console.log("Item:", itemName);
-      console.log("Note:", value);
-
-      const { data, error: saveError } = await supabase
+      console.log("6️⃣ Avant INSERT");
+      
+      const result = await supabase
         .from('ratings')
-        .upsert({
+        .insert({
           user_id: session.user.id,
           item_type: itemType,
           item_name: itemName,
           rating: value,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: 'user_id,item_type,item_name'
         })
         .select();
 
-      console.log("📥 RÉSULTAT:", { data, error: saveError });
+      console.log("7️⃣ Après INSERT");
+      console.log("8️⃣ Résultat complet:", JSON.stringify(result, null, 2));
 
-      if (saveError) {
-        console.error("❌ ERREUR SUPABASE:", saveError);
-        throw saveError;
+      if (result.error) {
+        console.error("❌ Erreur:", result.error);
+        setError("Erreur: " + result.error.message);
+      } else {
+        console.log("✅ SUCCÈS !");
+        setSavedValue(value);
+        if (onRated) onRated(value);
       }
-
-      // Succès !
-      console.log("✅ SAUVEGARDÉ !");
-      setSavedValue(value);
-      if (onRated) onRated(value);
       
     } catch (err: any) {
-      console.error("❌ CATCH ERROR:", err);
-      
-      let errorMsg = t("❌ Erreur : ", "❌ Error: ") + (err.message || "Inconnue");
-      setError(errorMsg);
-      setTimeout(() => setError(""), 8000);
-      
+      console.error("❌ CATCH:", err);
+      console.error("❌ Message:", err.message);
+      console.error("❌ Stack:", err.stack);
+      setError("Erreur: " + err.message);
     } finally {
+      console.log("9️⃣ Finally - loading=false");
       setLoading(false);
-      console.log("🏁 FIN (loading=false)");
     }
   };
 
@@ -128,15 +126,13 @@ export const Rating: React.FC<RatingProps> = ({
     <div style={styles.container}>
       {savedValue !== null && !error && (
         <div style={styles.savedBadge}>
-          {t("Note enregistrée : ", "Saved rating: ")}
+          {t("Note enregistrée : ", "Saved: ")}
           <strong>{savedValue}/{max}</strong>
         </div>
       )}
 
       {error && (
-        <div style={styles.errorBadge}>
-          {error}
-        </div>
+        <div style={styles.errorBadge}>{error}</div>
       )}
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -162,22 +158,11 @@ export const Rating: React.FC<RatingProps> = ({
         }}
       >
         {loading
-          ? t("⏳ Sauvegarde...", "⏳ Saving...")
+          ? "⏳ Sauvegarde..."
           : value === savedValue && savedValue !== null
-          ? t("✅ Noté", "✅ Rated")
-          : t("💾 Noter", "💾 Rate")}
+          ? "✅ Noté"
+          : "💾 Noter"}
       </button>
-
-      {!session && (
-        <div style={styles.loginHint}>
-          <small>
-            {t(
-              "💡 Connecte-toi pour sauvegarder",
-              "💡 Sign in to save"
-            )}
-          </small>
-        </div>
-      )}
     </div>
   );
 };
@@ -206,7 +191,6 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 6,
     fontSize: 12,
     fontWeight: 500,
-    wordBreak: 'break-word',
   },
   slider: {
     flex: 1,
@@ -233,7 +217,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 14,
     fontWeight: 600,
     cursor: "pointer",
-    transition: "all 0.2s",
   },
   buttonChanged: {
     background: "#667eea",
@@ -243,10 +226,6 @@ const styles: Record<string, React.CSSProperties> = {
   buttonLoading: {
     opacity: 0.7,
     cursor: 'not-allowed',
-  },
-  loginHint: {
-    textAlign: "center",
-    color: "#666",
   },
 };
 
