@@ -1,4 +1,4 @@
-// src/components/AuthGate.tsx
+// src/components/AuthGate.tsx - AVEC GOOGLE + DISCORD
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ForgotPassword from "./ForgotPassword";
@@ -18,6 +18,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { session, supabase } = useAuth();
@@ -106,14 +107,14 @@ const AuthGate: React.FC<AuthGateProps> = ({
     }
   };
 
-  // ============ CONNEXION INSTAGRAM ============
-  const handleInstagramLogin = async () => {
+  // ============ CONNEXION OAUTH ============
+  const handleOAuthLogin = async (provider: 'google' | 'discord') => {
     try {
       setLoading(true);
       setMessage("");
 
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'instagram',
+        provider: provider,
         options: {
           redirectTo: window.location.origin,
         }
@@ -121,12 +122,12 @@ const AuthGate: React.FC<AuthGateProps> = ({
 
       if (error) throw error;
       
-      // L'utilisateur sera redirigé vers Instagram
+      // L'utilisateur sera redirigé
     } catch (err: any) {
-      console.error("❌ Erreur Instagram:", err);
+      console.error(`❌ Erreur ${provider}:`, err);
       setMessage(t(
-        "❌ Connexion Instagram indisponible. Configure-la dans Supabase Dashboard.",
-        "❌ Instagram login unavailable. Configure it in Supabase Dashboard."
+        `❌ Connexion ${provider} indisponible.`,
+        `❌ ${provider} login unavailable.`
       ));
       setLoading(false);
     }
@@ -154,135 +155,183 @@ const AuthGate: React.FC<AuthGateProps> = ({
       <div style={{ marginBottom: 20, textAlign: 'center' }}>
         <span style={{ fontSize: 40 }}>🎵</span>
         <h2 style={{ margin: "8px 0 4px" }}>
-          {isSignUp 
-            ? t("Créer un compte", "Create account")
-            : t("Connexion à MusicTerra", "Sign in to MusicTerra")
-          }
+          {t("Connexion à MusicTerra", "Sign in to MusicTerra")}
         </h2>
         <p style={{ color: "#666", margin: 0, fontSize: 14 }}>
-          {isSignUp
-            ? t(
-                "Rejoins la communauté musicale mondiale",
-                "Join the global music community"
-              )
-            : t(
-                "Retrouve tes goûts musicaux et tes découvertes",
-                "Access your musical tastes and discoveries"
-              )
-          }
+          {t(
+            "Retrouve tes goûts musicaux et tes découvertes",
+            "Access your musical tastes and discoveries"
+          )}
         </p>
       </div>
 
-      {/* INSTAGRAM BUTTON */}
-      <button
-        onClick={handleInstagramLogin}
-        disabled={loading}
-        style={{
-          ...styles.instagramButton,
-          opacity: loading ? 0.6 : 1,
-          cursor: loading ? 'not-allowed' : 'pointer'
-        }}
-        type="button"
-      >
-        <span style={{ fontSize: 20 }}>📸</span>
-        {t("Continuer avec Instagram", "Continue with Instagram")}
-      </button>
+      {!showEmailForm ? (
+        <>
+          {/* OAUTH BUTTONS */}
+          <div style={{ display: "grid", gap: 12 }}>
+            {/* GOOGLE */}
+            <button
+              onClick={() => handleOAuthLogin('google')}
+              disabled={loading}
+              style={{
+                ...styles.oauthButton,
+                ...styles.googleButton,
+                opacity: loading ? 0.6 : 1,
+                cursor: loading ? 'not-allowed' : 'pointer'
+              }}
+              type="button"
+            >
+              <span style={{ fontSize: 20 }}>🔵</span>
+              {t("Continuer avec Google", "Continue with Google")}
+            </button>
 
-      {/* DIVIDER */}
-      <div style={styles.divider}>
-        <div style={{ 
-          position: 'absolute', 
-          left: 0, 
-          right: 0, 
-          height: 1, 
-          background: '#ddd', 
-          top: '50%' 
-        }} />
-        <span style={{ 
-          position: 'relative', 
-          padding: '0 12px', 
-          background: '#fff', 
-          color: '#999', 
-          fontSize: 13 
-        }}>
-          {t('ou', 'or')}
-        </span>
-      </div>
+            {/* DISCORD */}
+            <button
+              onClick={() => handleOAuthLogin('discord')}
+              disabled={loading}
+              style={{
+                ...styles.oauthButton,
+                ...styles.discordButton,
+                opacity: loading ? 0.6 : 1,
+                cursor: loading ? 'not-allowed' : 'pointer'
+              }}
+              type="button"
+            >
+              <span style={{ fontSize: 20 }}>💜</span>
+              {t("Continuer avec Discord", "Continue with Discord")}
+            </button>
+          </div>
 
-      {/* EMAIL/PASSWORD FORM */}
-      <form onSubmit={handleAuth} style={{ display: "grid", gap: 12 }}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={t("ton.email@exemple.com", "your.email@example.com")}
-          style={styles.input}
-          required
-          disabled={loading}
-          autoComplete="email"
-        />
-        
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder={t("Mot de passe (min. 6 caractères)", "Password (min. 6 chars)")}
-          style={styles.input}
-          required
-          disabled={loading}
-          minLength={6}
-          autoComplete={isSignUp ? "new-password" : "current-password"}
-        />
+          {/* DIVIDER */}
+          <div style={styles.divider}>
+            <div style={{ 
+              position: 'absolute', 
+              left: 0, 
+              right: 0, 
+              height: 1, 
+              background: '#ddd', 
+              top: '50%' 
+            }} />
+            <span style={{ 
+              position: 'relative', 
+              padding: '0 12px', 
+              background: '#fff', 
+              color: '#999', 
+              fontSize: 13 
+            }}>
+              {t('ou', 'or')}
+            </span>
+          </div>
 
-        <button 
-          type="submit" 
-          style={{
-            ...styles.submitButton,
-            opacity: loading ? 0.6 : 1,
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }} 
-          disabled={loading}
-        >
-          {loading 
-            ? t("⏳ Chargement...", "⏳ Loading...") 
-            : isSignUp
-              ? t("📝 Créer mon compte", "📝 Create account")
-              : t("🔑 Se connecter", "🔑 Sign in")
-          }
-        </button>
-      </form>
-
-      {/* FORGOT PASSWORD */}
-      {!isSignUp && (
-        <div style={{ marginTop: 10, textAlign: 'center' }}>
+          {/* EMAIL BUTTON */}
           <button
+            onClick={() => setShowEmailForm(true)}
+            style={styles.emailToggleButton}
             type="button"
-            onClick={() => setShowForgotPassword(true)}
-            style={styles.forgotPasswordLink}
-            disabled={loading}
           >
-            {t('Mot de passe oublié ?', 'Forgot password?')}
+            📧 {t("Se connecter avec email", "Sign in with email")}
           </button>
-        </div>
-      )}
+        </>
+      ) : (
+        <>
+          {/* BACK BUTTON */}
+          <button
+            onClick={() => {
+              setShowEmailForm(false);
+              setMessage("");
+            }}
+            style={styles.backButton}
+            type="button"
+          >
+            ← {t("Retour", "Back")}
+          </button>
 
-      {/* TOGGLE SIGNUP/SIGNIN */}
-      <div style={{ marginTop: 12, textAlign: "center" }}>
-        <button
-          type="button"
-          onClick={() => {
-            setIsSignUp(!isSignUp);
-            setMessage("");
-          }}
-          style={styles.toggleButton}
-          disabled={loading}
-        >
-          {isSignUp
-            ? t("Déjà un compte ? Se connecter", "Already have an account? Sign in")
-            : t("Pas de compte ? S'inscrire", "No account? Sign up")
-          }
-        </button>
-      </div>
+          {/* EMAIL FORM HEADER */}
+          <div style={{ marginTop: 16, marginBottom: 16, textAlign: 'center' }}>
+            <h3 style={{ margin: "0 0 4px" }}>
+              {isSignUp 
+                ? t("Créer un compte", "Create account")
+                : t("Connexion par email", "Sign in with email")
+              }
+            </h3>
+          </div>
+
+          {/* EMAIL/PASSWORD FORM */}
+          <form onSubmit={handleAuth} style={{ display: "grid", gap: 12 }}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t("ton.email@exemple.com", "your.email@example.com")}
+              style={styles.input}
+              required
+              disabled={loading}
+              autoComplete="email"
+            />
+            
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t("Mot de passe (min. 6 caractères)", "Password (min. 6 chars)")}
+              style={styles.input}
+              required
+              disabled={loading}
+              minLength={6}
+              autoComplete={isSignUp ? "new-password" : "current-password"}
+            />
+
+            <button 
+              type="submit" 
+              style={{
+                ...styles.submitButton,
+                opacity: loading ? 0.6 : 1,
+                cursor: loading ? 'not-allowed' : 'pointer'
+              }} 
+              disabled={loading}
+            >
+              {loading 
+                ? t("⏳ Chargement...", "⏳ Loading...") 
+                : isSignUp
+                  ? t("📝 Créer mon compte", "📝 Create account")
+                  : t("🔑 Se connecter", "🔑 Sign in")
+              }
+            </button>
+          </form>
+
+          {/* FORGOT PASSWORD */}
+          {!isSignUp && (
+            <div style={{ marginTop: 10, textAlign: 'center' }}>
+              <button
+                type="button"
+                onClick={() => setShowForgotPassword(true)}
+                style={styles.forgotPasswordLink}
+                disabled={loading}
+              >
+                {t('Mot de passe oublié ?', 'Forgot password?')}
+              </button>
+            </div>
+          )}
+
+          {/* TOGGLE SIGNUP/SIGNIN */}
+          <div style={{ marginTop: 12, textAlign: "center" }}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setMessage("");
+              }}
+              style={styles.toggleButton}
+              disabled={loading}
+            >
+              {isSignUp
+                ? t("Déjà un compte ? Se connecter", "Already have an account? Sign in")
+                : t("Pas de compte ? S'inscrire", "No account? Sign up")
+              }
+            </button>
+          </div>
+        </>
+      )}
 
       {/* MESSAGE */}
       {message && (
@@ -344,13 +393,11 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 12,
     background: "#fff",
   },
-  instagramButton: {
+  oauthButton: {
     width: "100%",
     padding: "14px 16px",
     border: "none",
     borderRadius: 10,
-    background: "linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)",
-    color: "#fff",
     fontSize: 15,
     fontWeight: 600,
     transition: "all 0.3s",
@@ -358,6 +405,36 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
+  },
+  googleButton: {
+    border: "2px solid #e0e0e0",
+    background: "#fff",
+    color: "#333",
+  },
+  discordButton: {
+    background: "#5865F2",
+    color: "#fff",
+  },
+  emailToggleButton: {
+    width: "100%",
+    padding: "12px 16px",
+    border: "2px solid #ddd",
+    borderRadius: 10,
+    background: "#fff",
+    color: "#667eea",
+    fontSize: 15,
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "all 0.2s",
+  },
+  backButton: {
+    background: "none",
+    border: "none",
+    color: "#667eea",
+    fontSize: 14,
+    cursor: "pointer",
+    padding: "8px",
+    textAlign: "left",
   },
   divider: {
     display: "flex",
@@ -425,4 +502,3 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 export default AuthGate;
- 
