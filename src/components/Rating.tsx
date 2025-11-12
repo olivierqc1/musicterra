@@ -1,4 +1,4 @@
-// src/components/Rating.tsx - VERSION AVEC LOCALSTORAGE
+// src/components/Rating.tsx - VERSION AMÉLIORÉE
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -22,17 +22,18 @@ export const Rating: React.FC<RatingProps> = ({
   const [savedValue, setSavedValue] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const [syncStatus, setSyncStatus] = useState<'local' | 'cloud' | 'syncing'>('local');
   const { session } = useAuth();
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-  // Clé localStorage unique par user/item
+  // Clé localStorage unique
   const getStorageKey = () => {
     const userId = session?.user?.id || 'anonymous';
     return `rating_${userId}_${itemType}_${itemName}`;
   };
 
-  // Charger la note (localStorage puis Supabase)
+  // Charger la note au démarrage
   useEffect(() => {
     if (session) {
       loadRating();
@@ -42,110 +43,175 @@ export const Rating: React.FC<RatingProps> = ({
   const loadRating = async () => {
     if (!session) return;
 
+    const localKey = getStorageKey();
+    
     try {
-      // 1. Charger depuis localStorage (instantané)
-      const localKey = getStorageKey();
-      const localValue = localStorage.getItem(localKey);
+      // 1. Essayer Supabase d'abord (source de vérité)
+      console.log("☁️ Chargement depuis Supabase...");
       
-      if (localValue) {
-        const rating = parseInt(localValue);
-        console.log("📦 Note chargée depuis localStorage:", rating);
-        setSavedValue(rating);
-        setValue(rating);
-      }
-
-      // 2. Essayer Supabase en arrière-plan
-      try {
-        const { data, error } = await supabase
+      const { data, error } = await Promise.race([
+        supabase
           .from('ratings')
           .select('rating')
           .eq('user_id', session.user.id)
           .eq('item_type', itemType)
           .eq('item_name', itemName)
-          .maybeSingle();
+          .maybeSingle(),
+        new Promise<any>((_, reject) => 
+          setTimeout(() => reject(new Error('timeout')), 5000)
+        )
+      ]);
 
-        if (!error && data) {
-          console.log("☁️ Note chargée depuis Supabase:", data.rating);
-          setSavedValue(data.rating);
-          setValue(data.rating);
-          // Sync avec localStorage
-          localStorage.setItem(localKey, String(data.rating));
-        }
-      } catch (err) {
-        console.log("⚠️ Supabase indisponible, utilisation du cache local");
+      if (!error && data) {
+        console.log("✅ Note cloud trouvée:", data.rating);
+        setSavedValue(data.rating);
+        setValue(data.rating);
+        setSyncStatus('cloud');
+        // Sync avec localStorage
+        localStorage.setItem(localKey, String(data.rating));
+        return;
       }
     } catch (err) {
-      console.error("❌ Erreur loadRating:", err);
+      console.log("⚠️ Supabase timeout, utilisation cache local");
+    }
+
+    // 2. Fallback sur localStorage
+    const localValue = localStorage.getItem(localKey);
+    if (localValue) {
+      const rating = parseInt(localValue);
+      console.log("📦 Note locale trouvée:", rating);
+      setSavedValue(rating);
+      setValue(rating);
+      setSyncStatus('local');
     }
   };
 
-  const handleRate = async () => {
-    console.log("🔵 handleRate appelé");
-    
-    if (!session) {
-      setError(t("⚠️ Connecte-toi", "⚠️ Sign in"));
-      return;
-    }
+  const syncToSupabase = async (ratingValue: number, retries = 3): Promise<boolean> => {
+    if (!session) return false;
 
-    if (value === 0) {
-      setError(t("⚠️ Sélectionne une note", "⚠️ Select rating"));
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const localKey = getStorageKey();
-      
-      // 1. Sauvegarder IMMÉDIATEMENT dans localStorage
-      localStorage.setItem(localKey, String(value));
-      console.log("✅ Sauvegardé dans localStorage:", value);
-      setSavedValue(value);
-      if (onRated) onRated(value);
-
-      // 2. Essayer Supabase en arrière-plan (non bloquant)
-      setTimeout(async () => {
-        try {
-          console.log("☁️ Tentative sync Supabase...");
-          
-          const { error: saveError } = await supabase
+    for (let i = 0; i < retries; i++) {
+      try {
+        console.log(`☁️ Tentative sync ${i + 1}/${retries}...`);
+        
+        const { error } = await Promise.race([
+          supabase
             .from('ratings')
             .upsert({
               user_id: session.user.id,
               item_type: itemType,
               item_name: itemName,
-              rating: value,
+              rating: ratingValue,
               updated_at: new Date().toISOString(),
             }, {
               onConflict: 'user_id,item_type,item_name'
-            });
+            }),
+          new Promise<any>((_, reject) =>
+            setTimeout(() => reject(new Error('timeout')), 8000)
+          )
+        ]);
 
-          if (saveError) {
-            console.warn("⚠️ Supabase sync échoué (note locale conservée):", saveError.message);
-          } else {
-            console.log("✅ Sync Supabase réussie !");
-          }
-        } catch (err: any) {
-          console.warn("⚠️ Supabase indisponible (note locale conservée)");
+        if (!error) {
+          console.log("✅ Sync Supabase réussie !");
+          setSyncStatus('cloud');
+          return true;
         }
-      }, 100);
+
+        console.warn(`⚠️ Tentative ${i + 1} échouée:`, error);
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Backoff
+      } catch (err) {
+        console.warn(`⚠️ Tentative ${i + 1} timeout`);
+        if (i < retries - 1) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+        }
+      }
+    }
+
+    console.error("❌ Toutes les tentatives de sync ont échoué");
+    return false;
+  };
+
+  const handleRate = async () => {
+    if (!session) {
+      setError(t("⚠️ Connecte-toi", "⚠️ Sign in"));
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
+
+    if (value === 0) {
+      setError(t("⚠️ Sélectionne une note", "⚠️ Select rating"));
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setSyncStatus('syncing');
+
+    try {
+      const localKey = getStorageKey();
+      
+      // 1. Sauvegarder IMMÉDIATEMENT en local
+      localStorage.setItem(localKey, String(value));
+      console.log("✅ Sauvegardé localement:", value);
+      setSavedValue(value);
+      if (onRated) onRated(value);
+
+      // 2. Essayer sync cloud avec retries
+      const synced = await syncToSupabase(value);
+      
+      if (!synced) {
+        setSyncStatus('local');
+        setError(t(
+          "⚠️ Sauvegardé localement (cloud indisponible)",
+          "⚠️ Saved locally (cloud unavailable)"
+        ));
+        setTimeout(() => setError(""), 5000);
+      }
 
     } catch (err: any) {
       console.error("❌ Erreur:", err);
-      setError("Erreur: " + err.message);
+      setError(t("Erreur: ", "Error: ") + err.message);
+      setSyncStatus('local');
     } finally {
       setLoading(false);
     }
   };
 
+  const getStatusBadge = () => {
+    if (syncStatus === 'cloud') {
+      return <span style={{ fontSize: 12, marginLeft: 6 }}>☁️</span>;
+    } else if (syncStatus === 'local') {
+      return <span style={{ fontSize: 12, marginLeft: 6 }}>📦</span>;
+    } else if (syncStatus === 'syncing') {
+      return <span style={{ fontSize: 12, marginLeft: 6 }}>⏳</span>;
+    }
+    return null;
+  };
+
+  const getStatusText = () => {
+    if (syncStatus === 'cloud') {
+      return t("Synchronisée", "Synced");
+    } else if (syncStatus === 'local') {
+      return t("Locale uniquement", "Local only");
+    } else if (syncStatus === 'syncing') {
+      return t("Synchronisation...", "Syncing...");
+    }
+    return "";
+  };
+
   return (
     <div style={styles.container}>
       {savedValue !== null && !error && (
-        <div style={styles.savedBadge}>
+        <div style={{
+          ...styles.savedBadge,
+          ...(syncStatus === 'local' ? { background: '#fef3c7', color: '#92400e' } : {})
+        }}>
           {t("Note enregistrée : ", "Saved: ")}
           <strong>{savedValue}/{max}</strong>
-          <span style={{ fontSize: 10, marginLeft: 4 }}>📦</span>
+          {getStatusBadge()}
+          <div style={{ fontSize: 10, marginTop: 2 }}>
+            {getStatusText()}
+          </div>
         </div>
       )}
 
@@ -176,15 +242,11 @@ export const Rating: React.FC<RatingProps> = ({
         }}
       >
         {loading
-          ? "⏳ Sauvegarde..."
+          ? t("⏳ Sauvegarde...", "⏳ Saving...")
           : value === savedValue && savedValue !== null
-          ? "✅ Noté"
-          : "💾 Noter"}
+          ? t("✅ Noté", "✅ Rated")
+          : t("💾 Noter", "💾 Rate")}
       </button>
-
-      <div style={{ fontSize: 10, color: '#888', marginTop: 4, textAlign: 'center' }}>
-        {t("Sauvegarde locale instantanée 📦", "Local save instant 📦")}
-      </div>
     </div>
   );
 };
@@ -199,7 +261,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid #e7e7e7",
   },
   savedBadge: {
-    padding: "6px 10px",
+    padding: "8px 12px",
     background: "#d1fae5",
     color: "#065f46",
     borderRadius: 6,
