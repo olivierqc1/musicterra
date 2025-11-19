@@ -1,4 +1,4 @@
-// src/components/Rating.tsx - VERSION AMÉLIORÉE
+// src/components/Rating.tsx - VERSION FINALE SANS TIMEOUT BLOQUANT
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -27,13 +27,11 @@ export const Rating: React.FC<RatingProps> = ({
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-  // Clé localStorage unique
   const getStorageKey = () => {
     const userId = session?.user?.id || 'anonymous';
     return `rating_${userId}_${itemType}_${itemName}`;
   };
 
-  // Charger la note au démarrage
   useEffect(() => {
     if (session) {
       loadRating();
@@ -46,88 +44,71 @@ export const Rating: React.FC<RatingProps> = ({
     const localKey = getStorageKey();
     
     try {
-      // 1. Essayer Supabase d'abord (source de vérité)
+      // 1. Charger depuis localStorage (instantané)
+      const localValue = localStorage.getItem(localKey);
+      if (localValue) {
+        const rating = parseInt(localValue);
+        console.log("📦 Note locale trouvée:", rating);
+        setSavedValue(rating);
+        setValue(rating);
+        setSyncStatus('local');
+      }
+
+      // 2. Essayer Supabase (NON BLOQUANT, sans Promise.race)
       console.log("☁️ Chargement depuis Supabase...");
       
-      const { data, error } = await Promise.race([
-        supabase
-          .from('ratings')
-          .select('rating')
-          .eq('user_id', session.user.id)
-          .eq('item_type', itemType)
-          .eq('item_name', itemName)
-          .maybeSingle(),
-        new Promise<any>((_, reject) => 
-          setTimeout(() => reject(new Error('timeout')), 5000)
-        )
-      ]);
+      const { data, error } = await supabase
+        .from('ratings')
+        .select('rating')
+        .eq('user_id', session.user.id)
+        .eq('item_type', itemType)
+        .eq('item_name', itemName)
+        .maybeSingle();
 
       if (!error && data) {
         console.log("✅ Note cloud trouvée:", data.rating);
         setSavedValue(data.rating);
         setValue(data.rating);
         setSyncStatus('cloud');
-        // Sync avec localStorage
         localStorage.setItem(localKey, String(data.rating));
-        return;
+      } else if (error) {
+        console.log("⚠️ Erreur Supabase:", error.message);
       }
-    } catch (err) {
-      console.log("⚠️ Supabase timeout, utilisation cache local");
-    }
-
-    // 2. Fallback sur localStorage
-    const localValue = localStorage.getItem(localKey);
-    if (localValue) {
-      const rating = parseInt(localValue);
-      console.log("📦 Note locale trouvée:", rating);
-      setSavedValue(rating);
-      setValue(rating);
-      setSyncStatus('local');
+    } catch (err: any) {
+      console.log("⚠️ Supabase indisponible:", err.message);
     }
   };
 
-  const syncToSupabase = async (ratingValue: number, retries = 3): Promise<boolean> => {
+  const syncToSupabase = async (ratingValue: number): Promise<boolean> => {
     if (!session) return false;
 
-    for (let i = 0; i < retries; i++) {
-      try {
-        console.log(`☁️ Tentative sync ${i + 1}/${retries}...`);
-        
-        const { error } = await Promise.race([
-          supabase
-            .from('ratings')
-            .upsert({
-              user_id: session.user.id,
-              item_type: itemType,
-              item_name: itemName,
-              rating: ratingValue,
-              updated_at: new Date().toISOString(),
-            }, {
-              onConflict: 'user_id,item_type,item_name'
-            }),
-          new Promise<any>((_, reject) =>
-            setTimeout(() => reject(new Error('timeout')), 8000)
-          )
-        ]);
+    try {
+      console.log("☁️ Sync Supabase...");
+      
+      const { error } = await supabase
+        .from('ratings')
+        .upsert({
+          user_id: session.user.id,
+          item_type: itemType,
+          item_name: itemName,
+          rating: ratingValue,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'user_id,item_type,item_name'
+        });
 
-        if (!error) {
-          console.log("✅ Sync Supabase réussie !");
-          setSyncStatus('cloud');
-          return true;
-        }
-
-        console.warn(`⚠️ Tentative ${i + 1} échouée:`, error);
-        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Backoff
-      } catch (err) {
-        console.warn(`⚠️ Tentative ${i + 1} timeout`);
-        if (i < retries - 1) {
-          await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-        }
+      if (!error) {
+        console.log("✅ Sync Supabase réussie !");
+        setSyncStatus('cloud');
+        return true;
+      } else {
+        console.warn("⚠️ Erreur sync:", error.message);
+        return false;
       }
+    } catch (err: any) {
+      console.warn("⚠️ Sync échouée:", err.message);
+      return false;
     }
-
-    console.error("❌ Toutes les tentatives de sync ont échoué");
-    return false;
   };
 
   const handleRate = async () => {
@@ -156,7 +137,7 @@ export const Rating: React.FC<RatingProps> = ({
       setSavedValue(value);
       if (onRated) onRated(value);
 
-      // 2. Essayer sync cloud avec retries
+      // 2. Essayer sync cloud (NON BLOQUANT)
       const synced = await syncToSupabase(value);
       
       if (!synced) {
