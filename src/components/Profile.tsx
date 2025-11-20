@@ -1,11 +1,11 @@
 // ———————————————————————————
-// Profile.tsx — MusicTerra (version propre)
-// Profil perso + Instagram + Genres + Recherche + Export JSON
+// Profile.tsx — MusicTerra (version fusionnée)
+// Profil perso + Instagram + Genres + Recherche + Export JSON + RATINGS HISTORY
 // ———————————————————————————
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Instagram, LogOut, MapPin, Trash2, Download } from "lucide-react";
+import { Instagram, LogOut, MapPin, Trash2, Download, Music, Globe } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,8 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 // ───────────────────────────────
 // Types & storage
@@ -40,6 +42,14 @@ interface Profile {
   email?: string;
   instagram?: { connected: boolean; handle: string };
   avatarDataUrl?: string;
+}
+
+interface Rating {
+  id: string;
+  item_type: 'genre' | 'country';
+  item_name: string;
+  rating: number;
+  updated_at: string;
 }
 
 const STORAGE_KEY = "musicterra.profile";
@@ -121,17 +131,115 @@ function GenreTags({
 // Page principale
 // ───────────────────────────────
 export default function ProfilePage() {
+  const { session, profile: authProfile } = useAuth();
+  
   const [profile, setProfile] = useState<Profile>(
     () =>
       loadProfile() ?? {
-        fullName: "",
+        fullName: authProfile?.display_name || "",
         username: "",
         bio: "",
         country: "",
         genres: [],
+        email: session?.user?.email || "",
         instagram: { connected: false, handle: "" },
       }
   );
+
+  // ──────── NOUVEAU : RATINGS ────────
+  const [ratings, setRatings] = useState<Rating[]>([]);
+  const [loadingRatings, setLoadingRatings] = useState(false);
+  const [filter, setFilter] = useState<'all' | 'genre' | 'country'>('all');
+  const [sortBy, setSortBy] = useState<'date' | 'rating' | 'name'>('date');
+
+  // Charger les ratings
+  useEffect(() => {
+    if (session) {
+      loadRatings();
+    }
+  }, [session]);
+
+  const loadRatings = async () => {
+    if (!session) return;
+
+    try {
+      setLoadingRatings(true);
+      console.log("📥 Chargement des ratings...");
+
+      const { data, error } = await supabase
+        .from('ratings')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .order('updated_at', { ascending: false });
+
+      if (error) {
+        console.error("Erreur Supabase:", error);
+        loadFromLocalStorage();
+      } else if (data) {
+        console.log(`✅ ${data.length} ratings chargés`);
+        setRatings(data);
+      }
+    } catch (err) {
+      console.error("Erreur:", err);
+      loadFromLocalStorage();
+    } finally {
+      setLoadingRatings(false);
+    }
+  };
+
+  const loadFromLocalStorage = () => {
+    const userId = session?.user?.id;
+    if (!userId) return;
+
+    const localRatings: Rating[] = [];
+    
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith(`rating_${userId}_`)) {
+        const parts = key.split('_');
+        const itemType = parts[2] as 'genre' | 'country';
+        const itemName = parts.slice(3).join('_');
+        const rating = parseInt(localStorage.getItem(key) || '0');
+
+        if (rating > 0) {
+          localRatings.push({
+            id: key,
+            item_type: itemType,
+            item_name: itemName,
+            rating: rating,
+            updated_at: new Date().toISOString(),
+          });
+        }
+      }
+    }
+
+    console.log(`📦 ${localRatings.length} ratings locaux`);
+    setRatings(localRatings);
+  };
+
+  // Filtrer et trier les ratings
+  const filteredRatings = ratings
+    .filter(r => filter === 'all' || r.item_type === filter)
+    .sort((a, b) => {
+      if (sortBy === 'date') {
+        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      } else if (sortBy === 'rating') {
+        return b.rating - a.rating;
+      } else {
+        return a.item_name.localeCompare(b.item_name);
+      }
+    });
+
+  // Stats
+  const stats = {
+    total: ratings.length,
+    genres: ratings.filter(r => r.item_type === 'genre').length,
+    countries: ratings.filter(r => r.item_type === 'country').length,
+    average: ratings.length > 0 
+      ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
+      : '0',
+  };
+  // ──────── FIN NOUVEAU ────────
 
   const fileRef = useRef<HTMLInputElement | null>(null);
   const onPickAvatar = () => fileRef.current?.click();
@@ -162,9 +270,16 @@ export default function ProfilePage() {
     saveProfile(profile);
   }, [profile]);
 
-  // Export JSON
+  // Export JSON (inclut maintenant les ratings)
   const exportProfile = () => {
-    const blob = new Blob([JSON.stringify(profile, null, 2)], {
+    const exportData = {
+      ...profile,
+      ratings: ratings,
+      stats: stats,
+      exportedAt: new Date().toISOString(),
+    };
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
@@ -248,6 +363,28 @@ export default function ProfilePage() {
         Mon profil
       </motion.h1>
 
+      {/* ──────── NOUVEAU : STATS RATINGS ────────  */}
+      {ratings.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="rounded-2xl text-center p-4">
+            <p className="text-3xl font-bold text-primary">{stats.total}</p>
+            <p className="text-sm text-muted-foreground">Notes</p>
+          </Card>
+          <Card className="rounded-2xl text-center p-4">
+            <p className="text-3xl font-bold text-primary">{stats.average}</p>
+            <p className="text-sm text-muted-foreground">Moyenne</p>
+          </Card>
+          <Card className="rounded-2xl text-center p-4">
+            <p className="text-3xl font-bold text-primary">{stats.genres}</p>
+            <p className="text-sm text-muted-foreground">Genres</p>
+          </Card>
+          <Card className="rounded-2xl text-center p-4">
+            <p className="text-3xl font-bold text-primary">{stats.countries}</p>
+            <p className="text-sm text-muted-foreground">Pays</p>
+          </Card>
+        </div>
+      )}
+
       {/* Avatar, genres et Instagram */}
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="rounded-2xl">
@@ -328,6 +465,74 @@ export default function ProfilePage() {
         </Card>
       </div>
 
+      {/* ──────── NOUVEAU : HISTORIQUE RATINGS ────────  */}
+      {ratings.length > 0 && (
+        <Card className="rounded-2xl">
+          <CardHeader>
+            <CardTitle>Mon historique de notes</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Filtres */}
+            <div className="flex flex-wrap gap-2 justify-between">
+              <div className="flex gap-2">
+                <Button
+                  variant={filter === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilter('all')}
+                >
+                  Tout ({ratings.length})
+                </Button>
+                <Button
+                  variant={filter === 'genre' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilter('genre')}
+                >
+                  <Music className="w-4 h-4 mr-1" /> Genres ({stats.genres})
+                </Button>
+                <Button
+                  variant={filter === 'country' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilter('country')}
+                >
+                  <Globe className="w-4 h-4 mr-1" /> Pays ({stats.countries})
+                </Button>
+              </div>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="px-3 py-1.5 border rounded-lg text-sm"
+              >
+                <option value="date">Récents</option>
+                <option value="rating">Note</option>
+                <option value="name">Nom</option>
+              </select>
+            </div>
+
+            {/* Liste */}
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {filteredRatings.map((rating) => (
+                <div
+                  key={rating.id}
+                  className="flex justify-between items-center p-3 border rounded-lg hover:bg-accent transition"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium">
+                      {rating.item_type === 'genre' ? '🎸' : '🌍'} {rating.item_name}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(rating.updated_at).toLocaleDateString('fr-FR')}
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="text-lg font-bold">
+                    {rating.rating}/10
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Export profil */}
       <Card className="rounded-2xl border-dashed border-2">
         <CardHeader>
@@ -335,7 +540,7 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent className="text-center">
           <p className="text-sm text-muted-foreground mb-3">
-            Télécharge ton profil MusicTerra en JSON pour le sauvegarder ou le partager.
+            Télécharge ton profil MusicTerra en JSON {ratings.length > 0 && '(inclut tes notes)'}.
           </p>
           <Button onClick={exportProfile}>
             <Download className="mr-2 h-4 w-4" /> Télécharger mon profil
@@ -422,50 +627,4 @@ function ResponsiveProfileDetail({
       {profile.instagram && (
         <a
           href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:underline flex items-center gap-1"
-        >
-          <Instagram className="w-4 h-4" /> {profile.instagram}
-        </a>
-      )}
-      {profile.country && (
-        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-          <MapPin className="w-4 h-4" /> {profile.country}
-        </div>
-      )}
-      <Button variant="outline" className="mt-2" onClick={() => onApply(profile)}>
-        Importer ce profil
-      </Button>
-      <Button variant="ghost" className="mt-1" onClick={() => onOpenChange(false)}>
-        Fermer
-      </Button>
-    </div>
-  );
-
-  return isDesktop ? (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Détails du profil</DialogTitle>
-          <DialogDescription>
-            Informations de l’utilisateur sélectionné.
-          </DialogDescription>
-        </DialogHeader>
-        <DetailContent />
-      </DialogContent>
-    </Dialog>
-  ) : (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Détails du profil</DrawerTitle>
-          <DrawerDescription>
-            Informations de l’utilisateur sélectionné.
-          </DrawerDescription>
-        </DrawerHeader>
-        <DetailContent />
-      </DrawerContent>
-    </Drawer>
-  );
-      }
+      
