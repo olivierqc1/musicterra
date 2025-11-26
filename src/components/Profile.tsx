@@ -627,4 +627,4 @@ function ResponsiveProfileDetail({
       {profile.instagram && (
         <a
           href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
-      
+       
