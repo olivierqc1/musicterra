@@ -20,7 +20,7 @@ ANTHROPIC_API_KEY = "YOUR_CLAUDE_API_KEY_HERE"  # ← Change ici
 INPUT_FILE = "genres.ts"
 OUTPUT_FILE = "genres_fixed.ts"
 
-client = Anthropic(api_key=ANTHROPIC_API_KEY)
+client = Anthropic(api_key=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)
 
 # ============================================
 # EXTRACTION DES GENRES
