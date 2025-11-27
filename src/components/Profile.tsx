@@ -1,5 +1,5 @@
 // ———————————————————————————
-// Profile.tsx — MusicTerra (version fusionnée)
+// Profile.tsx — MusicTerra (version fusionnée) - PARTIE 1/2
 // Profil perso + Instagram + Genres + Recherche + Export JSON + RATINGS HISTORY
 // ———————————————————————————
 
@@ -352,6 +352,12 @@ export default function ProfilePage() {
     }));
   };
 
+// ⚠️ ATTENTION: Ce fichier se termine ici. 
+// ⚠️ Tu dois maintenant copier le contenu de Profile_PARTIE2.tsx
+// ⚠️ et le coller À LA SUITE de ce code (en supprimant ce commentaire).
+// ⚠️ PARTIE 2/2 - À COLLER À LA SUITE DE LA PARTIE 1
+// ⚠️ Supprime les commentaires d'avertissement quand tu colles les deux parties ensemble
+
   return (
     <div className="mx-auto max-w-5xl p-4 md:p-8 space-y-8">
       <motion.h1
@@ -625,6 +631,64 @@ function ResponsiveProfileDetail({
       <h3 className="text-lg font-semibold">{profile.fullName}</h3>
       {profile.bio && <p className="text-sm text-muted-foreground">{profile.bio}</p>}
       {profile.instagram && (
-        
+        <a
           href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
-         
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-sm text-primary hover:underline"
+        >
+          <Instagram className="h-4 w-4" />
+          @{profile.instagram}
+        </a>
+      )}
+      {profile.country && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <MapPin className="h-4 w-4" />
+          {profile.country}
+        </div>
+      )}
+      {profile.genres && profile.genres.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {profile.genres.map((g: string) => (
+            <Badge key={g} variant="secondary" className="rounded-xl">
+              {g}
+            </Badge>
+          ))}
+        </div>
+      )}
+      <Button onClick={() => onApply(profile)} className="mt-4">
+        Appliquer à mon profil
+      </Button>
+    </div>
+  );
+
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Profil utilisateur</DialogTitle>
+            <DialogDescription>
+              Voir les détails et appliquer à ton profil.
+            </DialogDescription>
+          </DialogHeader>
+          <DetailContent />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Profil utilisateur</DrawerTitle>
+          <DrawerDescription>
+            Voir les détails et appliquer à ton profil.
+          </DrawerDescription>
+        </DrawerHeader>
+        <DetailContent />
+      </DrawerContent>
+    </Drawer>
+  );
+}
