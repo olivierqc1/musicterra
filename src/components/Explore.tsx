@@ -1,4 +1,4 @@
-// ─────────────── Explore.tsx ───────────────
+// ─────────────── Explore.tsx (avec système de notation) ───────────────
 import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
@@ -8,6 +8,7 @@ import { genres } from "@/data/genres"
 import { decades } from "@/data/decades"
 import { Button } from "@/components/ui/button"
 import { Music, Search } from "lucide-react"
+import { RatingSystem } from "@/components/RatingSystem"
 
 export default function Explore() {
   const [selectedCountry, setSelectedCountry] = useState("")
@@ -15,7 +16,7 @@ export default function Explore() {
   const [selectedDecade, setSelectedDecade] = useState("")
   const [search, setSearch] = useState("")
 
-  // Simulation d’une base combinée (à remplacer plus tard par ta vraie base)
+  // Simulation d'une base combinée (à remplacer plus tard par ta vraie base)
   const combinedData = countries.flatMap((country) =>
     (country.cities || []).map((city) => ({
       country: country.name,
@@ -117,6 +118,16 @@ export default function Explore() {
                 />
                 <h3 className="text-lg font-semibold">{item.city}</h3>
                 <p className="text-sm text-muted-foreground">{item.country}</p>
+                
+                {/* Note du pays */}
+                <div className="mt-2">
+                  <p className="text-xs text-muted-foreground mb-1">Noter ce pays:</p>
+                  <RatingSystem 
+                    itemName={item.country}
+                    itemType="country"
+                  />
+                </div>
+
                 <div className="flex flex-wrap gap-1 text-xs text-primary">
                   {item.styles.map((s, i) => (
                     <span key={i} className="px-2 py-1 border rounded-full">
@@ -124,10 +135,12 @@ export default function Explore() {
                     </span>
                   ))}
                 </div>
+                
                 <div className="mt-2 text-sm">
                   <strong>Artistes : </strong>
                   {item.artists.join(", ")}
                 </div>
+                
                 {item.spotify && (
                   <a
                     href={item.spotify}
@@ -146,6 +159,22 @@ export default function Explore() {
             Aucun résultat ne correspond à vos filtres.
           </p>
         )}
+      </div>
+
+      {/* Section pour noter les genres */}
+      <div className="mt-12 p-6 border rounded-2xl">
+        <h2 className="text-2xl font-bold mb-4">Noter les genres musicaux</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {genres.map((genre, idx) => (
+            <div key={idx} className="flex items-center justify-between p-3 border rounded-lg">
+              <span className="font-medium">{genre.name}</span>
+              <RatingSystem 
+                itemName={genre.name}
+                itemType="genre"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
