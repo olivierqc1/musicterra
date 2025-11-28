@@ -1,4 +1,4 @@
-// ─────────────── RatingSystem.tsx (VERSION CORRIGÉE) ───────────────
+// ─────────────── RatingSystem.tsx (VERSION DEBUG) ───────────────
 import { useState, useEffect } from "react"
 import { Star } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
@@ -16,6 +16,7 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
   const [hoverRating, setHoverRating] = useState(0)
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   // Charger le rating existant au montage
   useEffect(() => {
@@ -77,6 +78,7 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
     console.log(`💾 Début sauvegarde: ${itemType} "${itemName}" = ${rating}/10`)
     setSaving(true)
     setSaveStatus('saving')
+    setErrorMessage('')
     
     // 1. TOUJOURS sauvegarder en local d'abord (fallback)
     const userId = session?.user?.id || 'guest'
@@ -94,7 +96,19 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
     if (!session) {
       console.log('⚠️ Pas de session, sauvegarde locale seulement')
       setSaving(false)
-      setSaveStatus('success')
+      setSaveStatus('error')
+      setErrorMessage('Pas de session - connectez-vous!')
+      setCurrentRating(rating)
+      if (onRatingChange) onRatingChange(rating)
+      return
+    }
+
+    // Vérifier que session.user existe
+    if (!session.user || !session.user.id) {
+      console.error('❌ session.user.id est null!')
+      setSaving(false)
+      setSaveStatus('error')
+      setErrorMessage('session.user.id est null!')
       setCurrentRating(rating)
       if (onRatingChange) onRatingChange(rating)
       return
@@ -127,6 +141,10 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
           console.error('Code:', error.code)
           console.error('Message:', error.message)
           console.error('Details:', error.details)
+          
+          // AFFICHER L'ERREUR À L'ÉCRAN
+          const errMsg = `${error.code}: ${error.message}`
+          setErrorMessage(errMsg)
           setSaveStatus('error')
         } else {
           console.log('✅ Sauvegardé dans Supabase!')
@@ -144,14 +162,18 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
 
         if (error) {
           console.error('❌ Erreur Supabase delete:', error)
+          const errMsg = `${error.code}: ${error.message}`
+          setErrorMessage(errMsg)
           setSaveStatus('error')
         } else {
           console.log('✅ Supprimé de Supabase!')
           setSaveStatus('success')
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('❌ Exception lors de la sauvegarde:', err)
+      const errMsg = err?.message || String(err)
+      setErrorMessage(`Exception: ${errMsg}`)
       setSaveStatus('error')
     }
 
@@ -162,8 +184,11 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
       onRatingChange(rating)
     }
 
-    // Reset status après 2 secondes
-    setTimeout(() => setSaveStatus('idle'), 2000)
+    // Reset status après 5 secondes (plus long pour lire l'erreur)
+    setTimeout(() => {
+      setSaveStatus('idle')
+      setErrorMessage('')
+    }, 5000)
   }
 
   const handleClick = (rating: number) => {
@@ -213,12 +238,16 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
       )}
       {saveStatus === 'success' && (
         <div className="text-xs text-green-600 flex items-center gap-1">
-          ✅ Sauvegardé
+          ✅ Sauvegardé dans le cloud!
         </div>
       )}
       {saveStatus === 'error' && (
-        <div className="text-xs text-red-600 flex items-center gap-1">
-          ❌ Erreur (sauvegarde locale OK)
+        <div className="text-xs text-red-600 flex flex-col gap-1">
+          <div>❌ Erreur Supabase:</div>
+          <div className="font-mono text-[10px] bg-red-50 p-1 rounded max-w-full overflow-x-auto">
+            {errorMessage || 'Erreur inconnue'}
+          </div>
+          <div className="text-green-600">✅ Sauvegarde locale OK</div>
         </div>
       )}
     </div>
