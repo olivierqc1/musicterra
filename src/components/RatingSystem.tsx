@@ -1,3 +1,11 @@
+
+console.log('🔹 Juste avant upsert')
+console.log('🔹 supabase existe?', !!supabase)
+console.log('🔹 supabase.from existe?', !!(supabase && supabase.from))
+
+const { data, error } = await supabase
+  .from('ratings')
+  // ... reste du code
 // ─────────────── RatingSystem.tsx (VERSION DEBUG) ───────────────
 import { useState, useEffect } from "react"
 import { Star } from "lucide-react"
