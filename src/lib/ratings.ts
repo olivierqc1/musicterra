@@ -6,7 +6,7 @@ export type Rating = {
   user_id: string;
   item_type: "genre" | "country";
   item_name: string;
-  score: number;
+  rating: number;  // ← CHANGÉ de score à rating
   created_at: string;
   updated_at: string;
 };
@@ -17,16 +17,14 @@ export type Rating = {
 export async function saveRating(
   itemType: "genre" | "country",
   itemName: string,
-  score: number
+  rating: number  // ← CHANGÉ
 ): Promise<Rating | null> {
-  // Vérifier l'authentification
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     throw new Error("Non connecté");
   }
 
-  // Valider le score
-  if (score < 0 || score > 10) {
+  if (rating < 0 || rating > 10) {  // ← CHANGÉ
     throw new Error("Le score doit être entre 0 et 10");
   }
 
@@ -38,7 +36,7 @@ export async function saveRating(
           user_id: user.id,
           item_type: itemType,
           item_name: itemName,
-          score,
+          rating,  // ← CHANGÉ
           updated_at: new Date().toISOString(),
         },
         { 
@@ -120,7 +118,7 @@ export async function getRatingsByType(
       .select("*")
       .eq("user_id", user.id)
       .eq("item_type", itemType)
-      .order("score", { ascending: false });
+      .order("rating", { ascending: false });  // ← CHANGÉ
 
     if (error) throw error;
     return (data || []) as Rating[];
@@ -173,11 +171,11 @@ export async function getRatingStats(): Promise<{
   
   const average =
     ratings.length > 0
-      ? ratings.reduce((sum, r) => sum + r.score, 0) / ratings.length
+      ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length  // ← CHANGÉ
       : 0;
 
   const topRated = [...ratings]
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.rating - a.rating)  // ← CHANGÉ
     .slice(0, 5);
 
   return {
