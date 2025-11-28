@@ -1,12 +1,4 @@
-
-console.log('🔹 Juste avant upsert')
-console.log('🔹 supabase existe?', !!supabase)
-console.log('🔹 supabase.from existe?', !!(supabase && supabase.from))
-
-const { data, error } = await supabase
-  .from('ratings')
-  // ... reste du code
-// ─────────────── RatingSystem.tsx (VERSION DEBUG) ───────────────
+// ─────────────── RatingSystem.tsx (VERSION FINALE - SANS BOUCLES) ───────────────
 import { useState, useEffect } from "react"
 import { Star } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
@@ -26,61 +18,69 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
 
-  // Charger le rating existant au montage
+  // Charger le rating existant SEULEMENT au montage initial
   useEffect(() => {
-    loadRating()
-  }, [itemName, itemType, session])
-
-  const loadRating = async () => {
-    console.log(`🔍 Chargement rating pour: ${itemType} "${itemName}"`)
+    let isMounted = true
     
-    if (!session) {
-      console.log('❌ Pas de session, chargement depuis localStorage')
-      loadFromLocalStorage()
-      return
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('ratings')
-        .select('rating')
-        .eq('user_id', session.user.id)
-        .eq('item_type', itemType)
-        .eq('item_name', itemName)
-        .maybeSingle()
-
-      if (error) {
-        console.error('❌ Erreur Supabase:', error)
+    const loadRating = async () => {
+      console.log(`🔍 Chargement rating pour: ${itemType} "${itemName}"`)
+      
+      if (!session) {
+        console.log('❌ Pas de session, chargement depuis localStorage')
         loadFromLocalStorage()
         return
       }
 
-      if (data) {
-        console.log(`✅ Rating trouvé: ${data.rating}/10`)
-        setCurrentRating(data.rating)
-      } else {
-        console.log('ℹ️ Pas de rating trouvé, vérification localStorage')
-        loadFromLocalStorage()
-      }
-    } catch (err) {
-      console.error('❌ Exception:', err)
-      loadFromLocalStorage()
-    }
-  }
+      try {
+        const { data, error } = await supabase
+          .from('ratings')
+          .select('rating')
+          .eq('user_id', session.user.id)
+          .eq('item_type', itemType)
+          .eq('item_name', itemName)
+          .maybeSingle()
 
-  const loadFromLocalStorage = () => {
-    const userId = session?.user?.id || 'guest'
-    const key = `rating_${userId}_${itemType}_${itemName}`
-    const stored = localStorage.getItem(key)
-    
-    if (stored) {
-      const rating = parseInt(stored)
-      console.log(`📦 Rating local trouvé: ${rating}/10`)
-      setCurrentRating(rating)
-    } else {
-      console.log('ℹ️ Pas de rating local')
+        if (!isMounted) return
+
+        if (error) {
+          console.error('❌ Erreur Supabase load:', error)
+          loadFromLocalStorage()
+          return
+        }
+
+        if (data) {
+          console.log(`✅ Rating trouvé: ${data.rating}/10`)
+          setCurrentRating(data.rating)
+        } else {
+          console.log('ℹ️ Pas de rating trouvé, vérification localStorage')
+          loadFromLocalStorage()
+        }
+      } catch (err) {
+        console.error('❌ Exception load:', err)
+        if (isMounted) loadFromLocalStorage()
+      }
     }
-  }
+
+    const loadFromLocalStorage = () => {
+      const userId = session?.user?.id || 'guest'
+      const key = `rating_${userId}_${itemType}_${itemName}`
+      const stored = localStorage.getItem(key)
+      
+      if (stored) {
+        const rating = parseInt(stored)
+        console.log(`📦 Note locale trouvée: ${rating}`)
+        if (isMounted) setCurrentRating(rating)
+      } else {
+        console.log('ℹ️ Pas de rating local')
+      }
+    }
+
+    loadRating()
+
+    return () => {
+      isMounted = false
+    }
+  }, [itemName, itemType]) // PAS de "session" ici pour éviter les re-renders!
 
   const saveRating = async (rating: number) => {
     console.log(`💾 Début sauvegarde: ${itemType} "${itemName}" = ${rating}/10`)
@@ -88,7 +88,7 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
     setSaveStatus('saving')
     setErrorMessage('')
     
-    // 1. TOUJOURS sauvegarder en local d'abord (fallback)
+    // 1. TOUJOURS sauvegarder en local d'abord
     const userId = session?.user?.id || 'guest'
     const key = `rating_${userId}_${itemType}_${itemName}`
     
@@ -100,37 +100,42 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
       console.log(`🗑️ Supprimé du local: ${key}`)
     }
 
-    // 2. Sauvegarder dans Supabase si connecté
+    // 2. Mettre à jour l'UI immédiatement
+    setCurrentRating(rating)
+    if (onRatingChange) onRatingChange(rating)
+
+    // 3. Sauvegarder dans Supabase si connecté
     if (!session) {
       console.log('⚠️ Pas de session, sauvegarde locale seulement')
       setSaving(false)
-      setSaveStatus('error')
-      setErrorMessage('Pas de session - connectez-vous!')
-      setCurrentRating(rating)
-      if (onRatingChange) onRatingChange(rating)
+      setSaveStatus('success')
+      setTimeout(() => setSaveStatus('idle'), 2000)
       return
     }
 
-    // Vérifier que session.user existe
     if (!session.user || !session.user.id) {
       console.error('❌ session.user.id est null!')
       setSaving(false)
       setSaveStatus('error')
-      setErrorMessage('session.user.id est null!')
-      setCurrentRating(rating)
-      if (onRatingChange) onRatingChange(rating)
+      setErrorMessage('Session invalide')
+      setTimeout(() => {
+        setSaveStatus('idle')
+        setErrorMessage('')
+      }, 3000)
       return
     }
 
     try {
       console.log('☁️ Tentative sauvegarde Supabase...')
-      console.log('User ID:', session.user.id)
-      console.log('Item type:', itemType)
-      console.log('Item name:', itemName)
-      console.log('Rating:', rating)
+      console.log('🔹 User ID:', session.user.id)
+      console.log('🔹 Item type:', itemType)
+      console.log('🔹 Item name:', itemName)
+      console.log('🔹 Rating:', rating)
+      console.log('🔹 supabase existe?', !!supabase)
+      console.log('🔹 supabase.from existe?', !!(supabase && supabase.from))
 
       if (rating > 0) {
-        // UPSERT (insert ou update)
+        console.log('🔹 Appel upsert...')
         const { data, error } = await supabase
           .from('ratings')
           .upsert({
@@ -144,13 +149,14 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
           })
           .select()
 
+        console.log('🔹 Upsert terminé')
+
         if (error) {
           console.error('❌ Erreur Supabase upsert:', error)
           console.error('Code:', error.code)
           console.error('Message:', error.message)
           console.error('Details:', error.details)
           
-          // AFFICHER L'ERREUR À L'ÉCRAN
           const errMsg = `${error.code}: ${error.message}`
           setErrorMessage(errMsg)
           setSaveStatus('error')
@@ -161,12 +167,15 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
         }
       } else {
         // DELETE si rating = 0
+        console.log('🔹 Appel delete...')
         const { error } = await supabase
           .from('ratings')
           .delete()
           .eq('user_id', session.user.id)
           .eq('item_type', itemType)
           .eq('item_name', itemName)
+
+        console.log('🔹 Delete terminé')
 
         if (error) {
           console.error('❌ Erreur Supabase delete:', error)
@@ -186,21 +195,15 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
     }
 
     setSaving(false)
-    setCurrentRating(rating)
-    
-    if (onRatingChange) {
-      onRatingChange(rating)
-    }
 
-    // Reset status après 5 secondes (plus long pour lire l'erreur)
+    // Reset status après 3 secondes
     setTimeout(() => {
       setSaveStatus('idle')
       setErrorMessage('')
-    }, 5000)
+    }, 3000)
   }
 
   const handleClick = (rating: number) => {
-    // Si on clique sur la même note, on la retire (rating = 0)
     if (currentRating === rating) {
       console.log('🔄 Même note cliquée, suppression')
       saveRating(0)
@@ -241,20 +244,22 @@ export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSyste
       {/* Indicateur de statut */}
       {saveStatus === 'saving' && (
         <div className="text-xs text-muted-foreground flex items-center gap-1">
-          ⏳ Synchronisation...
+          ⏳ Sauvegarde...
         </div>
       )}
       {saveStatus === 'success' && (
         <div className="text-xs text-green-600 flex items-center gap-1">
-          ✅ Sauvegardé dans le cloud!
+          ✅ Enregistré!
         </div>
       )}
       {saveStatus === 'error' && (
         <div className="text-xs text-red-600 flex flex-col gap-1">
-          <div>❌ Erreur Supabase:</div>
-          <div className="font-mono text-[10px] bg-red-50 p-1 rounded max-w-full overflow-x-auto">
-            {errorMessage || 'Erreur inconnue'}
-          </div>
+          <div>❌ Erreur cloud:</div>
+          {errorMessage && (
+            <div className="font-mono text-[10px] bg-red-50 p-1 rounded max-w-full overflow-x-auto">
+              {errorMessage}
+            </div>
+          )}
           <div className="text-green-600">✅ Sauvegarde locale OK</div>
         </div>
       )}
