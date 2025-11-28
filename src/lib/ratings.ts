@@ -1,188 +1,226 @@
-// src/lib/ratings.ts
-import { supabase } from "./supabase";
+// ─────────────── RatingSystem.tsx (VERSION CORRIGÉE) ───────────────
+import { useState, useEffect } from "react"
+import { Star } from "lucide-react"
+import { useAuth } from "@/context/AuthContext"
+import { supabase } from "@/lib/supabase"
 
-export type Rating = {
-  id: string;
-  user_id: string;
-  item_type: "genre" | "country";
-  item_name: string;
-  rating: number;  // ← CHANGÉ de score à rating
-  created_at: string;
-  updated_at: string;
-};
-
-/**
- * Sauvegarder ou mettre à jour une note
- */
-export async function saveRating(
-  itemType: "genre" | "country",
-  itemName: string,
-  rating: number  // ← CHANGÉ
-): Promise<Rating | null> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    throw new Error("Non connecté");
-  }
-
-  if (rating < 0 || rating > 10) {  // ← CHANGÉ
-    throw new Error("Le score doit être entre 0 et 10");
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from("ratings")
-      .upsert(
-        {
-          user_id: user.id,
-          item_type: itemType,
-          item_name: itemName,
-          rating,  // ← CHANGÉ
-          updated_at: new Date().toISOString(),
-        },
-        { 
-          onConflict: "user_id,item_type,item_name",
-        }
-      )
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data as Rating;
-  } catch (error) {
-    console.error("Erreur sauvegarde note:", error);
-    throw error;
-  }
-}
-
-/**
- * Récupérer une note spécifique
- */
-export async function getRating(
-  itemType: "genre" | "country",
+interface RatingSystemProps {
   itemName: string
-): Promise<Rating | null> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-
-  try {
-    const { data, error } = await supabase
-      .from("ratings")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("item_type", itemType)
-      .eq("item_name", itemName)
-      .maybeSingle();
-
-    if (error) throw error;
-    return data as Rating | null;
-  } catch (error) {
-    console.error("Erreur récupération note:", error);
-    return null;
-  }
-}
-
-/**
- * Récupérer toutes les notes de l'utilisateur
- */
-export async function getAllRatings(): Promise<Rating[]> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return [];
-
-  try {
-    const { data, error } = await supabase
-      .from("ratings")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false });
-
-    if (error) throw error;
-    return (data || []) as Rating[];
-  } catch (error) {
-    console.error("Erreur récupération notes:", error);
-    return [];
-  }
-}
-
-/**
- * Récupérer les notes par type
- */
-export async function getRatingsByType(
   itemType: "genre" | "country"
-): Promise<Rating[]> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return [];
-
-  try {
-    const { data, error } = await supabase
-      .from("ratings")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("item_type", itemType)
-      .order("rating", { ascending: false });  // ← CHANGÉ
-
-    if (error) throw error;
-    return (data || []) as Rating[];
-  } catch (error) {
-    console.error("Erreur récupération notes par type:", error);
-    return [];
-  }
+  onRatingChange?: (rating: number) => void
 }
 
-/**
- * Supprimer une note
- */
-export async function deleteRating(
-  itemType: "genre" | "country",
-  itemName: string
-): Promise<boolean> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
+export function RatingSystem({ itemName, itemType, onRatingChange }: RatingSystemProps) {
+  const { session } = useAuth()
+  const [currentRating, setCurrentRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0)
+  const [saving, setSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle')
 
-  try {
-    const { error } = await supabase
-      .from("ratings")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("item_type", itemType)
-      .eq("item_name", itemName);
+  // Charger le rating existant au montage
+  useEffect(() => {
+    loadRating()
+  }, [itemName, itemType, session])
 
-    if (error) throw error;
-    return true;
-  } catch (error) {
-    console.error("Erreur suppression note:", error);
-    return false;
+  const loadRating = async () => {
+    console.log(`🔍 Chargement rating pour: ${itemType} "${itemName}"`)
+    
+    if (!session) {
+      console.log('❌ Pas de session, chargement depuis localStorage')
+      loadFromLocalStorage()
+      return
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('ratings')
+        .select('rating')
+        .eq('user_id', session.user.id)
+        .eq('item_type', itemType)
+        .eq('item_name', itemName)
+        .maybeSingle()
+
+      if (error) {
+        console.error('❌ Erreur Supabase:', error)
+        loadFromLocalStorage()
+        return
+      }
+
+      if (data) {
+        console.log(`✅ Rating trouvé: ${data.rating}/10`)
+        setCurrentRating(data.rating)
+      } else {
+        console.log('ℹ️ Pas de rating trouvé, vérification localStorage')
+        loadFromLocalStorage()
+      }
+    } catch (err) {
+      console.error('❌ Exception:', err)
+      loadFromLocalStorage()
+    }
   }
-}
 
-/**
- * Obtenir les statistiques de l'utilisateur
- */
-export async function getRatingStats(): Promise<{
-  total: number;
-  genres: number;
-  countries: number;
-  average: number;
-  topRated: Rating[];
-}> {
-  const ratings = await getAllRatings();
+  const loadFromLocalStorage = () => {
+    const userId = session?.user?.id || 'guest'
+    const key = `rating_${userId}_${itemType}_${itemName}`
+    const stored = localStorage.getItem(key)
+    
+    if (stored) {
+      const rating = parseInt(stored)
+      console.log(`📦 Rating local trouvé: ${rating}/10`)
+      setCurrentRating(rating)
+    } else {
+      console.log('ℹ️ Pas de rating local')
+    }
+  }
 
-  const genres = ratings.filter((r) => r.item_type === "genre");
-  const countries = ratings.filter((r) => r.item_type === "country");
-  
-  const average =
-    ratings.length > 0
-      ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length  // ← CHANGÉ
-      : 0;
+  const saveRating = async (rating: number) => {
+    console.log(`💾 Début sauvegarde: ${itemType} "${itemName}" = ${rating}/10`)
+    setSaving(true)
+    setSaveStatus('saving')
+    
+    // 1. TOUJOURS sauvegarder en local d'abord (fallback)
+    const userId = session?.user?.id || 'guest'
+    const key = `rating_${userId}_${itemType}_${itemName}`
+    
+    if (rating > 0) {
+      localStorage.setItem(key, rating.toString())
+      console.log(`📦 Sauvegardé en local: ${key} = ${rating}`)
+    } else {
+      localStorage.removeItem(key)
+      console.log(`🗑️ Supprimé du local: ${key}`)
+    }
 
-  const topRated = [...ratings]
-    .sort((a, b) => b.rating - a.rating)  // ← CHANGÉ
-    .slice(0, 5);
+    // 2. Sauvegarder dans Supabase si connecté
+    if (!session) {
+      console.log('⚠️ Pas de session, sauvegarde locale seulement')
+      setSaving(false)
+      setSaveStatus('success')
+      setCurrentRating(rating)
+      if (onRatingChange) onRatingChange(rating)
+      return
+    }
 
-  return {
-    total: ratings.length,
-    genres: genres.length,
-    countries: countries.length,
-    average: Math.round(average * 10) / 10,
-    topRated,
-  };
+    try {
+      console.log('☁️ Tentative sauvegarde Supabase...')
+      console.log('User ID:', session.user.id)
+      console.log('Item type:', itemType)
+      console.log('Item name:', itemName)
+      console.log('Rating:', rating)
+
+      if (rating > 0) {
+        // UPSERT (insert ou update)
+        const { data, error } = await supabase
+          .from('ratings')
+          .upsert({
+            user_id: session.user.id,
+            item_type: itemType,
+            item_name: itemName,
+            rating: rating,
+            updated_at: new Date().toISOString()
+          }, {
+            onConflict: 'user_id,item_type,item_name'
+          })
+          .select()
+
+        if (error) {
+          console.error('❌ Erreur Supabase upsert:', error)
+          console.error('Code:', error.code)
+          console.error('Message:', error.message)
+          console.error('Details:', error.details)
+          setSaveStatus('error')
+        } else {
+          console.log('✅ Sauvegardé dans Supabase!')
+          console.log('Data:', data)
+          setSaveStatus('success')
+        }
+      } else {
+        // DELETE si rating = 0
+        const { error } = await supabase
+          .from('ratings')
+          .delete()
+          .eq('user_id', session.user.id)
+          .eq('item_type', itemType)
+          .eq('item_name', itemName)
+
+        if (error) {
+          console.error('❌ Erreur Supabase delete:', error)
+          setSaveStatus('error')
+        } else {
+          console.log('✅ Supprimé de Supabase!')
+          setSaveStatus('success')
+        }
+      }
+    } catch (err) {
+      console.error('❌ Exception lors de la sauvegarde:', err)
+      setSaveStatus('error')
+    }
+
+    setSaving(false)
+    setCurrentRating(rating)
+    
+    if (onRatingChange) {
+      onRatingChange(rating)
+    }
+
+    // Reset status après 2 secondes
+    setTimeout(() => setSaveStatus('idle'), 2000)
+  }
+
+  const handleClick = (rating: number) => {
+    // Si on clique sur la même note, on la retire (rating = 0)
+    if (currentRating === rating) {
+      console.log('🔄 Même note cliquée, suppression')
+      saveRating(0)
+    } else {
+      saveRating(rating)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
+          <button
+            key={star}
+            onClick={() => handleClick(star)}
+            onMouseEnter={() => setHoverRating(star)}
+            onMouseLeave={() => setHoverRating(0)}
+            disabled={saving}
+            className="transition-transform hover:scale-110 disabled:opacity-50"
+            type="button"
+          >
+            <Star
+              className={`w-5 h-5 ${
+                (hoverRating || currentRating) >= star
+                  ? "fill-yellow-400 text-yellow-400"
+                  : "text-gray-300"
+              }`}
+            />
+          </button>
+        ))}
+        {currentRating > 0 && (
+          <span className="ml-2 text-sm font-semibold text-primary">
+            {currentRating}/10
+          </span>
+        )}
+      </div>
+      
+      {/* Indicateur de statut */}
+      {saveStatus === 'saving' && (
+        <div className="text-xs text-muted-foreground flex items-center gap-1">
+          ⏳ Synchronisation...
+        </div>
+      )}
+      {saveStatus === 'success' && (
+        <div className="text-xs text-green-600 flex items-center gap-1">
+          ✅ Sauvegardé
+        </div>
+      )}
+      {saveStatus === 'error' && (
+        <div className="text-xs text-red-600 flex items-center gap-1">
+          ❌ Erreur (sauvegarde locale OK)
+        </div>
+      )}
+    </div>
+  )
 }
