@@ -1,5 +1,5 @@
 // ———————————————————————————
-// Profile.tsx — MusicTerra (version fusionnée) - PARTIE 1/2
+// Profile.tsx — MusicTerra (version fusionnée)
 // Profil perso + Instagram + Genres + Recherche + Export JSON + RATINGS HISTORY
 // ———————————————————————————
 
@@ -146,7 +146,7 @@ export default function ProfilePage() {
       }
   );
 
-  // ──────── NOUVEAU : RATINGS ────────
+  // ──────── RATINGS ────────
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [loadingRatings, setLoadingRatings] = useState(false);
   const [filter, setFilter] = useState<'all' | 'genre' | 'country'>('all');
@@ -166,21 +166,31 @@ export default function ProfilePage() {
       setLoadingRatings(true);
       console.log("📥 Chargement des ratings...");
 
-      const { data, error } = await supabase
+      // Timeout de 5 secondes
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout après 5 secondes')), 5000);
+      });
+
+      const queryPromise = supabase
         .from('ratings')
         .select('*')
         .eq('user_id', session.user.id)
         .order('updated_at', { ascending: false });
 
+      // Race: première promesse qui se termine gagne
+      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+
       if (error) {
-        console.error("Erreur Supabase:", error);
+        console.error("❌ Erreur Supabase:", error);
+        console.log("📦 Fallback vers localStorage");
         loadFromLocalStorage();
       } else if (data) {
-        console.log(`✅ ${data.length} ratings chargés`);
+        console.log(`✅ ${data.length} ratings chargés depuis Supabase`);
         setRatings(data);
       }
-    } catch (err) {
-      console.error("Erreur:", err);
+    } catch (err: any) {
+      console.error("❌ Exception:", err.message);
+      console.log("📦 Fallback vers localStorage");
       loadFromLocalStorage();
     } finally {
       setLoadingRatings(false);
@@ -213,7 +223,7 @@ export default function ProfilePage() {
       }
     }
 
-    console.log(`📦 ${localRatings.length} ratings locaux`);
+    console.log(`📦 ${localRatings.length} ratings locaux chargés`);
     setRatings(localRatings);
   };
 
@@ -239,7 +249,6 @@ export default function ProfilePage() {
       ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
       : '0',
   };
-  // ──────── FIN NOUVEAU ────────
 
   const fileRef = useRef<HTMLInputElement | null>(null);
   const onPickAvatar = () => fileRef.current?.click();
@@ -352,12 +361,6 @@ export default function ProfilePage() {
     }));
   };
 
-// ⚠️ ATTENTION: Ce fichier se termine ici. 
-// ⚠️ Tu dois maintenant copier le contenu de Profile_PARTIE2.tsx
-// ⚠️ et le coller À LA SUITE de ce code (en supprimant ce commentaire).
-// ⚠️ PARTIE 2/2 - À COLLER À LA SUITE DE LA PARTIE 1
-// ⚠️ Supprime les commentaires d'avertissement quand tu colles les deux parties ensemble
-
   return (
     <div className="mx-auto max-w-5xl p-4 md:p-8 space-y-8">
       <motion.h1
@@ -369,7 +372,7 @@ export default function ProfilePage() {
         Mon profil
       </motion.h1>
 
-      {/* ──────── NOUVEAU : STATS RATINGS ────────  */}
+      {/* STATS RATINGS */}
       {ratings.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="rounded-2xl text-center p-4">
@@ -471,7 +474,7 @@ export default function ProfilePage() {
         </Card>
       </div>
 
-      {/* ──────── NOUVEAU : HISTORIQUE RATINGS ────────  */}
+      {/* HISTORIQUE RATINGS */}
       {ratings.length > 0 && (
         <Card className="rounded-2xl">
           <CardHeader>
@@ -626,69 +629,4 @@ function ResponsiveProfileDetail({
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (!profile) return null;
 
-  const DetailContent = () => (
-    <div className="flex flex-col items-center gap-3 text-center p-4">
-      <h3 className="text-lg font-semibold">{profile.fullName}</h3>
-      {profile.bio && <p className="text-sm text-muted-foreground">{profile.bio}</p>}
-      {profile.instagram && (
-        <a
-          href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-sm text-primary hover:underline"
-        >
-          <Instagram className="h-4 w-4" />
-          @{profile.instagram}
-        </a>
-      )}
-      {profile.country && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4" />
-          {profile.country}
-        </div>
-      )}
-      {profile.genres && profile.genres.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {profile.genres.map((g: string) => (
-            <Badge key={g} variant="secondary" className="rounded-xl">
-              {g}
-            </Badge>
-          ))}
-        </div>
-      )}
-      <Button onClick={() => onApply(profile)} className="mt-4">
-        Appliquer à mon profil
-      </Button>
-    </div>
-  );
-
-  if (isDesktop) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Profil utilisateur</DialogTitle>
-            <DialogDescription>
-              Voir les détails et appliquer à ton profil.
-            </DialogDescription>
-          </DialogHeader>
-          <DetailContent />
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Profil utilisateur</DrawerTitle>
-          <DrawerDescription>
-            Voir les détails et appliquer à ton profil.
-          </DrawerDescription>
-        </DrawerHeader>
-        <DetailContent />
-      </DrawerContent>
-    </Drawer>
-  );
-}
+  const DetailContent 
