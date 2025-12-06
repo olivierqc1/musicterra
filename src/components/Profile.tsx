@@ -635,7 +635,7 @@ function ResponsiveProfileDetail({
       {profile.bio && <p className="text-sm text-muted-foreground">{profile.bio}</p>}
       {profile.instagram && (
         
-          href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
+        <a  href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-sm text-primary hover:underline"
