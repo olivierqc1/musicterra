@@ -1,4 +1,4 @@
-// src/components/Rating.tsx - VERSION FINALE SANS TIMEOUT BLOQUANT
+// src/components/Rating.tsx - VERSION AVEC TIMEOUT QUI MARCHE
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -54,10 +54,10 @@ export const Rating: React.FC<RatingProps> = ({
         setSyncStatus('local');
       }
 
-      // 2. Essayer Supabase (NON BLOQUANT, sans Promise.race)
+      // 2. Essayer Supabase avec VRAI timeout
       console.log("☁️ Chargement depuis Supabase...");
       
-      const { data, error } = await supabase
+      const supabasePromise = supabase
         .from('ratings')
         .select('rating')
         .eq('user_id', session.user.id)
@@ -65,17 +65,26 @@ export const Rating: React.FC<RatingProps> = ({
         .eq('item_name', itemName)
         .maybeSingle();
 
+      // Timeout de 3 secondes
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 3000)
+      );
+
+      const { data, error } = await Promise.race([
+        supabasePromise,
+        timeoutPromise
+      ]) as any;
+
       if (!error && data) {
         console.log("✅ Note cloud trouvée:", data.rating);
         setSavedValue(data.rating);
         setValue(data.rating);
         setSyncStatus('cloud');
         localStorage.setItem(localKey, String(data.rating));
-      } else if (error) {
-        console.log("⚠️ Erreur Supabase:", error.message);
       }
     } catch (err: any) {
       console.log("⚠️ Supabase indisponible:", err.message);
+      // Continuer avec la valeur locale
     }
   };
 
@@ -85,7 +94,8 @@ export const Rating: React.FC<RatingProps> = ({
     try {
       console.log("☁️ Sync Supabase...");
       
-      const { error } = await supabase
+      // Créer les deux promesses
+      const supabasePromise = supabase
         .from('ratings')
         .upsert({
           user_id: session.user.id,
@@ -97,6 +107,17 @@ export const Rating: React.FC<RatingProps> = ({
           onConflict: 'user_id,item_type,item_name'
         });
 
+      // Timeout de 5 secondes
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Sync timeout')), 5000)
+      );
+
+      // Race entre sync et timeout
+      const { error } = await Promise.race([
+        supabasePromise,
+        timeoutPromise
+      ]) as any;
+
       if (!error) {
         console.log("✅ Sync Supabase réussie !");
         setSyncStatus('cloud');
@@ -106,7 +127,11 @@ export const Rating: React.FC<RatingProps> = ({
         return false;
       }
     } catch (err: any) {
-      console.warn("⚠️ Sync échouée:", err.message);
+      if (err.message === 'Sync timeout') {
+        console.warn("⏱️ Timeout sync après 5s");
+      } else {
+        console.warn("⚠️ Sync échouée:", err.message);
+      }
       return false;
     }
   };
@@ -137,16 +162,16 @@ export const Rating: React.FC<RatingProps> = ({
       setSavedValue(value);
       if (onRated) onRated(value);
 
-      // 2. Essayer sync cloud (NON BLOQUANT)
+      // 2. Essayer sync cloud avec timeout
       const synced = await syncToSupabase(value);
       
       if (!synced) {
         setSyncStatus('local');
         setError(t(
-          "⚠️ Sauvegardé localement (cloud indisponible)",
-          "⚠️ Saved locally (cloud unavailable)"
+          "💾 Sauvegardé localement",
+          "💾 Saved locally"
         ));
-        setTimeout(() => setError(""), 5000);
+        setTimeout(() => setError(""), 3000);
       }
 
     } catch (err: any) {
