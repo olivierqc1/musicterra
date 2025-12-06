@@ -67,7 +67,7 @@ export const Rating: React.FC<RatingProps> = ({
 
       // Timeout de 3 secondes
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout')), 3000)
+        setTimeout(() => reject(new Error('Timeout')), 15000)
       );
 
       const { data, error } = await Promise.race([
@@ -109,7 +109,7 @@ export const Rating: React.FC<RatingProps> = ({
 
       // Timeout de 5 secondes
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Sync timeout')), 5000)
+        setTimeout(() => reject(new Error('Sync timeout')), 15000)
       );
 
       // Race entre sync et timeout
