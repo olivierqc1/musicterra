@@ -1,6 +1,6 @@
 // src/services/emergingArtists.ts - VERSION HYBRIDE (localStorage + Supabase)
 import { supabase } from '../lib/supabase';
-import {genreSimilarityMatrix} from '../data/matrix';
+import { matrix } from '../data/matrix';
 
 export interface Rating {
   id: string;
@@ -148,7 +148,6 @@ function calculateSimilarity(genre1: string, genre2: string): number {
 
   if (g1 === g2) return 1;
 
-  const matrix = genreSimilarityMatrix as Record<string, Record<string, number>>;
   return matrix[g1]?.[g2] || matrix[g2]?.[g1] || 0;
 }
 
@@ -171,8 +170,6 @@ function getExtendedGenres(userRatings: Rating[]): Map<string, number> {
   });
 
   // Étendre via similarité
-  const matrix = genreSimilarityMatrix as Record<string, Record<string, number>>;
-  
   highRatedGenres.forEach(({ name, rating }) => {
     const similarities = matrix[name] || {};
     
