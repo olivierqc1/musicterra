@@ -139,7 +139,7 @@ export const Rating: React.FC<RatingProps> = ({
   const handleRate = async () => {
     if (!session) {
       setError(t("⚠️ Connecte-toi", "⚠️ Sign in"));
-      setTimeout(() => setError(""), 3000);
+      setTimeout(() => setError(""), 15000);
       return;
     }
 
