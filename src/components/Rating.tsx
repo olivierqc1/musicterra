@@ -65,9 +65,9 @@ export const Rating: React.FC<RatingProps> = ({
         .eq('item_name', itemName)
         .maybeSingle();
 
-      // Timeout de 3 secondes
+      // Timeout de 30 secondes
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout')), 15000)
+        setTimeout(() => reject(new Error('Timeout')), 30000)
       );
 
       const { data, error } = await Promise.race([
@@ -107,9 +107,9 @@ export const Rating: React.FC<RatingProps> = ({
           onConflict: 'user_id,item_type,item_name'
         });
 
-      // Timeout de 5 secondes
+      // Timeout de 30 secondes
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Sync timeout')), 15000)
+        setTimeout(() => reject(new Error('Sync timeout')), 30000)
       );
 
       // Race entre sync et timeout
@@ -128,7 +128,7 @@ export const Rating: React.FC<RatingProps> = ({
       }
     } catch (err: any) {
       if (err.message === 'Sync timeout') {
-        console.warn("⏱️ Timeout sync après 5s");
+        console.warn("⏱️ Timeout sync après 30s");
       } else {
         console.warn("⚠️ Sync échouée:", err.message);
       }
@@ -139,13 +139,13 @@ export const Rating: React.FC<RatingProps> = ({
   const handleRate = async () => {
     if (!session) {
       setError(t("⚠️ Connecte-toi", "⚠️ Sign in"));
-      setTimeout(() => setError(""), 15000);
+      setTimeout(() => setError(""), 30000);
       return;
     }
 
     if (value === 0) {
       setError(t("⚠️ Sélectionne une note", "⚠️ Select rating"));
-      setTimeout(() => setError(""), 3000);
+      setTimeout(() => setError(""), 30000);
       return;
     }
 
@@ -171,7 +171,7 @@ export const Rating: React.FC<RatingProps> = ({
           "💾 Sauvegardé localement",
           "💾 Saved locally"
         ));
-        setTimeout(() => setError(""), 3000);
+        setTimeout(() => setError(""), 30000);
       }
 
     } catch (err: any) {
