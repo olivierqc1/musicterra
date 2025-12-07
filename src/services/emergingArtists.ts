@@ -1,6 +1,6 @@
 // src/services/emergingArtists.ts - VERSION HYBRIDE (localStorage + Supabase)
 import { supabase } from '../lib/supabase';
-import genreSimilarityMatrix from '../data/matrix';
+import {genreSimilarityMatrix} from '../data/matrix';
 
 export interface Rating {
   id: string;
