@@ -1,354 +1,331 @@
-// src/components/EmergingArtists.tsx
-import { useState, useEffect } from 'react';
-import { getPersonalizedEmergingArtists, EmergingArtist, saveEmergingDiscovery } from '../services/emergingArtists';
-import { useAuth } from '../context/AuthContext';
-import { trackAction } from '../services/userBehavior';
+// src/services/emergingArtists.ts - VERSION HYBRIDE (localStorage + Supabase)
+import { supabase } from '../lib/supabase';
+import genreSimilarityMatrix from '../data/genreSimilarityMatrix';
 
-interface Props {
-  language: 'fr' | 'en';
+export interface Rating {
+  id: string;
+  user_id: string;
+  item_type: 'genre' | 'country';
+  item_name: string;
+  rating: number;
+  updated_at: string;
 }
 
-export default function EmergingArtists({ language }: Props) {
-  const [artists, setArtists] = useState<EmergingArtist[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saved, setSaved] = useState<Set<string>>(new Set());
-  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
-
-  const { session } = useAuth();
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
-
-  useEffect(() => {
-    loadArtists();
-  }, [session]);
-
-  // ⚡ Chargement rapide avec cache local et rafraîchissement en arrière-plan
-  const loadArtists = async () => {
-    if (!session) return;
-    setLoading(true);
-
-    const cacheKey = `emerging_artists_${session.user.id}`;
-    try {
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        setArtists(parsed.data);
-        setLastUpdated(parsed.timestamp);
-        setLoading(false);
-      }
-    } catch {}
-
-    // 🔄 Rafraîchit Supabase en arrière-plan
-    try {
-      const data = await getPersonalizedEmergingArtists(session.user.id);
-      if (data?.length) {
-        setArtists(data);
-        localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
-      }
-    } catch (err) {
-      console.error('Erreur chargement artistes émergents:', err);
-    }
-
-    setLoading(false);
-  };
-
-  // 💾 Optimistic UI pour la sauvegarde
-  const handleSave = async (artist: EmergingArtist) => {
-    if (!session) return;
-
-    // Réaction instantanée
-    setSaved((prev) => new Set([...prev, artist.name]));
-    try {
-      await saveEmergingDiscovery(artist.name, artist.mbid, artist.genres);
-      localStorage.setItem(`emerging_saved_${artist.name}`, 'true');
-      await trackAction('save_emerging', 'artist', artist.name, { genres: artist.genres });
-    } catch (err) {
-      console.error('Erreur saveEmergingDiscovery', err);
-    }
-  };
-
-  if (!session)
-    return (
-      <div style={styles.card}>
-        <p>
-          {t('Connectez-vous pour découvrir des artistes émergents', 'Sign in to discover emerging artists')}
-        </p>
-      </div>
-    );
-
-  if (loading && artists.length === 0)
-    return (
-      <div style={styles.loadingContainer}>
-        <div style={styles.spinner}></div>
-        <p>{t("Recherche d'artistes émergents basée sur vos goûts...", 'Finding emerging artists based on your taste...')}</p>
-      </div>
-    );
-
-  if (artists.length === 0)
-    return (
-      <div style={styles.card}>
-        <h3>{t('🌱 Artistes émergents', '🌱 Emerging artists')}</h3>
-        <p style={{ color: '#777' }}>
-          {t(
-            'Explorez plus de genres et notez-les pour obtenir des recommandations personnalisées!',
-            'Explore and rate more genres to get personalized recommendations!'
-          )}
-        </p>
-        <p style={{ fontSize: 13, color: '#999', marginTop: 12 }}>
-          💡 {t('Astuce: Notez au moins 5 genres différents', 'Tip: Rate at least 5 different genres')}
-        </p>
-      </div>
-    );
-
-  return (
-    <div style={styles.container}>
-      {/* Header */}
-      <div style={styles.header}>
-        <div>
-          <h3 style={{ margin: 0 }}>{t('🌱 Artistes émergents pour vous', '🌱 Emerging artists for you')}</h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', margin: '4px 0 0' }}>
-            {t('Découvrez-les avant tout le monde', 'Discover them before everyone else')}
-          </p>
-        </div>
-        <button onClick={loadArtists} style={styles.refreshBtn} disabled={loading}>
-          {loading ? '...' : '🔄'}
-        </button>
-      </div>
-
-      {lastUpdated && (
-        <p style={{ textAlign: 'center', fontSize: 12, color: '#999' }}>
-          {t('Dernière mise à jour :', 'Last updated:')} {new Date(lastUpdated).toLocaleTimeString(language)}
-        </p>
-      )}
-
-      {/* Info banner */}
-      <div style={styles.infoBanner}>
-        <span style={{ fontSize: 20 }}>💡</span>
-        <div style={{ fontSize: 13 }}>
-          {t(
-            "Ces artistes ont débuté récemment et ont peu d'auditeurs. Parfait pour être un découvreur!",
-            'These artists started recently and have few listeners. Perfect for being an early discoverer!'
-          )}
-        </div>
-      </div>
-
-      {/* Grid */}
-      <div style={styles.grid}>
-        {artists.map((artist) => (
-          <div key={artist.name} style={styles.artistCard}>
-            <div style={styles.imageContainer}>
-              {artist.imageUrl ? (
-                <img
-                  src={artist.imageUrl}
-                  alt={artist.name}
-                  style={styles.artistImage}
-                  loading="lazy"
-                  onError={(e) =>
-                    ((e.target as HTMLImageElement).src =
-                      'https://via.placeholder.com/300x300?text=' + encodeURIComponent(artist.name))
-                  }
-                />
-              ) : (
-                <div style={styles.noImage}>
-                  <span style={{ fontSize: 48 }}>🎵</span>
-                  <p style={{ margin: '8px 0 0', fontSize: 12 }}>{artist.name}</p>
-                </div>
-              )}
-
-              <div style={styles.emergenceBadge}>🌱 {Math.round(artist.emergenceScore)}%</div>
-            </div>
-
-            {/* Info */}
-            <div style={{ padding: 12 }}>
-              <strong style={{ fontSize: 15, display: 'block', marginBottom: 6 }}>{artist.name}</strong>
-
-              {/* Genres */}
-              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
-                {artist.genres.slice(0, 3).map((genre) => (
-                  <span key={genre} style={styles.genreTag}>
-                    {genre}
-                  </span>
-                ))}
-              </div>
-
-              {/* Stats */}
-              <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
-                {artist.country && <div>📍 {artist.country}</div>}
-                {artist.listeners !== undefined && (
-                  <div>👥 {artist.listeners.toLocaleString(language)} {t('auditeurs', 'listeners')}</div>
-                )}
-                {artist.lifeSpan?.begin && (
-                  <div>🎂 {t('Depuis', 'Since')} {artist.lifeSpan.begin.split('-')[0]}</div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div style={{ display: 'flex', gap: 6 }}>
-                {artist.lastfmUrl && (
-                  <a
-                    href={artist.lastfmUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={styles.lastfmBtn}
-                    onClick={() => session && trackAction('click_lastfm', 'artist', artist.name)}
-                  >
-                    🎧 Last.fm
-                  </a>
-                )}
-                <button
-                  onClick={() => handleSave(artist)}
-                  disabled={saved.has(artist.name)}
-                  style={{
-                    ...styles.saveBtn,
-                    ...(saved.has(artist.name) ? styles.saveBtnSaved : {}),
-                  }}
-                >
-                  {saved.has(artist.name)
-                    ? t('✓ Sauvegardé', '✓ Saved')
-                    : t('Sauvegarder', 'Save')}
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {artists.length >= 20 && (
-        <p style={{ textAlign: 'center', fontSize: 13, color: '#777' }}>
-          {t(
-            "Notez plus de genres pour découvrir encore plus d'artistes",
-            'Rate more genres to discover even more artists'
-          )}
-        </p>
-      )}
-    </div>
-  );
+export interface EmergingArtist {
+  name: string;
+  mbid: string;
+  genres: string[];
+  country?: string;
+  imageUrl?: string;
+  listeners?: number;
+  lastfmUrl?: string;
+  emergenceScore: number;
+  matchScore: number;
+  lifeSpan?: { begin?: string; end?: string };
 }
 
-// ✅ Styles optimisés : unifiés, légers, avec ombre et transitions douces
-const styles: Record<string, React.CSSProperties> = {
-  container: { display: 'grid', gap: 16 },
-  card: {
-    padding: 20,
-    background: '#fff',
-    borderRadius: 12,
-    border: '1px solid #e7e7e7',
-    textAlign: 'center',
-  },
-  loadingContainer: {
-    padding: 40,
-    textAlign: 'center',
-    display: 'grid',
-    gap: 16,
-    placeItems: 'center',
-  },
-  spinner: {
-    width: 40,
-    height: 40,
-    border: '4px solid #f0f0f0',
-    borderTop: '4px solid #667eea',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
-  },
-  header: {
-    padding: 20,
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: '#fff',
-    borderRadius: 12,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  refreshBtn: {
-    padding: '8px 12px',
-    background: 'rgba(255,255,255,0.2)',
-    border: '1px solid rgba(255,255,255,0.3)',
-    borderRadius: 8,
-    color: '#fff',
-    cursor: 'pointer',
-    fontSize: 18,
-  },
-  infoBanner: {
-    padding: 12,
-    background: '#fef3c7',
-    border: '1px solid #fbbf24',
-    borderRadius: 8,
-    display: 'flex',
-    gap: 12,
-    alignItems: 'flex-start',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: 16,
-  },
-  artistCard: {
-    border: '1px solid #e7e7e7',
-    borderRadius: 12,
-    overflow: 'hidden',
-    background: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-  },
-  imageContainer: { position: 'relative', width: '100%', aspectRatio: '1/1' },
-  artistImage: { width: '100%', height: '100%', objectFit: 'cover' },
-  noImage: {
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#999',
-  },
-  emergenceBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    padding: '4px 8px',
-    background: 'rgba(16, 185, 129, 0.9)',
-    color: '#fff',
-    borderRadius: 999,
-    fontSize: 11,
-    fontWeight: 600,
-    backdropFilter: 'blur(4px)',
-  },
-  genreTag: {
-    padding: '2px 8px',
-    background: '#e0e7ff',
-    color: '#3730a3',
-    borderRadius: 999,
-    fontSize: 11,
-    fontWeight: 500,
-  },
-  lastfmBtn: {
-    flex: 1,
-    padding: '8px 12px',
-    background: '#d51007',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 6,
-    textDecoration: 'none',
-    fontSize: 13,
-    fontWeight: 500,
-    textAlign: 'center',
-  },
-  saveBtn: {
-    flex: 1,
-    padding: '8px 12px',
-    background: '#fff',
-    border: '1px solid #667eea',
-    color: '#667eea',
-    borderRadius: 6,
-    cursor: 'pointer',
-    fontSize: 13,
-    fontWeight: 500,
-    transition: 'all 0.2s ease',
-  },
-  saveBtnSaved: {
-    background: '#667eea',
-    color: '#fff',
-    borderColor: '#667eea',
-  },
-};
+// ==========================================
+// CHARGER DEPUIS LOCALSTORAGE
+// ==========================================
+function loadRatingsFromLocalStorage(userId: string): Rating[] {
+  const ratings: Rating[] = [];
+  
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key?.startsWith(`rating_${userId}_`)) {
+      const parts = key.split('_');
+      const itemType = parts[2] as 'genre' | 'country';
+      const itemName = parts.slice(3).join('_');
+      const rating = parseInt(localStorage.getItem(key) || '0');
+
+      if (rating > 0) {
+        ratings.push({
+          id: key,
+          user_id: userId,
+          item_type: itemType,
+          item_name: itemName,
+          rating: rating,
+          updated_at: new Date().toISOString(),
+        });
+      }
+    }
+  }
+
+  return ratings;
+}
+
+// ==========================================
+// CHARGER DEPUIS SUPABASE (avec timeout)
+// ==========================================
+async function loadRatingsFromSupabase(userId: string): Promise<Rating[]> {
+  try {
+    console.log("☁️ Chargement Supabase...");
+    
+    const supabasePromise = supabase
+      .from('ratings')
+      .select('*')
+      .eq('user_id', userId)
+      .gte('rating', 5);
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Supabase timeout')), 5000)
+    );
+
+    const { data, error } = await Promise.race([
+      supabasePromise,
+      timeoutPromise
+    ]) as any;
+
+    if (error) {
+      console.warn("⚠️ Erreur Supabase:", error.message);
+      return [];
+    }
+
+    if (data && data.length > 0) {
+      console.log(`☁️ ${data.length} ratings Supabase chargés`);
+      return data;
+    }
+
+    return [];
+  } catch (err: any) {
+    console.warn("⚠️ Supabase indisponible:", err.message);
+    return [];
+  }
+}
+
+// ==========================================
+// MERGER localStorage + Supabase
+// ==========================================
+function mergeRatings(localRatings: Rating[], supabaseRatings: Rating[]): Rating[] {
+  const merged = new Map<string, Rating>();
+
+  // 1. Ajouter les ratings locaux
+  localRatings.forEach(rating => {
+    const key = `${rating.item_type}_${rating.item_name}`;
+    merged.set(key, rating);
+  });
+
+  // 2. Ajouter/remplacer avec les ratings Supabase (priorité)
+  supabaseRatings.forEach(rating => {
+    const key = `${rating.item_type}_${rating.item_name}`;
+    const existing = merged.get(key);
+
+    // Si Supabase a une version, elle prend priorité
+    if (!existing || new Date(rating.updated_at) >= new Date(existing.updated_at)) {
+      merged.set(key, rating);
+    }
+  });
+
+  return Array.from(merged.values());
+}
+
+// ==========================================
+// CHARGER HYBRIDE (localStorage + Supabase)
+// ==========================================
+export async function loadUserRatings(userId: string): Promise<Rating[]> {
+  console.log("📥 Chargement HYBRIDE des ratings...");
+
+  // 1. Charger localStorage (instantané)
+  const localRatings = loadRatingsFromLocalStorage(userId);
+  console.log(`📦 ${localRatings.length} ratings locaux`);
+
+  // 2. Lancer Supabase en parallèle
+  const supabaseRatings = await loadRatingsFromSupabase(userId);
+
+  // 3. Merger les deux
+  const merged = mergeRatings(localRatings, supabaseRatings);
+  console.log(`✅ ${merged.length} ratings au total (${localRatings.length} local + ${supabaseRatings.length} cloud)`);
+
+  return merged;
+}
+
+// ==========================================
+// CALCUL DE SIMILARITÉ
+// ==========================================
+function calculateSimilarity(genre1: string, genre2: string): number {
+  const g1 = genre1.toLowerCase().trim();
+  const g2 = genre2.toLowerCase().trim();
+
+  if (g1 === g2) return 1;
+
+  const matrix = genreSimilarityMatrix as Record<string, Record<string, number>>;
+  return matrix[g1]?.[g2] || matrix[g2]?.[g1] || 0;
+}
+
+// ==========================================
+// OBTENIR GENRES ÉTENDUS
+// ==========================================
+function getExtendedGenres(userRatings: Rating[]): Map<string, number> {
+  const genreScores = new Map<string, number>();
+
+  // Genres notés ≥5
+  const highRatedGenres = userRatings
+    .filter(r => r.item_type === 'genre' && r.rating >= 5)
+    .map(r => ({ name: r.item_name.toLowerCase(), rating: r.rating }));
+
+  if (highRatedGenres.length === 0) return genreScores;
+
+  // Ajouter les genres de base
+  highRatedGenres.forEach(({ name, rating }) => {
+    genreScores.set(name, rating);
+  });
+
+  // Étendre via similarité
+  const matrix = genreSimilarityMatrix as Record<string, Record<string, number>>;
+  
+  highRatedGenres.forEach(({ name, rating }) => {
+    const similarities = matrix[name] || {};
+    
+    Object.entries(similarities)
+      .filter(([_, sim]) => sim >= 0.5)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 15)
+      .forEach(([relatedGenre, similarity]) => {
+        const score = rating * similarity;
+        const current = genreScores.get(relatedGenre) || 0;
+        genreScores.set(relatedGenre, Math.max(current, score));
+      });
+  });
+
+  return genreScores;
+}
+
+// ==========================================
+// CALCULER MATCH SCORE
+// ==========================================
+function calculateMatchScore(
+  artistGenres: string[],
+  extendedGenres: Map<string, number>
+): number {
+  if (artistGenres.length === 0 || extendedGenres.size === 0) return 0;
+
+  let totalScore = 0;
+  let matchCount = 0;
+
+  artistGenres.forEach(artistGenre => {
+    const ag = artistGenre.toLowerCase();
+    
+    // Match direct
+    if (extendedGenres.has(ag)) {
+      totalScore += extendedGenres.get(ag)!;
+      matchCount++;
+      return;
+    }
+
+    // Match par similarité
+    let bestMatch = 0;
+    extendedGenres.forEach((score, userGenre) => {
+      const similarity = calculateSimilarity(ag, userGenre);
+      if (similarity >= 0.5) {
+        bestMatch = Math.max(bestMatch, score * similarity);
+      }
+    });
+
+    if (bestMatch > 0) {
+      totalScore += bestMatch;
+      matchCount++;
+    }
+  });
+
+  return matchCount > 0 ? totalScore / matchCount : 0;
+}
+
+// ==========================================
+// OBTENIR ARTISTES ÉMERGENTS PERSONNALISÉS
+// ==========================================
+export async function getPersonalizedEmergingArtists(
+  userId: string,
+  limit: number = 20
+): Promise<EmergingArtist[]> {
+  try {
+    console.log("🌱 Recherche d'artistes émergents personnalisés...");
+
+    // 1. Charger les ratings (hybride)
+    const ratings = await loadUserRatings(userId);
+    
+    if (ratings.length === 0) {
+      console.log("ℹ️ Aucun rating trouvé");
+      return [];
+    }
+
+    // 2. Obtenir genres étendus
+    const extendedGenres = getExtendedGenres(ratings);
+    console.log(`🎸 ${extendedGenres.size} genres dans le profil`);
+
+    // 3. Charger artistes émergents depuis Supabase
+    const { data: artists, error } = await supabase
+      .from('emerging_artists')
+      .select('*')
+      .order('emergence_score', { ascending: false })
+      .limit(500);
+
+    if (error || !artists) {
+      console.error("❌ Erreur chargement artistes:", error);
+      return [];
+    }
+
+    console.log(`📊 ${artists.length} artistes émergents analysés`);
+
+    // 4. Calculer scores et filtrer
+    const scoredArtists = artists
+      .map(artist => {
+        const matchScore = calculateMatchScore(
+          artist.genres || [],
+          extendedGenres
+        );
+
+        return {
+          name: artist.name,
+          mbid: artist.mbid,
+          genres: artist.genres || [],
+          country: artist.country,
+          imageUrl: artist.image_url,
+          listeners: artist.listeners,
+          lastfmUrl: artist.lastfm_url,
+          emergenceScore: artist.emergence_score,
+          matchScore: matchScore,
+          lifeSpan: artist.life_span,
+        };
+      })
+      .filter(a => a.matchScore > 0)
+      .sort((a, b) => {
+        // Score final = emergence × match
+        const scoreA = a.emergenceScore * a.matchScore;
+        const scoreB = b.emergenceScore * b.matchScore;
+        return scoreB - scoreA;
+      })
+      .slice(0, limit);
+
+    console.log(`✅ ${scoredArtists.length} artistes recommandés`);
+    return scoredArtists;
+
+  } catch (err: any) {
+    console.error("❌ Erreur getPersonalizedEmergingArtists:", err);
+    return [];
+  }
+}
+
+// ==========================================
+// SAUVEGARDER DÉCOUVERTE
+// ==========================================
+export async function saveEmergingDiscovery(
+  artistName: string,
+  artistMbid: string,
+  genres: string[]
+): Promise<void> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    await supabase.from('emerging_discoveries').insert({
+      user_id: user.id,
+      artist_name: artistName,
+      artist_mbid: artistMbid,
+      genres: genres,
+    });
+
+    console.log("✅ Découverte sauvegardée:", artistName);
+  } catch (err: any) {
+    console.error("❌ Erreur saveEmergingDiscovery:", err);
+  }
+}
