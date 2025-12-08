@@ -13,8 +13,10 @@ export interface Item {
   artists?: string[];
   subgenres?: string[];
   regions?: string[];
-  cities?: City[];     // 👈 nouveau
+  cities?: City[];
   spotify?: string;
   image?: string;
+  origin?: string;
+  relatedCountries?: string[];
+  year?: number;
 }
-
