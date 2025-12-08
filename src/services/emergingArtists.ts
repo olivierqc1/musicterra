@@ -1,6 +1,7 @@
-// src/services/emergingArtists.ts - VERSION HYBRIDE (localStorage + Supabase)
+// src/services/emergingArtists.ts - VERSION AVEC LAST.FM API
 import { supabase } from '../lib/supabase';
 import { matrix } from '../data/matrix';
+import { getTopArtistsByTag, filterEmerging, LastFmArtist } from './lastfm';
 
 export interface Rating {
   id: string;
@@ -15,13 +16,11 @@ export interface EmergingArtist {
   name: string;
   mbid: string;
   genres: string[];
-  country?: string;
   imageUrl?: string;
   listeners?: number;
   lastfmUrl?: string;
   emergenceScore: number;
   matchScore: number;
-  lifeSpan?: { begin?: string; end?: string };
 }
 
 // ==========================================
@@ -188,6 +187,20 @@ function getExtendedGenres(userRatings: Rating[]): Map<string, number> {
 }
 
 // ==========================================
+// CALCULER SCORE ÉMERGENCE
+// ==========================================
+function calculateEmergenceScore(artist: LastFmArtist): number {
+  // Score basé sur le nombre d'auditeurs (moins = plus émergent)
+  const listenerScore = Math.max(0, 100 - (artist.listeners / 1000));
+  
+  // Score basé sur le ratio playcount/listeners (plus bas = plus émergent)
+  const ratio = artist.playcount / Math.max(artist.listeners, 1);
+  const ratioScore = Math.max(0, 100 - ratio);
+  
+  return Math.min(100, (listenerScore + ratioScore) / 2);
+}
+
+// ==========================================
 // CALCULER MATCH SCORE
 // ==========================================
 function calculateMatchScore(
@@ -228,7 +241,7 @@ function calculateMatchScore(
 }
 
 // ==========================================
-// OBTENIR ARTISTES ÉMERGENTS PERSONNALISÉS
+// OBTENIR ARTISTES ÉMERGENTS VIA LAST.FM
 // ==========================================
 export async function getPersonalizedEmergingArtists(
   userId: string,
@@ -236,6 +249,13 @@ export async function getPersonalizedEmergingArtists(
 ): Promise<EmergingArtist[]> {
   try {
     console.log("🌱 Recherche d'artistes émergents personnalisés...");
+
+    // Vérifier si l'API key Last.fm est configurée
+    const apiKey = import.meta.env.VITE_LASTFM_API_KEY;
+    if (!apiKey) {
+      console.warn("⚠️ VITE_LASTFM_API_KEY non configurée");
+      return [];
+    }
 
     // 1. Charger les ratings (hybride)
     const ratings = await loadUserRatings(userId);
@@ -249,39 +269,76 @@ export async function getPersonalizedEmergingArtists(
     const extendedGenres = getExtendedGenres(ratings);
     console.log(`🎸 ${extendedGenres.size} genres dans le profil`);
 
-    // 3. Charger artistes émergents depuis Supabase
-    const { data: artists, error } = await supabase
-      .from('emerging_artists')
-      .select('*')
-      .order('emergence_score', { ascending: false })
-      .limit(500);
-
-    if (error || !artists) {
-      console.error("❌ Erreur chargement artistes:", error);
+    if (extendedGenres.size === 0) {
+      console.log("ℹ️ Aucun genre bien noté");
       return [];
     }
 
-    console.log(`📊 ${artists.length} artistes émergents analysés`);
+    // 3. Prendre les top genres
+    const topGenres = Array.from(extendedGenres.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10) // Top 10 genres
+      .map(([genre]) => genre);
 
-    // 4. Calculer scores et filtrer
-    const scoredArtists = artists
-      .map(artist => {
-        const matchScore = calculateMatchScore(
-          artist.genres || [],
-          extendedGenres
-        );
+    console.log(`🔍 Recherche sur Last.fm pour ${topGenres.length} genres...`);
+
+    // 4. Charger artistes de Last.fm pour chaque genre
+    const artistsMap = new Map<string, { artist: LastFmArtist; genres: string[] }>();
+
+    for (const genre of topGenres) {
+      try {
+        const artists = await getTopArtistsByTag(genre, 30);
+        const emerging = filterEmerging(artists);
+        
+        console.log(`  ${genre}: ${emerging.length} émergents`);
+
+        emerging.forEach(artist => {
+          const existing = artistsMap.get(artist.name);
+          if (existing) {
+            // Ajouter le genre à l'artiste existant
+            if (!existing.genres.includes(genre)) {
+              existing.genres.push(genre);
+            }
+          } else {
+            // Nouvel artiste
+            artistsMap.set(artist.name, {
+              artist,
+              genres: [genre]
+            });
+          }
+        });
+      } catch (err) {
+        console.warn(`⚠️ Erreur pour genre "${genre}":`, err);
+      }
+    }
+
+    console.log(`📊 ${artistsMap.size} artistes émergents trouvés`);
+
+    // 5. Calculer scores et filtrer
+    const scoredArtists = Array.from(artistsMap.values())
+      .map(({ artist, genres }) => {
+        const matchScore = calculateMatchScore(genres, extendedGenres);
+        const emergenceScore = calculateEmergenceScore(artist);
+
+        // Récupérer l'image (Last.fm retourne un tableau d'images de différentes tailles)
+        let imageUrl = '';
+        if (Array.isArray(artist.image)) {
+          // Prendre la plus grande image disponible
+          const largeImg = artist.image.find((img: any) => img.size === 'extralarge' || img.size === 'large');
+          imageUrl = largeImg?.['#text'] || artist.image[artist.image.length - 1]?.['#text'] || '';
+        } else if (typeof artist.image === 'string') {
+          imageUrl = artist.image;
+        }
 
         return {
           name: artist.name,
-          mbid: artist.mbid,
-          genres: artist.genres || [],
-          country: artist.country,
-          imageUrl: artist.image_url,
+          mbid: artist.mbid || '',
+          genres: genres,
+          imageUrl: imageUrl,
           listeners: artist.listeners,
-          lastfmUrl: artist.lastfm_url,
-          emergenceScore: artist.emergence_score,
+          lastfmUrl: artist.url,
+          emergenceScore: emergenceScore,
           matchScore: matchScore,
-          lifeSpan: artist.life_span,
         };
       })
       .filter(a => a.matchScore > 0)
@@ -314,12 +371,9 @@ export async function saveEmergingDiscovery(
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    await supabase.from('emerging_discoveries').insert({
-      user_id: user.id,
-      artist_name: artistName,
-      artist_mbid: artistMbid,
-      genres: genres,
-    });
+    // Optionnel : sauvegarder dans Supabase si tu veux
+    // Pour l'instant, on sauvegarde juste en localStorage
+    localStorage.setItem(`emerging_saved_${artistName}`, 'true');
 
     console.log("✅ Découverte sauvegardée:", artistName);
   } catch (err: any) {
