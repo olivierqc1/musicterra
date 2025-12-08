@@ -1,136 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- SEO Meta Tags -->
-    <title>🎵 MusicTerra - Découvre 3000+ Genres Musicaux du Monde</title>
-    <meta name="description" content="🎵 Découvre 3000+ genres musicaux du monde entier ! Tourne la roue, note tes styles préférés, découvre des artistes émergents avant tout le monde. Ton profil musical personnalisé t'attend !" />
-    <meta name="keywords" content="musique, genres musicaux, découverte musicale, artistes émergents, concerts, world music, music discovery, profil musical, roue musicale, styles musicaux" />
-    
+    <!-- Primary Meta Tags -->
+    <title>MusicTerra - Découvrez 150+ Genres Musicaux du Monde Entier</title>
+    <meta name="title" content="MusicTerra - Découvrez 150+ Genres Musicaux du Monde Entier">
+    <meta name="description" content="Explorez plus de 150 genres musicaux du monde entier : Indie Rock, K-Pop, Jazz, Metal, Hip Hop et bien plus. Histoire, artistes emblématiques et playlists Spotify pour chaque genre.">
+    <meta name="keywords" content="genres musicaux, musique mondiale, indie rock, k-pop, jazz, metal, hip hop, reggae, blues, découverte musicale, playlists spotify, histoire de la musique">
+    <meta name="author" content="MusicTerra">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://musicterra.vercel.app">
+
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://musicterra.xyz/" />
-    <meta property="og:title" content="🎵 MusicTerra - Découvre 3000+ Genres Musicaux" />
-    <meta property="og:description" content="Tourne la roue, découvre des genres musicaux du monde entier et des artistes émergents. Crée ton profil musical unique !" />
-    <meta property="og:image" content="https://musicterra.xyz/og-image.jpg" />
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://musicterra.xyz/" />
-    <meta property="twitter:title" content="🎵 MusicTerra - Découvre 3000+ Genres Musicaux" />
-    <meta property="twitter:description" content="Tourne la roue, découvre des genres musicaux du monde entier et des artistes émergents !" />
-    <meta property="twitter:image" content="https://musicterra.xyz/og-image.jpg" />
-    
-    <!-- Google verification -->
-    <meta name="google-site-verification" content="google531c00e69461582a" />
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://musicterra.xyz/" />
-    
-    <!-- Schema.org markup for SEO -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MusicTerra">
+    <meta property="og:title" content="MusicTerra - 150+ Genres Musicaux du Monde">
+    <meta property="og:description" content="Explorez les genres musicaux du monde entier avec leur histoire, artistes et playlists Spotify">
+    <meta property="og:url" content="https://musicterra.vercel.app">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MusicTerra - Genres Musicaux du Monde">
+    <meta name="twitter:description" content="Découvrez 150+ genres musicaux avec histoire et playlists">
+
+    <!-- Structured Data - Website -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
+      "@type": "WebSite",
       "name": "MusicTerra",
-      "description": "Découvre 3000+ genres musicaux du monde entier, crée ton profil musical personnalisé et découvre des artistes émergents",
-      "url": "https://musicterra.xyz",
-      "applicationCategory": "MusicApplication",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "150"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "featureList": [
-        "Découverte de 3000+ genres musicaux",
-        "Roue interactive de genres",
-        "Profil musical personnalisé",
-        "Artistes émergents",
-        "Concerts près de chez vous"
-      ]
+      "alternateName": "Music Terra",
+      "url": "https://musicterra.vercel.app",
+      "description": "Plateforme de découverte de genres musicaux du monde entier avec histoire, artistes et playlists",
+      "inLanguage": ["fr", "en"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://musicterra.vercel.app/?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
     }
     </script>
 
-    <style>
-      /* Global styles */
-      * {
-        box-sizing: border-box;
-      }
-      
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-          sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      /* Custom scrollbars */
-      ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #5568d3 0%, #63408b 100%);
-      }
-
-      /* Smooth transitions */
-      button, input, select, a {
-        transition: all 0.2s ease;
-      }
-
-      /* Focus states */
-      button:focus-visible,
-      input:focus-visible,
-      select:focus-visible {
-        outline: 2px solid #667eea;
-        outline-offset: 2px;
-      }
-
-      /* Animation */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
+    <!-- Structured Data - ItemList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Genres Musicaux du Monde",
+      "description": "Collection complète des genres musicaux mondiaux",
+      "numberOfItems": 150,
+      "itemListElement": [
+        {
+          "@type": "MusicGenre",
+          "name": "Indie Rock",
+          "description": "Rock indépendant émergé dans les années 1980",
+          "url": "https://musicterra.vercel.app/#indie-rock"
+        },
+        {
+          "@type": "MusicGenre",
+          "name": "K-Pop",
+          "description": "Pop coréenne, phénomène musical mondial",
+          "url": "https://musicterra.vercel.app/#k-pop"
+        },
+        {
+          "@type": "MusicGenre",
+          "name": "Heavy Metal",
+          "description": "Metal britannique des années 1970",
+          "url": "https://musicterra.vercel.app/#heavy-metal"
+        },
+        {
+          "@type": "MusicGenre",
+          "name": "Jazz",
+          "description": "Genre musical né aux États-Unis",
+          "url": "https://musicterra.vercel.app/#jazz"
+        },
+        {
+          "@type": "MusicGenre",
+          "name": "Hip Hop",
+          "description": "Culture urbaine née à New York",
+          "url": "https://musicterra.vercel.app/#hip-hop"
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .fade-in {
-        animation: fadeIn 0.3s ease;
-      }
-    </style>
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    
-    <!-- ERUDA - Console mobile -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
-    
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
