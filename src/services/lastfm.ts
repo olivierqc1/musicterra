@@ -21,7 +21,14 @@ export async function getTopArtistsByTag(
     );
     
     const data = await response.json();
-    return data.topartists?.artist || [];
+    const artists = data.topartists?.artist || [];
+    
+    // Convertir listeners et playcount en nombres
+    return artists.map((a: any) => ({
+      ...a,
+      listeners: parseInt(a.listeners || '0', 10),
+      playcount: parseInt(a.playcount || '0', 10),
+    }));
   } catch (error) {
     console.error('Last.fm error:', error);
     return [];
@@ -38,7 +45,14 @@ export async function getSimilarArtists(
     );
     
     const data = await response.json();
-    return data.similarartists?.artist || [];
+    const artists = data.similarartists?.artist || [];
+    
+    // Convertir listeners et playcount en nombres
+    return artists.map((a: any) => ({
+      ...a,
+      listeners: parseInt(a.listeners || '0', 10),
+      playcount: parseInt(a.playcount || '0', 10),
+    }));
   } catch (error) {
     console.error('Last.fm error:', error);
     return [];
