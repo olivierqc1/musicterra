@@ -23,6 +23,11 @@ export async function getTopArtistsByTag(
     const data = await response.json();
     const artists = data.topartists?.artist || [];
     
+    // DEBUG: voir la structure brute
+    if (artists[0]) {
+      console.log('🔍 Artiste brut Last.fm:', JSON.stringify(artists[0], null, 2));
+    }
+    
     // Convertir listeners et playcount en nombres
     return artists.map((a: any) => ({
       ...a,
