@@ -49,10 +49,14 @@ export async function getSimilarArtists(
 export function filterEmerging(artists: LastFmArtist[], tag?: string): LastFmArtist[] {
   console.log(`📊 ${tag}: ${artists.length} artistes reçus`);
   
-  // Log des exemples
-  if (artists.length > 0) {
-    console.log(`  Ex 1: ${artists[0].name} - ${artists[0].listeners.toLocaleString()} listeners`);
-    if (artists[1]) console.log(`  Ex 2: ${artists[1].name} - ${artists[1].listeners.toLocaleString()} listeners`);
+  // Log des exemples (avec vérification)
+  if (artists.length > 0 && artists[0]) {
+    const l1 = artists[0].listeners || 0;
+    console.log(`  Ex 1: ${artists[0].name} - ${l1.toLocaleString()} listeners`);
+    if (artists[1]) {
+      const l2 = artists[1].listeners || 0;
+      console.log(`  Ex 2: ${artists[1].name} - ${l2.toLocaleString()} listeners`);
+    }
   }
   
   const popularGenres = ['rock', 'pop', 'jazz', 'electronic', 'hip hop', 'metal', 'indie', 'alternative'];
@@ -63,7 +67,9 @@ export function filterEmerging(artists: LastFmArtist[], tag?: string): LastFmArt
   
   console.log(`  Seuil: ${listenerThreshold.toLocaleString()} listeners`);
   
+  // Filtrer en vérifiant que listeners existe
   const filtered = artists.filter(a => 
+    a.listeners && 
     a.listeners < listenerThreshold && 
     a.playcount < playcountThreshold
   );
@@ -72,6 +78,7 @@ export function filterEmerging(artists: LastFmArtist[], tag?: string): LastFmArt
 
   if (filtered.length === 0) {
     const fallback = artists.filter(a => 
+      a.listeners &&
       a.listeners < listenerThreshold * 2 && 
       a.playcount < playcountThreshold * 2
     ).slice(0, 10);
