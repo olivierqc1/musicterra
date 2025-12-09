@@ -3,107 +3,96 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://musicterra.vercel.app/</loc>
-    <lastmod>2025-12-08</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://musicterra.xyz/</loc>
+    <lastmod>2025-12-09</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <!-- Profile Page -->
+  <url>
+    <loc>https://musicterra.xyz/profile</loc>
+    <lastmod>2025-12-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Emerging Artists Page -->
+  <url>
+    <loc>https://musicterra.xyz/emerging</loc>
+    <lastmod>2025-12-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Concerts Page -->
+  <url>
+    <loc>https://musicterra.xyz/concerts</loc>
+    <lastmod>2025-12-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- Popular genres -->
   <url>
-    <loc>https://musicterra.vercel.app/#indie-rock</loc>
-    <lastmod>2025-12-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://musicterra.vercel.app/#k-pop</loc>
-    <lastmod>2025-12-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://musicterra.vercel.app/#heavy-metal</loc>
-    <lastmod>2025-12-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://musicterra.vercel.app/#hip-hop</loc>
-    <lastmod>2025-12-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://musicterra.vercel.app/#jazz</loc>
-    <lastmod>2025-12-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://musicterra.vercel.app/#reggae</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#indie-rock</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#techno</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#k-pop</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#blues</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#heavy-metal</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#punk</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#hip-hop</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#soul</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#jazz</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#funk</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#reggae</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#disco</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#techno</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#house</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#blues</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://musicterra.vercel.app/#trap</loc>
-    <lastmod>2025-12-08</lastmod>
+    <loc>https://musicterra.xyz/#punk</loc>
+    <lastmod>2025-12-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
