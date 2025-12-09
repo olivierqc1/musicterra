@@ -11,6 +11,24 @@ export interface LastFmArtist {
   playcount: number;
 }
 
+// Obtenir les stats d'un artiste spécifique
+async function getArtistInfo(artistName: string): Promise<{ listeners: number; playcount: number }> {
+  try {
+    const response = await fetch(
+      `${BASE_URL}?method=artist.getinfo&artist=${encodeURIComponent(artistName)}&api_key=${API_KEY}&format=json`
+    );
+    const data = await response.json();
+    
+    return {
+      listeners: parseInt(data.artist?.stats?.listeners || '0', 10),
+      playcount: parseInt(data.artist?.stats?.playcount || '0', 10),
+    };
+  } catch (error) {
+    console.warn(`Erreur stats pour ${artistName}:`, error);
+    return { listeners: 0, playcount: 0 };
+  }
+}
+
 export async function getTopArtistsByTag(
   tag: string,
   limit: number = 50
@@ -23,17 +41,31 @@ export async function getTopArtistsByTag(
     const data = await response.json();
     const artists = data.topartists?.artist || [];
     
-    // DEBUG: voir la structure brute
-    if (artists[0]) {
-      console.log('🔍 Artiste brut Last.fm:', JSON.stringify(artists[0], null, 2));
+    console.log(`🎵 ${tag}: ${artists.length} artistes récupérés, récupération des stats...`);
+    
+    // Récupérer les stats pour chaque artiste en parallèle (max 10 à la fois pour ne pas surcharger l'API)
+    const batchSize = 10;
+    const enrichedArtists: LastFmArtist[] = [];
+    
+    for (let i = 0; i < artists.length; i += batchSize) {
+      const batch = artists.slice(i, i + batchSize);
+      
+      const statsPromises = batch.map(async (artist: any) => {
+        const stats = await getArtistInfo(artist.name);
+        return {
+          ...artist,
+          listeners: stats.listeners,
+          playcount: stats.playcount,
+        };
+      });
+      
+      const batchResults = await Promise.all(statsPromises);
+      enrichedArtists.push(...batchResults);
     }
     
-    // Convertir listeners et playcount en nombres
-    return artists.map((a: any) => ({
-      ...a,
-      listeners: parseInt(a.listeners || '0', 10),
-      playcount: parseInt(a.playcount || '0', 10),
-    }));
+    console.log(`✅ Stats récupérées pour ${enrichedArtists.length} artistes`);
+    
+    return enrichedArtists;
   } catch (error) {
     console.error('Last.fm error:', error);
     return [];
@@ -52,12 +84,27 @@ export async function getSimilarArtists(
     const data = await response.json();
     const artists = data.similarartists?.artist || [];
     
-    // Convertir listeners et playcount en nombres
-    return artists.map((a: any) => ({
-      ...a,
-      listeners: parseInt(a.listeners || '0', 10),
-      playcount: parseInt(a.playcount || '0', 10),
-    }));
+    // Même logique pour similar artists
+    const batchSize = 10;
+    const enrichedArtists: LastFmArtist[] = [];
+    
+    for (let i = 0; i < artists.length; i += batchSize) {
+      const batch = artists.slice(i, i + batchSize);
+      
+      const statsPromises = batch.map(async (artist: any) => {
+        const stats = await getArtistInfo(artist.name);
+        return {
+          ...artist,
+          listeners: stats.listeners,
+          playcount: stats.playcount,
+        };
+      });
+      
+      const batchResults = await Promise.all(statsPromises);
+      enrichedArtists.push(...batchResults);
+    }
+    
+    return enrichedArtists;
   } catch (error) {
     console.error('Last.fm error:', error);
     return [];
@@ -68,7 +115,7 @@ export async function getSimilarArtists(
 export function filterEmerging(artists: LastFmArtist[], tag?: string): LastFmArtist[] {
   console.log(`📊 ${tag}: ${artists.length} artistes reçus`);
   
-  // Log des exemples (avec vérification)
+  // Log des exemples
   if (artists.length > 0 && artists[0]) {
     const l1 = artists[0].listeners || 0;
     console.log(`  Ex 1: ${artists[0].name} - ${l1.toLocaleString()} listeners`);
@@ -86,9 +133,9 @@ export function filterEmerging(artists: LastFmArtist[], tag?: string): LastFmArt
   
   console.log(`  Seuil: ${listenerThreshold.toLocaleString()} listeners`);
   
-  // Filtrer en vérifiant que listeners existe
+  // Filtrer
   const filtered = artists.filter(a => 
-    a.listeners && 
+    a.listeners > 0 && 
     a.listeners < listenerThreshold && 
     a.playcount < playcountThreshold
   );
@@ -97,7 +144,7 @@ export function filterEmerging(artists: LastFmArtist[], tag?: string): LastFmArt
 
   if (filtered.length === 0) {
     const fallback = artists.filter(a => 
-      a.listeners &&
+      a.listeners > 0 &&
       a.listeners < listenerThreshold * 2 && 
       a.playcount < playcountThreshold * 2
     ).slice(0, 10);
