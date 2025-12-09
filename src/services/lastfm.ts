@@ -19,13 +19,6 @@ async function getArtistInfo(artistName: string): Promise<{ listeners: number; p
     );
     const data = await response.json();
     
-    // DEBUG: voir la structure
-    console.log(`📍 Stats pour ${artistName}:`, {
-      listeners: data.artist?.stats?.listeners,
-      playcount: data.artist?.stats?.playcount,
-      fullData: JSON.stringify(data).substring(0, 200)
-    });
-    
     return {
       listeners: parseInt(data.artist?.stats?.listeners || '0', 10),
       playcount: parseInt(data.artist?.stats?.playcount || '0', 10),
@@ -50,7 +43,7 @@ export async function getTopArtistsByTag(
     
     console.log(`🎵 ${tag}: ${artists.length} artistes récupérés, récupération des stats...`);
     
-    // Récupérer les stats pour chaque artiste en parallèle (max 10 à la fois pour ne pas surcharger l'API)
+    // Récupérer les stats pour chaque artiste en parallèle (max 10 à la fois)
     const batchSize = 10;
     const enrichedArtists: LastFmArtist[] = [];
     
@@ -135,29 +128,31 @@ export function filterEmerging(artists: LastFmArtist[], tag?: string): LastFmArt
   const popularGenres = ['rock', 'pop', 'jazz', 'electronic', 'hip hop', 'metal', 'indie', 'alternative'];
   const isPopularGenre = tag ? popularGenres.some(g => tag.toLowerCase().includes(g)) : false;
   
-  const listenerThreshold = isPopularGenre ? 500000 : 200000;
-  const playcountThreshold = isPopularGenre ? 5000000 : 2000000;
+  // Seuils ajustés: min et max
+  const minListeners = 5000;  // Au moins 5k listeners
+  const maxListeners = isPopularGenre ? 150000 : 80000;  // Max 150k pour genres populaires, 80k sinon
+  const maxPlaycount = isPopularGenre ? 2000000 : 1000000;
   
-  console.log(`  Seuil: ${listenerThreshold.toLocaleString()} listeners`);
+  console.log(`  Seuil: ${minListeners.toLocaleString()} - ${maxListeners.toLocaleString()} listeners`);
   
-  // Filtrer
+  // Filtrer avec min ET max
   const filtered = artists.filter(a => 
-    a.listeners > 0 && 
-    a.listeners < listenerThreshold && 
-    a.playcount < playcountThreshold
+    a.listeners >= minListeners && 
+    a.listeners < maxListeners && 
+    a.playcount < maxPlaycount
   );
 
   console.log(`  → ${filtered.length} après filtre`);
 
   if (filtered.length === 0) {
+    // Fallback: être plus permissif
     const fallback = artists.filter(a => 
-      a.listeners > 0 &&
-      a.listeners < listenerThreshold * 2 && 
-      a.playcount < playcountThreshold * 2
-    ).slice(0, 10);
-    console.log(`  → ${fallback.length} avec fallback (x2)`);
+      a.listeners >= minListeners / 2 &&  // Min 2.5k listeners
+      a.listeners < maxListeners * 3
+    ).slice(0, 15);
+    console.log(`  → ${fallback.length} avec fallback`);
     return fallback;
   }
 
-  return filtered;
+  return filtered.slice(0, 20);  // Max 20 artistes
 }
