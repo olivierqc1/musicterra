@@ -288,7 +288,7 @@ export async function getPersonalizedEmergingArtists(
     for (const genre of topGenres) {
       try {
         const artists = await getTopArtistsByTag(genre, 30);
-        const emerging = filterEmerging(artists);
+        const emerging = filterEmerging(artists, genre);
         
         console.log(`  ${genre}: ${emerging.length} émergents`);
 
