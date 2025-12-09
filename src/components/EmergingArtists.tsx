@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getPersonalizedEmergingArtists, EmergingArtist, saveEmergingDiscovery } from '../services/emergingArtists';
 import { useAuth } from '../context/AuthContext';
 import { trackAction } from '../services/userBehavior';
+import SEO from './SEO';
 
 interface Props {
   language: 'fr' | 'en';
@@ -69,6 +70,11 @@ export default function EmergingArtists({ language }: Props) {
   if (!session)
     return (
       <div style={styles.card}>
+        <SEO 
+          title="Artistes Émergents"
+          description="Découvrez les artistes émergents dans vos genres favoris. Connectez-vous pour obtenir des recommandations personnalisées."
+          keywords="artistes émergents, nouveaux artistes, découverte musicale, talents musicaux"
+        />
         <p>
           {t('Connectez-vous pour découvrir des artistes émergents', 'Sign in to discover emerging artists')}
         </p>
@@ -78,6 +84,11 @@ export default function EmergingArtists({ language }: Props) {
   if (loading && artists.length === 0)
     return (
       <div style={styles.loadingContainer}>
+        <SEO 
+          title="Artistes Émergents"
+          description="Découvrez les artistes émergents dans vos genres favoris. Nouveaux talents à suivre avec statistiques Last.fm."
+          keywords="artistes émergents, nouveaux artistes, découverte musicale, talents musicaux, last.fm"
+        />
         <div style={styles.spinner}></div>
         <p>{t("Recherche d'artistes émergents basée sur vos goûts...", 'Finding emerging artists based on your taste...')}</p>
       </div>
@@ -86,6 +97,11 @@ export default function EmergingArtists({ language }: Props) {
   if (artists.length === 0)
     return (
       <div style={styles.card}>
+        <SEO 
+          title="Artistes Émergents"
+          description="Découvrez les artistes émergents. Notez plus de genres pour obtenir des recommandations personnalisées."
+          keywords="artistes émergents, nouveaux artistes, découverte musicale"
+        />
         <h3>{t('🌱 Artistes émergents', '🌱 Emerging artists')}</h3>
         <p style={{ color: '#777' }}>
           {t(
@@ -101,6 +117,23 @@ export default function EmergingArtists({ language }: Props) {
 
   return (
     <div style={styles.container}>
+      <SEO 
+        title="Artistes Émergents"
+        description="Découvrez les artistes émergents dans vos genres favoris. Nouveaux talents à suivre avec statistiques Last.fm en temps réel. Soyez parmi les premiers à les découvrir!"
+        keywords="artistes émergents, nouveaux artistes, découverte musicale, talents musicaux, last.fm, indie, rock, pop, jazz, metal, underground"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Artistes Émergents MusicTerra",
+          "description": "Collection d'artistes émergents personnalisée par genre musical",
+          "url": "https://musicterra.xyz/emerging",
+          "about": {
+            "@type": "MusicGroup",
+            "genre": "Various"
+          }
+        }}
+      />
+
       {/* Header */}
       <div style={styles.header}>
         <div>
@@ -184,7 +217,7 @@ export default function EmergingArtists({ language }: Props) {
               {/* Actions */}
               <div style={{ display: 'flex', gap: 6 }}>
                 {artist.lastfmUrl && (
-                  <a
+                  
                     href={artist.lastfmUrl}
                     target="_blank"
                     rel="noreferrer"
@@ -224,7 +257,6 @@ export default function EmergingArtists({ language }: Props) {
   );
 }
 
-// ✅ Styles optimisés : unifiés, légers, avec ombre et transitions douces
 const styles: Record<string, React.CSSProperties> = {
   container: { display: 'grid', gap: 16 },
   card: {
