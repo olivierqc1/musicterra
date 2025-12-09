@@ -1,6 +1,6 @@
 // ———————————————————————————
 // Profile.tsx — MusicTerra (version fusionnée)
-// Profil perso + Instagram + Genres + Recherche + Export JSON + RATINGS HISTORY
+// Profil perso + Instagram + Genres + Recherche RÉELLE + Export JSON + RATINGS + LOCALISATION
 // ———————————————————————————
 
 import React, { useEffect, useRef, useState } from "react";
@@ -38,6 +38,8 @@ interface Profile {
   username: string;
   bio: string;
   country: string;
+  current_country?: string;
+  origin_country?: string;
   genres: string[];
   email?: string;
   instagram?: { connected: boolean; handle: string };
@@ -68,6 +70,33 @@ function saveProfile(p: Profile) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
   } catch (e) {
     console.error("Erreur sauvegarde profil", e);
+  }
+}
+
+// Sauvegarder dans Supabase
+async function saveProfileToSupabase(userId: string, profile: Profile) {
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        display_name: profile.fullName,
+        username: profile.username,
+        bio: profile.bio,
+        country: profile.country,
+        current_country: profile.current_country,
+        origin_country: profile.origin_country,
+        genres: profile.genres,
+        instagram_handle: profile.instagram?.handle,
+      })
+      .eq('id', userId);
+
+    if (error) {
+      console.error('Erreur sauvegarde profil:', error);
+    } else {
+      console.log('✅ Profil sauvegardé dans Supabase');
+    }
+  } catch (e) {
+    console.error('Exception sauvegarde:', e);
   }
 }
 
@@ -140,6 +169,8 @@ export default function ProfilePage() {
         username: "",
         bio: "",
         country: "",
+        current_country: "",
+        origin_country: "",
         genres: [],
         email: session?.user?.email || "",
         instagram: { connected: false, handle: "" },
@@ -166,7 +197,6 @@ export default function ProfilePage() {
       setLoadingRatings(true);
       console.log("📥 Chargement des ratings...");
 
-      // Timeout de 5 secondes
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Timeout après 5 secondes')), 5000);
       });
@@ -177,7 +207,6 @@ export default function ProfilePage() {
         .eq('user_id', session.user.id)
         .order('updated_at', { ascending: false });
 
-      // Race: première promesse qui se termine gagne
       const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
 
       if (error) {
@@ -227,7 +256,6 @@ export default function ProfilePage() {
     setRatings(localRatings);
   };
 
-// Filtrer et trier les ratings
   const filteredRatings = ratings
     .filter(r => filter === 'all' || r.item_type === filter)
     .sort((a, b) => {
@@ -240,7 +268,6 @@ export default function ProfilePage() {
       }
     });
 
-  // Stats
   const stats = {
     total: ratings.length,
     genres: ratings.filter(r => r.item_type === 'genre').length,
@@ -275,11 +302,14 @@ export default function ProfilePage() {
 
   const isInstaConnected = profile.instagram?.connected && profile.instagram?.handle;
 
+  // Sauvegarder dans localStorage ET Supabase
   useEffect(() => {
     saveProfile(profile);
-  }, [profile]);
+    if (session?.user?.id) {
+      saveProfileToSupabase(session.user.id, profile);
+    }
+  }, [profile, session]);
 
-  // Export JSON (inclut maintenant les ratings)
   const exportProfile = () => {
     const exportData = {
       ...profile,
@@ -299,50 +329,60 @@ export default function ProfilePage() {
     URL.revokeObjectURL(url);
   };
 
-  // ——— Recherche de profils (mock) ———
+  // ──────── RECHERCHE RÉELLE ────────
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailProfile, setDetailProfile] = useState<any | null>(null);
   const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
 
-  const mockProfiles = [
-    {
-      id: "u1",
-      fullName: "Amina F.",
-      username: "amina.fm",
-      country: "Maroc",
-      bio: "Exploratrice de musiques gnawa & jazz.",
-      genres: ["Gnawa", "Jazz", "Afrobeat"],
-      instagram: "amina.fm",
-    },
-    {
-      id: "u2",
-      fullName: "Diego Pérez",
-      username: "diegopz",
-      country: "Argentine",
-      bio: "Rock national, tango nuevo, indie.",
-      genres: ["Rock Argentin", "Tango", "Indie Rock"],
-      instagram: "diegopz",
-    },
-    {
-      id: "u3",
-      fullName: "Li Wei",
-      username: "li.wei",
-      country: "Chine",
-      bio: "City pop, C-pop & ambient.",
-      genres: ["City Pop", "C-Pop", "Ambient"],
-    },
-  ];
+  const searchProfiles = async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
 
-  const filtered = React.useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return mockProfiles;
-    return mockProfiles.filter(
-      (p) =>
-        p.fullName.toLowerCase().includes(q) ||
-        p.username.toLowerCase().includes(q) ||
-        (p.genres && p.genres.some((g) => g.toLowerCase().includes(q))) ||
-        (p.country && p.country.toLowerCase().includes(q))
-    );
+    try {
+      setSearching(true);
+      const q = query.toLowerCase();
+
+      // Recherche dans display_name, username, country, bio
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .neq('id', session?.user?.id || '') // Exclure soi-même
+        .or(`display_name.ilike.%${q}%,username.ilike.%${q}%,country.ilike.%${q}%,bio.ilike.%${q}%`)
+        .limit(20);
+
+      if (error) {
+        console.error('Erreur recherche:', error);
+        setSearchResults([]);
+      } else {
+        console.log(`🔍 ${data?.length || 0} profils trouvés`);
+        
+        // Filtrer aussi par genres si présents
+        const filtered = data?.filter(p => {
+          if (!p.genres || p.genres.length === 0) return true;
+          return p.genres.some((g: string) => g.toLowerCase().includes(q));
+        }) || [];
+        
+        setSearchResults(filtered);
+      }
+    } catch (e) {
+      console.error('Exception recherche:', e);
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  // Debounce pour pas spammer l'API
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      searchProfiles(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [search]);
 
   const applyProfileFromResult = (p: any) => {
@@ -359,9 +399,7 @@ export default function ProfilePage() {
         ? { connected: true, handle: p.instagram }
         : prev.instagram,
     }));
-  };
-
-  return (
+  };return (
     <div className="mx-auto max-w-5xl p-4 md:p-8 space-y-8">
       <motion.h1
         initial={{ opacity: 0, y: -8 }}
@@ -394,8 +432,8 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* Avatar, genres et Instagram */}
-      <div className="grid md:grid-cols-2 gap-6">
+      {/* Avatar, Instagram et Localisation */}
+      <div className="grid md:grid-cols-3 gap-6">
         <Card className="rounded-2xl">
           <CardHeader>
             <CardTitle>Photo et genres</CardTitle>
@@ -414,12 +452,13 @@ export default function ProfilePage() {
                   </AvatarFallback>
                 )}
               </Avatar>
-              <div className="flex gap-2">
-                <Button variant="secondary" onClick={onPickAvatar}>
+              <div className="flex flex-col gap-2">
+                <Button variant="secondary" size="sm" onClick={onPickAvatar}>
                   Choisir…
                 </Button>
                 <Button
                   variant="ghost"
+                  size="sm"
                   onClick={() =>
                     setProfile((p) => ({ ...p, avatarDataUrl: undefined }))
                   }
@@ -461,14 +500,52 @@ export default function ProfilePage() {
                 }
               />
               {!isInstaConnected ? (
-                <Button onClick={connectInstagram}>
+                <Button onClick={connectInstagram} size="sm">
                   <Instagram className="h-4 w-4 mr-2" /> Connecter
                 </Button>
               ) : (
-                <Button variant="destructive" onClick={disconnectInstagram}>
+                <Button variant="destructive" size="sm" onClick={disconnectInstagram}>
                   <LogOut className="h-4 w-4 mr-2" /> Déconnecter
                 </Button>
               )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* LOCALISATION */}
+        <Card className="rounded-2xl">
+          <CardHeader>
+            <CardTitle>🌍 Localisation</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="current">Où je suis</Label>
+              <Input
+                id="current"
+                placeholder="ex. Espagne"
+                value={profile.current_country || ''}
+                onChange={(e) =>
+                  setProfile((p) => ({ ...p, current_country: e.target.value }))
+                }
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Artistes émergents locaux
+              </p>
+            </div>
+            
+            <div>
+              <Label htmlFor="origin">D'où je viens</Label>
+              <Input
+                id="origin"
+                placeholder="ex. Canada"
+                value={profile.origin_country || ''}
+                onChange={(e) =>
+                  setProfile((p) => ({ ...p, origin_country: e.target.value }))
+                }
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Garde un lien avec ton pays d'origine
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -481,7 +558,6 @@ export default function ProfilePage() {
             <CardTitle>Mon historique de notes</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Filtres */}
             <div className="flex flex-wrap gap-2 justify-between">
               <div className="flex gap-2">
                 <Button
@@ -517,7 +593,6 @@ export default function ProfilePage() {
               </select>
             </div>
 
-            {/* Liste */}
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {filteredRatings.map((rating) => (
                 <div
@@ -557,47 +632,83 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
-      {/* Recherche de profils */}
+      {/* Recherche de profils RÉELLE */}
       <Card className="rounded-2xl">
         <CardHeader>
-          <CardTitle>Recherche de profils</CardTitle>
+          <CardTitle>🔍 Recherche d'utilisateurs</CardTitle>
         </CardHeader>
         <CardContent>
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher par nom, pays ou genre…"
+            placeholder="Rechercher par nom, username, pays ou genre…"
             className="mb-4"
           />
 
           <div className="grid md:grid-cols-2 gap-4">
-            {filtered.map((p) => (
+            {searching && (
+              <p className="text-sm text-muted-foreground col-span-2 text-center">
+                🔍 Recherche en cours...
+              </p>
+            )}
+            
+            {!searching && searchResults.length === 0 && search.trim() && (
+              <p className="text-muted-foreground text-sm text-center col-span-2">
+                Aucun utilisateur trouvé.
+              </p>
+            )}
+            
+            {!searching && searchResults.length === 0 && !search.trim() && (
+              <p className="text-muted-foreground text-sm text-center col-span-2">
+                Tape pour chercher des utilisateurs MusicTerra...
+              </p>
+            )}
+
+            {searchResults.map((p) => (
               <Card
                 key={p.id}
                 className="cursor-pointer hover:bg-accent transition"
                 onClick={() => {
-                  setDetailProfile(p);
+                  setDetailProfile({
+                    id: p.id,
+                    fullName: p.display_name || 'Utilisateur',
+                    username: p.username,
+                    country: p.country,
+                    bio: p.bio,
+                    genres: p.genres || [],
+                    instagram: p.instagram_handle,
+                  });
                   setDetailOpen(true);
                 }}
               >
                 <CardContent className="p-4 text-center">
-                  <h4 className="font-semibold">{p.fullName}</h4>
-                  <p className="text-sm text-muted-foreground">{p.country}</p>
-                  <div className="flex flex-wrap justify-center gap-1 mt-1">
-                    {p.genres.map((g) => (
-                      <Badge key={g} variant="secondary" className="rounded-xl">
-                        {g}
-                      </Badge>
-                    ))}
-                  </div>
+                  <h4 className="font-semibold">{p.display_name || 'Utilisateur'}</h4>
+                  {p.username && (
+                    <p className="text-xs text-muted-foreground">@{p.username}</p>
+                  )}
+                  {p.country && (
+                    <p className="text-sm text-muted-foreground flex items-center justify-center gap-1 mt-1">
+                      <MapPin className="h-3 w-3" />
+                      {p.country}
+                    </p>
+                  )}
+                  {p.genres && p.genres.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-1 mt-2">
+                      {p.genres.slice(0, 3).map((g: string) => (
+                        <Badge key={g} variant="secondary" className="rounded-xl text-xs">
+                          {g}
+                        </Badge>
+                      ))}
+                      {p.genres.length > 3 && (
+                        <Badge variant="secondary" className="rounded-xl text-xs">
+                          +{p.genres.length - 3}
+                        </Badge>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
-            {filtered.length === 0 && (
-              <p className="text-muted-foreground text-sm text-center">
-                Aucun profil trouvé.
-              </p>
-            )}
           </div>
         </CardContent>
       </Card>
@@ -632,10 +743,13 @@ function ResponsiveProfileDetail({
   const DetailContent = () => (
     <div className="flex flex-col items-center gap-3 text-center p-4">
       <h3 className="text-lg font-semibold">{profile.fullName}</h3>
+      {profile.username && (
+        <p className="text-sm text-muted-foreground">@{profile.username}</p>
+      )}
       {profile.bio && <p className="text-sm text-muted-foreground">{profile.bio}</p>}
       {profile.instagram && (
-        
-        <a  href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
+        <a  
+          href={`https://instagram.com/${profile.instagram.replace("@", "")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-sm text-primary hover:underline"
