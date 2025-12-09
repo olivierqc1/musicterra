@@ -19,6 +19,13 @@ async function getArtistInfo(artistName: string): Promise<{ listeners: number; p
     );
     const data = await response.json();
     
+    // DEBUG: voir la structure
+    console.log(`📍 Stats pour ${artistName}:`, {
+      listeners: data.artist?.stats?.listeners,
+      playcount: data.artist?.stats?.playcount,
+      fullData: JSON.stringify(data).substring(0, 200)
+    });
+    
     return {
       listeners: parseInt(data.artist?.stats?.listeners || '0', 10),
       playcount: parseInt(data.artist?.stats?.playcount || '0', 10),
