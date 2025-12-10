@@ -1,5 +1,6 @@
 // src/services/concerts.ts
 import { supabase } from '../lib/supabase';
+import { createActivity } from './social'; // ✨ NOUVEAU
 
 // ✅ Types
 export interface ConcertAttendance {
@@ -18,16 +19,8 @@ export interface ConcertAttendance {
   updated_at: string;
 }
 
-// ✅ Amélioration globale
-// - moins de requêtes
-// - pas de .select() inutile
-// - logs allégés (seulement en mode DEV)
-// - meilleure gestion des erreurs silencieuses
-// - cache optionnel localStorage (pour la vitesse perçue)
-
 const isDev = import.meta.env.DEV;
 
-// 🧠 Helper générique de gestion d’erreur
 async function handleQuery<T>(promise: Promise<{ data: T | null; error: any }>): Promise<T | null> {
   const { data, error } = await promise;
   if (error) {
@@ -44,14 +37,15 @@ export async function markConcertStatus(
   eventDate: string,
   venueName: string,
   city: string,
-  status: 'going' | 'interested' | 'attended'
+  status: 'going' | 'interested' | 'attended',
+  rating?: number,
+  review?: string
 ) {
   if (!supabase) {
     if (isDev) console.warn('⚠️ Supabase non initialisé');
     return null;
   }
 
-  // ⚡ plus rapide : pas de .select()
   const { error } = await supabase.from('concert_attendance').upsert(
     {
       event_id: eventId,
@@ -60,6 +54,8 @@ export async function markConcertStatus(
       venue_name: venueName,
       city: city,
       status: status,
+      rating: rating,
+      review: review,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'user_id,event_id' }
@@ -67,11 +63,31 @@ export async function markConcertStatus(
 
   if (error && isDev) console.error('❌ markConcertStatus', error);
 
+  // ✨ NOUVEAU: Créer une activité
+  if (!error) {
+    if (status === 'going') {
+      await createActivity('going_concert', {
+        artist: eventName,
+        date: eventDate,
+        venue: venueName,
+        city: city,
+      });
+    } else if (status === 'attended') {
+      await createActivity('attended_concert', {
+        artist: eventName,
+        date: eventDate,
+        venue: venueName,
+        city: city,
+        rating: rating,
+      });
+    }
+  }
+
   // Cache local pour réaction immédiate
   try {
     localStorage.setItem(
       `concert_status_${eventId}`,
-      JSON.stringify({ status, updated_at: Date.now() })
+      JSON.stringify({ status, rating, updated_at: Date.now() })
     );
   } catch {}
 
@@ -87,7 +103,6 @@ export async function submitConcertReview(
 ) {
   if (!supabase) return null;
 
-  // ⚡ Pas de .single() (évite +400 ms)
   const { error } = await supabase
     .from('concert_attendance')
     .update({
@@ -101,7 +116,14 @@ export async function submitConcertReview(
 
   if (error && isDev) console.error('❌ submitConcertReview', error);
 
-  // Sauvegarde locale temporaire (UX instantanée)
+  // ✨ NOUVEAU: Créer une activité
+  if (!error) {
+    await createActivity('attended_concert', {
+      artist: eventId, // Tu peux améliorer ça en passant le nom de l'artiste
+      rating: rating,
+    });
+  }
+
   try {
     localStorage.setItem(
       `concert_review_${eventId}`,
@@ -112,11 +134,10 @@ export async function submitConcertReview(
   return !error;
 }
 
-// ✅ 3. Statut d’un utilisateur pour un concert donné
+// ✅ 3. Statut d'un utilisateur pour un concert donné
 export async function getUserConcertStatus(eventId: string) {
   if (!supabase) return null;
 
-  // ⚡ Vérifie d'abord le cache local
   try {
     const cached = localStorage.getItem(`concert_status_${eventId}`);
     if (cached) return JSON.parse(cached);
@@ -129,7 +150,7 @@ export async function getUserConcertStatus(eventId: string) {
   return data;
 }
 
-// ✅ 4. Tous les concerts d’un utilisateur
+// ✅ 4. Tous les concerts d'un utilisateur
 export async function getUserConcerts(userId: string) {
   if (!supabase) return [];
 
@@ -195,7 +216,6 @@ export async function uploadConcertPhoto(attendanceId: string, file: File) {
   const { data } = supabase.storage.from('concert-photos').getPublicUrl(filePath);
   const publicUrl = data?.publicUrl || '';
 
-  // ⚡ Pas de SELECT inutile
   const { error: dbError } = await supabase
     .from('concert_photos')
     .insert({ attendance_id: attendanceId, photo_url: publicUrl });
