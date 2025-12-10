@@ -367,7 +367,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                           target="_blank"
                           rel="noreferrer"
                           style={styles.linkBtn}
-                        >a
+                       <a>
                           {t('Billets', 'Tickets')} →
                         </a>
                       </div>
