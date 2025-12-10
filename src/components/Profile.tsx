@@ -1,11 +1,11 @@
 // ———————————————————————————
 // Profile.tsx — MusicTerra (version fusionnée)
-// Profil perso + Instagram + Genres + Recherche RÉELLE + Export JSON + RATINGS + LOCALISATION + SEO
+// Profil perso + Instagram + Genres + Recherche RÉELLE + Export JSON + RATINGS + LOCALISATION + SEO + SOCIAL
 // ———————————————————————————
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Instagram, LogOut, MapPin, Trash2, Download, Music, Globe } from "lucide-react";
+import { Instagram, LogOut, MapPin, Trash2, Download, Music, Globe, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import SEO from "@/components/SEO";
+import FollowButton from "@/components/FollowButton"; // ✨ NOUVEAU
+import FriendsFeed from "@/components/FriendsFeed"; // ✨ NOUVEAU
 
 // ───────────────────────────────
 // Types & storage
@@ -397,8 +399,7 @@ export default function ProfilePage() {
         ? { connected: true, handle: p.instagram }
         : prev.instagram,
     }));
-  };
-return (
+  };return (
     <div className="mx-auto max-w-5xl p-4 md:p-8 space-y-8">
       <SEO 
         title="Mon Profil Musical"
@@ -562,6 +563,21 @@ return (
           </CardContent>
         </Card>
       </div>
+
+      {/* ✨ NOUVEAU: FIL D'ACTIVITÉ DES AMIS */}
+      {session && (
+        <Card className="rounded-2xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Activité de mes amis
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FriendsFeed language="fr" limit={10} />
+          </CardContent>
+        </Card>
+      )}
 
       {/* HISTORIQUE RATINGS */}
       {ratings.length > 0 && (
@@ -785,7 +801,11 @@ function ResponsiveProfileDetail({
           ))}
         </div>
       )}
-      <Button onClick={() => onApply(profile)} className="mt-4">
+      
+      {/* ✨ NOUVEAU: Bouton Follow */}
+      <FollowButton userId={profile.id} size="md" language="fr" />
+      
+      <Button onClick={() => onApply(profile)} className="mt-2">
         Appliquer à mon profil
       </Button>
     </div>
