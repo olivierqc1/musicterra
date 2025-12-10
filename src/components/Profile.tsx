@@ -1,6 +1,6 @@
 // ———————————————————————————
 // Profile.tsx — MusicTerra (version fusionnée)
-// Profil perso + Instagram + Genres + Recherche RÉELLE + Export JSON + RATINGS + LOCALISATION
+// Profil perso + Instagram + Genres + Recherche RÉELLE + Export JSON + RATINGS + LOCALISATION + SEO
 // ———————————————————————————
 
 import React, { useEffect, useRef, useState } from "react";
@@ -29,6 +29,7 @@ import {
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
+import SEO from "@/components/SEO";
 
 // ───────────────────────────────
 // Types & storage
@@ -346,11 +347,10 @@ export default function ProfilePage() {
       setSearching(true);
       const q = query.toLowerCase();
 
-      // Recherche dans display_name, username, country, bio
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .neq('id', session?.user?.id || '') // Exclure soi-même
+        .neq('id', session?.user?.id || '')
         .or(`display_name.ilike.%${q}%,username.ilike.%${q}%,country.ilike.%${q}%,bio.ilike.%${q}%`)
         .limit(20);
 
@@ -360,7 +360,6 @@ export default function ProfilePage() {
       } else {
         console.log(`🔍 ${data?.length || 0} profils trouvés`);
         
-        // Filtrer aussi par genres si présents
         const filtered = data?.filter(p => {
           if (!p.genres || p.genres.length === 0) return true;
           return p.genres.some((g: string) => g.toLowerCase().includes(q));
@@ -376,7 +375,6 @@ export default function ProfilePage() {
     }
   };
 
-  // Debounce pour pas spammer l'API
   useEffect(() => {
     const timer = setTimeout(() => {
       searchProfiles(search);
@@ -399,8 +397,22 @@ export default function ProfilePage() {
         ? { connected: true, handle: p.instagram }
         : prev.instagram,
     }));
-  };return (
+  };
+return (
     <div className="mx-auto max-w-5xl p-4 md:p-8 space-y-8">
+      <SEO 
+        title="Mon Profil Musical"
+        description="Gérez votre profil MusicTerra : genres favoris, artistes émergents, notes et préférences musicales. Découvrez et partagez vos goûts musicaux avec la communauté."
+        keywords="profil musical, genres favoris, découverte musicale, notes musique, communauté musique, préférences musicales"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          "name": "Profil Utilisateur MusicTerra",
+          "description": "Page de profil personnel pour gérer ses préférences musicales",
+          "url": "https://musicterra.xyz/profile"
+        }}
+      />
+
       <motion.h1
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
