@@ -5,6 +5,7 @@ import { markConcertStatus, getUserConcertStatus } from '../services/concerts';
 import { useAuth } from '../context/AuthContext';
 import ConcertReview from './ConcertReview';
 import ConcertFeed from './ConcertFeed';
+import SEO from './SEO';
 
 interface Props {
   language: 'fr' | 'en';
@@ -40,11 +41,9 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     if (!session || events.length === 0) return;
 
     try {
-      // 🔥 Optimisation : éviter une boucle de requêtes
       const ids = events.map((e) => e.id);
       const cached: Record<string, any> = {};
 
-      // Lecture des statuts déjà stockés localement
       ids.forEach((id) => {
         const local = localStorage.getItem(`concert_status_${id}`);
         if (local) cached[id] = JSON.parse(local);
@@ -52,7 +51,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
 
       setUserStatuses((prev) => ({ ...prev, ...cached }));
 
-      // Appel Supabase pour actualiser
       const statusesArray = await Promise.all(ids.map((id) => getUserConcertStatus(id)));
       const fresh: Record<string, any> = {};
       statusesArray.forEach((s, i) => {
@@ -114,7 +112,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     setLoading(false);
   };
 
-  // ⚡ Optimistic UI : réagit instantanément sans attendre Supabase
+  // ⚡ Optimistic UI
   const handleMarkStatus = async (
     event: CombinedEvent,
     status: 'going' | 'interested' | 'attended'
@@ -134,7 +132,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
       return;
     }
 
-    // ✅ UI immédiate
     setUserStatuses((prev) => ({
       ...prev,
       [event.id]: { status, optimistic: true },
@@ -149,7 +146,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
         event.city,
         status
       );
-      // Actualise plus tard
       loadUserStatuses();
     } catch (error) {
       console.error(error);
@@ -161,6 +157,19 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
 
   return (
     <div style={{ display: 'grid', gap: 16 }}>
+      <SEO 
+        title="Concerts et Événements Musicaux"
+        description="Trouvez les concerts près de chez vous. Recherchez par artiste, marquez vos présences et partagez vos avis. Billetterie Ticketmaster intégrée."
+        keywords="concerts, événements musicaux, festivals, spectacles, billets concerts, ticketmaster, sortie concert, live music"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "EventSearchPage",
+          "name": "Recherche de Concerts MusicTerra",
+          "description": "Trouvez et suivez les concerts et événements musicaux",
+          "url": "https://musicterra.xyz/concerts"
+        }}
+      />
+
       {/* View toggle */}
       <div style={{ display: 'flex', gap: 8 }}>
         {['search', 'feed'].map((v) => (
@@ -256,7 +265,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                           {event.time && ` • ${event.time}`}
                         </p>
 
-                        {/* Status badge */}
                         {userStatus && (
                           <div style={{ marginTop: 6 }}>
                             {userStatus.status === 'going' && (
@@ -297,7 +305,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                         )}
                       </div>
 
-                      {/* Actions */}
                       <div
                         style={{
                           display: 'flex',
@@ -361,7 +368,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                           </button>
                         )}
 
-                        <a
+                        
                           href={event.url}
                           target="_blank"
                           rel="noreferrer"
