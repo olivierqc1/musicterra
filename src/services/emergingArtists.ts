@@ -1,7 +1,8 @@
-// src/services/emergingArtists.ts - VERSION AVEC LAST.FM API
+// src/services/emergingArtists.ts - VERSION AVEC LAST.FM API + ACTIVITÉ
 import { supabase } from '../lib/supabase';
 import { matrix } from '../data/matrix';
 import { getTopArtistsByTag, filterEmerging, LastFmArtist } from './lastfm';
+import { createActivity } from './social'; // ✨ NOUVEAU
 
 export interface Rating {
   id: string;
@@ -98,18 +99,15 @@ async function loadRatingsFromSupabase(userId: string): Promise<Rating[]> {
 function mergeRatings(localRatings: Rating[], supabaseRatings: Rating[]): Rating[] {
   const merged = new Map<string, Rating>();
 
-  // 1. Ajouter les ratings locaux
   localRatings.forEach(rating => {
     const key = `${rating.item_type}_${rating.item_name}`;
     merged.set(key, rating);
   });
 
-  // 2. Ajouter/remplacer avec les ratings Supabase (priorité)
   supabaseRatings.forEach(rating => {
     const key = `${rating.item_type}_${rating.item_name}`;
     const existing = merged.get(key);
 
-    // Si Supabase a une version, elle prend priorité
     if (!existing || new Date(rating.updated_at) >= new Date(existing.updated_at)) {
       merged.set(key, rating);
     }
@@ -124,14 +122,11 @@ function mergeRatings(localRatings: Rating[], supabaseRatings: Rating[]): Rating
 export async function loadUserRatings(userId: string): Promise<Rating[]> {
   console.log("📥 Chargement HYBRIDE des ratings...");
 
-  // 1. Charger localStorage (instantané)
   const localRatings = loadRatingsFromLocalStorage(userId);
   console.log(`📦 ${localRatings.length} ratings locaux`);
 
-  // 2. Lancer Supabase en parallèle
   const supabaseRatings = await loadRatingsFromSupabase(userId);
 
-  // 3. Merger les deux
   const merged = mergeRatings(localRatings, supabaseRatings);
   console.log(`✅ ${merged.length} ratings au total (${localRatings.length} local + ${supabaseRatings.length} cloud)`);
 
@@ -156,19 +151,16 @@ function calculateSimilarity(genre1: string, genre2: string): number {
 function getExtendedGenres(userRatings: Rating[]): Map<string, number> {
   const genreScores = new Map<string, number>();
 
-  // Genres notés ≥5
   const highRatedGenres = userRatings
     .filter(r => r.item_type === 'genre' && r.rating >= 5)
     .map(r => ({ name: r.item_name.toLowerCase(), rating: r.rating }));
 
   if (highRatedGenres.length === 0) return genreScores;
 
-  // Ajouter les genres de base
   highRatedGenres.forEach(({ name, rating }) => {
     genreScores.set(name, rating);
   });
 
-  // Étendre via similarité
   highRatedGenres.forEach(({ name, rating }) => {
     const similarities = matrix[name] || {};
     
@@ -190,10 +182,7 @@ function getExtendedGenres(userRatings: Rating[]): Map<string, number> {
 // CALCULER SCORE ÉMERGENCE
 // ==========================================
 function calculateEmergenceScore(artist: LastFmArtist): number {
-  // Score basé sur le nombre d'auditeurs (moins = plus émergent)
   const listenerScore = Math.max(0, 100 - (artist.listeners / 1000));
-  
-  // Score basé sur le ratio playcount/listeners (plus bas = plus émergent)
   const ratio = artist.playcount / Math.max(artist.listeners, 1);
   const ratioScore = Math.max(0, 100 - ratio);
   
@@ -215,14 +204,12 @@ function calculateMatchScore(
   artistGenres.forEach(artistGenre => {
     const ag = artistGenre.toLowerCase();
     
-    // Match direct
     if (extendedGenres.has(ag)) {
       totalScore += extendedGenres.get(ag)!;
       matchCount++;
       return;
     }
 
-    // Match par similarité
     let bestMatch = 0;
     extendedGenres.forEach((score, userGenre) => {
       const similarity = calculateSimilarity(ag, userGenre);
@@ -250,14 +237,12 @@ export async function getPersonalizedEmergingArtists(
   try {
     console.log("🌱 Recherche d'artistes émergents personnalisés...");
 
-    // Vérifier si l'API key Last.fm est configurée
     const apiKey = import.meta.env.VITE_LASTFM_API_KEY;
     if (!apiKey) {
       console.warn("⚠️ VITE_LASTFM_API_KEY non configurée");
       return [];
     }
 
-    // 1. Charger les ratings (hybride)
     const ratings = await loadUserRatings(userId);
     
     if (ratings.length === 0) {
@@ -265,7 +250,6 @@ export async function getPersonalizedEmergingArtists(
       return [];
     }
 
-    // 2. Obtenir genres étendus
     const extendedGenres = getExtendedGenres(ratings);
     console.log(`🎸 ${extendedGenres.size} genres dans le profil`);
 
@@ -274,15 +258,13 @@ export async function getPersonalizedEmergingArtists(
       return [];
     }
 
-    // 3. Prendre les top genres
     const topGenres = Array.from(extendedGenres.entries())
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 10) // Top 10 genres
+      .slice(0, 10)
       .map(([genre]) => genre);
 
     console.log(`🔍 Recherche sur Last.fm pour ${topGenres.length} genres...`);
 
-    // 4. Charger artistes de Last.fm pour chaque genre
     const artistsMap = new Map<string, { artist: LastFmArtist; genres: string[] }>();
 
     for (const genre of topGenres) {
@@ -295,12 +277,10 @@ export async function getPersonalizedEmergingArtists(
         emerging.forEach(artist => {
           const existing = artistsMap.get(artist.name);
           if (existing) {
-            // Ajouter le genre à l'artiste existant
             if (!existing.genres.includes(genre)) {
               existing.genres.push(genre);
             }
           } else {
-            // Nouvel artiste
             artistsMap.set(artist.name, {
               artist,
               genres: [genre]
@@ -314,16 +294,13 @@ export async function getPersonalizedEmergingArtists(
 
     console.log(`📊 ${artistsMap.size} artistes émergents trouvés`);
 
-    // 5. Calculer scores et filtrer
     const scoredArtists = Array.from(artistsMap.values())
       .map(({ artist, genres }) => {
         const matchScore = calculateMatchScore(genres, extendedGenres);
         const emergenceScore = calculateEmergenceScore(artist);
 
-        // Récupérer l'image (Last.fm retourne un tableau d'images de différentes tailles)
         let imageUrl = '';
         if (Array.isArray(artist.image)) {
-          // Prendre la plus grande image disponible
           const largeImg = artist.image.find((img: any) => img.size === 'extralarge' || img.size === 'large');
           imageUrl = largeImg?.['#text'] || artist.image[artist.image.length - 1]?.['#text'] || '';
         } else if (typeof artist.image === 'string') {
@@ -343,7 +320,6 @@ export async function getPersonalizedEmergingArtists(
       })
       .filter(a => a.matchScore > 0)
       .sort((a, b) => {
-        // Score final = emergence × match
         const scoreA = a.emergenceScore * a.matchScore;
         const scoreB = b.emergenceScore * b.matchScore;
         return scoreB - scoreA;
@@ -371,9 +347,13 @@ export async function saveEmergingDiscovery(
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    // Optionnel : sauvegarder dans Supabase si tu veux
-    // Pour l'instant, on sauvegarde juste en localStorage
     localStorage.setItem(`emerging_saved_${artistName}`, 'true');
+
+    // ✨ NOUVEAU: Créer une activité
+    await createActivity('saved_artist', {
+      artist: artistName,
+      genres: genres || [],
+    });
 
     console.log("✅ Découverte sauvegardée:", artistName);
   } catch (err: any) {
