@@ -36,7 +36,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
   const { session } = useAuth();
   const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
 
-  // ⚡ Grouper les appels en une seule requête
   const loadUserStatuses = async () => {
     if (!session || events.length === 0) return;
 
@@ -67,7 +66,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     if (events.length > 0 && session) loadUserStatuses();
   }, [events, session]);
 
-  // 🔍 Recherche Ticketmaster rapide
   const handleArtistSearch = async () => {
     if (!artistQuery.trim()) return;
     setLoading(true);
@@ -112,7 +110,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     setLoading(false);
   };
 
-  // ⚡ Optimistic UI
   const handleMarkStatus = async (
     event: CombinedEvent,
     status: 'going' | 'interested' | 'attended'
@@ -170,7 +167,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
         }}
       />
 
-      {/* View toggle */}
       <div style={{ display: 'flex', gap: 8 }}>
         {['search', 'feed'].map((v) => (
           <button
@@ -212,7 +208,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
               </button>
             </div>
 
-            {/* Suggestions */}
             {suggestedArtists.length > 0 && events.length === 0 && (
               <div style={{ marginTop: 12 }}>
                 <p style={{ fontSize: 14, color: '#555', marginBottom: 8 }}>
@@ -236,7 +231,6 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
             )}
           </div>
 
-          {/* Results */}
           {loading && (
             <div style={{ textAlign: 'center', padding: 20 }}>
               <p>{t('Recherche en cours...', 'Searching...')}</p>
