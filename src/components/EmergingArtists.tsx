@@ -383,4 +383,4 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fff',
     borderColor: '#667eea',
   },
-};
+}; 
