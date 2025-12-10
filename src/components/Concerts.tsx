@@ -419,4 +419,4 @@ const styles: Record<string, React.CSSProperties> = {
   actionBtnActive: { background: '#667eea', color: '#fff', borderColor: '#667eea' },
   linkBtn: { padding: '6px 12px', background: '#667eea', color: '#fff', textDecoration: 'none', borderRadius: 6, fontSize: 13, textAlign: 'center', display: 'block' },
   statusBadge: { padding: '4px 8px', borderRadius: 6, fontSize: 12, fontWeight: 600, display: 'inline-block' },
-}; 
+};
