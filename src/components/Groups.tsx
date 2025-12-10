@@ -1,9 +1,10 @@
-// src/components/Groups.tsx — version optimisée
+// src/components/Groups.tsx — version optimisée avec SEO
 import { useState, useEffect } from 'react';
 import CreateGroup from './CreateGroup';
 import GroupSearch from './GroupSearch';
 import GroupDetail from './GroupDetail';
 import { Group } from '../services/groups';
+import SEO from './SEO';
 
 interface Props {
   language: 'fr' | 'en';
@@ -47,6 +48,19 @@ export default function Groups({ language }: Props) {
 
   return (
     <div style={{ display: 'grid', gap: 16 }}>
+      <SEO 
+        title="Groupes Musicaux"
+        description="Rejoignez des groupes de passionnés de musique. Découvrez, partagez et discutez de vos genres favoris. Organisez des sorties concerts avec la communauté MusicTerra."
+        keywords="groupes musicaux, communauté musique, passionnés musique, découverte collective, sorties concerts, forums musique"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Groupes Musicaux MusicTerra",
+          "description": "Communautés de passionnés de musique par genre",
+          "url": "https://musicterra.xyz/groups"
+        }}
+      />
+
       {view === 'browse' ? (
         <>
           {/* Header */}
