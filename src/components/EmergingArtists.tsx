@@ -22,7 +22,6 @@ export default function EmergingArtists({ language }: Props) {
     loadArtists();
   }, [session]);
 
-  // ⚡ Chargement rapide avec cache local et rafraîchissement en arrière-plan
   const loadArtists = async () => {
     if (!session) return;
     setLoading(true);
@@ -38,7 +37,6 @@ export default function EmergingArtists({ language }: Props) {
       }
     } catch {}
 
-    // 🔄 Rafraîchit Supabase en arrière-plan
     try {
       const data = await getPersonalizedEmergingArtists(session.user.id);
       if (data?.length) {
@@ -52,11 +50,9 @@ export default function EmergingArtists({ language }: Props) {
     setLoading(false);
   };
 
-  // 💾 Optimistic UI pour la sauvegarde
   const handleSave = async (artist: EmergingArtist) => {
     if (!session) return;
 
-    // Réaction instantanée
     setSaved((prev) => new Set([...prev, artist.name]));
     try {
       await saveEmergingDiscovery(artist.name, artist.mbid, artist.genres);
@@ -134,7 +130,6 @@ export default function EmergingArtists({ language }: Props) {
         }}
       />
 
-      {/* Header */}
       <div style={styles.header}>
         <div>
           <h3 style={{ margin: 0 }}>{t('🌱 Artistes émergents pour vous', '🌱 Emerging artists for you')}</h3>
@@ -153,7 +148,6 @@ export default function EmergingArtists({ language }: Props) {
         </p>
       )}
 
-      {/* Info banner */}
       <div style={styles.infoBanner}>
         <span style={{ fontSize: 20 }}>💡</span>
         <div style={{ fontSize: 13 }}>
@@ -164,7 +158,6 @@ export default function EmergingArtists({ language }: Props) {
         </div>
       </div>
 
-      {/* Grid */}
       <div style={styles.grid}>
         {artists.map((artist) => (
           <div key={artist.name} style={styles.artistCard}>
@@ -190,11 +183,9 @@ export default function EmergingArtists({ language }: Props) {
               <div style={styles.emergenceBadge}>🌱 {Math.round(artist.emergenceScore)}%</div>
             </div>
 
-            {/* Info */}
             <div style={{ padding: 12 }}>
               <strong style={{ fontSize: 15, display: 'block', marginBottom: 6 }}>{artist.name}</strong>
 
-              {/* Genres */}
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
                 {artist.genres.slice(0, 3).map((genre) => (
                   <span key={genre} style={styles.genreTag}>
@@ -203,7 +194,6 @@ export default function EmergingArtists({ language }: Props) {
                 ))}
               </div>
 
-              {/* Stats */}
               <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
                 {artist.country && <div>📍 {artist.country}</div>}
                 {artist.listeners !== undefined && (
@@ -214,7 +204,6 @@ export default function EmergingArtists({ language }: Props) {
                 )}
               </div>
 
-              {/* Actions */}
               <div style={{ display: 'flex', gap: 6 }}>
                 {artist.lastfmUrl && (
                   
@@ -383,4 +372,4 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fff',
     borderColor: '#667eea',
   },
-}; 
+};
