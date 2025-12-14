@@ -9,11 +9,33 @@ interface Props {
   language: 'fr' | 'en';
 }
 
+// Fonction pour extraire les 10 genres les plus populaires
+const getTopGenres = (artists: EmergingArtist[]): string[] => {
+  // Créer un objet pour compter les occurrences des genres
+  const genreCounts: Record<string, number> = {};
+  
+  // Parcourir tous les artistes et compter les genres
+  artists.forEach(artist => {
+    artist.genres.forEach(genre => {
+      genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+    });
+  });
+  
+  // Convertir en tableau trié par nombre d'occurrences
+  return Object.entries(genreCounts)
+    .sort((a, b) => b[1] - a[1])  // Trier par nombre décroissant
+    .slice(0, 10)  // Prendre les 10 premiers
+    .map(([genre]) => genre);  // Ne garder que les noms des genres
+};
+
 export default function EmergingArtists({ language }: Props) {
   const [artists, setArtists] = useState<EmergingArtist[]>([]);
+  const [filteredArtists, setFilteredArtists] = useState<EmergingArtist[]>([]);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [topGenres, setTopGenres] = useState<string[]>([]);
 
   const { session } = useAuth();
   const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
@@ -21,6 +43,28 @@ export default function EmergingArtists({ language }: Props) {
   useEffect(() => {
     loadArtists();
   }, [session]);
+
+  useEffect(() => {
+    // Filtrer les artistes par genre sélectionné
+    if (selectedGenre) {
+      const filtered = artists.filter(artist => 
+        artist.genres.some(genre => 
+          genre.toLowerCase() === selectedGenre.toLowerCase()
+        )
+      );
+      setFilteredArtists(filtered);
+    } else {
+      setFilteredArtists(artists);
+    }
+  }, [selectedGenre, artists]);
+
+  useEffect(() => {
+    // Mettre à jour les genres les plus populaires quand les artistes changent
+    if (artists.length > 0) {
+      const topGenresList = getTopGenres(artists);
+      setTopGenres(topGenresList);
+    }
+  }, [artists]);
 
   const loadArtists = async () => {
     if (!session) return;
@@ -142,6 +186,31 @@ export default function EmergingArtists({ language }: Props) {
         </button>
       </div>
 
+      {/* Filtre de genres dynamiques */}
+      <div style={styles.genreFilterContainer}>
+        <button 
+          onClick={() => setSelectedGenre(null)} 
+          style={{
+            ...styles.genreFilterButton, 
+            ...(selectedGenre === null ? styles.genreFilterButtonActive : {})
+          }}
+        >
+          {t('Tous les genres', 'All Genres')}
+        </button>
+        {topGenres.map(genre => (
+          <button 
+            key={genre}
+            onClick={() => setSelectedGenre(genre)}
+            style={{
+              ...styles.genreFilterButton, 
+              ...(selectedGenre === genre ? styles.genreFilterButtonActive : {})
+            }}
+          >
+            {genre}
+          </button>
+        ))}
+      </div>
+
       {lastUpdated && (
         <p style={{ textAlign: 'center', fontSize: 12, color: '#999' }}>
           {t('Dernière mise à jour :', 'Last updated:')} {new Date(lastUpdated).toLocaleTimeString(language)}
@@ -159,82 +228,88 @@ export default function EmergingArtists({ language }: Props) {
       </div>
 
       <div style={styles.grid}>
-        {artists.map((artist) => (
-          <div key={artist.name} style={styles.artistCard}>
-            <div style={styles.imageContainer}>
-              {artist.imageUrl ? (
-                <img
-                  src={artist.imageUrl}
-                  alt={artist.name}
-                  style={styles.artistImage}
-                  loading="lazy"
-                  onError={(e) =>
-                    ((e.target as HTMLImageElement).src =
-                      'https://via.placeholder.com/300x300?text=' + encodeURIComponent(artist.name))
-                  }
-                />
-              ) : (
-                <div style={styles.noImage}>
-                  <span style={{ fontSize: 48 }}>🎵</span>
-                  <p style={{ margin: '8px 0 0', fontSize: 12 }}>{artist.name}</p>
-                </div>
-              )}
-
-              <div style={styles.emergenceBadge}>🌱 {Math.round(artist.emergenceScore)}%</div>
-            </div>
-
-            <div style={{ padding: 12 }}>
-              <strong style={{ fontSize: 15, display: 'block', marginBottom: 6 }}>{artist.name}</strong>
-
-              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
-                {artist.genres.slice(0, 3).map((genre) => (
-                  <span key={genre} style={styles.genreTag}>
-                    {genre}
-                  </span>
-                ))}
-              </div>
-
-              <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
-                {artist.country && <div>📍 {artist.country}</div>}
-                {artist.listeners !== undefined && (
-                  <div>👥 {artist.listeners.toLocaleString(language)} {t('auditeurs', 'listeners')}</div>
-                )}
-                {artist.lifeSpan?.begin && (
-                  <div>🎂 {t('Depuis', 'Since')} {artist.lifeSpan.begin.split('-')[0]}</div>
-                )}
-              </div>
-
-              <div style={{ display: 'flex', gap: 6 }}>
-                {artist.lastfmUrl && (
-                  <a
-                    href={artist.lastfmUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={styles.lastfmBtn}
-                    onClick={() => session && trackAction('click_lastfm', 'artist', artist.name)}
-                  >
-                    🎧 Last.fm
-                  </a>
-                )}
-                <button
-                  onClick={() => handleSave(artist)}
-                  disabled={saved.has(artist.name)}
-                  style={{
-                    ...styles.saveBtn,
-                    ...(saved.has(artist.name) ? styles.saveBtnSaved : {}),
-                  }}
-                >
-                  {saved.has(artist.name)
-                    ? t('✓ Sauvegardé', '✓ Saved')
-                    : t('Sauvegarder', 'Save')}
-                </button>
-              </div>
-            </div>
+        {filteredArtists.length === 0 ? (
+          <div style={styles.noArtistsFound}>
+            <p>{t('Aucun artiste trouvé dans ce genre', 'No artists found in this genre')}</p>
           </div>
-        ))}
+        ) : (
+          filteredArtists.map((artist) => (
+            <div key={artist.name} style={styles.artistCard}>
+              <div style={styles.imageContainer}>
+                {artist.imageUrl ? (
+                  <img
+                    src={artist.imageUrl}
+                    alt={artist.name}
+                    style={styles.artistImage}
+                    loading="lazy"
+                    onError={(e) =>
+                      ((e.target as HTMLImageElement).src =
+                        'https://via.placeholder.com/300x300?text=' + encodeURIComponent(artist.name))
+                    }
+                  />
+                ) : (
+                  <div style={styles.noImage}>
+                    <span style={{ fontSize: 48 }}>🎵</span>
+                    <p style={{ margin: '8px 0 0', fontSize: 12 }}>{artist.name}</p>
+                  </div>
+                )}
+
+                <div style={styles.emergenceBadge}>🌱 {Math.round(artist.emergenceScore)}%</div>
+              </div>
+
+              <div style={{ padding: 12 }}>
+                <strong style={{ fontSize: 15, display: 'block', marginBottom: 6 }}>{artist.name}</strong>
+
+                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+                  {artist.genres.slice(0, 3).map((genre) => (
+                    <span key={genre} style={styles.genreTag}>
+                      {genre}
+                    </span>
+                  ))}
+                </div>
+
+                <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
+                  {artist.country && <div>📍 {artist.country}</div>}
+                  {artist.listeners !== undefined && (
+                    <div>👥 {artist.listeners.toLocaleString(language)} {t('auditeurs', 'listeners')}</div>
+                  )}
+                  {artist.lifeSpan?.begin && (
+                    <div>🎂 {t('Depuis', 'Since')} {artist.lifeSpan.begin.split('-')[0]}</div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {artist.lastfmUrl && (
+                    <a
+                      href={artist.lastfmUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={styles.lastfmBtn}
+                      onClick={() => session && trackAction('click_lastfm', 'artist', artist.name)}
+                    >
+                      🎧 Last.fm
+                    </a>
+                  )}
+                  <button
+                    onClick={() => handleSave(artist)}
+                    disabled={saved.has(artist.name)}
+                    style={{
+                      ...styles.saveBtn,
+                      ...(saved.has(artist.name) ? styles.saveBtnSaved : {}),
+                    }}
+                  >
+                    {saved.has(artist.name)
+                      ? t('✓ Sauvegardé', '✓ Saved')
+                      : t('Sauvegarder', 'Save')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
-      {artists.length >= 20 && (
+      {filteredArtists.length >= 20 && (
         <p style={{ textAlign: 'center', fontSize: 13, color: '#777' }}>
           {t(
             "Notez plus de genres pour découvrir encore plus d'artistes",
@@ -288,28 +363,33 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     fontSize: 18,
   },
-  infoBanner: {
-    padding: 12,
-    background: '#fef3c7',
-    border: '1px solid #fbbf24',
-    borderRadius: 8,
-    display: 'flex',
-    gap: 12,
-    alignItems: 'flex-start',
+  genreFilterContainer: {
+    display: 'flex', 
+    flexWrap: 'wrap', 
+    gap: 8, 
+    justifyContent: 'center', 
+    marginBottom: 16,
+    padding: '0 16px'
   },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: 16,
+  genreFilterButton: {
+    padding: '6px 12px',
+    background: '#f0f0f0', 
+    border: '1px solid #ddd',
+    borderRadius: 999,
+    fontSize: 12,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
   },
-  artistCard: {
-    border: '1px solid #e7e7e7',
-    borderRadius: 12,
-    overflow: 'hidden',
-    background: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    transition: 'transform 0.2s, box-shadow 0.2s',
+  genreFilterButtonActive: {
+    background: '#667eea', 
+    color: 'white', 
+    borderColor: '#667eea'
+  },
+  noArtistsFound: {
+    width: '100%', 
+    textAlign: 'center', 
+    padding: 20, 
+    color: '#777'
   },
   imageContainer: { position: 'relative', width: '100%', aspectRatio: '1/1' },
   artistImage: { width: '100%', height: '100%', objectFit: 'cover' },
@@ -342,6 +422,29 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 999,
     fontSize: 11,
     fontWeight: 500,
+  },
+  artistCard: {
+    border: '1px solid #e7e7e7',
+    borderRadius: 12,
+    overflow: 'hidden',
+    background: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    transition: 'transform 0.2s, box-shadow 0.2s',
+  },
+  infoBanner: {
+    padding: 12,
+    background: '#fef3c7',
+    border: '1px solid #fbbf24',
+    borderRadius: 8,
+    display: 'flex',
+    gap: 12,
+    alignItems: 'flex-start',
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+    gap: 16,
   },
   lastfmBtn: {
     flex: 1,
