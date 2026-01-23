@@ -1,4 +1,4 @@
-// src/components/AuthGate.tsx - AVEC GOOGLE + DISCORD
+// src/components/AuthGate.tsx - AVEC GOOGLE + DISCORD + CRÉATION PROFIL MANUELLE
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ForgotPassword from "./ForgotPassword";
@@ -60,6 +60,33 @@ const AuthGate: React.FC<AuthGateProps> = ({
         });
 
         if (error) throw error;
+
+        // ✨ CRÉER LE PROFIL MANUELLEMENT (FIX pour trigger Supabase qui ne marche pas)
+        if (data.user) {
+          try {
+            console.log('📝 Création du profil pour:', data.user.id);
+            
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .insert({
+                id: data.user.id,
+                email: data.user.email || email,
+                display_name: email.split('@')[0],
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              });
+
+            if (profileError) {
+              console.error('⚠️ Erreur création profil:', profileError);
+              // Ne pas bloquer l'inscription si le profil échoue
+            } else {
+              console.log('✅ Profil créé avec succès');
+            }
+          } catch (err) {
+            console.error('⚠️ Exception profil:', err);
+            // Ne pas bloquer l'inscription
+          }
+        }
 
         setMessage(t(
           "✅ Compte créé ! Vérifie ton email pour confirmer ton compte.",
@@ -501,4 +528,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default AuthGate; 
+export default AuthGate;
