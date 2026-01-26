@@ -2,11 +2,302 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root { height: 100%; }
+/* ============================================ */
+/* 🎨 BACKGROUND ANIMÉ MAGNIFIQUE */
+/* ============================================ */
+
+html, body, #root { 
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
-  background: #f1f5f9;  /* gris clair lisible */
-  color: #0f172a;       /* bleu nuit lisible */
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  
+  /* Gradient animé ultra moderne */
+  background: linear-gradient(
+    -45deg,
+    #667eea,
+    #764ba2,
+    #f093fb,
+    #4facfe,
+    #00f2fe,
+    #667eea
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  
+  /* Overlay pour adoucir */
+  position: relative;
+  overflow-x: hidden;
 }
-button, input { font: inherit; }
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(240, 147, 251, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 90% 30%, rgba(79, 172, 254, 0.2) 0%, transparent 50%);
+  animation: backgroundFloat 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Animation du gradient principal */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animation des bulles de background */
+@keyframes backgroundFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* ============================================ */
+/* 🌟 EFFETS DE LUMIÈRE FLOTTANTS */
+/* ============================================ */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+/* Particules décoratives (optionnel) */
+body::before {
+  animation: backgroundFloat 20s ease-in-out infinite, float 15s ease-in-out infinite;
+}
+
+/* ============================================ */
+/* 🎯 STYLES DE BASE */
+/* ============================================ */
+
+button, input { 
+  font: inherit; 
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* ============================================ */
+/* 📱 RESPONSIVE */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  body {
+    background-size: 600% 600%;
+  }
+}
+
+/* ============================================ */
+/* 🎨 GLASSMORPHISM UTILITIES */
+/* ============================================ */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================ */
+/* ✨ ANIMATIONS SUPPLÉMENTAIRES */
+/* ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease;
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ============================================ */
+/* 🎭 SCROLLBAR PERSONNALISÉE */
+/* ============================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* ============================================ */
+/* 🔮 EFFETS DE SÉLECTION */
+/* ============================================ */
+
+::selection {
+  background: rgba(102, 126, 234, 0.3);
+  color: white;
+}
+
+::-moz-selection {
+  background: rgba(102, 126, 234, 0.3);
+  color: white;
+}
+
+/* ============================================ */
+/* 🌈 VARIANTES DE COULEUR POUR THÈMES */
+/* ============================================ */
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --glass-white: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 12px 48px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================ */
+/* 🎪 ANIMATIONS D'ENTRÉE POUR ÉLÉMENTS */
+/* ============================================ */
+
+.card-enter {
+  animation: fadeIn 0.6s ease;
+}
+
+.button-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.button-hover:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ============================================ */
+/* 🎨 PRÉCHARGEMENT DES ANIMATIONS */
+/* ============================================ */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
