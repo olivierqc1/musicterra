@@ -11,8 +11,8 @@ import { Wheel } from "./components/Wheel";
 import Rating from "./components/Rating";
 import Profile from "./components/Profile";
 import AuthGate from "./components/AuthGate";
-import Groups from "./components/Groups";
 import Concerts from "./components/Concerts";
+import { styles } from "./appStyles";
 import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
 import ResetPassword from "./components/ResetPassword";
@@ -62,7 +62,7 @@ const isYear = (i: Item): i is YearItem => "year" in i;
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
   const [tab, setTab] = useState<
-    "discover" | "emerging" | "groups" | "concerts" | "profile"
+    "discover" | "emerging" | "concerts" | "profile"
   >("discover");
   const [pool, setPool] = useState<"genres" | "countries" | "years">("genres");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -186,11 +186,6 @@ const App: React.FC = () => {
         description = language === "fr"
           ? "Découvrez les nouveaux talents et artistes émergents de la scène musicale mondiale."
           : "Discover new talents and emerging artists from the global music scene.";
-      } else if (tab === "groups") {
-        title = language === "fr" ? "Groupes Musicaux" : "Music Groups";
-        description = language === "fr"
-          ? "Rejoignez des groupes de passionnés et partagez vos découvertes musicales."
-          : "Join groups of enthusiasts and share your music discoveries.";
       } else if (tab === "concerts") {
         title = language === "fr" ? "Concerts et Événements" : "Concerts and Events";
         description = language === "fr"
@@ -325,15 +320,6 @@ const App: React.FC = () => {
             onClick={() => setTab("emerging")}
           >
             {t("🌱 Émergents", "🌱 Emerging")}
-          </button>
-          <button
-            style={{
-              ...styles.tabBtn,
-              ...(tab === "groups" ? styles.tabActive : {}),
-            }}
-            onClick={() => setTab("groups")}
-          >
-            {t("👥 Groupes", "👥 Groups")}
           </button>
           <button
             style={{
@@ -517,7 +503,6 @@ const App: React.FC = () => {
           )}
 
           {tab === "emerging" && <EmergingArtists language={language} />}
-          {tab === "groups" && <Groups language={language} />}
           {tab === "concerts" && (
             <Concerts
               language={language}
@@ -544,168 +529,5 @@ const App: React.FC = () => {
 
 // ⬇️⬇️⬇️ CONTINUE AVEC LA PARTIE 2 CI-DESSOUS ⬇️⬇️⬇️// src/App.tsx - COPIE PARTIE 2/2
 // ⬆️⬆️⬆️ Colle ce code JUSTE APRÈS la partie 1 ⬆️⬆️⬆️
-
-const styles: Record<string, React.CSSProperties> = {
-  app: { 
-    maxWidth: 1080, 
-    margin: "0 auto", 
-    padding: "12px 16px",
-    minHeight: "100vh",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
-    flexWrap: "wrap",
-    gap: 12,
-    background: "rgba(255, 255, 255, 0.95)",
-    padding: "16px 20px",
-    borderRadius: 16,
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-  },
-  infoBtn: {
-    padding: "6px 10px",
-    borderRadius: 8,
-    border: "1px solid rgba(255, 255, 255, 0.3)",
-    background: "rgba(255, 255, 255, 0.9)",
-    cursor: "pointer",
-    fontSize: 16,
-    backdropFilter: "blur(10px)",
-    transition: "all 0.2s ease",
-  },
-  streakBadge: {
-    padding: "4px 10px",
-    background: "linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)",
-    color: "#fff",
-    borderRadius: 999,
-    fontSize: 13,
-    fontWeight: 600,
-    boxShadow: "0 2px 8px rgba(255,107,107,0.3)",
-  },
-  tabsBar: {
-    display: "flex",
-    gap: 8,
-    borderBottom: "none",
-    paddingBottom: 8,
-    marginBottom: 12,
-    flexWrap: "wrap",
-    background: "rgba(255, 255, 255, 0.9)",
-    padding: "12px",
-    borderRadius: 16,
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
-  },
-  tabBtn: {
-    padding: "8px 12px",
-    borderRadius: 999,
-    border: "1px solid rgba(102, 126, 234, 0.2)",
-    background: "rgba(255, 255, 255, 0.8)",
-    cursor: "pointer",
-    fontSize: 14,
-    fontWeight: 500,
-    transition: "all 0.2s ease",
-    backdropFilter: "blur(5px)",
-  },
-  tabActive: { 
-    borderColor: "#667eea", 
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", 
-    color: "#fff",
-    boxShadow: "0 4px 12px rgba(102, 126, 234, 0.4)",
-  },
-  main: { 
-    display: "grid", 
-    gap: 12, 
-    alignItems: "start",
-  },
-  card: {
-    border: "1px solid rgba(255, 255, 255, 0.3)",
-    borderRadius: 20,
-    padding: 20,
-    background: "rgba(255, 255, 255, 0.95)",
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
-  },
-  resultGrid: {
-    display: "grid",
-    gridTemplateColumns: "140px 1fr",
-    gap: 16,
-    alignItems: "flex-start",
-  },
-  resultImage: {
-    width: "100%",
-    borderRadius: 12,
-    objectFit: "cover",
-    aspectRatio: "1/1",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-  },
-  noImage: {
-    width: "100%",
-    aspectRatio: "1/1",
-    borderRadius: 12,
-    background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-    display: "grid",
-    placeItems: "center",
-    color: "#888",
-    fontSize: 12,
-  },
-  lightText: { color: "#444", marginTop: 4, fontSize: 14 },
-  chipLabel: {
-    padding: "8px 14px",
-    border: "1px solid rgba(102, 126, 234, 0.3)",
-    borderRadius: 999,
-    background: "rgba(255, 255, 255, 0.9)",
-    cursor: "pointer",
-    fontSize: 14,
-    transition: "all 0.2s ease",
-    backdropFilter: "blur(5px)",
-  },
-  primaryLink: {
-    textDecoration: "none",
-    border: "none",
-    color: "#fff",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    padding: "10px 16px",
-    borderRadius: 10,
-    display: "inline-block",
-    fontWeight: 500,
-    boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
-    transition: "all 0.2s ease",
-  },
-  badgeContainer: {
-    display: "flex",
-    gap: 8,
-    flexWrap: "wrap",
-    marginTop: 6,
-  },
-  badge: {
-    padding: "6px 12px",
-    border: "1px solid rgba(102, 126, 234, 0.2)",
-    borderRadius: 999,
-    fontSize: 12,
-    background: "rgba(102, 126, 234, 0.05)",
-    backdropFilter: "blur(5px)",
-  },
-  secondaryBtn: {
-    padding: "8px 12px",
-    borderRadius: 10,
-    border: "1px solid rgba(187, 187, 187, 0.3)",
-    background: "rgba(255, 255, 255, 0.9)",
-    cursor: "pointer",
-    fontSize: 13,
-    backdropFilter: "blur(5px)",
-    transition: "all 0.2s ease",
-  },
-  footer: { 
-    marginTop: 32, 
-    textAlign: "center", 
-    color: "rgba(255, 255, 255, 0.8)",
-    padding: "20px",
-    background: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 16,
-    backdropFilter: "blur(10px)",
-  },
-};
 
 export default App;
