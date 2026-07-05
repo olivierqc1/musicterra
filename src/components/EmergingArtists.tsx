@@ -278,7 +278,25 @@ export default function EmergingArtists({ language }: Props) {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', gap: 6 }}>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  <a
+                    href={`https://bandcamp.com/search?q=${encodeURIComponent(artist.name)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ ...styles.lastfmBtn, background: '#1da0c3' }}
+                    onClick={() => session && trackAction('click_bandcamp', 'artist', artist.name)}
+                  >
+                    🎸 Bandcamp
+                  </a>
+                  <a
+                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(artist.name + ' music')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ ...styles.lastfmBtn, background: '#c4302b' }}
+                    onClick={() => session && trackAction('click_youtube', 'artist', artist.name)}
+                  >
+                    ▶️ YouTube
+                  </a>
                   {artist.lastfmUrl && (
                     <a
                       href={artist.lastfmUrl}
