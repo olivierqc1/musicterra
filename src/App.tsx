@@ -13,6 +13,8 @@ import Profile from "./components/Profile";
 import AuthGate from "./components/AuthGate";
 import Concerts from "./components/Concerts";
 import { styles } from "./appStyles";
+import { getListenLinks } from "./listenLinks";
+import { Analytics } from "@vercel/analytics/react";
 import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
 import ResetPassword from "./components/ResetPassword";
@@ -129,9 +131,9 @@ const App: React.FC = () => {
     return Object.entries(row).sort((a, b) => b[1] - a[1]);
   }, [selectedItem]);
 
-  const handleSpotifyClick = () => {
+  const handleListenClick = (platform: string) => {
     if (selectedItem && session) {
-      trackAction("click_spotify", pool, selectedItem.name);
+      trackAction(`click_${platform.toLowerCase().replace(/\s/g, "_")}`, pool, selectedItem.name);
     }
   };
 
@@ -266,6 +268,7 @@ const App: React.FC = () => {
       {showWelcome && <Welcome onClose={handleCloseWelcome} language={language} />}
 
       <div style={styles.app}>
+        <Analytics />
         <header style={styles.header}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 22 }}>🎵</span>
@@ -454,18 +457,29 @@ const App: React.FC = () => {
                         </p>
                       ) : null}
 
-                      {selectedItem.spotify && (
-                        <p style={{ marginTop: 8 }}>
-                          <a
-                            href={selectedItem.spotify}
-                            target="_blank"
-                            rel="noreferrer"
-                            style={styles.primaryLink}
-                            onClick={handleSpotifyClick}
-                          >
-                            🎧 {t("Playlist Spotify", "Spotify playlist")}
-                          </a>
-                        </p>
+                      {!isYear(selectedItem) && (
+                        <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                          {getListenLinks(selectedItem.name, selectedItem.spotify).map((l) => (
+                            <a
+                              key={l.label}
+                              href={l.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={() => handleListenClick(l.label)}
+                              style={{
+                                background: l.label === "Spotify" ? "#1db954" : "rgba(255,255,255,0.12)",
+                                color: "#fff",
+                                textDecoration: "none",
+                                padding: "8px 14px",
+                                borderRadius: 999,
+                                fontSize: 14,
+                                fontWeight: 600,
+                              }}
+                            >
+                              {l.emoji} {l.label}
+                            </a>
+                          ))}
+                        </div>
                       )}
 
                       <div style={{ marginTop: 14 }}>
