@@ -51,12 +51,24 @@ function artistsFromTopRatedGenres(max = 8): string[] {
   }
 }
 
+// Restaure l'état sauvegardé (Chrome mobile décharge les onglets en arrière-plan)
+function loadSavedState() {
+  try {
+    return JSON.parse(sessionStorage.getItem("mt_state") || "{}");
+  } catch {
+    return {};
+  }
+}
+
 const App: React.FC = () => {
-  const [language, setLanguage] = useState<"fr" | "en">("fr");
+  const saved = useMemo(loadSavedState, []);
+  const [language, setLanguage] = useState<"fr" | "en">(saved.language === "en" ? "en" : "fr");
   const [tab, setTab] = useState<
     "discover" | "emerging" | "concerts" | "profile"
-  >("discover");
-  const [pool, setPool] = useState<"genres" | "countries" | "years">("genres");
+  >(["discover", "emerging", "concerts", "profile"].includes(saved.tab) ? saved.tab : "discover");
+  const [pool, setPool] = useState<"genres" | "countries" | "years">(
+    ["genres", "countries", "years"].includes(saved.pool) ? saved.pool : "genres"
+  );
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [showWelcome, setShowWelcome] = useState(false);
@@ -84,6 +96,27 @@ const App: React.FC = () => {
   }, [pool]);
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+
+  // Restaure le dernier item découvert après un rechargement de page
+  useEffect(() => {
+    if (saved.selectedName && !selectedItem) {
+      const found = items.find((i) => i.name === saved.selectedName);
+      if (found) setSelectedItem(found);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Sauvegarde l'état de navigation (survit au déchargement de l'onglet)
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        "mt_state",
+        JSON.stringify({ tab, pool, language, selectedName: selectedItem?.name || null })
+      );
+    } catch {
+      /* sessionStorage indisponible */
+    }
+  }, [tab, pool, language, selectedItem]);
 
   useEffect(() => {
     const hasVisited = localStorage.getItem('musicterra_visited');
