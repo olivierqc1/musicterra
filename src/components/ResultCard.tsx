@@ -17,6 +17,14 @@ interface Props {
   language: "fr" | "en";
 }
 
+const PLATFORM_COLORS: Record<string, string> = {
+  Spotify: "#1db954",
+  YouTube: "#c4302b",
+  "YT Music": "#282828",
+  Bandcamp: "#1da0c3",
+  Deezer: "#7c3aed",
+};
+
 export default function ResultCard({ item, pool, language }: Props) {
   const { session } = useAuth();
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
@@ -111,7 +119,8 @@ export default function ResultCard({ item, pool, language }: Props) {
                       rel="noreferrer"
                       onClick={() => handleListenClick(l.label)}
                       style={{
-                        background: l.label === "Spotify" ? "#1db954" : "rgba(255,255,255,0.12)",
+                        background: PLATFORM_COLORS[l.label] || "#444",
+                        boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
                         color: "#fff",
                         textDecoration: "none",
                         padding: "8px 14px",
