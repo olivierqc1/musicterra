@@ -5,15 +5,13 @@ import React, { useMemo, useState, useEffect } from "react";
 import { genres } from "./data/genres";
 import { countries } from "./data/countries";
 import { years } from "./data/years";
-import { matrix } from "./data/matrix";
 
 import { Wheel } from "./components/Wheel";
-import Rating from "./components/Rating";
 import Profile from "./components/Profile";
 import AuthGate from "./components/AuthGate";
 import Concerts from "./components/Concerts";
 import { styles } from "./appStyles";
-import { getListenLinks } from "./listenLinks";
+import ResultCard from "./components/ResultCard";
 import { Analytics } from "@vercel/analytics/react";
 import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
@@ -24,42 +22,34 @@ import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
 import { updateStreak } from "./services/gamification";
 
-// Types
-type GenreItem = {
-  name: string;
-  descriptionFr: string;
-  descriptionEn: string;
-  subgenres?: string[];
-  artists: string[];
-  spotify?: string;
-  image?: string;
-};
+import { type Item, isGenre, isCountry, isYear } from "./itemTypes";
 
-type CountryItem = {
-  name: string;
-  descriptionFr: string;
-  descriptionEn: string;
-  regions?: string[];
-  artists: string[];
-  spotify?: string;
-  image?: string;
-  cities?: any[];
-};
-
-type YearItem = {
-  name: string;
-  year: number;
-  descriptionFr: string;
-  descriptionEn: string;
-  spotify?: string;
-  image?: string;
-};
-
-type Item = GenreItem | CountryItem | YearItem;
-
-const isGenre = (i: Item): i is GenreItem => "subgenres" in i;
-const isCountry = (i: Item): i is CountryItem => "regions" in i;
-const isYear = (i: Item): i is YearItem => "year" in i;
+// Artistes des genres les mieux notés (fallback pour les suggestions de concerts)
+function artistsFromTopRatedGenres(max = 8): string[] {
+  try {
+    const rated: { name: string; rating: number }[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || !key.startsWith("rating_")) continue;
+      const parts = key.split("_");
+      if (parts[2] !== "genre") continue;
+      const rating = parseInt(localStorage.getItem(key) || "0", 10);
+      if (rating >= 6) rated.push({ name: parts.slice(3).join("_"), rating });
+    }
+    rated.sort((a, b) => b.rating - a.rating);
+    const out: string[] = [];
+    for (const r of rated) {
+      const g = genres.find((x) => x.name === r.name);
+      for (const a of g?.artists || []) {
+        if (!out.includes(a)) out.push(a);
+        if (out.length >= max) return out;
+      }
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<"fr" | "en">("fr");
@@ -121,19 +111,6 @@ const App: React.FC = () => {
 
     if (found && session) {
       trackAction("spin", pool, found.name);
-    }
-  };
-
-  const similarityBoost = useMemo(() => {
-    if (!selectedItem) return [];
-    const name = selectedItem.name;
-    const row = matrix[name] || {};
-    return Object.entries(row).sort((a, b) => b[1] - a[1]);
-  }, [selectedItem]);
-
-  const handleListenClick = (platform: string) => {
-    if (selectedItem && session) {
-      trackAction(`click_${platform.toLowerCase().replace(/\s/g, "_")}`, pool, selectedItem.name);
     }
   };
 
@@ -389,129 +366,7 @@ const App: React.FC = () => {
               </div>
 
               {selectedItem && (
-                <div style={styles.card}>
-                  <div style={styles.resultGrid}>
-                    <div>
-                      {selectedItem.image ? (
-                        <img
-                          src={selectedItem.image}
-                          alt={selectedItem.name}
-                          style={styles.resultImage}
-                        />
-                      ) : (
-                        <div style={styles.noImage}>
-                          {t("Aucune image", "No image")}
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      {isYear(selectedItem) ? (
-                        <h2 style={{ margin: "4px 0 6px" }}>
-                          {selectedItem.year}
-                        </h2>
-                      ) : (
-                        <h2 style={{ margin: "4px 0 6px" }}>
-                          {selectedItem.name}
-                        </h2>
-                      )}
-
-                      <p style={{ marginTop: 0 }}>
-                        {language === "fr"
-                          ? selectedItem.descriptionFr
-                          : selectedItem.descriptionEn}
-                      </p>
-
-                      {isGenre(selectedItem) && selectedItem.subgenres?.length ? (
-                        <p style={styles.lightText}>
-                          <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
-                          {selectedItem.subgenres.join(", ")}
-                        </p>
-                      ) : null}
-
-                      {isCountry(selectedItem) && selectedItem.regions?.length ? (
-                        <p style={styles.lightText}>
-                          <strong>{t("Régions", "Regions")}:</strong>{" "}
-                          {selectedItem.regions.join(", ")}
-                        </p>
-                      ) : null}
-
-                      {isCountry(selectedItem) && selectedItem.cities?.length ? (
-                        <div style={{ marginTop: 8 }}>
-                          <strong>{t("Villes", "Cities")}:</strong>
-                          <ul style={{ margin: "6px 0 0 16px" }}>
-                            {selectedItem.cities.map((c: any) => (
-                              <li key={c.name}>
-                                <em>{c.name}</em>
-                                {c.styles ? ` — ${c.styles.join(", ")}` : ""}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : null}
-
-                      {!isYear(selectedItem) && selectedItem.artists?.length ? (
-                        <p style={styles.lightText}>
-                          <strong>{t("Artistes", "Artists")}:</strong>{" "}
-                          {selectedItem.artists.join(", ")}
-                        </p>
-                      ) : null}
-
-                      {!isYear(selectedItem) && (
-                        <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
-                          {getListenLinks(selectedItem.name, selectedItem.spotify).map((l) => (
-                            <a
-                              key={l.label}
-                              href={l.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              onClick={() => handleListenClick(l.label)}
-                              style={{
-                                background: l.label === "Spotify" ? "#1db954" : "rgba(255,255,255,0.12)",
-                                color: "#fff",
-                                textDecoration: "none",
-                                padding: "8px 14px",
-                                borderRadius: 999,
-                                fontSize: 14,
-                                fontWeight: 600,
-                              }}
-                            >
-                              {l.emoji} {l.label}
-                            </a>
-                          ))}
-                        </div>
-                      )}
-
-                      <div style={{ marginTop: 14 }}>
-                        <Rating
-                          itemType={
-                            pool === "genres" 
-                              ? "genre" 
-                              : pool === "countries"
-                              ? "country"
-                              : "genre"
-                          }
-                          itemName={selectedItem.name}
-                          max={10}
-                          language={language}
-                        />
-                      </div>
-
-                      {similarityBoost.length > 0 && (
-                        <div style={{ marginTop: 12 }}>
-                          <strong>{t("Affinités", "Similarities")}:</strong>
-                          <div style={styles.badgeContainer}>
-                            {similarityBoost.slice(0, 8).map(([label, score]) => (
-                              <span key={label} style={styles.badge}>
-                                {label} • {Math.round(score * 100)}%
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <ResultCard item={selectedItem} pool={pool} language={language} />
               )}
             </section>
           )}
@@ -521,9 +376,9 @@ const App: React.FC = () => {
             <Concerts
               language={language}
               suggestedArtists={
-                selectedItem && !isYear(selectedItem)
-                  ? selectedItem.artists || []
-                  : []
+                selectedItem && !isYear(selectedItem) && selectedItem.artists?.length
+                  ? selectedItem.artists
+                  : artistsFromTopRatedGenres()
               }
             />
           )}
