@@ -21,6 +21,7 @@ import SEO from "./components/SEO";
 import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
 import { updateStreak } from "./services/gamification";
+import { syncRatings } from "./services/ratingsStore";
 
 import { type Item, isGenre, isCountry, isYear } from "./itemTypes";
 
@@ -131,6 +132,8 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    // migrations locales tout de suite; sync cloud dès qu'on est connecté
+    syncRatings(session?.user?.id);
     if (session) {
       updateStreak(session.user.id).then(streak => {
         setCurrentStreak(streak);
