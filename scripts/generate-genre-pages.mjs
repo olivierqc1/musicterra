@@ -193,3 +193,4 @@ writeFileSync(join(DIST, "sitemap.xml"), sitemap);
 
 try { unlinkSync(".tmp-genres.mjs"); } catch {}
 console.log(`✅ ${urls.length - 1} pages de genre + index + sitemap générés dans ${DIST}/`);
+ 
