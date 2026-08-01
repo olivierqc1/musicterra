@@ -115,6 +115,31 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, [rotation, items]);
 
+  // Redessiner quand l'onglet redevient visible / actif.
+  // Sur mobile (iOS Safari, Chrome Android), le navigateur peut vider le
+  // contenu du <canvas> quand l'app passe en arrière-plan un certain temps
+  // pour libérer de la mémoire. Comme aucun state ne change au retour,
+  // le useEffect ci-dessus ne se redéclenche jamais et la roue reste vide.
+  // On force donc un redraw explicite à chaque retour au premier plan.
+  useEffect(() => {
+    const redraw = () => requestAnimationFrame(() => drawWheel(rotation));
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') redraw();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('pageshow', redraw);
+    window.addEventListener('focus', redraw);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('pageshow', redraw);
+      window.removeEventListener('focus', redraw);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rotation, items]);
+
   const spin = () => {
     if (!items.length || spinning) return;
     
