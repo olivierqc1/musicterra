@@ -42,6 +42,24 @@ function getLevel(explored: number) {
   return { ...lvl, nextAt: next ? next.min : null };
 }
 
+// Empêche un appel Supabase lent (mauvais réseau mobile, cold start, etc.)
+// de bloquer l'affichage indéfiniment. Après `ms`, on abandonne cet appel
+// précis et on continue avec ce qu'on a déjà (localStorage).
+function withTimeout<T>(promise: PromiseLike<T>, ms = 6000): Promise<T | null> {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(null), ms);
+    Promise.resolve(promise)
+      .then((val) => {
+        clearTimeout(timer);
+        resolve(val);
+      })
+      .catch(() => {
+        clearTimeout(timer);
+        resolve(null);
+      });
+  });
+}
+
 export default function Passport({ language = "fr" }: Props) {
   const { session } = useAuth();
   const [stats, setStats] = useState<PassportStats | null>(null);
@@ -54,19 +72,13 @@ export default function Passport({ language = "fr" }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
-  async function loadStats() {
-    setLoading(true);
+  function readLocalStats() {
     const exploredGenres = new Set<string>();
     const exploredCountries = new Set<string>();
-    let totalSpins = 0;
-    let currentStreak = 0;
-    let longestStreak = 0;
     let favoriteGenre: string | null = null;
     let favoriteRating = 0;
 
-    const userId = session?.user?.id;
-
-    // 1) Ratings localStorage (fonctionne même sans connexion)
+    // Ratings localStorage (fonctionne même sans connexion)
     try {
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -91,52 +103,76 @@ export default function Passport({ language = "fr" }: Props) {
       /* localStorage indisponible */
     }
 
-    // 2) Données Supabase si connecté
-    if (userId) {
-      try {
-        const [ratingsRes, behaviorRes, streakRes] = await Promise.all([
-          supabase
-            .from("ratings")
-            .select("item_type, item_name, rating")
-            .eq("user_id", userId),
-          supabase
-            .from("user_behavior")
-            .select("action_type, item_type, item_name")
-            .eq("user_id", userId),
-          supabase
-            .from("user_streaks")
-            .select("current_streak, longest_streak")
-            .eq("user_id", userId)
-            .single(),
-        ]);
+    return { exploredGenres, exploredCountries, favoriteGenre, favoriteRating };
+  }
 
-        (ratingsRes.data || []).forEach((r: any) => {
-          if (r.item_type === "genre") {
-            exploredGenres.add(r.item_name);
-            if (r.rating > favoriteRating) {
-              favoriteRating = r.rating;
-              favoriteGenre = r.item_name;
-            }
-          } else if (r.item_type === "country") {
-            exploredCountries.add(r.item_name);
-          }
-        });
+  async function loadStats() {
+    setLoading(true);
 
-        (behaviorRes.data || []).forEach((a: any) => {
-          if (a.action_type === "spin") {
-            totalSpins++;
-            if (a.item_type === "genre") exploredGenres.add(a.item_name);
-            if (a.item_type === "country") exploredCountries.add(a.item_name);
-          }
-        });
+    // 1) Stats locales : synchrone, instantané. On les affiche tout de
+    // suite pour que le passeport apparaisse sans attendre le réseau.
+    const local = readLocalStats();
+    setStats({
+      genresExplored: local.exploredGenres.size,
+      countriesExplored: local.exploredCountries.size,
+      totalSpins: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      favoriteGenre: local.favoriteGenre,
+      favoriteRating: local.favoriteRating,
+    });
+    setLoading(false);
 
-        if (streakRes.data) {
-          currentStreak = streakRes.data.current_streak || 0;
-          longestStreak = streakRes.data.longest_streak || 0;
+    // 2) Données Supabase si connecté : en arrière-plan, sans bloquer
+    // l'affichage. Chaque requête a un timeout pour éviter qu'un réseau
+    // mobile capricieux ou un cold start Supabase laisse le passeport
+    // "coincé" en chargement.
+    const userId = session?.user?.id;
+    if (!userId) return;
+
+    const [ratingsRes, behaviorRes, streakRes] = await Promise.all([
+      withTimeout(
+        supabase.from("ratings").select("item_type, item_name, rating").eq("user_id", userId)
+      ),
+      withTimeout(
+        supabase.from("user_behavior").select("action_type, item_type, item_name").eq("user_id", userId)
+      ),
+      withTimeout(
+        supabase.from("user_streaks").select("current_streak, longest_streak").eq("user_id", userId).single()
+      ),
+    ]);
+
+    const exploredGenres = new Set(local.exploredGenres);
+    const exploredCountries = new Set(local.exploredCountries);
+    let totalSpins = 0;
+    let currentStreak = 0;
+    let longestStreak = 0;
+    let favoriteGenre = local.favoriteGenre;
+    let favoriteRating = local.favoriteRating;
+
+    (ratingsRes?.data || []).forEach((r: any) => {
+      if (r.item_type === "genre") {
+        exploredGenres.add(r.item_name);
+        if (r.rating > favoriteRating) {
+          favoriteRating = r.rating;
+          favoriteGenre = r.item_name;
         }
-      } catch {
-        /* on affiche ce qu'on a */
+      } else if (r.item_type === "country") {
+        exploredCountries.add(r.item_name);
       }
+    });
+
+    (behaviorRes?.data || []).forEach((a: any) => {
+      if (a.action_type === "spin") {
+        totalSpins++;
+        if (a.item_type === "genre") exploredGenres.add(a.item_name);
+        if (a.item_type === "country") exploredCountries.add(a.item_name);
+      }
+    });
+
+    if (streakRes?.data) {
+      currentStreak = streakRes.data.current_streak || 0;
+      longestStreak = streakRes.data.longest_streak || 0;
     }
 
     setStats({
@@ -148,7 +184,6 @@ export default function Passport({ language = "fr" }: Props) {
       favoriteGenre,
       favoriteRating,
     });
-    setLoading(false);
   }
 
   // ── Génération de la carte partageable (canvas 1080x1080) ──
