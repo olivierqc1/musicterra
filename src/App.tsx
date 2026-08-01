@@ -22,6 +22,7 @@ import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
 import { updateStreak } from "./services/gamification";
 import { syncRatings } from "./services/ratingsStore";
+import { buildPersonalizedGenrePool } from "./services/wheelPersonalization";
 
 import { type Item, isGenre, isCountry, isYear } from "./itemTypes";
 
@@ -70,6 +71,9 @@ const App: React.FC = () => {
   const [pool, setPool] = useState<"genres" | "countries" | "years">(
     ["genres", "countries", "years"].includes(saved.pool) ? saved.pool : "genres"
   );
+  // Mode de la roue : "random" = pool complet, "personalized" = pondéré
+  // vers les genres bien notés (voir services/wheelPersonalization.ts).
+  const [wheelMode, setWheelMode] = useState<"random" | "personalized">("random");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [showWelcome, setShowWelcome] = useState(false);
@@ -95,6 +99,17 @@ const App: React.FC = () => {
       spotify: y.spotify,
     })) as Item[];
   }, [pool]);
+
+  // Pool réellement passé à la roue : le pool complet en mode "random",
+  // ou un sous-ensemble pondéré vers les genres bien notés en mode
+  // "personalized". Recalculé à chaque bascule de mode/pool pour lire
+  // les notes les plus fraîches du localStorage.
+  const wheelItems: Item[] = useMemo(() => {
+    if (wheelMode === "personalized" && pool === "genres") {
+      return buildPersonalizedGenrePool(items);
+    }
+    return items;
+  }, [wheelMode, items, pool]);
 
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
@@ -390,12 +405,42 @@ const App: React.FC = () => {
                 </label>
               </div>
 
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <label style={styles.chipLabel}>
+                  <input
+                    type="radio"
+                    name="wheelMode"
+                    checked={wheelMode === "random"}
+                    onChange={() => setWheelMode("random")}
+                  />{" "}
+                  {t("🎲 Complètement aléatoire", "🎲 Fully random")}
+                </label>
+                <label style={styles.chipLabel}>
+                  <input
+                    type="radio"
+                    name="wheelMode"
+                    checked={wheelMode === "personalized"}
+                    onChange={() => setWheelMode("personalized")}
+                    disabled={pool !== "genres"}
+                  />{" "}
+                  {t("✨ Propose-moi un truc", "✨ Suggest something")}
+                </label>
+              </div>
+              {wheelMode === "personalized" && pool !== "genres" && (
+                <p style={{ fontSize: 13, opacity: 0.7, margin: "-8px 0 0" }}>
+                  {t(
+                    "Disponible seulement pour les genres pour l'instant.",
+                    "Only available for genres for now."
+                  )}
+                </p>
+              )}
+
               <div style={styles.card}>
                 <h3 style={{ marginTop: 0, textAlign: "center" }}>
                   {t("🎡 Tourne la roue", "🎡 Spin the wheel")}
                 </h3>
                 <Wheel
-                  items={items.map((i) => i.name)}
+                  items={wheelItems.map((i) => i.name)}
                   onSelect={onSpin}
                   language={language}
                 />
