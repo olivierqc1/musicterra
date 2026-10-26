@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthContext";
 import { trackAction } from "../services/userBehavior";
 import { useItemDescription } from "../hooks/useItemDescription";
 import ListenPreview from "./ListenPreview";
+import LocalScenes from "./LocalScenes";
 import { shareUrl } from "../lib/share";
 
 interface Props {
@@ -71,7 +72,7 @@ export default function ResultCard({ item, pool, language }: Props) {
   return (
     <div style={styles.card}>
           <div style={styles.resultGrid}>
-            <div>
+            <div style={styles.resultMedia}>
               {item.image ? (
                 <img
                   src={item.image}
@@ -85,7 +86,7 @@ export default function ResultCard({ item, pool, language }: Props) {
               )}
             </div>
 
-            <div>
+            <div style={styles.resultBody}>
               <div style={styles.titleRow}>
                 <h2 style={{ margin: "4px 0 6px" }}>
                   {isYear(item) ? item.year : item.name}
@@ -110,27 +111,6 @@ export default function ResultCard({ item, pool, language }: Props) {
                   <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
                   {item.subgenres.join(", ")}
                 </p>
-              ) : null}
-
-              {isCountry(item) && item.regions?.length ? (
-                <p style={styles.lightText}>
-                  <strong>{t("Régions", "Regions")}:</strong>{" "}
-                  {item.regions.join(", ")}
-                </p>
-              ) : null}
-
-              {isCountry(item) && item.cities?.length ? (
-                <div style={{ marginTop: 8 }}>
-                  <strong>{t("Villes", "Cities")}:</strong>
-                  <ul style={{ margin: "6px 0 0 16px" }}>
-                    {item.cities.map((c: any) => (
-                      <li key={c.name}>
-                        <em>{c.name}</em>
-                        {c.styles ? ` — ${c.styles.join(", ")}` : ""}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               ) : null}
 
               {item.artists?.length ? (
@@ -171,6 +151,10 @@ export default function ResultCard({ item, pool, language }: Props) {
                 spotify={item.spotify}
                 language={language}
               />
+
+              {isCountry(item) && (
+                <LocalScenes key={item.name} country={item} language={language} />
+              )}
 
               <div style={{ marginTop: 14 }}>
                 <Rating

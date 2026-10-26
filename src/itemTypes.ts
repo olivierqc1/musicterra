@@ -1,3 +1,5 @@
+import type { City, CityStyle } from "./types";
+
 // Types
 export type GenreItem = {
   name: string;
@@ -19,7 +21,8 @@ export type CountryItem = {
   artists: string[];
   spotify?: string;
   image?: string;
-  cities?: any[];
+  cities?: City[];
+  cityStyles?: CityStyle[];
 };
 
 export type YearItem = {

@@ -82,11 +82,21 @@ export const styles: Record<string, React.CSSProperties> = {
     backdropFilter: "blur(10px)",
     boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
   },
+  // Deux colonnes sur grand écran ; sur téléphone, l'image passe au-dessus
+  // et le texte prend toute la largeur (sinon il déborde à droite).
   resultGrid: {
-    display: "grid",
-    gridTemplateColumns: "140px 1fr",
+    display: "flex",
+    flexWrap: "wrap",
     gap: 16,
     alignItems: "flex-start",
+  },
+  resultMedia: {
+    flex: "0 0 140px",
+    maxWidth: 140,
+  },
+  resultBody: {
+    flex: "1 1 260px",
+    minWidth: 0,
   },
   resultImage: {
     width: "100%",
