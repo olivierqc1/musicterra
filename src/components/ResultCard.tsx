@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthContext";
 import { trackAction } from "../services/userBehavior";
 import { useItemDescription } from "../hooks/useItemDescription";
 import ListenPreview from "./ListenPreview";
+import LocalScenes from "./LocalScenes";
 import { shareUrl } from "../lib/share";
 
 interface Props {
@@ -112,27 +113,6 @@ export default function ResultCard({ item, pool, language }: Props) {
                 </p>
               ) : null}
 
-              {isCountry(item) && item.regions?.length ? (
-                <p style={styles.lightText}>
-                  <strong>{t("Régions", "Regions")}:</strong>{" "}
-                  {item.regions.join(", ")}
-                </p>
-              ) : null}
-
-              {isCountry(item) && item.cities?.length ? (
-                <div style={{ marginTop: 8 }}>
-                  <strong>{t("Villes", "Cities")}:</strong>
-                  <ul style={{ margin: "6px 0 0 16px" }}>
-                    {item.cities.map((c: any) => (
-                      <li key={c.name}>
-                        <em>{c.name}</em>
-                        {c.styles ? ` — ${c.styles.join(", ")}` : ""}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-
               {item.artists?.length ? (
                 <p style={styles.lightText}>
                   <strong>{t("Artistes", "Artists")}:</strong>{" "}
@@ -171,6 +151,10 @@ export default function ResultCard({ item, pool, language }: Props) {
                 spotify={item.spotify}
                 language={language}
               />
+
+              {isCountry(item) && (
+                <LocalScenes key={item.name} country={item} language={language} />
+              )}
 
               <div style={{ marginTop: 14 }}>
                 <Rating
