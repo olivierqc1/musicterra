@@ -8,13 +8,12 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 - Supabase : authentification et base de données (client dans `src/lib/supabase.ts`, contexte dans `src/context/AuthContext.tsx`)
 - SEO : `react-helmet-async` (composant `src/components/SEO.tsx`) et pages statiques générées au build
 - Alias d'import : `@/` → `src/`
-- Hébergement : GitHub Pages, sur le domaine personnalisé musicterra.xyz (donc pas de `base` à configurer dans Vite)
+- Hébergement : Vercel (domaine musicterra.xyz), avec `@vercel/analytics`
 
 ## Déploiement
-- Chaque push sur `main` lance `.github/workflows/deploy.yml` : `npm install`, `npm run build`, puis publication de `dist/` sur GitHub Pages. Le workflow écrit `dist/CNAME` (musicterra.xyz) et `dist/.nojekyll`.
-- Les variables `VITE_*` sont injectées au build depuis les secrets du repo (Settings → Secrets and variables → Actions). Toute nouvelle variable doit être ajoutée à la fois dans les secrets et dans le bloc `env` du workflow.
-- GitHub Pages ne sert que des fichiers statiques : pas de fonction serveur, pas de route API, pas d'en-têtes HTTP personnalisés. Une clé qui doit rester secrète ne peut pas être utilisée par le site.
-- La navigation par onglets n'utilise pas d'URL distinctes, donc aucune redirection SPA n'est nécessaire. Les pages de genre générées (`/genre/<slug>/`) sont de vrais fichiers servis directement.
+- Vercel est connecté au repo : chaque push sur `main` redéploie le site, et chaque PR reçoit une URL de prévisualisation.
+- Les variables `VITE_*` se configurent dans Vercel (Project → Settings → Environment Variables). Toute nouvelle variable doit y être ajoutée, sinon elle sera vide en production.
+- Pas de GitHub Pages ni de workflow GitHub Actions de déploiement : ne pas en ajouter.
 
 ## Commandes
 - `npm run dev` : serveur local Vite
@@ -53,7 +52,7 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 
 ## Variables d'environnement
 - Toutes les variables lues par l'app commencent par `VITE_` et se retrouvent donc en clair dans le JavaScript envoyé au navigateur. N'y mettre que des clés prévues pour être publiques.
-- Les fichiers `.env` et `.env.local` ne doivent jamais être commités. Les valeurs de production sont dans les secrets GitHub Actions du repo.
+- Les fichiers `.env` et `.env.local` ne doivent jamais être commités. Les valeurs de production sont dans les variables d'environnement du projet Vercel.
 
 ## Conventions
 - Composants fonctionnels et hooks uniquement, un composant par fichier, nom en PascalCase.

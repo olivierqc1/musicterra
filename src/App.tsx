@@ -16,6 +16,7 @@ import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
 import ResetPassword from "./components/ResetPassword";
 import SEO from "./components/SEO";
+import { Analytics } from "@vercel/analytics/react";
 import { useItemDescription } from "./hooks/useItemDescription";
 
 import { useAuth } from "./context/AuthContext";
@@ -298,6 +299,7 @@ const App: React.FC = () => {
       {showWelcome && <Welcome onClose={handleCloseWelcome} language={language} />}
 
       <div style={styles.app}>
+        <Analytics />
         <header style={styles.header}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 22 }}>🎵</span>
