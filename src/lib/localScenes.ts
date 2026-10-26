@@ -35,8 +35,12 @@ export function getLocalScenes(country: CountryLike): LocalScene[] {
   const byKey = new Map<string, LocalScene>();
   const order: string[] = [];
 
+  // « Salta » rejoint la région « Salta/Jujuy » plutôt que de créer une 2e puce
+  const findKey = (k: string): string =>
+    byKey.has(k) ? k : order.find((o) => o.split("/").map((p) => p.trim()).includes(k)) || k;
+
   const upsert = (name: string, extra: Partial<LocalScene>) => {
-    const k = key(name);
+    const k = findKey(key(name));
     if (!k) return;
     const existing = byKey.get(k);
     if (existing) {
