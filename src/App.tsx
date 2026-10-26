@@ -1,5 +1,4 @@
-// src/App.tsx - COPIE PARTIE 1/2
-// Copie d'abord ce code, puis copie la partie 2 juste en dessous
+// src/App.tsx
 
 import React, { useMemo, useState, useEffect } from "react";
 import { genres } from "./data/genresLite";
@@ -9,6 +8,7 @@ import { years } from "./data/years";
 import { Wheel } from "./components/Wheel";
 import Profile from "./components/Profile";
 import AuthGate from "./components/AuthGate";
+import Passport from "./components/Passport";
 import Concerts from "./components/Concerts";
 import { styles } from "./appStyles";
 import ResultCard from "./components/ResultCard";
@@ -18,6 +18,7 @@ import ResetPassword from "./components/ResetPassword";
 import SEO from "./components/SEO";
 import { Analytics } from "@vercel/analytics/react";
 import { useItemDescription } from "./hooks/useItemDescription";
+import { readDeepLink, findByDeepLink, syncUrl, type Pool } from "./lib/share";
 
 import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
@@ -65,12 +66,24 @@ function loadSavedState() {
 
 const App: React.FC = () => {
   const saved = useMemo(loadSavedState, []);
+  // Lien partagé (?g=, ?c=, ?y=) : prioritaire sur l'état sauvegardé
+  const deepLink = useMemo(readDeepLink, []);
   const [language, setLanguage] = useState<"fr" | "en">(saved.language === "en" ? "en" : "fr");
   const [tab, setTab] = useState<
     "discover" | "emerging" | "concerts" | "profile"
-  >(["discover", "emerging", "concerts", "profile"].includes(saved.tab) ? saved.tab : "discover");
-  const [pool, setPool] = useState<"genres" | "countries" | "years">(
-    ["genres", "countries", "years"].includes(saved.pool) ? saved.pool : "genres"
+  >(
+    deepLink
+      ? "discover"
+      : ["discover", "emerging", "concerts", "profile"].includes(saved.tab)
+      ? saved.tab
+      : "discover"
+  );
+  const [pool, setPool] = useState<Pool>(
+    deepLink
+      ? deepLink.pool
+      : ["genres", "countries", "years"].includes(saved.pool)
+      ? saved.pool
+      : "genres"
   );
   // Mode de la roue : "random" = pool complet, "personalized" = pondéré
   // vers les genres bien notés (voir services/wheelPersonalization.ts).
@@ -81,8 +94,15 @@ const App: React.FC = () => {
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [showWelcome, setShowWelcome] = useState(false);
   const [isResetPassword, setIsResetPassword] = useState(false);
+  // Fenêtre de connexion : l'app est utilisable sans compte, on ne
+  // demande de se connecter que pour sauvegarder (notes, passeport, profil).
+  const [showLogin, setShowLogin] = useState(false);
 
   const { session, profile } = useAuth();
+
+  useEffect(() => {
+    if (session) setShowLogin(false);
+  }, [session]);
 
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
@@ -114,16 +134,40 @@ const App: React.FC = () => {
     return items;
   }, [wheelMode, items, pool]);
 
+  // Liste stable pour la roue : un nouveau tableau à chaque rendu ferait
+  // retirer les segments au hasard en plein lancer.
+  const wheelNames = useMemo(() => wheelItems.map((i) => i.name), [wheelItems]);
+
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
 
-  // Restaure le dernier item découvert après un rechargement de page
+  // Ouvre l'élément d'un lien partagé, sinon restaure le dernier item
+  // découvert après un rechargement de page
   useEffect(() => {
+    if (deepLink) {
+      const found = findByDeepLink(items, deepLink.pool, deepLink.key);
+      if (found) {
+        setSelectedItem(found);
+        return;
+      }
+    }
     if (saved.selectedName && !selectedItem) {
       const found = items.find((i) => i.name === saved.selectedName);
       if (found) setSelectedItem(found);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Garde l'adresse de la page synchronisée avec l'élément affiché,
+  // pour qu'on puisse copier le lien depuis la barre d'adresse.
+  useEffect(() => {
+    syncUrl(selectedItem, pool);
+  }, [selectedItem, pool]);
+
+  // Changer de catégorie ferme la fiche de l'ancienne catégorie
+  const changePool = (next: Pool) => {
+    setPool(next);
+    setSelectedItem(null);
+  };
 
   // Sauvegarde l'état de navigation (survit au déchargement de l'onglet)
   useEffect(() => {
@@ -279,20 +323,6 @@ const App: React.FC = () => {
     );
   }
 
-  if (!session) {
-    return (
-      <>
-        <SEO
-          title={language === "fr" ? "Connexion" : "Sign In"}
-          description={language === "fr"
-            ? "Connectez-vous à MusicTerra pour découvrir la musique du monde"
-            : "Sign in to MusicTerra to discover world music"}
-        />
-        <AuthGate mode="fullpage" language={language} />
-      </>
-    );
-  }
-
   return (
     <>
       <SEO {...seoData} />
@@ -332,6 +362,12 @@ const App: React.FC = () => {
               <span style={{ fontSize: 12, color: "#555" }}>
                 {profile.display_name || profile.email}
               </span>
+            )}
+
+            {!session && (
+              <button onClick={() => setShowLogin(true)} style={styles.loginBtn}>
+                {t("Se connecter", "Sign in")}
+              </button>
             )}
           </div>
         </header>
@@ -384,7 +420,7 @@ const App: React.FC = () => {
                     type="radio"
                     name="pool"
                     checked={pool === "genres"}
-                    onChange={() => setPool("genres")}
+                    onChange={() => changePool("genres")}
                   />{" "}
                   {t("🎸 Genres", "🎸 Genres")}
                 </label>
@@ -393,7 +429,7 @@ const App: React.FC = () => {
                     type="radio"
                     name="pool"
                     checked={pool === "countries"}
-                    onChange={() => setPool("countries")}
+                    onChange={() => changePool("countries")}
                   />{" "}
                   {t("🌍 Pays", "🌍 Countries")}
                 </label>
@@ -402,7 +438,7 @@ const App: React.FC = () => {
                     type="radio"
                     name="pool"
                     checked={pool === "years"}
-                    onChange={() => setPool("years")}
+                    onChange={() => changePool("years")}
                   />{" "}
                   {t("📅 Années", "📅 Years")}
                 </label>
@@ -443,7 +479,7 @@ const App: React.FC = () => {
                   {t("🎡 Tourne la roue", "🎡 Spin the wheel")}
                 </h3>
                 <Wheel
-                  items={wheelItems.map((i) => i.name)}
+                  items={wheelNames}
                   onSelect={onSpin}
                   language={language}
                 />
@@ -466,8 +502,37 @@ const App: React.FC = () => {
               }
             />
           )}
-          {tab === "profile" && <Profile language={language} />}
+          {tab === "profile" &&
+            (session ? (
+              <Profile />
+            ) : (
+              <section style={{ display: "grid", gap: 16 }}>
+                <Passport language={language} />
+                <AuthGate mode="inline" language={language} />
+              </section>
+            ))}
         </main>
+
+        {showLogin && !session && (
+          <div style={styles.loginOverlay} onClick={() => setShowLogin(false)}>
+            <div style={styles.loginSheet} onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setShowLogin(false)}
+                style={styles.loginClose}
+                aria-label={t("Fermer", "Close")}
+              >
+                ✕
+              </button>
+              <p style={{ margin: "0 0 4px", textAlign: "center", color: "#555", fontSize: 14 }}>
+                {t(
+                  "Crée un compte pour sauvegarder tes notes, ton passeport et tes séries.",
+                  "Create an account to save your ratings, passport and streaks."
+                )}
+              </p>
+              <AuthGate mode="inline" language={language} />
+            </div>
+          </div>
+        )}
 
         <footer style={styles.footer}>
           <small>
@@ -479,8 +544,5 @@ const App: React.FC = () => {
     </>
   );
 };
-
-// ⬇️⬇️⬇️ CONTINUE AVEC LA PARTIE 2 CI-DESSOUS ⬇️⬇️⬇️// src/App.tsx - COPIE PARTIE 2/2
-// ⬆️⬆️⬆️ Colle ce code JUSTE APRÈS la partie 1 ⬆️⬆️⬆️
 
 export default App;
