@@ -34,6 +34,12 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
   - `countries.ts`, `years.ts`, `cityStyleBoosts.ts`
   - `genresLite.ts` : ce que l'app importe. Mêmes genres que `genres.ts`, mais `descriptionFr` et `descriptionEn` vides et un champ `descSlug` en plus. Ne jamais importer `genres.ts` directement dans le code de l'app : ça remettrait 10 Mo dans le bundle.
 
+## Comportements clés de l'app
+- L'app est utilisable sans compte : la roue, les fiches et l'écoute marchent pour tout le monde. Le compte n'est demandé que pour sauvegarder (notes dans le cloud, passeport, profil, artistes émergents). Le bouton « Se connecter » de l'en-tête ouvre `AuthGate` dans une fenêtre ; ne pas remettre de mur de connexion plein écran.
+- Liens partageables (`src/lib/share.ts`) : `?g=<slug>` ouvre un genre, `?c=<slug>` un pays, `?y=<année>` une année. L'adresse est mise à jour quand une fiche s'affiche. Le bouton « Partager » d'un genre partage la page statique `/genre/<slug>/` (meilleur aperçu sur Reddit et les messageries), qui renvoie vers `/?g=<slug>`.
+- La roue (`Wheel.tsx`) affiche 16 segments tirés au hasard dans le pool et les renouvelle à chaque lancer. Le gagnant est tiré parmi ces segments, ce qui garde un tirage uniforme sur tout le pool. La liste passée à `Wheel` doit être mémoïsée (`useMemo`), sinon les segments changent en plein lancer.
+- Écoute dans la fiche (`ListenPreview.tsx`) : lecteur Spotify intégré si l'élément a une vraie playlist, sinon extraits de 30 s via l'API publique de Deezer en JSONP (pas de clé, pas de CORS).
+
 ## Chargement des descriptions de genres
 - Le plugin Vite `scripts/genres-split-plugin.mjs` lit `genres.ts` et produit le module `virtual:genres-lite` (exposé par `src/data/genresLite.ts`) ainsi qu'un fichier `/genre-desc/<slug>.json` par genre (`{ "fr": "...", "en": "..." }`). En dev, ces fichiers sont servis depuis la mémoire ; au build, ils sont écrits dans `dist/genre-desc/`.
 - Pour afficher une description, utiliser le hook `useItemDescription(item, language)` (`src/hooks/useItemDescription.ts`), qui renvoie `{ text, loading }`. Il marche aussi pour les pays et les années, dont la description est déjà dans l'objet.

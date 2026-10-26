@@ -123,7 +123,8 @@ ${g.subgenres?.length ? `<div class="tags">${g.subgenres.map((s) => `<span class
 ${paragraphs(g.descriptionFr)}
 ${g.artists?.length ? `<h2>Artistes emblématiques</h2><div class="tags">${g.artists.map((a) => `<span class="tag">${esc(a)}</span>`).join("")}</div>` : ""}
 ${g.spotify ? `<p><a class="spotify" href="${esc(g.spotify)}" rel="noopener" target="_blank">▶ Écouter sur Spotify</a></p>` : ""}
-<a class="cta" href="/">🎡 Découvrir un autre genre — tourner la roue</a>
+<a class="cta" href="/?g=${slug}">🎧 Écouter et noter ${esc(g.name)} dans MusicTerra</a>
+<p><a href="/">🎡 Ou tourner la roue pour découvrir un autre genre</a></p>
 <h2>In English</h2>
 <div class="lang-en">${paragraphs(g.descriptionEn)}</div>
 ${related.length ? `<h2>Genres à explorer ensuite</h2><ul class="links">${related.map((r) => `<li><a href="/genre/${slugify(r.name)}/">${esc(r.name)}</a></li>`).join("")}</ul>` : ""}

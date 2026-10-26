@@ -2,7 +2,7 @@
 // Carte de résultat après un spin : image, description, liens d'écoute,
 // notation et affinités. Extrait de App.tsx pour garder les fichiers légers.
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { type Item, isGenre, isCountry, isYear } from "../itemTypes";
 import { matrix } from "../data/matrix";
 import { styles } from "../appStyles";
@@ -11,6 +11,8 @@ import Rating from "./Rating";
 import { useAuth } from "../context/AuthContext";
 import { trackAction } from "../services/userBehavior";
 import { useItemDescription } from "../hooks/useItemDescription";
+import ListenPreview from "./ListenPreview";
+import { shareUrl } from "../lib/share";
 
 interface Props {
   item: Item;
@@ -30,6 +32,30 @@ export default function ResultCard({ item, pool, language }: Props) {
   const { session } = useAuth();
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
   const description = useItemDescription(item, language);
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
+
+  const handleShare = async () => {
+    const url = shareUrl(item, pool);
+    const label = isYear(item) ? String(item.year) : item.name;
+    const text = t(
+      `J'ai découvert ${label} sur MusicTerra 🎡`,
+      `I just discovered ${label} on MusicTerra 🎡`
+    );
+    if (session) trackAction("share", pool, item.name);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${label} · MusicTerra`, text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setShareStatus("copied");
+    } catch (err) {
+      // L'utilisateur a fermé la feuille de partage : rien à signaler
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      setShareStatus("error");
+    }
+    window.setTimeout(() => setShareStatus("idle"), 2500);
+  };
 
   const similarityBoost = useMemo(() => {
     const row = matrix[item.name] || {};
@@ -60,15 +86,18 @@ export default function ResultCard({ item, pool, language }: Props) {
             </div>
 
             <div>
-              {isYear(item) ? (
+              <div style={styles.titleRow}>
                 <h2 style={{ margin: "4px 0 6px" }}>
-                  {item.year}
+                  {isYear(item) ? item.year : item.name}
                 </h2>
-              ) : (
-                <h2 style={{ margin: "4px 0 6px" }}>
-                  {item.name}
-                </h2>
-              )}
+                <button onClick={handleShare} style={styles.shareBtn}>
+                  {shareStatus === "copied"
+                    ? t("✓ Lien copié", "✓ Link copied")
+                    : shareStatus === "error"
+                    ? t("Impossible de partager", "Couldn't share")
+                    : t("🔗 Partager", "🔗 Share")}
+                </button>
+              </div>
 
               <p style={{ marginTop: 0, ...(description.loading ? { opacity: 0.6 } : {}) }}>
                 {description.loading
@@ -104,38 +133,44 @@ export default function ResultCard({ item, pool, language }: Props) {
                 </div>
               ) : null}
 
-              {!isYear(item) && item.artists?.length ? (
+              {item.artists?.length ? (
                 <p style={styles.lightText}>
                   <strong>{t("Artistes", "Artists")}:</strong>{" "}
                   {item.artists.join(", ")}
                 </p>
               ) : null}
 
-              {!isYear(item) && (
-                <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  {getListenLinks(item.name, item.spotify).map((l) => (
-                    <a
-                      key={l.label}
-                      href={l.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => handleListenClick(l.label)}
-                      style={{
-                        background: PLATFORM_COLORS[l.label] || "#444",
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
-                        color: "#fff",
-                        textDecoration: "none",
-                        padding: "8px 14px",
-                        borderRadius: 999,
-                        fontSize: 14,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {l.emoji} {l.label}
-                    </a>
-                  ))}
-                </div>
-              )}
+              <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {getListenLinks(item.name, item.spotify).map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => handleListenClick(l.label)}
+                    style={{
+                      background: PLATFORM_COLORS[l.label] || "#444",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
+                      color: "#fff",
+                      textDecoration: "none",
+                      padding: "8px 14px",
+                      borderRadius: 999,
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {l.emoji} {l.label}
+                  </a>
+                ))}
+              </div>
+
+              <ListenPreview
+                key={item.name}
+                name={isYear(item) ? String(item.year) : item.name}
+                artists={item.artists?.filter((a) => a !== "Anonymous")}
+                spotify={item.spotify}
+                language={language}
+              />
 
               <div style={{ marginTop: 14 }}>
                 <Rating
