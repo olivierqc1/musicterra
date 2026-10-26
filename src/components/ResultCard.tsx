@@ -71,7 +71,7 @@ export default function ResultCard({ item, pool, language }: Props) {
   return (
     <div style={styles.card}>
           <div style={styles.resultGrid}>
-            <div>
+            <div style={styles.resultMedia}>
               {item.image ? (
                 <img
                   src={item.image}
@@ -85,7 +85,7 @@ export default function ResultCard({ item, pool, language }: Props) {
               )}
             </div>
 
-            <div>
+            <div style={styles.resultBody}>
               <div style={styles.titleRow}>
                 <h2 style={{ margin: "4px 0 6px" }}>
                   {isYear(item) ? item.year : item.name}
