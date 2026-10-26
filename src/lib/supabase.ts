@@ -1,12 +1,8 @@
 // src/lib/supabase.ts - VERSION AVEC TIMEOUT
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.REACT_APP_SUPABASE_URL || ''
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.REACT_APP_SUPABASE_ANON_KEY || ''
-
-console.log('🔧 Init Supabase client');
-console.log('URL:', supabaseUrl);
-console.log('Key existe?', !!supabaseAnonKey);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('⚠️ ERREUR : Variables Supabase manquantes')

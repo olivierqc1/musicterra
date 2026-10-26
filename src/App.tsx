@@ -2,7 +2,7 @@
 // Copie d'abord ce code, puis copie la partie 2 juste en dessous
 
 import React, { useMemo, useState, useEffect } from "react";
-import { genres } from "./data/genres";
+import { genres } from "./data/genresLite";
 import { countries } from "./data/countries";
 import { years } from "./data/years";
 
@@ -12,11 +12,11 @@ import AuthGate from "./components/AuthGate";
 import Concerts from "./components/Concerts";
 import { styles } from "./appStyles";
 import ResultCard from "./components/ResultCard";
-import { Analytics } from "@vercel/analytics/react";
 import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
 import ResetPassword from "./components/ResetPassword";
 import SEO from "./components/SEO";
+import { useItemDescription } from "./hooks/useItemDescription";
 
 import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
@@ -75,6 +75,8 @@ const App: React.FC = () => {
   // vers les genres bien notés (voir services/wheelPersonalization.ts).
   const [wheelMode, setWheelMode] = useState<"random" | "personalized">("random");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  // Les genres arrivent sans description : elle se charge à la demande.
+  const selectedDescription = useItemDescription(selectedItem, language).text;
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [showWelcome, setShowWelcome] = useState(false);
   const [isResetPassword, setIsResetPassword] = useState(false);
@@ -177,7 +179,7 @@ const App: React.FC = () => {
       : "music, music genres, music discovery, emerging artists, world music";
 
     if (selectedItem) {
-      const itemDesc = language === "fr" ? selectedItem.descriptionFr : selectedItem.descriptionEn;
+      const itemDesc = selectedDescription;
       
       if (pool === "genres") {
         title = language === "fr" 
@@ -245,7 +247,7 @@ const App: React.FC = () => {
           "@context": "https://schema.org",
           "@type": "MusicGenre",
           "name": selectedItem.name,
-          "description": language === "fr" ? selectedItem.descriptionFr : selectedItem.descriptionEn,
+          "description": selectedDescription,
           ...(selectedItem.image && { "image": selectedItem.image }),
         }
       };
@@ -296,7 +298,6 @@ const App: React.FC = () => {
       {showWelcome && <Welcome onClose={handleCloseWelcome} language={language} />}
 
       <div style={styles.app}>
-        <Analytics />
         <header style={styles.header}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 22 }}>🎵</span>

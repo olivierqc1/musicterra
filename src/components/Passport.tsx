@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
-import { genres } from "../data/genres";
+import { genres } from "../data/genresLite";
 import { countries } from "../data/countries";
 
 interface Props {

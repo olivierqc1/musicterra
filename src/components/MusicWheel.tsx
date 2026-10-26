@@ -1,7 +1,7 @@
 // ─────────────── MusicWheel.tsx ───────────────
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import { genres } from "@/data/genres"
+import { genres } from "@/data/genresLite"
 
 export default function MusicWheel() {
   const [rotation, setRotation] = useState(0)

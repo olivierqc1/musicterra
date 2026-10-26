@@ -10,6 +10,7 @@ import { getListenLinks } from "../listenLinks";
 import Rating from "./Rating";
 import { useAuth } from "../context/AuthContext";
 import { trackAction } from "../services/userBehavior";
+import { useItemDescription } from "../hooks/useItemDescription";
 
 interface Props {
   item: Item;
@@ -28,6 +29,7 @@ const PLATFORM_COLORS: Record<string, string> = {
 export default function ResultCard({ item, pool, language }: Props) {
   const { session } = useAuth();
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const description = useItemDescription(item, language);
 
   const similarityBoost = useMemo(() => {
     const row = matrix[item.name] || {};
@@ -68,10 +70,10 @@ export default function ResultCard({ item, pool, language }: Props) {
                 </h2>
               )}
 
-              <p style={{ marginTop: 0 }}>
-                {language === "fr"
-                  ? item.descriptionFr
-                  : item.descriptionEn}
+              <p style={{ marginTop: 0, ...(description.loading ? { opacity: 0.6 } : {}) }}>
+                {description.loading
+                  ? t("Chargement de la description…", "Loading description…")
+                  : description.text}
               </p>
 
               {isGenre(item) && item.subgenres?.length ? (
