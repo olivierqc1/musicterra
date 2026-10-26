@@ -119,6 +119,7 @@ const App: React.FC = () => {
       year: y.year,
       descriptionFr: y.descriptionFr,
       descriptionEn: y.descriptionEn,
+      artists: y.artists,
       spotify: y.spotify,
     })) as Item[];
   }, [pool]);

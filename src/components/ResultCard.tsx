@@ -133,43 +133,41 @@ export default function ResultCard({ item, pool, language }: Props) {
                 </div>
               ) : null}
 
-              {!isYear(item) && item.artists?.length ? (
+              {item.artists?.length ? (
                 <p style={styles.lightText}>
                   <strong>{t("Artistes", "Artists")}:</strong>{" "}
                   {item.artists.join(", ")}
                 </p>
               ) : null}
 
-              {!isYear(item) && (
-                <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  {getListenLinks(item.name, item.spotify).map((l) => (
-                    <a
-                      key={l.label}
-                      href={l.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => handleListenClick(l.label)}
-                      style={{
-                        background: PLATFORM_COLORS[l.label] || "#444",
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
-                        color: "#fff",
-                        textDecoration: "none",
-                        padding: "8px 14px",
-                        borderRadius: 999,
-                        fontSize: 14,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {l.emoji} {l.label}
-                    </a>
-                  ))}
-                </div>
-              )}
+              <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {getListenLinks(item.name, item.spotify).map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => handleListenClick(l.label)}
+                    style={{
+                      background: PLATFORM_COLORS[l.label] || "#444",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
+                      color: "#fff",
+                      textDecoration: "none",
+                      padding: "8px 14px",
+                      borderRadius: 999,
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {l.emoji} {l.label}
+                  </a>
+                ))}
+              </div>
 
               <ListenPreview
                 key={item.name}
                 name={isYear(item) ? String(item.year) : item.name}
-                artists={!isYear(item) ? item.artists : undefined}
+                artists={item.artists?.filter((a) => a !== "Anonymous")}
                 spotify={item.spotify}
                 language={language}
               />

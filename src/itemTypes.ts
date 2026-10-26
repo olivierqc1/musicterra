@@ -27,6 +27,7 @@ export type YearItem = {
   year: number;
   descriptionFr: string;
   descriptionEn: string;
+  artists?: string[];
   spotify?: string;
   image?: string;
 };
