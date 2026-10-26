@@ -19,4 +19,6 @@ export interface Item {
   origin?: string;
   relatedCountries?: string[];
   year?: number;
+  /** Rempli par genres-split : clé de /genre-desc/<slug>.json */
+  descSlug?: string | null;
 }

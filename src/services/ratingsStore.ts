@@ -7,7 +7,7 @@
 // et on incrémente SCHEMA_VERSION. Ne JAMAIS changer le format sans migration.
 
 import { supabase } from "../lib/supabase";
-import { genres } from "../data/genres";
+import { genres } from "../data/genresLite";
 
 const SCHEMA_KEY = "mt_ratings_schema";
 const SCHEMA_VERSION = 2;

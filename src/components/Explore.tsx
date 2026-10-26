@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { countries } from "@/data/countries"
-import { genres } from "@/data/genres"
+import { genres } from "@/data/genresLite"
 import { decades } from "@/data/decades"
 import { Button } from "@/components/ui/button"
 import { Music, Search } from "lucide-react"

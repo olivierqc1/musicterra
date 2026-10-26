@@ -7,6 +7,8 @@ export type GenreItem = {
   artists: string[];
   spotify?: string;
   image?: string;
+  /** Rempli par genres-split : clé de /genre-desc/<slug>.json */
+  descSlug?: string | null;
 };
 
 export type CountryItem = {

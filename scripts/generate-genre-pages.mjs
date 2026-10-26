@@ -7,6 +7,7 @@ import { build } from "esbuild";
 import { mkdirSync, writeFileSync, unlinkSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { join } from "node:path";
+import { slugify } from "./genre-slugs.mjs";
 
 const SITE = "https://musicterra.xyz";
 const DIST = "dist";
@@ -23,13 +24,7 @@ const { genres } = await import(pathToFileURL(".tmp-genres.mjs").href);
 console.log(`Genres chargés: ${genres.length}`);
 
 // ---------- 2. Utilitaires ----------
-const slugify = (s) =>
-  s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+// slugify est partag\u00e9 avec le plugin Vite genres-split (scripts/genre-slugs.mjs)
 
 const esc = (s = "") =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");

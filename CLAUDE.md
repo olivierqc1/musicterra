@@ -8,6 +8,13 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 - Supabase : authentification et base de données (client dans `src/lib/supabase.ts`, contexte dans `src/context/AuthContext.tsx`)
 - SEO : `react-helmet-async` (composant `src/components/SEO.tsx`) et pages statiques générées au build
 - Alias d'import : `@/` → `src/`
+- Hébergement : GitHub Pages, sur le domaine personnalisé musicterra.xyz (donc pas de `base` à configurer dans Vite)
+
+## Déploiement
+- Chaque push sur `main` lance `.github/workflows/deploy.yml` : `npm install`, `npm run build`, puis publication de `dist/` sur GitHub Pages. Le workflow écrit `dist/CNAME` (musicterra.xyz) et `dist/.nojekyll`.
+- Les variables `VITE_*` sont injectées au build depuis les secrets du repo (Settings → Secrets and variables → Actions). Toute nouvelle variable doit être ajoutée à la fois dans les secrets et dans le bloc `env` du workflow.
+- GitHub Pages ne sert que des fichiers statiques : pas de fonction serveur, pas de route API, pas d'en-têtes HTTP personnalisés. Une clé qui doit rester secrète ne peut pas être utilisée par le site.
+- La navigation par onglets n'utilise pas d'URL distinctes, donc aucune redirection SPA n'est nécessaire. Les pages de genre générées (`/genre/<slug>/`) sont de vrais fichiers servis directement.
 
 ## Commandes
 - `npm run dev` : serveur local Vite
@@ -26,12 +33,17 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
   - `genres.ts` : la source de vérité, environ 2 900 genres (environ 10 Mo), type `Item` défini dans `src/types.ts` (`name`, `descriptionFr`, `descriptionEn`, `artists`, `subgenres`, `regions`, `cities`, `spotify`, `origin`, `relatedCountries`, `year`)
   - `matrix.ts` : matrice de similarité. Pour chaque genre, ses 8 genres les plus proches avec un score entre 0 et 1. Elle n'est pas symétrique. Incrémenter `MATRIX_VERSION` à chaque changement de logique.
   - `countries.ts`, `years.ts`, `cityStyleBoosts.ts`
-  - Les fichiers `genres.v0.ts` à `genres.v13.ts`, `genres.vclaude.ts`, `genres-normalized.ts`, `genresv3.ts`, `matrix.v1.ts`, `years.v1.ts`, `countries.vo.ts` sont d'anciennes versions non importées. Ne pas les modifier et ne pas s'en servir comme référence.
+  - `genresLite.ts` : ce que l'app importe. Mêmes genres que `genres.ts`, mais `descriptionFr` et `descriptionEn` vides et un champ `descSlug` en plus. Ne jamais importer `genres.ts` directement dans le code de l'app : ça remettrait 10 Mo dans le bundle.
+
+## Chargement des descriptions de genres
+- Le plugin Vite `scripts/genres-split-plugin.mjs` lit `genres.ts` et produit le module `virtual:genres-lite` (exposé par `src/data/genresLite.ts`) ainsi qu'un fichier `/genre-desc/<slug>.json` par genre (`{ "fr": "...", "en": "..." }`). En dev, ces fichiers sont servis depuis la mémoire ; au build, ils sont écrits dans `dist/genre-desc/`.
+- Pour afficher une description, utiliser le hook `useItemDescription(item, language)` (`src/hooks/useItemDescription.ts`), qui renvoie `{ text, loading }`. Il marche aussi pour les pays et les années, dont la description est déjà dans l'objet.
+- Les slugs viennent de `scripts/genre-slugs.mjs`, partagé avec `generate-genre-pages.mjs`.
 
 ## Règles de travail sur les données
 - `genres.ts` et `matrix.ts` sont énormes : ne jamais les réécrire en entier. Les modifier par petites éditions ciblées ou par script.
 - Un genre ajouté dans `genres.ts` doit avoir `descriptionFr` et `descriptionEn`, et son `name` doit rester unique, parce que le slug de sa page SEO en dépend.
-- Le bundle JS fait près de 12 Mo, surtout à cause de `genres.ts`. Toute nouvelle grosse donnée doit être chargée avec `import()` dynamique plutôt qu'ajoutée au bundle principal.
+- Le bundle JS principal fait environ 2,2 Mo (450 Ko gzip). Toute nouvelle grosse donnée doit être chargée à la demande (`import()` dynamique ou fichier JSON) plutôt qu'ajoutée au bundle principal.
 
 ## Supabase (sécurité)
 - Seule la clé `anon` est utilisée côté client, via `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY`. Aucune clé `service_role` ne doit jamais apparaître dans le frontend.
@@ -41,7 +53,7 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 
 ## Variables d'environnement
 - Toutes les variables lues par l'app commencent par `VITE_` et se retrouvent donc en clair dans le JavaScript envoyé au navigateur. N'y mettre que des clés prévues pour être publiques.
-- Les fichiers `.env` et `.env.local` ne doivent jamais être commités. Les valeurs de production se configurent dans les variables d'environnement de l'hébergeur.
+- Les fichiers `.env` et `.env.local` ne doivent jamais être commités. Les valeurs de production sont dans les secrets GitHub Actions du repo.
 
 ## Conventions
 - Composants fonctionnels et hooks uniquement, un composant par fichier, nom en PascalCase.
@@ -53,9 +65,6 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 - Avant de déclarer une tâche terminée : `npm run build` doit passer, et `npx tsc -p tsconfig.app.json --noEmit` ne doit pas avoir de nouvelle erreur dans les fichiers modifiés.
 
 ## Points connus à corriger
-- `src/lib/ratings.ts` contient des erreurs de syntaxe ; il n'est importé nulle part.
-- `src/lib/firebaseConfig.ts` est un vestige : Firebase n'est pas installé et le fichier n'est pas importé.
-- `src/components/Explore.tsx` importe `@/data/decades`, qui n'existe pas.
+- `src/components/Explore.tsx` et `src/components/MusicWheel.tsx` ne sont utilisés nulle part, et `Explore.tsx` importe `@/data/decades`, qui n'existe pas.
 - `EmergingArtists.tsx` importe le type `EmergingArtist`, qui n'est pas exporté par `src/services/emergingArtists.ts`.
-- `src/lib/supabase.ts` écrit l'URL Supabase dans la console au démarrage : à retirer.
-- Le site n'est plus hébergé sur Vercel, mais `App.tsx` charge encore `@vercel/analytics`, qui ne fonctionne que sur Vercel : retirer l'import, le composant `<Analytics />` et la dépendance.
+- `src/index.cc` ressemble à une copie égarée de `index.css`.
