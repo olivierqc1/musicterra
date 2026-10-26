@@ -393,7 +393,7 @@ export const countries: Item[] = [
     descriptionFr: "Sainte-Lucie a créé son propre style de soca, la Dennery Segment, née dans le village de Dennery : un rythme rapide et répétitif conçu pour danser pendant le carnaval. L'île, bilingue anglais et créole, garde aussi des traditions de quadrille et de musique kwadril jouées au violon et au banjo. Le Saint Lucia Jazz Festival accueille chaque année des artistes internationaux.",
     descriptionEn: "Saint Lucia created its own style of soca, Dennery Segment, born in the village of Dennery: a fast, repetitive rhythm made for dancing at Carnival. The island, bilingual in English and Creole, also keeps quadrille traditions (kwadril) played on fiddle and banjo. The Saint Lucia Jazz Festival hosts international artists every year.",
     regions: ['Castries', 'Vieux Fort'],
-    artists: ['Machel Montano (influence régionale)', 'Freezy'],
+    artists: ['Teddyson John', 'Ricky T', 'Freezy'],
     spotify: "https://open.spotify.com/search/Saint%20Lucia%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Castries_St_Lucia.jpg",
     cityStyles: [
@@ -689,7 +689,7 @@ export const countries: Item[] = [
     descriptionFr: "La Roumanie a un folk très varié, des doinas mélancoliques aux fanfares tziganes comme Fanfare Ciocărlia et au Taraf de Haïdouks. La manele, mélange de pop, de rythmes orientaux et de musique tzigane, est extrêmement populaire. Le pays a aussi une scène électronique reconnue, du minimal de Bucarest à la pop dance d'Inna.",
     descriptionEn: "Romania has a very varied folk music, from melancholic doinas to Roma brass bands such as Fanfare Ciocărlia and Taraf de Haïdouks. Manele, a blend of pop, Oriental rhythms and Roma music, is hugely popular. The country also has a recognised electronic scene, from Bucharest minimal to Inna's dance pop.",
     regions: ['București', 'Cluj-Napoca', 'Iași'],
-    artists: ['Goran Bregović (régionnel)', 'Inna'],
+    artists: ['Fanfare Ciocărlia', 'Taraf de Haïdouks', 'Inna'],
     spotify: "https://open.spotify.com/search/Romania%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Bucharest_Skyline.jpg"
   },
@@ -789,7 +789,7 @@ export const countries: Item[] = [
     descriptionFr: "La Moldavie partage avec la Roumanie un folk riche en violons, cymbalums et fanfares. Zdob și Zdub mêle ce folk au rock et au punk, et O-Zone a créé le tube mondial « Dragostea din tei ». Le pays participe avec enthousiasme à l'Eurovision, souvent avec des chansons festives et décalées.",
     descriptionEn: "Moldova shares with Romania a folk music rich in fiddles, cimbaloms and brass bands. Zdob și Zdub blends this folk with rock and punk, and O-Zone created the global hit “Dragostea din tei”. The country takes part in Eurovision with enthusiasm, often with festive, quirky songs.",
     regions: ['Chișinău', 'Bălți'],
-    artists: ['Zdob și Zdub', "'Carla's Dreams'"],
+    artists: ['Zdob și Zdub', "Carla's Dreams", 'O-Zone'],
     spotify: "https://open.spotify.com/search/Moldova%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Chisinau_skyline.jpg"
   },
@@ -860,7 +860,7 @@ export const countries: Item[] = [
     descriptionFr: "L'Albanie est connue pour son iso-polyphonie, un chant à plusieurs voix sur un bourdon, inscrit au patrimoine de l'UNESCO. La pop et le rap albanais sont aujourd'hui très dynamiques, en Albanie comme au Kosovo et dans la diaspora. Plusieurs stars internationales, comme Dua Lipa et Rita Ora, ont des origines albanaises.",
     descriptionEn: "Albania is known for its iso-polyphony, multi-voice singing over a drone, listed by UNESCO. Albanian pop and rap are very dynamic today, in Albania as in Kosovo and the diaspora. Several international stars, such as Dua Lipa and Rita Ora, have Albanian roots.",
     regions: ['Tirana', 'Shkodër'],
-    artists: ['Dua Lipa (diaspora)', 'Noizy'],
+    artists: ['Noizy', 'Elvana Gjata', 'Dua Lipa'],
     spotify: "https://open.spotify.com/search/Albania%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/5/52/Tirana_Skyline.jpg"
   },
@@ -869,7 +869,7 @@ export const countries: Item[] = [
     descriptionFr: "Le Kosovo a une scène pop et rap en albanais très productive, qui rayonne dans tous les Balkans et la diaspora en Suisse et en Allemagne. Dua Lipa et Rita Ora sont nées de familles kosovares, et le festival Sunny Hill de Pristina a été fondé par la famille de Dua Lipa. Le folk local se joue à la çiftelia, un luth à deux cordes.",
     descriptionEn: "Kosovo has a very productive Albanian-language pop and rap scene that reaches the whole Balkans and the diaspora in Switzerland and Germany. Dua Lipa and Rita Ora were born to Kosovar families, and Pristina's Sunny Hill festival was founded by Dua Lipa's family. Local folk is played on the çiftelia, a two-string lute.",
     regions: ['Prishtina', 'Prizren'],
-    artists: ['Rita Ora (diaspora)', 'Capital T'],
+    artists: ['Capital T', 'Era Istrefi', 'Rita Ora'],
     spotify: "https://open.spotify.com/search/Kosovo%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Pristina_Skyline.jpg"
   },
@@ -880,7 +880,7 @@ export const countries: Item[] = [
     descriptionFr: "L'Andorre, petite principauté des Pyrénées, partage les traditions musicales catalanes, comme la sardane et les chants populaires. Le pays a participé à l'Eurovision de 2004 à 2009. Le festival de jazz d'Escaldes-Engordany et les concerts d'été animent sa vie culturelle.",
     descriptionEn: "Andorra, a small principality in the Pyrenees, shares Catalan musical traditions such as the sardana and folk songs. The country took part in Eurovision from 2004 to 2009. The Escaldes-Engordany jazz festival and summer concerts drive its cultural life.",
     regions: ['Andorra la Vella'],
-    artists: ['Anonymous (Eurovision)'],
+    artists: ['Marta Roure'],
     spotify: "https://open.spotify.com/search/Andorra%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Andorra_la_Vella_Skyline.jpg"
   },
@@ -889,7 +889,7 @@ export const countries: Item[] = [
     descriptionFr: "Monaco a une vie musicale tournée vers le classique, avec l'Orchestre philharmonique de Monte-Carlo et l'Opéra, qui a créé des œuvres de Ravel et Puccini. Les Ballets russes de Diaghilev y ont été basés au début du XXe siècle. Léo Ferré, l'un des grands noms de la chanson française, est né à Monaco.",
     descriptionEn: "Monaco's musical life is centred on classical music, with the Monte-Carlo Philharmonic Orchestra and the Opera, which premiered works by Ravel and Puccini. Diaghilev's Ballets Russes were based there in the early 20th century. Léo Ferré, one of the great names of French chanson, was born in Monaco.",
     regions: ['Monte-Carlo'],
-    artists: ['Léo Ferré (lien historique)'],
+    artists: ['Léo Ferré'],
     spotify: "https://open.spotify.com/search/Monaco%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Monaco_Skyline.jpg"
   },
@@ -907,7 +907,7 @@ export const countries: Item[] = [
     descriptionFr: "Le Liechtenstein, petite principauté alpine, a une vie musicale tournée vers le classique et les traditions alpines, avec ses fanfares et ses chœurs. Le compositeur Josef Rheinberger, connu pour sa musique d'orgue, y est né. Le pays n'a jamais participé à l'Eurovision, faute de radio publique membre de l'UER.",
     descriptionEn: "Liechtenstein, a small Alpine principality, has a musical life centred on classical music and Alpine traditions, with its brass bands and choirs. Composer Josef Rheinberger, known for his organ music, was born there. The country has never taken part in Eurovision, as it has no public broadcaster in the EBU.",
     regions: ['Vaduz'],
-    artists: ['Elisabeth Gunawan (classique, ex.)'],
+    artists: ['Josef Rheinberger'],
     spotify: "https://open.spotify.com/search/Liechtenstein%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Vaduz_Skyline.jpg"
   },

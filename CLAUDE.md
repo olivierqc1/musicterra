@@ -31,7 +31,8 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 - `src/data/` : données statiques
   - `genres.ts` : la source de vérité, environ 2 900 genres (environ 10 Mo), type `Item` défini dans `src/types.ts` (`name`, `descriptionFr`, `descriptionEn`, `artists`, `subgenres`, `regions`, `cities`, `spotify`, `origin`, `relatedCountries`, `year`)
   - `matrix.ts` : matrice de similarité. Pour chaque genre, ses 8 genres les plus proches avec un score entre 0 et 1. Elle n'est pas symétrique. Incrémenter `MATRIX_VERSION` à chaque changement de logique.
-  - `countries.ts`, `years.ts`, `cityStyleBoosts.ts`
+  - `countries.ts`, `cityStyleBoosts.ts`
+  - `years.ts` : une entrée par année, mais une description par période (par décennie depuis 1910). Toutes les années d'une même période partagent le même texte : vérifier que la période correspond bien à l'année (une erreur de décalage d'une décennie a déjà eu lieu). Ne mettre une playlist Spotify que si on a vérifié qu'elle correspond à la période ; sinon un lien de recherche.
   - `genresLite.ts` : ce que l'app importe. Mêmes genres que `genres.ts`, mais `descriptionFr` et `descriptionEn` vides et un champ `descSlug` en plus. Ne jamais importer `genres.ts` directement dans le code de l'app : ça remettrait 10 Mo dans le bundle.
 
 ## Comportements clés de l'app
