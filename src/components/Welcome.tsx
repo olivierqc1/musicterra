@@ -1,246 +1,198 @@
-import { X } from 'lucide-react';
+// src/components/Welcome.tsx
+// Fenêtre « À propos » : ce que fait l'app, en quatre étapes.
+// S'ouvre à la première visite et avec le bouton « ? » de l'en-tête.
+
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { C, R } from "../theme";
 
 interface Props {
   onClose: () => void;
-  language: 'fr' | 'en';
+  language: "fr" | "en";
 }
 
 export default function Welcome({ onClose, language }: Props) {
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const steps: [string, string][] = [
+    [
+      t("Tourne la roue", "Spin the wheel"),
+      t(
+        "Elle tombe sur un genre, un pays ou une année parmi des milliers, du plus connu au plus obscur.",
+        "It lands on a genre, a country or a year out of thousands, from the famous to the obscure."
+      ),
+    ],
+    [
+      t("Écoute et lis son histoire", "Listen and read its story"),
+      t(
+        "Chaque fiche raconte d'où vient la musique et propose des extraits à écouter tout de suite.",
+        "Each page tells where the music comes from and lets you play samples right away."
+      ),
+    ],
+    [
+      t("Note ce que tu entends", "Rate what you hear"),
+      t(
+        "Tes notes remplissent ton passeport musical. Ce que tu as déjà noté ne revient plus sur la roue.",
+        "Your ratings fill your music passport. Anything you've rated won't come back on the wheel."
+      ),
+    ],
+    [
+      t("Laisse-toi guider", "Let it guide you"),
+      t(
+        "Avec « Propose-moi un truc », la roue penche vers ce qui ressemble à tes coups de cœur. Tes notes servent aussi à te proposer des artistes émergents et des concerts.",
+        "With “Suggest something”, the wheel leans toward what's close to your favorites. Your ratings also bring you emerging artists and concerts."
+      ),
+    ],
+  ];
 
   return (
     <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div style={styles.header}>
-          <div style={styles.headerContent}>
-            <div style={styles.logo}>🌍🎵</div>
-            <div>
-              <h1 style={styles.title}>
-                {t('Bienvenue sur MusicTerra', 'Welcome to MusicTerra')}
-              </h1>
-              <p style={styles.subtitle}>
-                {t(
-                  'Votre carte personnalisée de découverte musicale mondiale',
-                  'Your personalized map of global music discovery'
-                )}
-              </p>
-            </div>
-          </div>
-          <button onClick={onClose} style={styles.closeBtn}>
-            <X size={24} />
-          </button>
-        </div>
+      <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="welcome-title"
+        style={styles.sheet}
+        onClick={(e) => e.stopPropagation()}
+        initial={{ y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+      >
+        <button onClick={onClose} style={styles.closeBtn} aria-label={t("Fermer", "Close")}>
+          ✕
+        </button>
 
-        {/* Content */}
-        <div style={styles.content}>
-          {/* Section 1 */}
-          <div style={styles.section}>
-            <div style={styles.iconCircle}>🎯</div>
-            <div>
-              <h3 style={styles.sectionTitle}>
-                {t('Comment ça fonctionne ?', 'How does it work?')}
-              </h3>
-              <p style={styles.text}>
-                {t(
-                  'Explorez des milliers de genres musicaux du monde entier. Notez ceux que vous aimez pour créer votre profil musical unique.',
-                  'Explore thousands of music genres from around the world. Rate the ones you like to create your unique music profile.'
-                )}
-              </p>
-            </div>
-          </div>
+        <img src="/favicon.svg" alt="" width={48} height={48} />
+        <h2 id="welcome-title" style={styles.title}>
+          {t("La musique du monde, une roue à la fois", "World music, one spin at a time")}
+        </h2>
 
-          {/* Section 2 */}
-          <div style={styles.section}>
-            <div style={styles.iconCircle}>⭐</div>
-            <div>
-              <h3 style={styles.sectionTitle}>
-                {t('Plus vous notez, meilleur c\'est !', 'The more you rate, the better!')}
-              </h3>
-              <p style={styles.text}>
-                {t(
-                  'Chaque note améliore votre profil. Notre algorithme apprend vos goûts et vous recommande des genres similaires que vous allez adorer.',
-                  'Every rating improves your profile. Our algorithm learns your taste and recommends similar genres you\'ll love.'
-                )}
-              </p>
-            </div>
-          </div>
+        <ol style={styles.list}>
+          {steps.map(([title, text], i) => (
+            <li key={title} style={styles.step}>
+              <span style={styles.num} aria-hidden>
+                {i + 1}
+              </span>
+              <div>
+                <div style={styles.stepTitle}>{title}</div>
+                <p style={styles.stepText}>{text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
 
-          {/* Section 3 */}
-          <div style={styles.section}>
-            <div style={styles.iconCircle}>🌱</div>
-            <div>
-              <h3 style={styles.sectionTitle}>
-                {t('Découvrez des artistes émergents', 'Discover emerging artists')}
-              </h3>
-              <p style={styles.text}>
-                {t(
-                  'Basé sur votre profil, nous vous proposons des artistes émergents à découvrir avant tout le monde. Soyez un découvreur !',
-                  'Based on your profile, we suggest emerging artists to discover before everyone else. Be a discoverer!'
-                )}
-              </p>
-            </div>
-          </div>
-
-          {/* Section 4 */}
-          <div style={styles.section}>
-            <div style={styles.iconCircle}>🎤</div>
-            <div>
-              <h3 style={styles.sectionTitle}>
-                {t('Trouvez des concerts près de chez vous', 'Find concerts near you')}
-              </h3>
-              <p style={styles.text}>
-                {t(
-                  'Consultez l\'onglet Concerts pour voir les événements musicaux à venir dans votre région et ceux correspondant à vos goûts.',
-                  'Check the Concerts tab to see upcoming music events in your area that match your taste.'
-                )}
-              </p>
-            </div>
-          </div>
-
-          {/* CTA */}
-          <div style={styles.cta}>
-            <button onClick={onClose} style={styles.ctaButton}>
-              {t('🚀 Commencer l\'exploration', '🚀 Start exploring')}
-            </button>
-            <p style={styles.ctaText}>
-              💡 {t(
-                'Astuce : Notez au moins 5-10 genres pour des recommandations optimales',
-                'Tip: Rate at least 5-10 genres for optimal recommendations'
-              )}
-            </p>
-          </div>
-        </div>
-      </div>
+        <button onClick={onClose} style={styles.cta}>
+          {t("Tourner la roue", "Spin the wheel")}
+        </button>
+        <p style={styles.note}>
+          {t(
+            "Pas besoin de compte pour tourner la roue. Un compte sert à garder tes notes.",
+            "No account needed to spin. An account keeps your ratings."
+          )}
+        </p>
+      </motion.div>
     </div>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
   overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(0, 0, 0, 0.75)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "fixed",
+    inset: 0,
+    background: "rgba(21, 27, 59, 0.45)",
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "center",
     zIndex: 9999,
-    padding: 20,
-    backdropFilter: 'blur(4px)'
   },
-  modal: {
-    background: '#fff',
-    borderRadius: 20,
-    maxWidth: 700,
-    width: '100%',
-    maxHeight: '90vh',
-    overflow: 'hidden',
-    boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  header: {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: '#fff',
-    padding: '24px 30px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start'
-  },
-  headerContent: {
-    display: 'flex',
-    gap: 16,
-    alignItems: 'center',
-    flex: 1
-  },
-  logo: {
-    fontSize: 40,
-    lineHeight: 1
-  },
-  title: {
-    margin: 0,
-    fontSize: 24,
-    fontWeight: 700
-  },
-  subtitle: {
-    margin: '6px 0 0',
-    fontSize: 14,
-    opacity: 0.95
+  sheet: {
+    position: "relative",
+    width: "100%",
+    maxWidth: 520,
+    maxHeight: "92vh",
+    overflowY: "auto",
+    background: C.surface,
+    borderRadius: `${R.panel + 4}px ${R.panel + 4}px 0 0`,
+    padding: "28px 22px max(24px, env(safe-area-inset-bottom))",
   },
   closeBtn: {
-    background: 'rgba(255,255,255,0.2)',
-    border: 'none',
-    borderRadius: 8,
-    color: '#fff',
-    cursor: 'pointer',
-    padding: 8,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'background 0.2s'
-  },
-  content: {
-    padding: '24px 30px 30px',
-    overflowY: 'auto',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 20
-  },
-  section: {
-    display: 'flex',
-    gap: 14,
-    alignItems: 'flex-start'
-  },
-  iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #e0e7ff 0%, #f0f4ff 100%)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 22,
-    flexShrink: 0
-  },
-  sectionTitle: {
-    margin: '0 0 6px 0',
-    fontSize: 16,
-    fontWeight: 600,
-    color: '#1f2937'
-  },
-  text: {
-    margin: 0,
+    position: "absolute",
+    top: 14,
+    right: 14,
+    width: 34,
+    height: 34,
+    border: "none",
+    borderRadius: R.pill,
+    background: C.soft,
+    color: C.ink,
     fontSize: 14,
-    lineHeight: 1.6,
-    color: '#6b7280'
+  },
+  title: {
+    margin: "12px 0 20px",
+    fontSize: 28,
+    fontWeight: 800,
+    letterSpacing: "-0.035em",
+    lineHeight: 1.05,
+    color: C.ink,
+    maxWidth: "16ch",
+  },
+  list: {
+    listStyle: "none",
+    margin: 0,
+    padding: 0,
+    display: "grid",
+    gap: 16,
+  },
+  step: {
+    display: "grid",
+    gridTemplateColumns: "32px 1fr",
+    gap: 12,
+    alignItems: "start",
+  },
+  num: {
+    width: 32,
+    height: 32,
+    borderRadius: R.pill,
+    background: C.marigold,
+    color: C.ink,
+    display: "grid",
+    placeItems: "center",
+    fontWeight: 800,
+    fontSize: 15,
+  },
+  stepTitle: {
+    fontWeight: 700,
+    color: C.ink,
+    fontSize: 17,
+    marginTop: 4,
+  },
+  stepText: {
+    margin: "2px 0 0",
+    color: C.muted,
+    fontSize: 15,
+    lineHeight: 1.5,
   },
   cta: {
-    marginTop: 12,
-    padding: '20px',
-    background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-    borderRadius: 12,
-    textAlign: 'center'
+    width: "100%",
+    marginTop: 24,
+    padding: "14px 20px",
+    border: "none",
+    borderRadius: R.pill,
+    background: C.cobalt,
+    color: "#fff",
+    fontSize: 17,
+    fontWeight: 700,
+    boxShadow: `0 3px 0 ${C.ink}`,
   },
-  ctaButton: {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 12,
-    padding: '14px 28px',
-    fontSize: 16,
-    fontWeight: 600,
-    cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    width: '100%'
-  },
-  ctaText: {
-    margin: '14px 0 0',
+  note: {
+    margin: "12px 0 0",
+    textAlign: "center",
+    color: C.muted,
     fontSize: 13,
-    color: '#92400e',
-    fontWeight: 500
-  }
+  },
 };

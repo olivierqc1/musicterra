@@ -10,6 +10,7 @@ import {
   GroupChallenge
 } from '../services/groups';
 import { useAuth } from '../context/AuthContext';
+import { toast } from "../lib/toast";
 
 interface Props {
   groupId: string;
@@ -67,7 +68,7 @@ export default function GroupDetail({ groupId, language }: Props) {
   };
 
   const handleRSVP = async (eventId: string) => {
-    if (!session) return alert(t('Connectez-vous pour participer', 'Please sign in to RSVP'));
+    if (!session) return toast(t('Connectez-vous pour participer', 'Please sign in to RSVP'), "info");
     try {
       await rsvpToEvent(eventId, session.user.id);
       loadData();
@@ -247,59 +248,59 @@ export default function GroupDetail({ groupId, language }: Props) {
 
 // 🎨 Styles allégés et uniformisés
 const styles: Record<string, React.CSSProperties> = {
-  card: { padding: 16, background: '#fff', borderRadius: 12, border: '1px solid #e7e7e7' },
+  card: { padding: 16, background: '#fff', borderRadius: 12, border: '1px solid #DFE3EF' },
   tabsContainer: { display: 'flex', gap: 8, flexWrap: 'wrap' },
   tabBtn: {
     padding: '8px 14px',
     background: '#fff',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 999,
     cursor: 'pointer',
     fontSize: 14,
     fontWeight: 500
   },
-  tabActive: { background: '#667eea', color: '#fff', borderColor: '#667eea' },
-  timestamp: { fontSize: 12, color: '#999', textAlign: 'center' },
-  emptyText: { color: '#777', textAlign: 'center' },
-  textLine: { fontSize: 13, color: '#555', margin: '4px 0' },
-  metaText: { fontSize: 12, color: '#999', margin: '4px 0' },
-  commentText: { margin: '4px 0', fontSize: 13, color: '#555', fontStyle: 'italic' },
-  likeCount: { fontSize: 13, color: '#667eea' },
+  tabActive: { background: '#2C3FD1', color: '#fff', borderColor: '#2C3FD1' },
+  timestamp: { fontSize: 12, color: '#8A90AD', textAlign: 'center' },
+  emptyText: { color: '#5A6183', textAlign: 'center' },
+  textLine: { fontSize: 13, color: '#3A4166', margin: '4px 0' },
+  metaText: { fontSize: 12, color: '#8A90AD', margin: '4px 0' },
+  commentText: { margin: '4px 0', fontSize: 13, color: '#3A4166', fontStyle: 'italic' },
+  likeCount: { fontSize: 13, color: '#2C3FD1' },
   discoveryCard: {
     display: 'flex',
     gap: 12,
     padding: 12,
-    background: '#f9fafb',
+    background: '#F4F6FB',
     borderRadius: 8,
     alignItems: 'flex-start'
   },
   smallAvatar: { width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' },
   itemBadge: {
     padding: '2px 8px',
-    background: '#e0e7ff',
-    color: '#3730a3',
+    background: '#E8EBFC',
+    color: '#2C3FD1',
     borderRadius: 999,
     fontSize: 12,
     fontWeight: 600
   },
-  eventCard: { display: 'flex', gap: 12, padding: 12, border: '1px solid #eee', borderRadius: 8 },
+  eventCard: { display: 'flex', gap: 12, padding: 12, border: '1px solid #EEF1F8', borderRadius: 8 },
   rsvpBtn: {
     padding: '8px 14px',
     background: '#fff',
-    border: '1px solid #667eea',
-    color: '#667eea',
+    border: '1px solid #2C3FD1',
+    color: '#2C3FD1',
     borderRadius: 8,
     cursor: 'pointer',
     fontSize: 13
   },
-  rsvpBtnActive: { background: '#667eea', color: '#fff' },
+  rsvpBtnActive: { background: '#2C3FD1', color: '#fff' },
   challengeCard: {
     display: 'flex',
     gap: 12,
     padding: 14,
-    background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+    background: '#FFF3D6',
     borderRadius: 10,
-    border: '2px solid #fbbf24'
+    border: '2px solid #FFB224'
   },
   progressCircle: {
     width: 60,
@@ -310,12 +311,12 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '2px solid #fbbf24'
+    border: '2px solid #FFB224'
   },
   loadingContainer: {
     textAlign: 'center',
     padding: 40,
-    color: '#555',
+    color: '#3A4166',
     display: 'grid',
     gap: 12,
     placeItems: 'center'
@@ -323,8 +324,8 @@ const styles: Record<string, React.CSSProperties> = {
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #f0f0f0',
-    borderTop: '4px solid #667eea',
+    border: '4px solid #EEF1F8',
+    borderTop: '4px solid #2C3FD1',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite'
   }

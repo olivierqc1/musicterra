@@ -209,8 +209,8 @@ const styles: Record<string, CSSProperties> = {
     alignItems: "center",
     padding: 10,
     borderRadius: 12,
-    background: "#f4f4fb",
-    border: "1px solid rgba(102, 126, 234, 0.2)",
+    background: "#F4F6FB",
+    border: "1px solid rgba(44, 63, 209, 0.2)",
   },
   cover: {
     borderRadius: 8,
@@ -226,7 +226,7 @@ const styles: Record<string, CSSProperties> = {
   },
   trackArtist: {
     fontSize: 13,
-    color: "#666",
+    color: "#5A6183",
   },
   playerFooter: {
     display: "flex",
@@ -235,12 +235,12 @@ const styles: Record<string, CSSProperties> = {
     gap: 8,
     marginTop: 4,
     fontSize: 11,
-    color: "#888",
+    color: "#8A90AD",
   },
   nextBtn: {
     border: "none",
     background: "none",
-    color: "#667eea",
+    color: "#2C3FD1",
     fontSize: 12,
     fontWeight: 600,
     cursor: "pointer",

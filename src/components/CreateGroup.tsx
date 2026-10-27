@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { createGroup, POPULAR_TAGS } from '../services/groups';
 import { supabase } from '../lib/supabase';
+import { toast } from "../lib/toast";
 
 interface Props {
   onClose: () => void;
@@ -28,7 +29,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
       if (selectedTags.length < 5) {
         setSelectedTags([...selectedTags, tag]);
       } else {
-        alert(t('Maximum 5 tags', 'Maximum 5 tags'));
+        toast(t('Maximum 5 tags', 'Maximum 5 tags'), "info");
       }
     }
   };
@@ -40,7 +41,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
         setSelectedTags([...selectedTags, tag]);
         setCustomTag('');
       } else {
-        alert(t('Maximum 5 tags', 'Maximum 5 tags'));
+        toast(t('Maximum 5 tags', 'Maximum 5 tags'), "info");
       }
     }
   };
@@ -51,13 +52,13 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
 
     // Vérifier la taille (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert(t('Fichier trop volumineux (max 2MB)', 'File too large (max 2MB)'));
+      toast(t('Fichier trop volumineux (max 2MB)', 'File too large (max 2MB)'), "info");
       return;
     }
 
     // Vérifier le type
     if (!file.type.startsWith('image/')) {
-      alert(t('Veuillez choisir une image', 'Please choose an image'));
+      toast(t('Veuillez choisir une image', 'Please choose an image'), "info");
       return;
     }
 
@@ -96,12 +97,12 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      alert(t('Veuillez entrer un nom', 'Please enter a name'));
+      toast(t('Veuillez entrer un nom', 'Please enter a name'), "info");
       return;
     }
 
     if (selectedTags.length === 0) {
-      alert(t('Veuillez sélectionner au moins un tag', 'Please select at least one tag'));
+      toast(t('Veuillez sélectionner au moins un tag', 'Please select at least one tag'), "info");
       return;
     }
 
@@ -129,7 +130,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
       onClose();
     } catch (error) {
       console.error(error);
-      alert(t('Erreur lors de la création', 'Error creating group'));
+      toast(t('Erreur lors de la création', 'Error creating group'), "error");
     }
     setCreating(false);
   };
@@ -152,7 +153,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
             ) : (
               <div style={styles.avatarPlaceholder}>
                 <span style={{ fontSize: 32 }}>📷</span>
-                <p style={{ fontSize: 12, margin: '8px 0 0', color: '#777' }}>
+                <p style={{ fontSize: 12, margin: '8px 0 0', color: '#5A6183' }}>
                   {t('Ajouter une photo', 'Add photo')}
                 </p>
               </div>
@@ -195,7 +196,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
             maxLength={200}
             rows={3}
           />
-          <div style={{ fontSize: 12, color: '#777', textAlign: 'right' }}>
+          <div style={{ fontSize: 12, color: '#5A6183', textAlign: 'right' }}>
             {description.length}/200
           </div>
         </div>
@@ -281,7 +282,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
               />
               <div>
                 <strong>{t('Public', 'Public')}</strong>
-                <p style={{ fontSize: 12, color: '#777', margin: '2px 0 0' }}>
+                <p style={{ fontSize: 12, color: '#5A6183', margin: '2px 0 0' }}>
                   {t('Tout le monde peut voir et rejoindre', 'Anyone can see and join')}
                 </p>
               </div>
@@ -294,7 +295,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
               />
               <div>
                 <strong>{t('Privé', 'Private')}</strong>
-                <p style={{ fontSize: 12, color: '#777', margin: '2px 0 0' }}>
+                <p style={{ fontSize: 12, color: '#5A6183', margin: '2px 0 0' }}>
                   {t('Sur invitation uniquement', 'Invitation only')}
                 </p>
               </div>
@@ -349,14 +350,14 @@ const styles: Record<string, React.CSSProperties> = {
     width: 100,
     height: 100,
     borderRadius: '50%',
-    border: '3px dashed #ddd',
+    border: '3px dashed #DFE3EF',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
     overflow: 'hidden',
     transition: 'border-color 0.2s',
-    background: '#fafafa'
+    background: '#F4F6FB'
   },
   avatarImg: {
     width: '100%',
@@ -365,7 +366,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   avatarPlaceholder: {
     textAlign: 'center',
-    color: '#999'
+    color: '#8A90AD'
   },
   field: {
     marginBottom: 16
@@ -379,7 +380,7 @@ const styles: Record<string, React.CSSProperties> = {
   input: {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14,
     fontFamily: 'inherit'
@@ -387,7 +388,7 @@ const styles: Record<string, React.CSSProperties> = {
   textarea: {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14,
     fontFamily: 'inherit',
@@ -400,27 +401,27 @@ const styles: Record<string, React.CSSProperties> = {
     maxHeight: 200,
     overflowY: 'auto',
     padding: 8,
-    background: '#f9fafb',
+    background: '#F4F6FB',
     borderRadius: 8
   },
   tag: {
     padding: '6px 12px',
     background: '#fff',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 999,
     cursor: 'pointer',
     fontSize: 13,
     transition: 'all 0.2s'
   },
   tagActive: {
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
-    borderColor: '#667eea'
+    borderColor: '#2C3FD1'
   },
   addTagBtn: {
     padding: '10px 16px',
-    background: '#f0f0f0',
-    border: '1px solid #ddd',
+    background: '#EEF1F8',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     cursor: 'pointer',
     fontSize: 14,
@@ -430,7 +431,7 @@ const styles: Record<string, React.CSSProperties> = {
   selectedTags: {
     marginBottom: 16,
     padding: 12,
-    background: '#f0f9ff',
+    background: '#E8EBFC',
     borderRadius: 8,
     border: '1px solid #bfdbfe'
   },
@@ -439,7 +440,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: 6,
     padding: '6px 10px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     borderRadius: 999,
     fontSize: 13,
@@ -463,7 +464,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     gap: 10,
     padding: 12,
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     cursor: 'pointer',
     alignItems: 'flex-start',
@@ -471,7 +472,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   cancelBtn: {
     padding: '10px 20px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     background: '#fff',
     cursor: 'pointer',
@@ -481,7 +482,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '10px 20px',
     border: 'none',
     borderRadius: 8,
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     cursor: 'pointer',
     fontWeight: 500,

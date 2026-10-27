@@ -5,7 +5,8 @@ import ForgotPassword from "./ForgotPassword";
 
 interface AuthGateProps {
   children?: React.ReactNode;
-  mode?: "inline" | "fullpage";
+  /** "sheet" : sans cadre, pour la fenêtre de connexion de l'en-tête. */
+  mode?: "inline" | "fullpage" | "sheet";
   language?: "fr" | "en";
 }
 
@@ -180,11 +181,11 @@ const AuthGate: React.FC<AuthGateProps> = ({
     <>
       {/* HEADER */}
       <div style={{ marginBottom: 20, textAlign: 'center' }}>
-        <span style={{ fontSize: 40 }}>🎵</span>
-        <h2 style={{ margin: "8px 0 4px" }}>
+        <img src="/favicon.svg" alt="" width={44} height={44} style={{ display: "block", margin: "0 auto" }} />
+        <h2 style={{ margin: "10px 0 4px", fontSize: 24, fontWeight: 800 }}>
           {t("Connexion à MusicTerra", "Sign in to MusicTerra")}
         </h2>
-        <p style={{ color: "#666", margin: 0, fontSize: 14 }}>
+        <p style={{ color: "#5A6183", margin: 0, fontSize: 14 }}>
           {t(
             "Retrouve tes goûts musicaux et tes découvertes",
             "Access your musical tastes and discoveries"
@@ -208,7 +209,6 @@ const AuthGate: React.FC<AuthGateProps> = ({
               }}
               type="button"
             >
-              <span style={{ fontSize: 20 }}>🔵</span>
               {t("Continuer avec Google", "Continue with Google")}
             </button>
 
@@ -224,7 +224,6 @@ const AuthGate: React.FC<AuthGateProps> = ({
               }}
               type="button"
             >
-              <span style={{ fontSize: 20 }}>💜</span>
               {t("Continuer avec Discord", "Continue with Discord")}
             </button>
           </div>
@@ -236,14 +235,14 @@ const AuthGate: React.FC<AuthGateProps> = ({
               left: 0, 
               right: 0, 
               height: 1, 
-              background: '#ddd', 
+              background: '#DFE3EF', 
               top: '50%' 
             }} />
             <span style={{ 
               position: 'relative', 
               padding: '0 12px', 
               background: '#fff', 
-              color: '#999', 
+              color: '#8A90AD', 
               fontSize: 13 
             }}>
               {t('ou', 'or')}
@@ -256,7 +255,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
             style={styles.emailToggleButton}
             type="button"
           >
-            📧 {t("Se connecter avec email", "Sign in with email")}
+            {t("Continuer avec un email", "Continue with email")}
           </button>
         </>
       ) : (
@@ -318,10 +317,10 @@ const AuthGate: React.FC<AuthGateProps> = ({
               disabled={loading}
             >
               {loading 
-                ? t("⏳ Chargement...", "⏳ Loading...") 
+                ? t("Un instant…", "One moment…")
                 : isSignUp
-                  ? t("📝 Créer mon compte", "📝 Create account")
-                  : t("🔑 Se connecter", "🔑 Sign in")
+                  ? t("Créer mon compte", "Create account")
+                  : t("Se connecter", "Sign in")
               }
             </button>
           </form>
@@ -372,7 +371,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
 
       {/* FOOTER */}
       <div style={styles.footer}>
-        <small style={{ color: "#888", fontSize: 12 }}>
+        <small style={{ color: "#8A90AD", fontSize: 12 }}>
           {t(
             "En te connectant, tu acceptes nos conditions d'utilisation",
             "By signing in, you agree to our terms of service"
@@ -391,6 +390,10 @@ const AuthGate: React.FC<AuthGateProps> = ({
     );
   }
 
+  if (mode === "sheet") {
+    return <div style={{ padding: "0 16px 8px" }}>{formContent}</div>;
+  }
+
   return <div style={styles.inlineCard}>{formContent}</div>;
 };
 
@@ -401,7 +404,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "#2C3FD1",
     padding: 16,
   },
   fullpageCard: {
@@ -413,18 +416,18 @@ const styles: Record<string, React.CSSProperties> = {
     boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
   },
   inlineCard: {
-    maxWidth: 420,
-    margin: "20px auto",
+    width: "100%",
+    boxSizing: "border-box",
     padding: 24,
-    border: "1px solid #e7e7e7",
-    borderRadius: 12,
+    border: "1px solid #DFE3EF",
+    borderRadius: 20,
     background: "#fff",
   },
   oauthButton: {
     width: "100%",
     padding: "14px 16px",
     border: "none",
-    borderRadius: 10,
+    borderRadius: 999,
     fontSize: 15,
     fontWeight: 600,
     transition: "all 0.3s",
@@ -434,9 +437,9 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 10,
   },
   googleButton: {
-    border: "2px solid #e0e0e0",
+    border: "1px solid #DFE3EF",
     background: "#fff",
-    color: "#333",
+    color: "#151B3B",
   },
   discordButton: {
     background: "#5865F2",
@@ -445,10 +448,10 @@ const styles: Record<string, React.CSSProperties> = {
   emailToggleButton: {
     width: "100%",
     padding: "12px 16px",
-    border: "2px solid #ddd",
-    borderRadius: 10,
+    border: "1px solid #DFE3EF",
+    borderRadius: 999,
     background: "#fff",
-    color: "#667eea",
+    color: "#2C3FD1",
     fontSize: 15,
     fontWeight: 600,
     cursor: "pointer",
@@ -457,7 +460,7 @@ const styles: Record<string, React.CSSProperties> = {
   backButton: {
     background: "none",
     border: "none",
-    color: "#667eea",
+    color: "#2C3FD1",
     fontSize: 14,
     cursor: "pointer",
     padding: "8px",
@@ -473,8 +476,8 @@ const styles: Record<string, React.CSSProperties> = {
   input: {
     width: "100%",
     padding: "12px 14px",
-    border: "1px solid #ddd",
-    borderRadius: 8,
+    border: "1px solid #DFE3EF",
+    borderRadius: 12,
     fontSize: 15,
     outline: "none",
     transition: "border-color 0.2s",
@@ -483,8 +486,8 @@ const styles: Record<string, React.CSSProperties> = {
     width: "100%",
     padding: "12px 14px",
     border: "none",
-    borderRadius: 8,
-    background: "#667eea",
+    borderRadius: 999,
+    background: "#2C3FD1",
     color: "#fff",
     fontSize: 15,
     fontWeight: 600,
@@ -493,7 +496,7 @@ const styles: Record<string, React.CSSProperties> = {
   toggleButton: {
     background: "none",
     border: "none",
-    color: "#667eea",
+    color: "#2C3FD1",
     fontSize: 14,
     cursor: "pointer",
     textDecoration: "underline",
@@ -502,7 +505,7 @@ const styles: Record<string, React.CSSProperties> = {
   forgotPasswordLink: {
     background: "none",
     border: "none",
-    color: "#999",
+    color: "#8A90AD",
     fontSize: 13,
     cursor: "pointer",
     textDecoration: "underline",
@@ -515,11 +518,11 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 14,
   },
   messageError: {
-    background: "#fee",
+    background: "#FCE4E7",
     color: "#c00",
   },
   messageSuccess: {
-    background: "#efe",
+    background: "#DDF5EC",
     color: "#060",
   },
   footer: {

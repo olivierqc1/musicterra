@@ -2,7 +2,10 @@
 // Carte de résultat après un spin : image, description, liens d'écoute,
 // notation et affinités. Extrait de App.tsx pour garder les fichiers légers.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type React from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { C, R } from "../theme";
 import { type Item, isGenre, isCountry, isYear } from "../itemTypes";
 import { matrix } from "../data/matrix";
 import { styles } from "../appStyles";
@@ -19,6 +22,8 @@ interface Props {
   item: Item;
   pool: "genres" | "countries" | "years";
   language: "fr" | "en";
+  /** Fiche arrivée par un lancer de roue : animation et défilement. */
+  justSpun?: boolean;
 }
 
 const PLATFORM_COLORS: Record<string, string> = {
@@ -29,11 +34,25 @@ const PLATFORM_COLORS: Record<string, string> = {
   Deezer: "#7c3aed",
 };
 
-export default function ResultCard({ item, pool, language }: Props) {
+export default function ResultCard({ item, pool, language, justSpun = false }: Props) {
   const { session } = useAuth();
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
   const description = useItemDescription(item, language);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
+  const reduceMotion = useReducedMotion();
+  const [expanded, setExpanded] = useState(false);
+  const longText = (description.text || "").length > 420;
+  const cardRef = useRef<HTMLElement>(null);
+
+  // Nouveau résultat : on le fait défiler à l'écran (sur téléphone, il
+  // apparaît sous la roue, hors de vue).
+  useEffect(() => {
+    if (!justSpun) return;
+    cardRef.current?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }, [item, reduceMotion, justSpun]);
 
   const handleShare = async () => {
     const url = shareUrl(item, pool);
@@ -69,122 +88,173 @@ export default function ResultCard({ item, pool, language }: Props) {
     }
   };
 
+  const kicker = isGenre(item)
+    ? t("🎸 Genre", "🎸 Genre")
+    : isCountry(item)
+    ? t("🌍 Pays", "🌍 Country")
+    : t("📅 Année", "📅 Year");
+  const title = isYear(item) ? String(item.year) : capitalize(item.name);
+
   return (
-    <div style={styles.card}>
-          <div style={styles.resultGrid}>
-            <div style={styles.resultMedia}>
-              {item.image ? (
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  style={styles.resultImage}
-                />
-              ) : (
-                <div style={styles.noImage}>
-                  {t("Aucune image", "No image")}
-                </div>
-              )}
+    <motion.article
+      ref={cardRef}
+      style={{ ...styles.card, padding: "20px 18px", scrollMarginTop: 12 }}
+      initial={reduceMotion || !justSpun ? false : { opacity: 0, scale: 1.08, rotate: -2 }}
+      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+      transition={{ type: "spring", stiffness: 420, damping: 26 }}
+      aria-live="polite"
+    >
+      <div style={styles.titleRow}>
+        <span style={styles.resultKicker}>{kicker}</span>
+        <button onClick={handleShare} style={styles.shareBtn}>
+          {shareStatus === "copied"
+            ? t("Lien copié", "Link copied")
+            : shareStatus === "error"
+            ? t("Impossible de partager", "Couldn't share")
+            : t("Partager", "Share")}
+        </button>
+      </div>
+
+      <h2 style={styles.resultTitle}>{title}</h2>
+
+      <div style={styles.resultGrid}>
+        {item.image && (
+          <div style={styles.resultMedia}>
+            <img src={item.image} alt="" style={styles.resultImage} />
+          </div>
+        )}
+
+        <div style={styles.resultBody}>
+          {description.loading ? (
+            <div style={{ display: "grid", gap: 8, marginBottom: 16 }} aria-label={t("Chargement", "Loading")}>
+              <div className="mt-skeleton" style={{ height: 14 }} />
+              <div className="mt-skeleton" style={{ height: 14 }} />
+              <div className="mt-skeleton" style={{ height: 14, width: "70%" }} />
             </div>
-
-            <div style={styles.resultBody}>
-              <div style={styles.titleRow}>
-                <h2 style={{ margin: "4px 0 6px" }}>
-                  {isYear(item) ? item.year : item.name}
-                </h2>
-                <button onClick={handleShare} style={styles.shareBtn}>
-                  {shareStatus === "copied"
-                    ? t("✓ Lien copié", "✓ Link copied")
-                    : shareStatus === "error"
-                    ? t("Impossible de partager", "Couldn't share")
-                    : t("🔗 Partager", "🔗 Share")}
-                </button>
-              </div>
-
-              <p style={{ marginTop: 0, ...(description.loading ? { opacity: 0.6 } : {}) }}>
-                {description.loading
-                  ? t("Chargement de la description…", "Loading description…")
-                  : description.text}
+          ) : (
+            <>
+              <p
+                style={{
+                  ...styles.resultText,
+                  ...(longText && !expanded ? clamped : {}),
+                }}
+              >
+                {description.text}
               </p>
+              {longText && (
+                <button style={readMore} onClick={() => setExpanded((v) => !v)} aria-expanded={expanded}>
+                  {expanded ? t("Réduire", "Show less") : t("Lire la suite", "Read more")}
+                </button>
+              )}
+            </>
+          )}
 
-              {isGenre(item) && item.subgenres?.length ? (
-                <p style={styles.lightText}>
-                  <strong>{t("Sous-genres", "Subgenres")}:</strong>{" "}
-                  {item.subgenres.join(", ")}
-                </p>
-              ) : null}
+          {isGenre(item) && item.subgenres?.length ? (
+            <p style={styles.lightText}>
+              <span style={styles.metaLabel}>{t("Sous-genres", "Subgenres")} :</span>{" "}
+              {item.subgenres.join(", ")}
+            </p>
+          ) : null}
 
-              {item.artists?.length ? (
-                <p style={styles.lightText}>
-                  <strong>{t("Artistes", "Artists")}:</strong>{" "}
-                  {item.artists.join(", ")}
-                </p>
-              ) : null}
+          {item.artists?.length ? (
+            <p style={styles.lightText}>
+              <span style={styles.metaLabel}>{t("Artistes", "Artists")} :</span>{" "}
+              {item.artists.join(", ")}
+            </p>
+          ) : null}
 
-              <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {getListenLinks(item.name, item.spotify).map((l) => (
-                  <a
-                    key={l.label}
-                    href={l.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => handleListenClick(l.label)}
-                    style={{
-                      background: PLATFORM_COLORS[l.label] || "#444",
-                      boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
-                      color: "#fff",
-                      textDecoration: "none",
-                      padding: "8px 14px",
-                      borderRadius: 999,
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {l.emoji} {l.label}
-                  </a>
+          <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {getListenLinks(item.name, item.spotify).map((l) => (
+              <a
+                key={l.label}
+                href={l.url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => handleListenClick(l.label)}
+                style={listenLink}
+              >
+                <span
+                  aria-hidden
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 99,
+                    background: PLATFORM_COLORS[l.label] || C.muted,
+                  }}
+                />
+                {l.label}
+              </a>
+            ))}
+          </div>
+
+          <ListenPreview
+            key={item.name}
+            name={isYear(item) ? String(item.year) : item.name}
+            artists={item.artists?.filter((a) => a !== "Anonymous")}
+            spotify={item.spotify}
+            language={language}
+          />
+
+          {isCountry(item) && (
+            <LocalScenes key={item.name} country={item} language={language} />
+          )}
+
+          <div style={{ marginTop: 18 }}>
+            <Rating
+              itemType={pool === "genres" ? "genre" : pool === "countries" ? "country" : "year"}
+              itemName={item.name}
+              max={10}
+              language={language}
+            />
+          </div>
+
+          {similarityBoost.length > 0 && (
+            <div style={{ marginTop: 18 }}>
+              <span style={styles.metaLabel}>{t("Si tu aimes, essaie aussi", "If you like it, try")}</span>
+              <div style={styles.badgeContainer}>
+                {similarityBoost.slice(0, 8).map(([label, score]) => (
+                  <span key={label} style={styles.badge}>
+                    {label} <span style={{ color: C.faint }}>{Math.round(score * 100)} %</span>
+                  </span>
                 ))}
               </div>
-
-              <ListenPreview
-                key={item.name}
-                name={isYear(item) ? String(item.year) : item.name}
-                artists={item.artists?.filter((a) => a !== "Anonymous")}
-                spotify={item.spotify}
-                language={language}
-              />
-
-              {isCountry(item) && (
-                <LocalScenes key={item.name} country={item} language={language} />
-              )}
-
-              <div style={{ marginTop: 14 }}>
-                <Rating
-                  itemType={
-                    pool === "genres" 
-                      ? "genre" 
-                      : pool === "countries"
-                      ? "country"
-                      : "year"
-                  }
-                  itemName={item.name}
-                  max={10}
-                  language={language}
-                />
-              </div>
-
-              {similarityBoost.length > 0 && (
-                <div style={{ marginTop: 12 }}>
-                  <strong>{t("Affinités", "Similarities")}:</strong>
-                  <div style={styles.badgeContainer}>
-                    {similarityBoost.slice(0, 8).map(([label, score]) => (
-                      <span key={label} style={styles.badge}>
-                        {label} • {Math.round(score * 100)}%
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
-          </div>
+          )}
         </div>
+      </div>
+    </motion.article>
   );
 }
+
+const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+
+const clamped: React.CSSProperties = {
+  display: "-webkit-box",
+  WebkitLineClamp: 6,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+};
+
+const readMore: React.CSSProperties = {
+  margin: "-4px 0 14px",
+  padding: 0,
+  border: "none",
+  background: "none",
+  color: C.cobalt,
+  fontSize: 15,
+  fontWeight: 600,
+};
+
+const listenLink: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 7,
+  padding: "8px 13px",
+  borderRadius: R.pill,
+  border: `1px solid ${C.line}`,
+  background: C.surface,
+  color: C.ink,
+  textDecoration: "none",
+  fontSize: 14,
+  fontWeight: 600,
+};

@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import ConcertReview from './ConcertReview';
 import ConcertFeed from './ConcertFeed';
 import SEO from './SEO';
+import { toast } from "../lib/toast";
+import Loader from "./Loader";
 
 interface Props {
   language: 'fr' | 'en';
@@ -74,12 +76,11 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
       const ticketmasterEvents = await searchConcertsByArtist(artistQuery);
 
       if (!ticketmasterEvents?.length) {
-        alert(
+        toast(
           t(
             `Aucun concert trouvé pour "${artistQuery}". Essayez un artiste plus connu comme Coldplay, The Weeknd, etc.`,
             `No concerts found for "${artistQuery}". Try a more popular artist like Coldplay, The Weeknd, etc.`
-          )
-        );
+          ), "info");
         setEvents([]);
         setLoading(false);
         return;
@@ -105,7 +106,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
       setEvents(combined);
     } catch (err) {
       console.error('❌ Erreur recherche:', err);
-      alert(t('Erreur lors de la recherche', 'Error searching'));
+      toast(t('Erreur lors de la recherche', 'Error searching'), "error");
     }
     setLoading(false);
   };
@@ -115,12 +116,11 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
     status: 'going' | 'interested' | 'attended'
   ) => {
     if (!session) {
-      alert(
+      toast(
         t(
           'Connectez-vous pour utiliser cette fonctionnalité',
           'Please sign in to use this feature'
-        )
-      );
+        ), "info");
       return;
     }
 
@@ -146,7 +146,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
       loadUserStatuses();
     } catch (error) {
       console.error(error);
-      alert(t('Erreur', 'Error'));
+      toast(t('Erreur', 'Error'), "error");
     }
   };
 
@@ -186,7 +186,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
         <>
           <div style={styles.card}>
             <h2>{t('🎤 Concerts à venir', '🎤 Upcoming concerts')}</h2>
-            <p style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+            <p style={{ fontSize: 14, color: '#5A6183', marginBottom: 16 }}>
               {t('Recherche par artiste (Ticketmaster)', 'Search by artist (Ticketmaster)')}
             </p>
 
@@ -210,7 +210,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
 
             {suggestedArtists.length > 0 && events.length === 0 && (
               <div style={{ marginTop: 12 }}>
-                <p style={{ fontSize: 14, color: '#555', marginBottom: 8 }}>
+                <p style={{ fontSize: 14, color: '#3A4166', marginBottom: 8 }}>
                   {t('Suggestions:', 'Suggestions:')}
                 </p>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -232,9 +232,7 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
           </div>
 
           {loading && (
-            <div style={{ textAlign: 'center', padding: 20 }}>
-              <p>{t('Recherche en cours...', 'Searching...')}</p>
-            </div>
+            <Loader label={t('Recherche des concerts…', 'Looking for concerts…')} />
           )}
 
           {events.length > 0 && !loading && (
@@ -251,10 +249,10 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                     <div key={event.id} style={styles.eventCard}>
                       <div style={{ flex: 1 }}>
                         <strong>{event.artistName}</strong>
-                        <p style={{ margin: '4px 0', fontSize: 14, color: '#555' }}>
+                        <p style={{ margin: '4px 0', fontSize: 14, color: '#3A4166' }}>
                           📍 {event.venueName}, {event.city}
                         </p>
-                        <p style={{ margin: '4px 0', fontSize: 14, color: '#555' }}>
+                        <p style={{ margin: '4px 0', fontSize: 14, color: '#3A4166' }}>
                           📅 {new Date(event.date).toLocaleDateString(language)}
                           {event.time && ` • ${event.time}`}
                         </p>
@@ -265,8 +263,8 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                               <span
                                 style={{
                                   ...styles.statusBadge,
-                                  background: '#d1fae5',
-                                  color: '#065f46',
+                                  background: '#DDF5EC',
+                                  color: '#0B6E52',
                                 }}
                               >
                                 ✓ {t("J'y vais", 'Going')}
@@ -276,8 +274,8 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                               <span
                                 style={{
                                   ...styles.statusBadge,
-                                  background: '#fef3c7',
-                                  color: '#92400e',
+                                  background: '#FFF3D6',
+                                  color: '#151B3B',
                                 }}
                               >
                                 ⭐ {t('Intéressé', 'Interested')}
@@ -287,8 +285,8 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
                               <span
                                 style={{
                                   ...styles.statusBadge,
-                                  background: '#e0e7ff',
-                                  color: '#3730a3',
+                                  background: '#E8EBFC',
+                                  color: '#2C3FD1',
                                 }}
                               >
                                 ✓ {t('Vu', 'Attended')}{' '}
@@ -402,15 +400,15 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  card: { border: '1px solid #e7e7e7', borderRadius: 14, padding: 14, background: '#fff' },
-  tabBtn: { padding: '8px 12px', borderRadius: 999, border: '1px solid #ddd', background: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 500 },
-  tabActive: { borderColor: '#667eea', background: '#667eea', color: '#fff' },
-  input: { flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: 8, fontSize: 14 },
-  primaryBtn: { padding: '8px 16px', background: '#667eea', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 500 },
-  suggestionBtn: { padding: '6px 12px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: 999, cursor: 'pointer', fontSize: 13 },
-  eventCard: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: 12, border: '1px solid #eee', borderRadius: 8, gap: 12 },
-  actionBtn: { padding: '6px 12px', background: '#fff', border: '1px solid #ddd', borderRadius: 6, cursor: 'pointer', fontSize: 13, whiteSpace: 'nowrap' },
-  actionBtnActive: { background: '#667eea', color: '#fff', borderColor: '#667eea' },
-  linkBtn: { padding: '6px 12px', background: '#667eea', color: '#fff', textDecoration: 'none', borderRadius: 6, fontSize: 13, textAlign: 'center', display: 'block' },
+  card: { border: '1px solid #DFE3EF', borderRadius: 14, padding: 14, background: '#fff' },
+  tabBtn: { padding: '8px 12px', borderRadius: 999, border: '1px solid #DFE3EF', background: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 500 },
+  tabActive: { borderColor: '#2C3FD1', background: '#2C3FD1', color: '#fff' },
+  input: { flex: 1, padding: '8px 12px', border: '1px solid #DFE3EF', borderRadius: 8, fontSize: 14 },
+  primaryBtn: { padding: '8px 16px', background: '#2C3FD1', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 500 },
+  suggestionBtn: { padding: '6px 12px', background: '#EEF1F8', border: '1px solid #DFE3EF', borderRadius: 999, cursor: 'pointer', fontSize: 13 },
+  eventCard: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: 12, border: '1px solid #EEF1F8', borderRadius: 8, gap: 12 },
+  actionBtn: { padding: '6px 12px', background: '#fff', border: '1px solid #DFE3EF', borderRadius: 6, cursor: 'pointer', fontSize: 13, whiteSpace: 'nowrap' },
+  actionBtnActive: { background: '#2C3FD1', color: '#fff', borderColor: '#2C3FD1' },
+  linkBtn: { padding: '6px 12px', background: '#2C3FD1', color: '#fff', textDecoration: 'none', borderRadius: 6, fontSize: 13, textAlign: 'center', display: 'block' },
   statusBadge: { padding: '4px 8px', borderRadius: 6, fontSize: 12, fontWeight: 600, display: 'inline-block' },
 };

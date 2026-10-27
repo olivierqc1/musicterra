@@ -4,9 +4,12 @@ import { getPersonalizedEmergingArtists, EmergingArtist, saveEmergingDiscovery }
 import { useAuth } from '../context/AuthContext';
 import { trackAction } from '../services/userBehavior';
 import SEO from './SEO';
+import Loader from "./Loader";
 
 interface Props {
   language: 'fr' | 'en';
+  /** Ouvre la fenêtre de connexion (affiché aux visiteurs sans compte). */
+  onSignIn?: () => void;
 }
 
 // Fonction pour extraire les 10 genres les plus populaires
@@ -28,7 +31,7 @@ const getTopGenres = (artists: EmergingArtist[]): string[] => {
     .map(([genre]) => genre);  // Ne garder que les noms des genres
 };
 
-export default function EmergingArtists({ language }: Props) {
+export default function EmergingArtists({ language, onSignIn }: Props) {
   const [artists, setArtists] = useState<EmergingArtist[]>([]);
   const [filteredArtists, setFilteredArtists] = useState<EmergingArtist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,9 +118,31 @@ export default function EmergingArtists({ language }: Props) {
           description="Découvrez les artistes émergents dans vos genres favoris. Connectez-vous pour obtenir des recommandations personnalisées."
           keywords="artistes émergents, nouveaux artistes, découverte musicale, talents musicaux"
         />
-        <p>
-          {t('Connectez-vous pour découvrir des artistes émergents', 'Sign in to discover emerging artists')}
+        <h2 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 800 }}>
+          {t("Des artistes à suivre, choisis pour toi", "Up-and-coming artists, picked for you")}
+        </h2>
+        <p style={{ margin: "0 0 16px", color: "#5A6183", lineHeight: 1.55 }}>
+          {t(
+            "Note quelques genres sur la roue : on te propose ensuite des artistes encore peu connus dans les styles que tu aimes.",
+            "Rate a few genres on the wheel, and we'll suggest lesser-known artists in the styles you like."
+          )}
         </p>
+        {onSignIn && (
+          <button
+            onClick={onSignIn}
+            style={{
+              padding: "11px 20px",
+              borderRadius: 999,
+              border: "none",
+              background: "#2C3FD1",
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 15,
+            }}
+          >
+            {t("Se connecter", "Sign in")}
+          </button>
+        )}
       </div>
     );
 
@@ -129,8 +154,9 @@ export default function EmergingArtists({ language }: Props) {
           description="Découvrez les artistes émergents dans vos genres favoris. Nouveaux talents à suivre avec statistiques Last.fm."
           keywords="artistes émergents, nouveaux artistes, découverte musicale, talents musicaux, last.fm"
         />
-        <div style={styles.spinner}></div>
-        <p>{t("Recherche d'artistes émergents basée sur vos goûts...", 'Finding emerging artists based on your taste...')}</p>
+        <Loader
+          label={t("On cherche des artistes dans les genres que tu aimes…", "Finding artists in the genres you like…")}
+        />
       </div>
     );
 
@@ -143,13 +169,13 @@ export default function EmergingArtists({ language }: Props) {
           keywords="artistes émergents, nouveaux artistes, découverte musicale"
         />
         <h3>{t('🌱 Artistes émergents', '🌱 Emerging artists')}</h3>
-        <p style={{ color: '#777' }}>
+        <p style={{ color: '#5A6183' }}>
           {t(
             'Explorez plus de genres et notez-les pour obtenir des recommandations personnalisées!',
             'Explore and rate more genres to get personalized recommendations!'
           )}
         </p>
-        <p style={{ fontSize: 13, color: '#999', marginTop: 12 }}>
+        <p style={{ fontSize: 13, color: '#8A90AD', marginTop: 12 }}>
           💡 {t('Astuce: Notez au moins 5 genres différents', 'Tip: Rate at least 5 different genres')}
         </p>
       </div>
@@ -212,7 +238,7 @@ export default function EmergingArtists({ language }: Props) {
       </div>
 
       {lastUpdated && (
-        <p style={{ textAlign: 'center', fontSize: 12, color: '#999' }}>
+        <p style={{ textAlign: 'center', fontSize: 12, color: '#8A90AD' }}>
           {t('Dernière mise à jour :', 'Last updated:')} {new Date(lastUpdated).toLocaleTimeString(language)}
         </p>
       )}
@@ -268,7 +294,7 @@ export default function EmergingArtists({ language }: Props) {
                   ))}
                 </div>
 
-                <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
+                <div style={{ fontSize: 12, color: '#5A6183', marginBottom: 8 }}>
                   {artist.country && <div>📍 {artist.country}</div>}
                   {artist.listeners !== undefined && (
                     <div>👥 {artist.listeners.toLocaleString(language)} {t('auditeurs', 'listeners')}</div>
@@ -328,7 +354,7 @@ export default function EmergingArtists({ language }: Props) {
       </div>
 
       {filteredArtists.length >= 20 && (
-        <p style={{ textAlign: 'center', fontSize: 13, color: '#777' }}>
+        <p style={{ textAlign: 'center', fontSize: 13, color: '#5A6183' }}>
           {t(
             "Notez plus de genres pour découvrir encore plus d'artistes",
             'Rate more genres to discover even more artists'
@@ -345,7 +371,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 20,
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
     textAlign: 'center',
   },
   loadingContainer: {
@@ -358,14 +384,14 @@ const styles: Record<string, React.CSSProperties> = {
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #f0f0f0',
-    borderTop: '4px solid #667eea',
+    border: '4px solid #EEF1F8',
+    borderTop: '4px solid #2C3FD1',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
   },
   header: {
     padding: 20,
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: '#2C3FD1',
     color: '#fff',
     borderRadius: 12,
     display: 'flex',
@@ -391,35 +417,35 @@ const styles: Record<string, React.CSSProperties> = {
   },
   genreFilterButton: {
     padding: '6px 12px',
-    background: '#f0f0f0', 
-    border: '1px solid #ddd',
+    background: '#EEF1F8', 
+    border: '1px solid #DFE3EF',
     borderRadius: 999,
     fontSize: 12,
     cursor: 'pointer',
     transition: 'all 0.2s ease'
   },
   genreFilterButtonActive: {
-    background: '#667eea', 
+    background: '#2C3FD1', 
     color: 'white', 
-    borderColor: '#667eea'
+    borderColor: '#2C3FD1'
   },
   noArtistsFound: {
     width: '100%', 
     textAlign: 'center', 
     padding: 20, 
-    color: '#777'
+    color: '#5A6183'
   },
   imageContainer: { position: 'relative', width: '100%', aspectRatio: '1/1' },
   artistImage: { width: '100%', height: '100%', objectFit: 'cover' },
   noImage: {
     width: '100%',
     height: '100%',
-    background: 'linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%)',
+    background: '#EEF1F8',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#999',
+    color: '#8A90AD',
   },
   emergenceBadge: {
     position: 'absolute',
@@ -435,14 +461,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   genreTag: {
     padding: '2px 8px',
-    background: '#e0e7ff',
-    color: '#3730a3',
+    background: '#E8EBFC',
+    color: '#2C3FD1',
     borderRadius: 999,
     fontSize: 11,
     fontWeight: 500,
   },
   artistCard: {
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
     borderRadius: 12,
     overflow: 'hidden',
     background: '#fff',
@@ -452,8 +478,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   infoBanner: {
     padding: 12,
-    background: '#fef3c7',
-    border: '1px solid #fbbf24',
+    background: '#FFF3D6',
+    border: '1px solid #FFB224',
     borderRadius: 8,
     display: 'flex',
     gap: 12,
@@ -480,8 +506,8 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     padding: '8px 12px',
     background: '#fff',
-    border: '1px solid #667eea',
-    color: '#667eea',
+    border: '1px solid #2C3FD1',
+    color: '#2C3FD1',
     borderRadius: 6,
     cursor: 'pointer',
     fontSize: 13,
@@ -489,8 +515,8 @@ const styles: Record<string, React.CSSProperties> = {
     transition: 'all 0.2s ease',
   },
   saveBtnSaved: {
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
-    borderColor: '#667eea',
+    borderColor: '#2C3FD1',
   },
 };

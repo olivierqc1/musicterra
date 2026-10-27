@@ -6,6 +6,7 @@
 // la même chance de sortir.
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { C, FONT, R, WHEEL_SEGMENTS } from "../theme";
 
 type Props = {
   items: string[];
@@ -16,12 +17,6 @@ type Props = {
 const SEGMENTS = 16;
 const SIZE = 400; // taille logique du canvas, en pixels CSS
 
-const COLORS = [
-  "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A",
-  "#98D8C8", "#F7DC6F", "#BB8FCE", "#85C1E2",
-  "#F8B739", "#52B788", "#E63946", "#457B9D",
-  "#F1C40F", "#9B59B6", "#3498DB", "#E74C3C",
-];
 
 // Tire jusqu'à n éléments distincts au hasard (Fisher-Yates partiel)
 function sample(items: string[], n: number): string[] {
@@ -77,7 +72,7 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const center = SIZE / 2;
-      const radius = center - 20;
+      const radius = center - 16;
       ctx.clearRect(0, 0, SIZE, SIZE);
 
       if (visible.length === 0) return;
@@ -92,51 +87,64 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
         ctx.moveTo(center, center);
         ctx.arc(center, center, radius, startAngle, endAngle);
         ctx.closePath();
-        ctx.fillStyle = COLORS[index % COLORS.length];
+        const seg = WHEEL_SEGMENTS[index % WHEEL_SEGMENTS.length];
+        ctx.fillStyle = seg.bg;
         ctx.fill();
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = C.surface;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
 
+        // Sur la moitié gauche, on retourne le texte pour qu'il se lise
+        // à l'endroit plutôt que la tête en bas.
+        const mid = startAngle + segmentAngle / 2;
+        const onLeft = Math.cos(mid) < 0;
         ctx.save();
         ctx.translate(center, center);
-        ctx.rotate(startAngle + segmentAngle / 2);
-        ctx.textAlign = "right";
+        ctx.rotate(onLeft ? mid + Math.PI : mid);
+        ctx.textAlign = onLeft ? "left" : "right";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = "#fff";
-        ctx.font = `600 ${fontSize}px system-ui, -apple-system, sans-serif`;
-        ctx.shadowColor = "rgba(0,0,0,0.45)";
-        ctx.shadowBlur = 3;
-        ctx.fillText(fitText(ctx, label, radius - 60), radius - 14, 0);
+        ctx.fillStyle = seg.fg;
+        ctx.font = `600 ${fontSize}px ${FONT}`;
+        const text = fitText(ctx, label, radius - 60);
+        ctx.fillText(text, onLeft ? -(radius - 14) : radius - 14, 0);
         ctx.restore();
       });
 
-      // Cercle central
+      // Bord du disque
       ctx.beginPath();
-      ctx.arc(center, center, 30, 0, 2 * Math.PI);
-      ctx.fillStyle = "#667eea";
+      ctx.arc(center, center, radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = C.ink;
+      ctx.lineWidth = 6;
+      ctx.stroke();
+
+      // Étiquette centrale, comme au centre d'un vinyle
+      ctx.beginPath();
+      ctx.arc(center, center, 34, 0, 2 * Math.PI);
+      ctx.fillStyle = C.surface;
       ctx.fill();
-      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = C.ink;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(center, center, 9, 0, 2 * Math.PI);
+      ctx.fillStyle = C.marigold;
+      ctx.fill();
       ctx.lineWidth = 3;
       ctx.stroke();
-      ctx.fillStyle = "#fff";
-      ctx.font = "bold 16px system-ui";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("🎵", center, center);
 
       // Pointeur en haut
       ctx.save();
-      ctx.translate(center, 22);
+      ctx.translate(center, 30);
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(-14, -18);
-      ctx.lineTo(14, -18);
+      ctx.lineTo(-13, -24);
+      ctx.lineTo(13, -24);
       ctx.closePath();
-      ctx.fillStyle = "#FF6B6B";
+      ctx.fillStyle = C.marigold;
       ctx.fill();
-      ctx.strokeStyle = "#fff";
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = C.ink;
+      ctx.lineWidth = 3;
+      ctx.lineJoin = "round";
       ctx.stroke();
       ctx.restore();
     },
@@ -146,6 +154,18 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
   useEffect(() => {
     drawWheel(rotation);
   }, [rotation, drawWheel]);
+
+  // La police de la roue arrive après le premier dessin : on redessine.
+  useEffect(() => {
+    let alive = true;
+    document.fonts?.ready.then(() => {
+      if (alive) drawWheel(rotation);
+    });
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drawWheel]);
 
   // Redessine au redimensionnement et au retour au premier plan : sur mobile,
   // le navigateur peut vider le <canvas> quand l'app passe en arrière-plan.
@@ -241,7 +261,7 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
           ...(spinning ? styles.spinButtonDisabled : {}),
         }}
       >
-        {spinning ? t("🎡 Ça tourne...", "🎡 Spinning...") : t("🎡 Lancer la roue", "🎡 Spin the wheel")}
+        {spinning ? t("Ça tourne…", "Spinning…") : t("Lancer la roue", "Spin the wheel")}
       </button>
 
       <div style={styles.itemCount}>
@@ -258,12 +278,8 @@ const styles: Record<string, React.CSSProperties> = {
   wheelContainer: {
     position: "relative",
     width: "100%",
-    maxWidth: 400,
+    maxWidth: 380,
     aspectRatio: "1/1",
-    borderRadius: "50%",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-    background: "#fff",
-    padding: 10,
   },
   canvas: {
     width: "100%",
@@ -271,25 +287,26 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: "50%",
   },
   spinButton: {
-    padding: "12px 24px",
-    borderRadius: 12,
+    minWidth: 220,
+    padding: "14px 28px",
+    borderRadius: R.pill,
     border: "none",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: C.cobalt,
     color: "#fff",
     cursor: "pointer",
-    fontSize: 16,
-    fontWeight: 600,
-    boxShadow: "0 4px 15px rgba(102, 126, 234, 0.4)",
-    transition: "all 0.3s ease",
+    fontSize: 17,
+    fontWeight: 700,
+    letterSpacing: "-0.01em",
+    boxShadow: `0 3px 0 ${C.ink}`,
   },
   spinButtonDisabled: {
-    opacity: 0.6,
-    cursor: "not-allowed",
-    transform: "scale(0.98)",
+    background: C.cobaltDark,
+    cursor: "wait",
+    boxShadow: "none",
+    transform: "translateY(3px)",
   },
   itemCount: {
     fontSize: 13,
-    color: "#666",
-    fontWeight: 500,
+    color: C.muted,
   },
 };

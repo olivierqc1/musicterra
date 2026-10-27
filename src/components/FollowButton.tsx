@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { followUser, unfollowUser, isFollowing } from '../services/social';
 import { useAuth } from '../context/AuthContext';
+import { toast } from "../lib/toast";
 
 interface Props {
   userId: string;
@@ -44,7 +45,7 @@ export default function FollowButton({
 
   const handleClick = async () => {
     if (!session) {
-      alert(t('Connectez-vous pour suivre des utilisateurs', 'Sign in to follow users'));
+      toast(t('Connectez-vous pour suivre des utilisateurs', 'Sign in to follow users'), "info");
       return;
     }
 
@@ -139,14 +140,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 15,
   },
   notFollowing: {
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
-    border: '1px solid #667eea',
+    border: '1px solid #2C3FD1',
   },
   following: {
     background: '#fff',
-    color: '#667eea',
-    border: '1px solid #667eea',
+    color: '#2C3FD1',
+    border: '1px solid #2C3FD1',
   },
   loading: {
     opacity: 0.6,

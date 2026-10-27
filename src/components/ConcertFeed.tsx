@@ -62,7 +62,7 @@ export default function ConcertFeed({ groupId, language }: Props) {
 
   if (activities.length === 0) {
     return (
-      <p style={{ textAlign: 'center', color: '#777' }}>
+      <p style={{ textAlign: 'center', color: '#5A6183' }}>
         {t('Aucune activité récente', 'No recent activity')}
       </p>
     );
@@ -71,7 +71,7 @@ export default function ConcertFeed({ groupId, language }: Props) {
   return (
     <div style={{ display: 'grid', gap: 12 }}>
       {lastUpdated && (
-        <p style={{ fontSize: 12, color: '#999', textAlign: 'center' }}>
+        <p style={{ fontSize: 12, color: '#8A90AD', textAlign: 'center' }}>
           {t('Dernière mise à jour :', 'Last updated:')}{' '}
           {new Date(lastUpdated).toLocaleTimeString(language)}
         </p>
@@ -138,7 +138,7 @@ export default function ConcertFeed({ groupId, language }: Props) {
 const styles: Record<string, React.CSSProperties> = {
   activityCard: {
     padding: 12,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
     borderRadius: 12,
     background: '#fff',
     transition: 'all 0.2s ease',
@@ -152,14 +152,14 @@ const styles: Record<string, React.CSSProperties> = {
     objectFit: 'cover',
     boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
   },
-  textLine: { margin: '2px 0', fontSize: 14, color: '#555' },
+  textLine: { margin: '2px 0', fontSize: 14, color: '#3A4166' },
   ratingBadge: {
     padding: '4px 8px',
-    background: '#fef3c7',
+    background: '#FFF3D6',
     borderRadius: 6,
     fontSize: 12,
     fontWeight: 600,
   },
-  reviewText: { marginTop: 6, fontSize: 14, fontStyle: 'italic', color: '#444' },
-  footerText: { fontSize: 12, color: '#999', marginTop: 4 },
+  reviewText: { marginTop: 6, fontSize: 14, fontStyle: 'italic', color: '#3A4166' },
+  footerText: { fontSize: 12, color: '#8A90AD', marginTop: 4 },
 };

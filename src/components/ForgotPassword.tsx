@@ -113,7 +113,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 30,
     background: '#fff',
     borderRadius: 16,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
   },
   successBox: {
@@ -122,7 +122,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 30,
     background: '#fff',
     borderRadius: 16,
-    border: '2px solid #10b981',
+    border: '2px solid #0E9F75',
     textAlign: 'center',
   },
   title: {
@@ -133,13 +133,13 @@ const styles: Record<string, React.CSSProperties> = {
   text: {
     margin: '0 0 20px 0',
     fontSize: 15,
-    color: '#555',
+    color: '#3A4166',
     lineHeight: 1.6,
   },
   subtext: {
     margin: '12px 0 24px 0',
     fontSize: 13,
-    color: '#777',
+    color: '#5A6183',
   },
   form: {
     display: 'flex',
@@ -148,13 +148,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   input: {
     padding: '12px 16px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 10,
     fontSize: 15,
   },
   submitButton: {
     padding: '14px 20px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 10,
@@ -166,8 +166,8 @@ const styles: Record<string, React.CSSProperties> = {
   cancelButton: {
     padding: '10px 20px',
     background: 'transparent',
-    color: '#667eea',
-    border: '1px solid #667eea',
+    color: '#2C3FD1',
+    border: '1px solid #2C3FD1',
     borderRadius: 10,
     fontSize: 14,
     fontWeight: 500,
@@ -175,7 +175,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   backButton: {
     padding: '12px 24px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 10,
@@ -185,8 +185,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   error: {
     padding: '10px 12px',
-    background: '#fee2e2',
-    color: '#991b1b',
+    background: '#FCE4E7',
+    color: '#A3283A',
     borderRadius: 8,
     fontSize: 14,
   },

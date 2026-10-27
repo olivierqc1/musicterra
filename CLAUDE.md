@@ -4,7 +4,8 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 
 ## Stack
 - React 19 + Vite 7, TypeScript (mode strict), SPA sans routeur : la navigation se fait par onglets (`discover`, `emerging`, `concerts`, `profile`) gérés dans `src/App.tsx`
-- Styles : Tailwind CSS et objets de style dans `src/appStyles.ts`, animations `framer-motion`, icônes `lucide-react`
+- Styles : thème clair. Toutes les couleurs, la police et les rayons viennent de `src/theme.ts` (`C`, `FONT`, `R`, `WHEEL_SEGMENTS`) ; les mêmes valeurs existent en variables CSS dans `src/index.css` pour les classes Tailwind (`bg-primary`, `text-muted-foreground`…). Ne pas écrire de couleur en dur ailleurs. Police : Bricolage Grotesque (Google Fonts, chargée dans `index.html`). Objets de style partagés dans `src/appStyles.ts`, animations `framer-motion`, icônes `lucide-react`
+- Messages à l'utilisateur : `toast(texte, "info" | "success" | "error")` de `src/lib/toast.ts`, jamais `alert()` ni `confirm()`. Chargements : composant `Loader` ou classe CSS `mt-skeleton`.
 - Supabase : authentification et base de données (client dans `src/lib/supabase.ts`, contexte dans `src/context/AuthContext.tsx`)
 - SEO : `react-helmet-async` (composant `src/components/SEO.tsx`) et pages statiques générées au build
 - Alias d'import : `@/` → `src/`
@@ -58,6 +59,10 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 - Chaque table qui contient des données d'utilisateur doit avoir la RLS activée, avec des policies basées sur `auth.uid()`. Quand une tâche touche la base, fournir le SQL (table, index, policies RLS) dans la même réponse.
 - Les appels Supabase vont dans `src/services/`, jamais directement dans les composants. Toujours traiter le champ `error` retourné.
 
+## Icônes et images de partage
+- `public/favicon.svg` est la source de l'icône ; `apple-touch-icon.png`, `icon-192.png` et `icon-512.png` en sont des rendus (manifest : `public/manifest.webmanifest`).
+- `public/og-image.jpg` (1200×630) est l'aperçu des liens partagés, utilisé aussi par les pages de genre statiques.
+
 ## Variables d'environnement
 - Toutes les variables lues par l'app commencent par `VITE_` et se retrouvent donc en clair dans le JavaScript envoyé au navigateur. N'y mettre que des clés prévues pour être publiques.
 - Les fichiers `.env` et `.env.local` ne doivent jamais être commités. Les valeurs de production sont dans les variables d'environnement du projet Vercel.
@@ -74,4 +79,3 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 ## Points connus à corriger
 - `src/components/Explore.tsx` et `src/components/MusicWheel.tsx` ne sont utilisés nulle part, et `Explore.tsx` importe `@/data/decades`, qui n'existe pas.
 - `EmergingArtists.tsx` importe le type `EmergingArtist`, qui n'est pas exporté par `src/services/emergingArtists.ts`.
-- `src/index.cc` ressemble à une copie égarée de `index.css`.

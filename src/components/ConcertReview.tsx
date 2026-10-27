@@ -1,6 +1,7 @@
 // src/components/ConcertReview.tsx
 import { useState } from 'react';
 import { submitConcertReview } from '../services/concerts';
+import { toast } from "../lib/toast";
 
 interface Props {
   eventId: string;
@@ -21,7 +22,7 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      alert(t('Merci de donner une note', 'Please give a rating'));
+      toast(t('Merci de donner une note', 'Please give a rating'), "info");
       return;
     }
 
@@ -44,7 +45,7 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
         })
         .catch((err) => {
           console.error('Erreur lors de la soumission', err);
-          alert(t('Erreur de connexion. Réessaye plus tard.', 'Connection error. Try again later.'));
+          toast(t('Erreur de connexion. Réessaye plus tard.', 'Connection error. Try again later.'), "error");
           setSavedLocally(false);
         });
     } catch (error) {
@@ -73,8 +74,8 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
                 onClick={() => setRating(n)}
                 style={{
                   ...styles.ratingBtn,
-                  background: n <= rating ? '#667eea' : '#f0f0f0',
-                  color: n <= rating ? '#fff' : '#333',
+                  background: n <= rating ? '#2C3FD1' : '#EEF1F8',
+                  color: n <= rating ? '#fff' : '#151B3B',
                   transform: n === rating ? 'scale(1.1)' : 'scale(1)',
                 }}
               >
@@ -114,7 +115,7 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
 
         {/* Status indicator */}
         {savedLocally && (
-          <p style={{ color: '#888', fontSize: 13, marginTop: -8, marginBottom: 12 }}>
+          <p style={{ color: '#8A90AD', fontSize: 13, marginTop: -8, marginBottom: 12 }}>
             {t('💾 Enregistré localement — sera synchronisé en ligne', '💾 Saved locally — syncing online')}
           </p>
         )}
@@ -170,7 +171,7 @@ const styles: Record<string, React.CSSProperties> = {
   textarea: {
     width: '100%',
     padding: 10,
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14,
     fontFamily: 'inherit',
@@ -178,7 +179,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   cancelBtn: {
     padding: '8px 16px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     background: '#fff',
     cursor: 'pointer',
@@ -187,7 +188,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 16px',
     border: 'none',
     borderRadius: 8,
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     cursor: 'pointer',
     fontWeight: 500,

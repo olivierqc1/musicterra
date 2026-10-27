@@ -43,22 +43,26 @@ for (const g of genres) {
 }
 
 const CSS = `
-  :root{color-scheme:dark}
+  :root{color-scheme:light}
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#1a1a2e;color:#eaeaf2;line-height:1.65}
-  .wrap{max-width:760px;margin:0 auto;padding:24px 20px 60px}
-  a{color:#8be9fd}
-  header a{color:#eaeaf2;text-decoration:none;font-weight:700;font-size:1.05rem}
-  h1{font-size:2rem;margin:.6em 0 .2em;color:#fff}
-  .meta{color:#a6a6c1;font-size:.95rem;margin-bottom:1.2em}
-  .tags{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
-  .tag{background:#2a2a45;border-radius:999px;padding:4px 12px;font-size:.85rem}
-  .cta{display:inline-block;background:#e94560;color:#fff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:700;margin:18px 0}
-  .spotify{display:inline-block;background:#1db954;color:#fff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:600;margin:6px 0}
-  h2{margin-top:1.6em;color:#fff;font-size:1.25rem}
+  body{margin:0;font-family:"Bricolage Grotesque",system-ui,-apple-system,sans-serif;background:#F4F6FB;color:#3A4166;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 18px 60px}
+  a{color:#2C3FD1}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  header .brand{display:flex;align-items:center;gap:8px;color:#151B3B;text-decoration:none;font-weight:800;font-size:1.3rem;letter-spacing:-.04em}
+  header .all{font-size:.95rem}
+  h1{font-size:clamp(2.2rem,9vw,3.2rem);line-height:1.02;letter-spacing:-.035em;margin:.8em 0 .25em;color:#151B3B;font-weight:800}
+  .meta{display:inline-block;background:#FFF3D6;color:#151B3B;border-radius:999px;padding:4px 12px;font-size:.9rem;font-weight:600;margin-bottom:1em}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .tag{background:#fff;border:1px solid #DFE3EF;border-radius:999px;padding:4px 12px;font-size:.88rem;color:#3A4166}
+  .cta{display:inline-block;background:#2C3FD1;color:#fff;text-decoration:none;padding:14px 24px;border-radius:999px;font-weight:700;margin:20px 0 8px;box-shadow:0 3px 0 #151B3B}
+  .spotify{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #DFE3EF;color:#151B3B;text-decoration:none;padding:9px 16px;border-radius:999px;font-weight:600;margin:6px 0}
+  .spotify::before{content:"";width:10px;height:10px;border-radius:99px;background:#1db954}
+  h2{margin-top:1.8em;color:#151B3B;font-size:1.3rem;letter-spacing:-.02em}
+  p{max-width:68ch}
   ul.links{padding-left:1.2em}
-  footer{margin-top:48px;border-top:1px solid #2a2a45;padding-top:18px;font-size:.9rem;color:#a6a6c1}
-  .lang-en{border-left:3px solid #2a2a45;padding-left:14px;color:#c9c9dd}
+  footer{margin-top:48px;border-top:1px solid #DFE3EF;padding-top:18px;font-size:.9rem;color:#5A6183}
+  .lang-en{border-left:3px solid #FFB224;padding-left:14px;color:#5A6183}
 `;
 
 const layout = ({ title, description, canonical, body }) => `<!DOCTYPE html>
@@ -75,13 +79,19 @@ const layout = ({ title, description, canonical, body }) => `<!DOCTYPE html>
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#F4F6FB">
+<meta property="og:image" content="${SITE}/og-image.jpg">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap" rel="stylesheet">
 <style>${CSS}</style>
 </head>
 <body>
 <div class="wrap">
-<header><a href="/">🎵 MusicTerra</a> · <a href="/genres/" style="font-weight:400;color:#8be9fd">Tous les genres</a></header>
+<header><a class="brand" href="/"><img src="/favicon.svg" alt="" width="28" height="28">MusicTerra</a><a class="all" href="/genres/">Tous les genres</a></header>
 ${body}
-<footer>MusicTerra — Découvrez ${genres.length}+ genres musicaux du monde entier. <a href="/">Tourner la roue →</a></footer>
+<footer>MusicTerra : ${genres.length} genres musicaux du monde entier. <a href="/">Tourner la roue</a></footer>
 </div>
 </body>
 </html>`;
@@ -123,7 +133,7 @@ ${g.subgenres?.length ? `<div class="tags">${g.subgenres.map((s) => `<span class
 ${paragraphs(g.descriptionFr)}
 ${g.artists?.length ? `<h2>Artistes emblématiques</h2><div class="tags">${g.artists.map((a) => `<span class="tag">${esc(a)}</span>`).join("")}</div>` : ""}
 ${g.spotify ? `<p><a class="spotify" href="${esc(g.spotify)}" rel="noopener" target="_blank">▶ Écouter sur Spotify</a></p>` : ""}
-<a class="cta" href="/?g=${slug}">🎧 Écouter et noter ${esc(g.name)} dans MusicTerra</a>
+<a class="cta" href="/?g=${slug}">Écouter et noter dans MusicTerra</a>
 <p><a href="/">🎡 Ou tourner la roue pour découvrir un autre genre</a></p>
 <h2>In English</h2>
 <div class="lang-en">${paragraphs(g.descriptionEn)}</div>

@@ -7,6 +7,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { genres } from "../data/genresLite";
 import { countries } from "../data/countries";
+import { C, FONT, R, WHEEL_SEGMENTS } from "../theme";
 
 interface Props {
   language?: "fr" | "en";
@@ -198,16 +199,15 @@ export default function Passport({ language = "fr" }: Props) {
       const ctx = canvas.getContext("2d")!;
 
       // fond dégradé
-      const grad = ctx.createLinearGradient(0, 0, 0, S);
-      grad.addColorStop(0, "#1a1a2e");
-      grad.addColorStop(1, "#0f0f1e");
-      ctx.fillStyle = grad;
+      if (document.fonts) await document.fonts.ready;
+      const F = (w: number, px: number) => `${w} ${px}px ${FONT}`;
+      ctx.fillStyle = C.paper;
       ctx.fillRect(0, 0, S, S);
 
       // arc de progression (mini roue)
       const cx = S / 2, cy = 330, R = 170;
       const pct = Math.min(stats.genresExplored / TOTAL_GENRES, 1);
-      const segColors = ["#e94560", "#ff9f43", "#feca57", "#1db954", "#48dbfb", "#54a0ff", "#5f27cd", "#f368e0"];
+      const segColors = WHEEL_SEGMENTS.map((x) => x.bg);
       const n = segColors.length;
       for (let i = 0; i < n; i++) {
         ctx.beginPath();
@@ -215,36 +215,40 @@ export default function Passport({ language = "fr" }: Props) {
         ctx.arc(cx, cy, R, (i / n) * 2 * Math.PI - Math.PI / 2, ((i + 1) / n) * 2 * Math.PI - Math.PI / 2);
         ctx.closePath();
         ctx.fillStyle = segColors[i];
-        ctx.globalAlpha = i / n < pct ? 1 : 0.18;
+        ctx.globalAlpha = i / n < Math.max(pct, 0.125) ? 1 : 0.2;
         ctx.fill();
       }
       ctx.globalAlpha = 1;
       // moyeu
       ctx.beginPath();
       ctx.arc(cx, cy, R * 0.55, 0, 2 * Math.PI);
-      ctx.fillStyle = "#1a1a2e";
+      ctx.fillStyle = C.surface;
       ctx.fill();
-      ctx.strokeStyle = "#e94560";
-      ctx.lineWidth = 6;
+      ctx.strokeStyle = C.ink;
+      ctx.lineWidth = 8;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, 2 * Math.PI);
+      ctx.lineWidth = 10;
       ctx.stroke();
       // nombre au centre
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = C.ink;
       ctx.textAlign = "center";
-      ctx.font = "bold 84px system-ui, sans-serif";
+      ctx.font = F(800, 84);
       ctx.fillText(String(stats.genresExplored), cx, cy + 14);
-      ctx.font = "28px system-ui, sans-serif";
-      ctx.fillStyle = "#a6a6c1";
+      ctx.font = F(500, 26);
+      ctx.fillStyle = C.muted;
       ctx.fillText(t("genres explorés", "genres explored"), cx, cy + 58);
 
       // titre
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 56px system-ui, sans-serif";
-      ctx.fillText(t("Mon Passeport Musical", "My Musical Passport"), cx, 100);
+      ctx.fillStyle = C.ink;
+      ctx.font = F(800, 58);
+      ctx.fillText(t("Mon passeport musical", "My music passport"), cx, 100);
 
       // niveau
       const level = getLevel(stats.genresExplored);
-      ctx.font = "bold 44px system-ui, sans-serif";
-      ctx.fillStyle = "#e94560";
+      ctx.font = F(700, 44);
+      ctx.fillStyle = C.cobalt;
       ctx.fillText(`${level.emoji} ${language === "fr" ? level.fr : level.en}`, cx, 590);
 
       // stats en ligne
@@ -256,28 +260,28 @@ export default function Passport({ language = "fr" }: Props) {
       const colW = S / 3;
       rows.forEach(([val, label], i) => {
         const x = colW * i + colW / 2;
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 64px system-ui, sans-serif";
+        ctx.fillStyle = C.ink;
+        ctx.font = F(800, 64);
         ctx.fillText(val, x, 720);
-        ctx.fillStyle = "#a6a6c1";
-        ctx.font = "26px system-ui, sans-serif";
+        ctx.fillStyle = C.muted;
+        ctx.font = F(500, 26);
         ctx.fillText(label, x, 762);
       });
 
       // genre favori
       if (stats.favoriteGenre) {
-        ctx.fillStyle = "#a6a6c1";
-        ctx.font = "28px system-ui, sans-serif";
+        ctx.fillStyle = C.muted;
+        ctx.font = F(500, 28);
         ctx.fillText(t("Coup de cœur :", "Favorite genre:"), cx, 850);
-        ctx.fillStyle = "#feca57";
-        ctx.font = "bold 44px system-ui, sans-serif";
+        ctx.fillStyle = C.ink;
+        ctx.font = F(800, 46);
         const name = stats.favoriteGenre.length > 28 ? stats.favoriteGenre.slice(0, 27) + "…" : stats.favoriteGenre;
         ctx.fillText(name, cx, 902);
       }
 
       // footer
-      ctx.fillStyle = "#e94560";
-      ctx.font = "bold 34px system-ui, sans-serif";
+      ctx.fillStyle = C.cobalt;
+      ctx.font = F(700, 34);
       ctx.fillText("musicterra.xyz", cx, 1010);
 
       const blob: Blob = await new Promise((res) => canvas.toBlob((b) => res(b!), "image/png"));
@@ -307,7 +311,13 @@ export default function Passport({ language = "fr" }: Props) {
   }
 
   if (loading) {
-    return <div style={styles.card}>{t("Chargement du passeport…", "Loading passport…")}</div>;
+    return (
+      <div style={styles.card} aria-label={t("Chargement du passeport", "Loading passport")}>
+        <div className="mt-skeleton" style={{ height: 24, width: "55%" }} />
+        <div className="mt-skeleton" style={{ height: 10, marginTop: 20 }} />
+        <div className="mt-skeleton" style={{ height: 64, marginTop: 20 }} />
+      </div>
+    );
   }
   if (!stats) return null;
 
@@ -318,7 +328,7 @@ export default function Passport({ language = "fr" }: Props) {
     <div style={styles.card}>
       <div style={styles.headerRow}>
         <div>
-          <div style={styles.title}>🎫 {t("Passeport Musical", "Musical Passport")}</div>
+          <div style={styles.title}>{t("Passeport musical", "Music passport")}</div>
           <div style={styles.level}>
             {level.emoji} {language === "fr" ? level.fr : level.en}
             {level.nextAt && (
@@ -330,7 +340,7 @@ export default function Passport({ language = "fr" }: Props) {
           </div>
         </div>
         <button style={styles.shareBtn} onClick={shareCard} disabled={sharing}>
-          {sharing ? "…" : t("📤 Partager", "📤 Share")}
+          {sharing ? "…" : t("Partager", "Share")}
         </button>
       </div>
 
@@ -351,7 +361,7 @@ export default function Passport({ language = "fr" }: Props) {
 
       {stats.favoriteGenre && (
         <div style={styles.favorite}>
-          {t("Coup de cœur :", "Favorite:")} <strong style={{ color: "#feca57" }}>{stats.favoriteGenre}</strong>{" "}
+          {t("Coup de cœur :", "Favorite:")} <strong style={{ color: C.ink }}>{stats.favoriteGenre}</strong>{" "}
           ({stats.favoriteRating}/10)
         </div>
       )}
@@ -382,40 +392,51 @@ function Stat({ value, label, sub }: { value: number | string; label: string; su
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    background: "linear-gradient(160deg, #23233d 0%, #1a1a2e 100%)",
-    border: "1px solid #2a2a45",
-    borderRadius: 16,
+    background: C.surface,
+    border: `1px solid ${C.line}`,
+    borderRadius: R.panel,
     padding: 20,
-    color: "#eaeaf2",
-    marginBottom: 24,
+    color: C.ink,
   },
   headerRow: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" },
-  title: { fontSize: 20, fontWeight: 700 },
-  level: { color: "#e94560", fontWeight: 600, marginTop: 4, fontSize: 15 },
-  levelNext: { color: "#a6a6c1", fontWeight: 400, fontSize: 13 },
-  shareBtn: {
-    background: "#e94560",
-    color: "#fff",
-    border: "none",
-    borderRadius: 10,
-    padding: "10px 16px",
-    fontWeight: 700,
+  title: { fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 },
+  level: {
+    display: "inline-block",
+    marginTop: 8,
+    padding: "3px 10px",
+    borderRadius: R.pill,
+    background: C.marigoldSoft,
+    color: C.ink,
+    fontWeight: 600,
     fontSize: 14,
-    cursor: "pointer",
   },
-  progressWrap: { background: "#12121f", borderRadius: 999, height: 12, marginTop: 16, overflow: "hidden" },
+  levelNext: { color: C.muted, fontWeight: 400, fontSize: 13 },
+  shareBtn: {
+    background: C.surface,
+    color: C.cobalt,
+    border: `1px solid ${C.line}`,
+    borderRadius: R.pill,
+    padding: "8px 14px",
+    fontWeight: 600,
+    fontSize: 14,
+  },
+  progressWrap: { background: C.soft, borderRadius: R.pill, height: 10, marginTop: 18, overflow: "hidden" },
   progressBar: {
     height: "100%",
-    borderRadius: 999,
-    background: "linear-gradient(90deg, #e94560, #ff9f43, #feca57)",
+    borderRadius: R.pill,
+    background: C.cobalt,
     transition: "width .6s ease",
   },
-  progressLabel: { color: "#a6a6c1", fontSize: 13, marginTop: 6 },
-  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: 10, marginTop: 16 },
-  stat: { background: "#12121f", borderRadius: 12, padding: "12px 8px", textAlign: "center" },
-  statValue: { fontSize: 24, fontWeight: 800, color: "#fff" },
-  statSub: { fontSize: 12, color: "#a6a6c1", fontWeight: 400, marginLeft: 3 },
-  statLabel: { fontSize: 12, color: "#a6a6c1", marginTop: 2 },
-  favorite: { marginTop: 14, fontSize: 15 },
-  hint: { marginTop: 14, fontSize: 13, color: "#a6a6c1", fontStyle: "italic" },
-};
+  progressLabel: { color: C.muted, fontSize: 13, marginTop: 6 },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    marginTop: 16,
+    borderTop: `1px solid ${C.line}`,
+  },
+  stat: { padding: "14px 4px 10px", borderBottom: `1px solid ${C.line}` },
+  statValue: { fontSize: 28, fontWeight: 800, color: C.ink, letterSpacing: "-0.03em" },
+  statSub: { fontSize: 13, color: C.faint, fontWeight: 500, marginLeft: 3 },
+  statLabel: { fontSize: 13, color: C.muted, marginTop: 0 },
+  favorite: { marginTop: 14, fontSize: 15, color: C.inkSoft },
+  hint: { marginTop: 14, fontSize: 13, color: C.muted },};

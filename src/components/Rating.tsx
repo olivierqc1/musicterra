@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { C, R } from "../theme";
 import { notifyRatingsChanged } from "../services/ratedItems";
 
 interface RatingProps {
@@ -139,13 +140,16 @@ export const Rating: React.FC<RatingProps> = ({
 
   const handleRate = async () => {
     if (!session) {
-      setError(t("⚠️ Connecte-toi", "⚠️ Sign in"));
-      setTimeout(() => setError(""), 30000);
+      setError(t(
+        "Connecte-toi (bouton en haut) pour enregistrer ta note.",
+        "Sign in (button at the top) to save your rating."
+      ));
+      setTimeout(() => setError(""), 8000);
       return;
     }
 
     if (value === 0) {
-      setError(t("⚠️ Sélectionne une note", "⚠️ Select rating"));
+      setError(t("Choisis une note de 1 à 10.", "Pick a rating from 1 to 10."));
       setTimeout(() => setError(""), 30000);
       return;
     }
@@ -207,53 +211,61 @@ export const Rating: React.FC<RatingProps> = ({
     return "";
   };
 
+  const isSaved = value === savedValue && savedValue !== null;
+
   return (
     <div style={styles.container}>
-      {savedValue !== null && !error && (
-        <div style={{
-          ...styles.savedBadge,
-          ...(syncStatus === 'local' ? { background: '#fef3c7', color: '#92400e' } : {})
-        }}>
-          {t("Note enregistrée : ", "Saved: ")}
-          <strong>{savedValue}/{max}</strong>
-          {getStatusBadge()}
-          <div style={{ fontSize: 10, marginTop: 2 }}>
-            {getStatusText()}
-          </div>
-        </div>
-      )}
+      <div style={styles.headRow}>
+        <span style={styles.heading}>{t("Ta note", "Your rating")}</span>
+        {savedValue !== null && !error && (
+          <span style={styles.savedText}>
+            {t("Enregistrée", "Saved")} · {getStatusText()}
+            {getStatusBadge()}
+          </span>
+        )}
+      </div>
 
-      {error && (
-        <div style={styles.errorBadge}>{error}</div>
-      )}
+      {error && <div style={styles.errorBadge}>{error}</div>}
 
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <input
-          type="range"
-          min={0}
-          max={max}
-          value={value}
-          onChange={(e) => setValue(Number(e.target.value))}
-          style={styles.slider}
-          disabled={loading}
-        />
-        <div style={styles.valueDisplay}>{value}/{max}</div>
+      <div style={styles.scale} role="radiogroup" aria-label={t("Note sur 10", "Rating out of 10")}>
+        {Array.from({ length: max }, (_, k) => k + 1).map((n) => {
+          const on = n <= value;
+          return (
+            <button
+              key={n}
+              type="button"
+              role="radio"
+              aria-checked={value === n}
+              onClick={() => setValue(n)}
+              disabled={loading}
+              style={{
+                ...styles.step,
+                ...(on ? styles.stepOn : {}),
+                ...(value === n ? styles.stepCurrent : {}),
+              }}
+            >
+              {n}
+            </button>
+          );
+        })}
       </div>
 
       <button
         onClick={handleRate}
-        disabled={loading || value === 0}
+        disabled={loading || value === 0 || isSaved}
         style={{
           ...styles.button,
-          ...(value !== savedValue ? styles.buttonChanged : {}),
+          ...(!isSaved && value > 0 ? styles.buttonChanged : {}),
           ...(loading ? styles.buttonLoading : {}),
         }}
       >
         {loading
-          ? t("⏳ Sauvegarde...", "⏳ Saving...")
-          : value === savedValue && savedValue !== null
-          ? t("✅ Noté", "✅ Rated")
-          : t("💾 Noter", "💾 Rate")}
+          ? t("Enregistrement…", "Saving…")
+          : isSaved
+          ? t(`✓ Noté ${savedValue}/${max}`, `✓ Rated ${savedValue}/${max}`)
+          : value === 0
+          ? t("Choisis une note", "Pick a rating")
+          : t(`Enregistrer ${value}/${max}`, `Save ${value}/${max}`)}
       </button>
     </div>
   );
@@ -263,62 +275,70 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     display: "grid",
     gap: 10,
-    padding: 12,
-    background: "#f8f9fa",
-    borderRadius: 10,
-    border: "1px solid #e7e7e7",
+    padding: 14,
+    background: C.soft,
+    borderRadius: R.control + 4,
   },
-  savedBadge: {
+  headRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "baseline",
+    gap: 8,
+    flexWrap: "wrap",
+  },
+  heading: { fontWeight: 700, color: C.ink, fontSize: 15 },
+  savedText: { fontSize: 12, color: C.jade, fontWeight: 600 },
+  errorBadge: {
     padding: "8px 12px",
-    background: "#d1fae5",
-    color: "#065f46",
-    borderRadius: 6,
+    background: C.roseSoft,
+    color: "#A3283A",
+    borderRadius: R.small,
     fontSize: 13,
     fontWeight: 500,
   },
-  errorBadge: {
-    padding: "8px 12px",
-    background: "#fee2e2",
-    color: "#991b1b",
-    borderRadius: 6,
-    fontSize: 12,
-    fontWeight: 500,
+  scale: {
+    display: "grid",
+    gridTemplateColumns: "repeat(10, 1fr)",
+    gap: 4,
   },
-  slider: {
-    flex: 1,
-    height: 6,
-    borderRadius: 3,
-    outline: "none",
-    appearance: "none",
-    background: "#ddd",
-    cursor: "pointer",
-  },
-  valueDisplay: {
-    minWidth: 50,
-    textAlign: "center",
-    fontSize: 16,
-    fontWeight: 700,
-    color: "#667eea",
-  },
-  button: {
-    padding: "10px 14px",
-    border: "1px solid #ddd",
-    borderRadius: 8,
-    background: "#fff",
-    color: "#444",
+  step: {
+    height: 40,
+    padding: 0,
+    borderRadius: R.small,
+    border: `1px solid ${C.line}`,
+    background: C.surface,
+    color: C.muted,
     fontSize: 14,
     fontWeight: 600,
-    cursor: "pointer",
+  },
+  stepOn: {
+    background: C.marigoldSoft,
+    borderColor: C.marigold,
+    color: C.ink,
+  },
+  stepCurrent: {
+    background: C.marigold,
+    borderColor: C.ink,
+    color: C.ink,
+    fontWeight: 800,
+  },
+  button: {
+    padding: "11px 14px",
+    border: `1px solid ${C.line}`,
+    borderRadius: R.pill,
+    background: C.surface,
+    color: C.inkSoft,
+    fontSize: 15,
+    fontWeight: 600,
   },
   buttonChanged: {
-    background: "#667eea",
+    background: C.cobalt,
     color: "#fff",
-    borderColor: "#667eea",
+    borderColor: C.cobalt,
   },
   buttonLoading: {
     opacity: 0.7,
-    cursor: 'not-allowed',
   },
 };
 
-export default Rating; 
+export default Rating;
