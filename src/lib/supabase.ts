@@ -4,9 +4,12 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('⚠️ ERREUR : Variables Supabase manquantes')
-  throw new Error('Missing Supabase credentials');
+// Sans les variables Supabase (oubliées dans Vercel, par exemple), on ne
+// fait plus planter toute l'app : la roue et les fiches marchent quand même,
+// seules la connexion et la sauvegarde dans le cloud échouent.
+export const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
+if (!supabaseConfigured) {
+  console.error('⚠️ Variables VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY manquantes : connexion désactivée')
 }
 
 // Helper pour timeout de 10 secondes
@@ -34,7 +37,10 @@ const fetchWithTimeout = async (url: string, options: any = {}) => {
 };
 
 // CLIENT avec timeout
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(
+  supabaseUrl || "https://not-configured.supabase.co",
+  supabaseAnonKey || "not-configured",
+  {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
