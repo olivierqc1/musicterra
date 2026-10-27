@@ -123,7 +123,16 @@ export default function ResultCard({ item, pool, language, justSpun = false, onO
       <div style={styles.resultGrid}>
         {item.image && (
           <div style={styles.resultMedia}>
-            <img src={item.image} alt="" style={styles.resultImage} />
+            <img
+              src={item.image}
+              alt=""
+              style={styles.resultImage}
+              onError={(e) => {
+                // Image introuvable : on retire le cadre plutôt qu'une icône cassée
+                const box = e.currentTarget.parentElement;
+                if (box) box.style.display = "none";
+              }}
+            />
           </div>
         )}
 
