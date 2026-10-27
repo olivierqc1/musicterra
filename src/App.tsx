@@ -13,6 +13,7 @@ import Concerts from "./components/Concerts";
 import { styles } from "./appStyles";
 import ResultCard from "./components/ResultCard";
 import Toaster from "./components/Toaster";
+import TasteProfile from "./components/TasteProfile";
 import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
 import ResetPassword from "./components/ResetPassword";
@@ -180,6 +181,31 @@ const App: React.FC = () => {
   }, [selectedItem, pool]);
 
   // Changer de catégorie ferme la fiche de l'ancienne catégorie
+  // Ouvre une fiche précise (depuis le profil) dans l'onglet « Découvrir »
+  const openItem = (next: Pool, name: string) => {
+    const lower = name.toLowerCase();
+    const list: Item[] =
+      next === "genres"
+        ? (genres as Item[])
+        : next === "countries"
+        ? (countries as Item[])
+        : years.map((y) => ({
+            name: String(y.year),
+            year: y.year,
+            descriptionFr: y.descriptionFr,
+            descriptionEn: y.descriptionEn,
+            artists: y.artists,
+            spotify: y.spotify,
+          })) as Item[];
+    const found = list.find((i) => i.name.toLowerCase() === lower);
+    if (!found) return;
+    setPool(next);
+    setWheelMode("random");
+    setHasSpun(true);
+    setSelectedItem(found);
+    setTab("discover");
+  };
+
   const changePool = (next: Pool) => {
     setPool(next);
     setSelectedItem(null);
@@ -483,6 +509,7 @@ const App: React.FC = () => {
                   pool={pool}
                   language={language}
                   justSpun={hasSpun}
+                  onOpenGenre={(name) => openItem("genres", name)}
                 />
               )}
             </section>
@@ -503,10 +530,15 @@ const App: React.FC = () => {
           )}
           {tab === "profile" &&
             (session ? (
-              <Profile />
+              <Profile
+                language={language}
+                onOpen={openItem}
+                onSpin={() => setTab("discover")}
+              />
             ) : (
               <section style={{ display: "grid", gap: 16 }}>
                 <Passport language={language} />
+                <TasteProfile language={language} onOpen={openItem} onSpin={() => setTab("discover")} />
                 <AuthGate mode="inline" language={language} />
               </section>
             ))}

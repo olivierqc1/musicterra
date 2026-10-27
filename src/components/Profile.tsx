@@ -17,6 +17,7 @@ import { supabase } from "@/lib/supabase";
 import SEO from "@/components/SEO";
 import Passport from "@/components/Passport";
 import ProfileSearch from "@/components/ProfileSearch";
+import TasteProfile, { type OpenItem } from "./TasteProfile";
 
 // ───────────────────────────────
 // Types & storage
@@ -154,7 +155,14 @@ function GenreTags({
 // ───────────────────────────────
 // Page principale
 // ───────────────────────────────
-export default function ProfilePage() {
+interface ProfilePageProps {
+  language?: "fr" | "en";
+  /** Ouvre la fiche d'un genre, d'un pays ou d'une année dans « Découvrir ». */
+  onOpen?: OpenItem;
+  onSpin?: () => void;
+}
+
+export default function ProfilePage({ language = "fr", onOpen, onSpin }: ProfilePageProps) {
   const { session, profile: authProfile } = useAuth();
   
   const [profile, setProfile] = useState<Profile>(
@@ -365,7 +373,10 @@ export default function ProfilePage() {
       </motion.h1>
 
       {/* PASSEPORT MUSICAL */}
-      <Passport language="fr" />
+      <Passport language={language} />
+
+      {/* PORTRAIT MUSICAL */}
+      <TasteProfile language={language} onOpen={onOpen} onSpin={onSpin} />
 
       {/* Avatar, Instagram et Localisation */}
       <div className="grid md:grid-cols-3 gap-6">
@@ -539,9 +550,16 @@ export default function ProfilePage() {
 
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {filteredRatings.map((rating) => (
-                <div
+                <button
+                  type="button"
                   key={rating.id}
-                  className="flex justify-between items-center p-3 border rounded-lg hover:bg-accent transition"
+                  onClick={() =>
+                    onOpen?.(
+                      rating.item_type === "country" ? "countries" : rating.item_type === "year" ? "years" : "genres",
+                      rating.item_name
+                    )
+                  }
+                  className="w-full text-left flex justify-between items-center gap-3 p-3 border rounded-xl hover:bg-accent transition"
                 >
                   <div className="flex-1">
                     <div className="font-medium">
@@ -551,10 +569,10 @@ export default function ProfilePage() {
                       {new Date(rating.updated_at).toLocaleDateString('fr-FR')}
                     </div>
                   </div>
-                  <Badge variant="secondary" className="text-lg font-bold">
+                  <Badge variant="secondary" className="text-base font-bold">
                     {rating.rating}/10
                   </Badge>
-                </div>
+                </button>
               ))}
             </div>
           </CardContent>
