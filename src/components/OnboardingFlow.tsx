@@ -54,7 +54,7 @@ export default function OnboardingFlow({ onComplete, language }: Props) {
         </div>
 
         <h2>{STEPS[step].title}</h2>
-        <p style={{ color: '#666' }}>{STEPS[step].subtitle}</p>
+        <p style={{ color: '#5A6183' }}>{STEPS[step].subtitle}</p>
 
         {step === 0 && (
           <button onClick={() => setStep(1)} style={styles.btn}>
@@ -104,14 +104,14 @@ const styles: Record<string, React.CSSProperties> = {
     width: 10,
     height: 10,
     borderRadius: '50%',
-    background: '#ddd'
+    background: '#DFE3EF'
   },
   progressDotActive: {
-    background: '#667eea'
+    background: '#2C3FD1'
   },
   btn: {
     padding: '12px 24px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 8,

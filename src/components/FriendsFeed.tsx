@@ -190,8 +190,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   refreshBtn: {
     padding: '6px 10px',
-    background: '#f0f0f0',
-    border: '1px solid #ddd',
+    background: '#EEF1F8',
+    border: '1px solid #DFE3EF',
     borderRadius: 6,
     cursor: 'pointer',
     fontSize: 16,
@@ -203,8 +203,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   activityCard: {
     padding: 14,
-    background: '#fafafa',
-    border: '1px solid #eee',
+    background: '#F4F6FB',
+    border: '1px solid #EEF1F8',
     borderRadius: 10,
     transition: '0.2s',
   },
@@ -218,7 +218,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: 40,
     borderRadius: '50%',
     objectFit: 'cover',
-    border: '2px solid #667eea',
+    border: '2px solid #2C3FD1',
   },
   activityContent: {
     flex: 1,
@@ -234,7 +234,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   timestamp: {
     fontSize: 12,
-    color: '#999',
+    color: '#8A90AD',
     margin: 0,
   },
   loading: {
@@ -247,8 +247,8 @@ const styles: Record<string, React.CSSProperties> = {
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #f0f0f0',
-    borderTop: '4px solid #667eea',
+    border: '4px solid #EEF1F8',
+    borderTop: '4px solid #2C3FD1',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
   },
@@ -257,26 +257,26 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: 'center',
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
   },
   emptyTitle: {
     marginTop: 0,
     fontSize: 20,
   },
   emptyText: {
-    color: '#666',
+    color: '#5A6183',
     fontSize: 14,
     marginBottom: 12,
   },
   emptyHint: {
     fontSize: 13,
-    color: '#999',
+    color: '#8A90AD',
     margin: 0,
   },
   hint: {
     textAlign: 'center',
     fontSize: 13,
-    color: '#999',
+    color: '#8A90AD',
     margin: 0,
   },
 };

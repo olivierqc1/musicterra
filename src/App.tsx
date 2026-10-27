@@ -12,6 +12,7 @@ import Passport from "./components/Passport";
 import Concerts from "./components/Concerts";
 import { styles } from "./appStyles";
 import ResultCard from "./components/ResultCard";
+import Toaster from "./components/Toaster";
 import EmergingArtists from "./components/EmergingArtists";
 import Welcome from "./components/Welcome";
 import ResetPassword from "./components/ResetPassword";
@@ -92,6 +93,9 @@ const App: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   // Incrémenté à chaque nouvelle note pour retirer l'item de la roue.
   const [ratingsVersion, setRatingsVersion] = useState(0);
+  // Vrai après un lancer : la fiche s'anime et défile à l'écran. Faux pour
+  // une fiche restaurée au chargement ou ouverte par un lien.
+  const [hasSpun, setHasSpun] = useState(false);
   // Les genres arrivent sans description : elle se charge à la demande.
   const selectedDescription = useItemDescription(selectedItem, language).text;
   const [currentStreak, setCurrentStreak] = useState<number>(0);
@@ -217,6 +221,7 @@ const App: React.FC = () => {
 
   const onSpin = (name: string) => {
     const found = items.find((i) => i.name === name) || null;
+    setHasSpun(true);
     setSelectedItem(found);
 
     if (found && session) {
@@ -342,154 +347,128 @@ const App: React.FC = () => {
 
       <div style={styles.app}>
         <Analytics />
+        <Toaster />
         <header style={styles.header}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 22 }}>🎵</span>
-            <h1 style={{ margin: 0 }}>MusicTerra</h1>
+          <div style={styles.brand}>
+            <img src="/favicon.svg" alt="" width={28} height={28} />
+            <h1 style={styles.wordmark} className="mt-wordmark">MusicTerra</h1>
           </div>
 
-          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-            <button
-              onClick={() => setShowWelcome(true)}
-              style={styles.infoBtn}
-              title={t('À propos', 'About')}
-            >
-              ℹ️
-            </button>
-
+          <div style={styles.headerActions} className="mt-header-actions">
             {currentStreak > 0 && (
-              <div style={styles.streakBadge}>
+              <div style={styles.streakBadge} title={t("Série en cours", "Current streak")}>
                 🔥 {currentStreak}
               </div>
             )}
 
             <button
               onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
-              style={styles.secondaryBtn}
+              style={styles.iconBtn}
+              className="mt-icon-btn"
+              aria-label={t("Passer en anglais", "Switch to French")}
             >
-              {t("🇬🇧 EN", "🇫🇷 FR")}
+              {t("EN", "FR")}
+            </button>
+
+            <button
+              onClick={() => setShowWelcome(true)}
+              style={styles.iconBtn}
+              className="mt-icon-btn"
+              aria-label={t("À propos", "About")}
+            >
+              ?
             </button>
 
             {profile && (
-              <span style={{ fontSize: 12, color: "#555" }}>
+              <span style={styles.userName}>
                 {profile.display_name || profile.email}
               </span>
             )}
 
             {!session && (
-              <button onClick={() => setShowLogin(true)} style={styles.loginBtn}>
-                {t("Se connecter", "Sign in")}
+              <button onClick={() => setShowLogin(true)} style={styles.loginBtn} className="mt-login-btn">
+                {t("Connexion", "Sign in")}
               </button>
             )}
           </div>
         </header>
 
-        <nav style={styles.tabsBar}>
-          <button
-            style={{
-              ...styles.tabBtn,
-              ...(tab === "discover" ? styles.tabActive : {}),
-            }}
-            onClick={() => setTab("discover")}
-          >
-            {t("🔍 Découvrir", "🔍 Discover")}
-          </button>
-          <button
-            style={{
-              ...styles.tabBtn,
-              ...(tab === "emerging" ? styles.tabActive : {}),
-            }}
-            onClick={() => setTab("emerging")}
-          >
-            {t("🌱 Émergents", "🌱 Emerging")}
-          </button>
-          <button
-            style={{
-              ...styles.tabBtn,
-              ...(tab === "concerts" ? styles.tabActive : {}),
-            }}
-            onClick={() => setTab("concerts")}
-          >
-            {t("🎤 Concerts", "🎤 Concerts")}
-          </button>
-          <button
-            style={{
-              ...styles.tabBtn,
-              ...(tab === "profile" ? styles.tabActive : {}),
-            }}
-            onClick={() => setTab("profile")}
-          >
-            {t("👤 Profil", "👤 Profile")}
-          </button>
+        <nav style={styles.tabsBar} aria-label={t("Sections", "Sections")}>
+          {(
+            [
+              ["discover", "🎡", t("Découvrir", "Discover")],
+              ["emerging", "🌱", t("Émergents", "Emerging")],
+              ["concerts", "🎤", t("Concerts", "Concerts")],
+              ["profile", "🛂", t("Profil", "Profile")],
+            ] as const
+          ).map(([key, icon, label]) => (
+            <button
+              key={key}
+              style={{ ...styles.tabBtn, ...(tab === key ? styles.tabActive : {}) }}
+              onClick={() => setTab(key)}
+              aria-current={tab === key ? "page" : undefined}
+            >
+              <span style={styles.tabIcon} aria-hidden>
+                {icon}
+              </span>
+              {label}
+            </button>
+          ))}
         </nav>
 
         <main style={styles.main}>
           {tab === "discover" && (
             <section style={{ display: "grid", gap: 16 }}>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <label style={styles.chipLabel}>
-                  <input
-                    type="radio"
-                    name="pool"
-                    checked={pool === "genres"}
-                    onChange={() => changePool("genres")}
-                  />{" "}
-                  {t("🎸 Genres", "🎸 Genres")}
-                </label>
-                <label style={styles.chipLabel}>
-                  <input
-                    type="radio"
-                    name="pool"
-                    checked={pool === "countries"}
-                    onChange={() => changePool("countries")}
-                  />{" "}
-                  {t("🌍 Pays", "🌍 Countries")}
-                </label>
-                <label style={styles.chipLabel}>
-                  <input
-                    type="radio"
-                    name="pool"
-                    checked={pool === "years"}
-                    onChange={() => changePool("years")}
-                  />{" "}
-                  {t("📅 Années", "📅 Years")}
-                </label>
+              <div style={styles.segRow} role="group" aria-label={t("Roue", "Wheel")}>
+                {(
+                  [
+                    ["genres", "🎸", t("Genres", "Genres")],
+                    ["countries", "🌍", t("Pays", "Countries")],
+                    ["years", "📅", t("Années", "Years")],
+                  ] as const
+                ).map(([key, icon, label]) => (
+                  <button
+                    key={key}
+                    style={{ ...styles.seg, ...(pool === key ? styles.segActive : {}) }}
+                    onClick={() => changePool(key)}
+                    aria-pressed={pool === key}
+                  >
+                    {icon} {label}
+                  </button>
+                ))}
               </div>
 
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <label style={styles.chipLabel}>
-                  <input
-                    type="radio"
-                    name="wheelMode"
-                    checked={wheelMode === "random"}
-                    onChange={() => setWheelMode("random")}
-                  />{" "}
-                  {t("🎲 Complètement aléatoire", "🎲 Fully random")}
-                </label>
-                <label style={styles.chipLabel}>
-                  <input
-                    type="radio"
-                    name="wheelMode"
-                    checked={wheelMode === "personalized"}
-                    onChange={() => setWheelMode("personalized")}
-                    disabled={pool !== "genres"}
-                  />{" "}
-                  {t("✨ Propose-moi un truc", "✨ Suggest something")}
-                </label>
+              <div style={styles.segRow} role="group" aria-label={t("Mode", "Mode")}>
+                <button
+                  style={{ ...styles.seg, ...(wheelMode === "random" ? styles.segActive : {}) }}
+                  onClick={() => setWheelMode("random")}
+                  aria-pressed={wheelMode === "random"}
+                >
+                  🎲 {t("Au hasard", "Random")}
+                </button>
+                <button
+                  style={{
+                    ...styles.seg,
+                    ...(wheelMode === "personalized" ? styles.segActive : {}),
+                    ...(pool !== "genres" ? styles.segDisabled : {}),
+                  }}
+                  onClick={() => setWheelMode("personalized")}
+                  disabled={pool !== "genres"}
+                  aria-pressed={wheelMode === "personalized"}
+                >
+                  ✨ {t("Propose-moi un truc", "Suggest something")}
+                </button>
               </div>
-              {wheelMode === "personalized" && pool !== "genres" && (
-                <p style={{ fontSize: 13, opacity: 0.7, margin: "-8px 0 0" }}>
+              {pool !== "genres" && (
+                <p style={styles.hint}>
                   {t(
-                    "Disponible seulement pour les genres pour l'instant.",
-                    "Only available for genres for now."
+                    "« Propose-moi un truc » marche seulement avec les genres pour l'instant.",
+                    "“Suggest something” only works with genres for now."
                   )}
                 </p>
               )}
 
-              <div style={styles.card}>
-                <h3 style={{ marginTop: 0, textAlign: "center" }}>
-                  {t("🎡 Tourne la roue", "🎡 Spin the wheel")}
-                </h3>
+              <div style={styles.wheelCard}>
                 <Wheel
                   items={wheelNames}
                   onSelect={onSpin}
@@ -498,12 +477,20 @@ const App: React.FC = () => {
               </div>
 
               {selectedItem && (
-                <ResultCard item={selectedItem} pool={pool} language={language} />
+                <ResultCard
+                  key={selectedItem.name}
+                  item={selectedItem}
+                  pool={pool}
+                  language={language}
+                  justSpun={hasSpun}
+                />
               )}
             </section>
           )}
 
-          {tab === "emerging" && <EmergingArtists language={language} />}
+          {tab === "emerging" && (
+            <EmergingArtists language={language} onSignIn={() => setShowLogin(true)} />
+          )}
           {tab === "concerts" && (
             <Concerts
               language={language}
@@ -535,22 +522,13 @@ const App: React.FC = () => {
               >
                 ✕
               </button>
-              <p style={{ margin: "0 0 4px", textAlign: "center", color: "#555", fontSize: 14 }}>
-                {t(
-                  "Crée un compte pour sauvegarder tes notes, ton passeport et tes séries.",
-                  "Create an account to save your ratings, passport and streaks."
-                )}
-              </p>
-              <AuthGate mode="inline" language={language} />
+              <AuthGate mode="sheet" language={language} />
             </div>
           </div>
         )}
 
         <footer style={styles.footer}>
-          <small>
-            © {new Date().getFullYear()} MusicTerra •{" "}
-            {t('Découvrez la musique du monde', 'Discover world music')}
-          </small>
+          © {new Date().getFullYear()} MusicTerra · {t("La musique du monde, une roue à la fois", "World music, one spin at a time")}
         </footer>
       </div>
     </>

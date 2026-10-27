@@ -100,7 +100,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 16,
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
   },
   title: {
     marginTop: 0,
@@ -117,16 +117,16 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: 12,
     padding: 12,
-    border: '1px solid #eee',
+    border: '1px solid #EEF1F8',
     borderRadius: 10,
-    background: '#fafafa',
+    background: '#F4F6FB',
   },
   avatar: {
     width: 50,
     height: 50,
     borderRadius: '50%',
     objectFit: 'cover',
-    border: '2px solid #667eea',
+    border: '2px solid #2C3FD1',
   },
   userInfo: {
     flex: 1,
@@ -138,12 +138,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   username: {
     fontSize: 13,
-    color: '#666',
+    color: '#5A6183',
     margin: '2px 0',
   },
   stats: {
     fontSize: 12,
-    color: '#999',
+    color: '#8A90AD',
     margin: '4px 0 0',
   },
   loading: {
@@ -156,8 +156,8 @@ const styles: Record<string, React.CSSProperties> = {
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #f0f0f0',
-    borderTop: '4px solid #667eea',
+    border: '4px solid #EEF1F8',
+    borderTop: '4px solid #2C3FD1',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
   },
@@ -166,10 +166,10 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: 'center',
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
   },
   emptyText: {
-    color: '#777',
+    color: '#5A6183',
     fontSize: 14,
   },
 };

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { updateProfile, uploadAvatar, Profile } from '../services/profile';
 import { useAuth } from '../context/AuthContext';
+import { toast } from "../lib/toast";
 
 interface Props {
   currentProfile: Profile;
@@ -28,24 +29,24 @@ export default function ProfileEdit({ currentProfile, onSave, onCancel, language
 
     // Vérifier la taille (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert(t('Fichier trop volumineux (max 2MB)', 'File too large (max 2MB)'));
+      toast(t('Fichier trop volumineux (max 2MB)', 'File too large (max 2MB)'), "info");
       return;
     }
 
     // Vérifier le type
     if (!file.type.startsWith('image/')) {
-      alert(t('Veuillez choisir une image', 'Please choose an image'));
+      toast(t('Veuillez choisir une image', 'Please choose an image'), "info");
       return;
     }
 
     setUploading(true);
     try {
       await uploadAvatar(session.user.id, file);
-      alert(t('Photo mise à jour!', 'Photo updated!'));
+      toast(t('Photo mise à jour!', 'Photo updated!'), "success");
       onSave(); // Recharger le profil
     } catch (error) {
       console.error(error);
-      alert(t('Erreur lors de l\'upload', 'Upload error'));
+      toast(t('Erreur lors de l\'upload', 'Upload error'), "error");
     }
     setUploading(false);
   };
@@ -65,7 +66,7 @@ export default function ProfileEdit({ currentProfile, onSave, onCancel, language
       onSave();
     } catch (error) {
       console.error(error);
-      alert(t('Erreur lors de la sauvegarde', 'Error saving'));
+      toast(t('Erreur lors de la sauvegarde', 'Error saving'), "error");
     }
     setSaving(false);
   };
@@ -92,7 +93,7 @@ export default function ProfileEdit({ currentProfile, onSave, onCancel, language
             >
               {uploading ? '...' : t('Changer la photo', 'Change photo')}
             </button>
-            <p style={{ fontSize: 12, color: '#777', margin: '4px 0 0' }}>
+            <p style={{ fontSize: 12, color: '#5A6183', margin: '4px 0 0' }}>
               {t('JPG, PNG max 2MB', 'JPG, PNG max 2MB')}
             </p>
           </div>
@@ -128,7 +129,7 @@ export default function ProfileEdit({ currentProfile, onSave, onCancel, language
             maxLength={300}
             rows={4}
           />
-          <div style={{ fontSize: 12, color: '#777', textAlign: 'right' }}>
+          <div style={{ fontSize: 12, color: '#5A6183', textAlign: 'right' }}>
             {bio.length}/300
           </div>
         </div>
@@ -149,7 +150,7 @@ export default function ProfileEdit({ currentProfile, onSave, onCancel, language
         <div style={styles.field}>
           <label style={styles.label}>Instagram</label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ color: '#777' }}>@</span>
+            <span style={{ color: '#5A6183' }}>@</span>
             <input
               type="text"
               value={instagram}
@@ -213,7 +214,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 16,
     marginBottom: 20,
     padding: 16,
-    background: '#f9fafb',
+    background: '#F4F6FB',
     borderRadius: 12
   },
   avatar: {
@@ -221,11 +222,11 @@ const styles: Record<string, React.CSSProperties> = {
     height: 80,
     borderRadius: '50%',
     objectFit: 'cover',
-    border: '3px solid #667eea'
+    border: '3px solid #2C3FD1'
   },
   uploadBtn: {
     padding: '8px 12px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 8,
@@ -245,7 +246,7 @@ const styles: Record<string, React.CSSProperties> = {
   input: {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14,
     fontFamily: 'inherit'
@@ -253,7 +254,7 @@ const styles: Record<string, React.CSSProperties> = {
   textarea: {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14,
     fontFamily: 'inherit',
@@ -261,7 +262,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   cancelBtn: {
     padding: '10px 20px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     background: '#fff',
     cursor: 'pointer'
@@ -270,7 +271,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '10px 20px',
     border: 'none',
     borderRadius: 8,
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     cursor: 'pointer',
     fontWeight: 500

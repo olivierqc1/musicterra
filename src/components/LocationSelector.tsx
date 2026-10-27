@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from "../lib/toast";
 
 interface Props {
   onLocationSelect: (city: string, coords?: { lat: number; lng: number }) => void;
@@ -14,7 +15,7 @@ export default function LocationSelector({ onLocationSelect, language }: Props) 
 
   const handleGetGPS = () => {
     if (!navigator.geolocation) {
-      alert(t('Géolocalisation non supportée', 'Geolocation not supported'));
+      toast(t('Géolocalisation non supportée', 'Geolocation not supported'), "info");
       return;
     }
 
@@ -30,7 +31,7 @@ export default function LocationSelector({ onLocationSelect, language }: Props) 
       },
       (error) => {
         setLoadingGPS(false);
-        alert(t('Erreur de géolocalisation', 'Geolocation error'));
+        toast(t('Erreur de géolocalisation', 'Geolocation error'), "error");
         console.error(error);
       }
     );
@@ -72,7 +73,7 @@ export default function LocationSelector({ onLocationSelect, language }: Props) 
       </button>
 
       {useGPS && (
-        <p style={{ fontSize: 13, color: '#667eea', marginTop: 8 }}>
+        <p style={{ fontSize: 13, color: '#2C3FD1', marginTop: 8 }}>
           {t('📍 Concerts près de vous', '📍 Concerts near you')}
         </p>
       )}
@@ -87,13 +88,13 @@ const styles: Record<string, React.CSSProperties> = {
   input: {
     flex: 1,
     padding: '8px 12px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14
   },
   btn: {
     padding: '8px 16px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 8,
@@ -103,14 +104,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   gpsBtn: {
     width: '100%',
-    background: '#10b981'
+    background: '#0E9F75'
   },
   divider: {
     display: 'flex',
     alignItems: 'center',
     textAlign: 'center',
     margin: '12px 0',
-    color: '#999'
+    color: '#8A90AD'
   },
   dividerText: {
     padding: '0 12px',

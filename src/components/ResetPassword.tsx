@@ -119,7 +119,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     minHeight: '100vh',
     padding: 20,
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: '#2C3FD1',
   },
   card: {
     maxWidth: 400,
@@ -146,7 +146,7 @@ const styles: Record<string, React.CSSProperties> = {
   text: {
     margin: '0 0 24px 0',
     fontSize: 15,
-    color: '#555',
+    color: '#3A4166',
   },
   form: {
     display: 'flex',
@@ -161,17 +161,17 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: 14,
     fontWeight: 600,
-    color: '#333',
+    color: '#151B3B',
   },
   input: {
     padding: '12px 16px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 10,
     fontSize: 15,
   },
   submitButton: {
     padding: '14px 20px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 10,
@@ -182,8 +182,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   error: {
     padding: '10px 12px',
-    background: '#fee2e2',
-    color: '#991b1b',
+    background: '#FCE4E7',
+    color: '#A3283A',
     borderRadius: 8,
     fontSize: 14,
   },

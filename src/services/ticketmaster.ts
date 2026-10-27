@@ -28,7 +28,6 @@ export async function searchConcertsByArtist(artist: string): Promise<Ticketmast
   
   if (!API_KEY) {
     console.error('❌ VITE_TICKETMASTER_API_KEY manquante dans .env');
-    alert('Erreur: Clé API Ticketmaster manquante. Vérifiez votre fichier .env');
     return [];
   }
 
@@ -49,10 +48,6 @@ export async function searchConcertsByArtist(artist: string): Promise<Ticketmast
 
     if (!res.ok) {
       console.error('❌ Erreur HTTP:', res.status, res.statusText);
-      
-      if (res.status === 401) {
-        alert('Erreur: Clé API Ticketmaster invalide');
-      }
       
       return [];
     }
@@ -99,10 +94,6 @@ export async function searchConcertsByArtist(artist: string): Promise<Ticketmast
     
   } catch (err) {
     console.error('💥 Erreur complète Ticketmaster:', err);
-    
-    if (err instanceof TypeError) {
-      alert('Erreur de connexion. Vérifiez votre connexion internet.');
-    }
     
     return [];
   }

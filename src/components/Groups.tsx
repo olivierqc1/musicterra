@@ -113,7 +113,7 @@ export default function Groups({ language }: Props) {
                       />
                       <div>
                         <strong>{g.name}</strong>
-                        <p style={{ margin: 0, fontSize: 12, color: '#666' }}>
+                        <p style={{ margin: 0, fontSize: 12, color: '#5A6183' }}>
                           {g.member_count} {t('membres', 'members')}
                         </p>
                       </div>
@@ -155,7 +155,7 @@ export default function Groups({ language }: Props) {
               />
               <div style={{ flex: 1 }}>
                 <h2 style={{ margin: '0 0 4px' }}>{selectedGroup.name}</h2>
-                <p style={{ margin: '0 0 8px', color: '#666' }}>
+                <p style={{ margin: '0 0 8px', color: '#5A6183' }}>
                   {selectedGroup.description}
                 </p>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -165,7 +165,7 @@ export default function Groups({ language }: Props) {
                     </span>
                   ))}
                 </div>
-                <p style={{ fontSize: 13, color: '#999', marginTop: 8 }}>
+                <p style={{ fontSize: 13, color: '#8A90AD', marginTop: 8 }}>
                   👥 {selectedGroup.member_count} {t('membres', 'members')}
                 </p>
               </div>
@@ -200,12 +200,12 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 16,
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
   },
-  subText: { fontSize: 13, color: '#666', marginTop: 4 },
+  subText: { fontSize: 13, color: '#5A6183', marginTop: 4 },
   createBtn: {
     padding: '10px 16px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 8,
@@ -216,15 +216,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
   infoCard: {
     padding: 16,
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: '#2C3FD1',
     color: '#fff',
     borderRadius: 12,
     fontSize: 14,
   },
   backBtn: {
     padding: '8px 16px',
-    background: '#f0f0f0',
-    border: '1px solid #ddd',
+    background: '#EEF1F8',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     cursor: 'pointer',
     fontSize: 14,
@@ -236,7 +236,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 16,
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7',
+    border: '1px solid #DFE3EF',
     alignItems: 'flex-start',
   },
   groupAvatar: {
@@ -244,12 +244,12 @@ const styles: Record<string, React.CSSProperties> = {
     height: 80,
     borderRadius: '50%',
     objectFit: 'cover',
-    border: '3px solid #667eea',
+    border: '3px solid #2C3FD1',
   },
   tag: {
     padding: '4px 10px',
-    background: '#e0e7ff',
-    color: '#3730a3',
+    background: '#E8EBFC',
+    color: '#2C3FD1',
     borderRadius: 999,
     fontSize: 12,
     fontWeight: 500,
@@ -257,7 +257,7 @@ const styles: Record<string, React.CSSProperties> = {
   loadingContainer: {
     textAlign: 'center',
     padding: 40,
-    color: '#555',
+    color: '#3A4166',
     display: 'grid',
     gap: 12,
     placeItems: 'center',
@@ -265,13 +265,13 @@ const styles: Record<string, React.CSSProperties> = {
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #f0f0f0',
-    borderTop: '4px solid #667eea',
+    border: '4px solid #EEF1F8',
+    borderTop: '4px solid #2C3FD1',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
   },
   cacheCard: {
-    border: '1px solid #eee',
+    border: '1px solid #EEF1F8',
     borderRadius: 12,
     padding: 14,
     background: '#fff',
@@ -281,9 +281,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
-    background: '#fafafa',
+    background: '#F4F6FB',
     padding: 8,
     cursor: 'pointer',
     transition: '0.2s',

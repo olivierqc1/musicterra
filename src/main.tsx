@@ -20,7 +20,6 @@ const rootElement = document.getElementById("root");
 
 if (!rootElement) {
   console.error("❌ ERREUR: Élément #root introuvable dans le DOM!");
-  alert("ERREUR: #root introuvable!");
 } else {
   console.log("✅ Élément #root trouvé");
   
@@ -41,6 +40,5 @@ if (!rootElement) {
     console.log("✅ React rendu avec succès!");
   } catch (error) {
     console.error("❌ ERREUR lors du render:", error);
-    alert("ERREUR: " + error);
   }
 }

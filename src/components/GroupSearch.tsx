@@ -85,7 +85,7 @@ export default function GroupSearch({ onGroupSelect, language }: Props) {
               />
               <div style={{ flex: 1 }}>
                 <strong>{group.name}</strong>
-                <p style={{ fontSize: 13, color: '#666', margin: '4px 0' }}>
+                <p style={{ fontSize: 13, color: '#5A6183', margin: '4px 0' }}>
                   {group.description}
                 </p>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
@@ -95,7 +95,7 @@ export default function GroupSearch({ onGroupSelect, language }: Props) {
                     </span>
                   ))}
                 </div>
-                <p style={{ fontSize: 12, color: '#999', marginTop: 4 }}>
+                <p style={{ fontSize: 12, color: '#8A90AD', marginTop: 4 }}>
                   👥 {group.member_count} {t('membres', 'members')}
                 </p>
               </div>
@@ -111,7 +111,7 @@ export default function GroupSearch({ onGroupSelect, language }: Props) {
       )}
 
       {!loading && results.length === 0 && (query || selectedTags.length > 0) && (
-        <p style={{ textAlign: 'center', color: '#777' }}>
+        <p style={{ textAlign: 'center', color: '#5A6183' }}>
           {t('Aucun groupe trouvé', 'No groups found')}
         </p>
       )}
@@ -124,18 +124,18 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 16,
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7'
+    border: '1px solid #DFE3EF'
   },
   input: {
     flex: 1,
     padding: '10px 12px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14
   },
   searchBtn: {
     padding: '10px 16px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 8,
@@ -149,22 +149,22 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tag: {
     padding: '6px 12px',
-    background: '#f0f0f0',
-    border: '1px solid #ddd',
+    background: '#EEF1F8',
+    border: '1px solid #DFE3EF',
     borderRadius: 999,
     cursor: 'pointer',
     fontSize: 13
   },
   tagActive: {
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
-    borderColor: '#667eea'
+    borderColor: '#2C3FD1'
   },
   groupCard: {
     display: 'flex',
     gap: 12,
     padding: 12,
-    border: '1px solid #eee',
+    border: '1px solid #EEF1F8',
     borderRadius: 10,
     alignItems: 'flex-start'
   },
@@ -176,15 +176,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
   miniTag: {
     padding: '2px 8px',
-    background: '#e0e7ff',
-    color: '#3730a3',
+    background: '#E8EBFC',
+    color: '#2C3FD1',
     borderRadius: 999,
     fontSize: 11,
     fontWeight: 500
   },
   joinBtn: {
     padding: '8px 16px',
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 8,

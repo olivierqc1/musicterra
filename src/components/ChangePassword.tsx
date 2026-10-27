@@ -113,7 +113,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 20,
     background: '#fff',
     borderRadius: 12,
-    border: '1px solid #e7e7e7'
+    border: '1px solid #DFE3EF'
   },
   title: {
     margin: '0 0 20px 0',
@@ -133,17 +133,17 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     fontSize: 14,
     fontWeight: 500,
-    color: '#333'
+    color: '#151B3B'
   },
   input: {
     padding: '10px 12px',
-    border: '1px solid #ddd',
+    border: '1px solid #DFE3EF',
     borderRadius: 8,
     fontSize: 14
   },
   button: {
     padding: '12px 20px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: '#2C3FD1',
     color: '#fff',
     border: 'none',
     borderRadius: 8,
@@ -159,13 +159,13 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500
   },
   success: {
-    background: '#d1fae5',
-    color: '#065f46',
-    border: '1px solid #10b981'
+    background: '#DDF5EC',
+    color: '#0B6E52',
+    border: '1px solid #0E9F75'
   },
   error: {
-    background: '#fee2e2',
-    color: '#991b1b',
-    border: '1px solid #ef4444'
+    background: '#FCE4E7',
+    color: '#A3283A',
+    border: '1px solid #D9374B'
   }
 };

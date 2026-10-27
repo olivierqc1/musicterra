@@ -22,7 +22,7 @@ export default function UpgradePrompt({ reason, onClose, language }: Props) {
               : t('Fonctionnalité Premium', 'Premium Feature')
             }
           </h2>
-          <p style={{ color: '#666', fontSize: 15 }}>
+          <p style={{ color: '#5A6183', fontSize: 15 }}>
             {reason === 'limit_reached'
               ? t('Vous avez marqué 3 concerts ce mois-ci', 'You\'ve marked 3 concerts this month')
               : t('Cette fonctionnalité est réservée aux membres Premium', 'This feature is for Premium members')
@@ -40,7 +40,7 @@ export default function UpgradePrompt({ reason, onClose, language }: Props) {
               <span style={{ fontSize: 32, fontWeight: 'bold' }}>
                 ${PRICING.monthly.price}
               </span>
-              <span style={{ color: '#666' }}>/{t('mois', 'month')}</span>
+              <span style={{ color: '#5A6183' }}>/{t('mois', 'month')}</span>
             </div>
             <ul style={styles.featureList}>
               {PRICING.monthly.features.map((feature, i) => (
@@ -64,9 +64,9 @@ export default function UpgradePrompt({ reason, onClose, language }: Props) {
               <span style={{ fontSize: 32, fontWeight: 'bold' }}>
                 ${PRICING.annual.price}
               </span>
-              <span style={{ color: '#666' }}>/{t('an', 'year')}</span>
+              <span style={{ color: '#5A6183' }}>/{t('an', 'year')}</span>
             </div>
-            <p style={{ fontSize: 13, color: '#667eea', margin: '4px 0 12px' }}>
+            <p style={{ fontSize: 13, color: '#2C3FD1', margin: '4px 0 12px' }}>
               ${(PRICING.annual.price / 12).toFixed(2)}/{t('mois', 'month')}
             </p>
             <ul style={styles.featureList}>
@@ -80,7 +80,7 @@ export default function UpgradePrompt({ reason, onClose, language }: Props) {
           </div>
         </div>
 
-        <p style={{ textAlign: 'center', fontSize: 13, color: '#999', marginTop: 16 }}>
+        <p style={{ textAlign: 'center', fontSize: 13, color: '#8A90AD', marginTop: 16 }}>
           {t('Annule à tout moment • Paiement sécurisé par Stripe', 'Cancel anytime • Secure payment by Stripe')}
         </p>
       </div>
@@ -119,7 +119,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: 'none',
     fontSize: 32,
     cursor: 'pointer',
-    color: '#999',
+    color: '#8A90AD',
     lineHeight: 1
   },
   icon: {
@@ -133,20 +133,20 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: 24
   },
   planCard: {
-    border: '2px solid #e7e7e7',
+    border: '2px solid #DFE3EF',
     borderRadius: 12,
     padding: 24,
     position: 'relative'
   },
   planCardHighlight: {
-    borderColor: '#667eea',
-    background: '#f8f9ff'
+    borderColor: '#2C3FD1',
+    background: '#F4F6FB'
   },
   savingsBadge: {
     position: 'absolute',
     top: -12,
     right: 16,
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff',
     padding: '4px 12px',
     borderRadius: 999,
@@ -166,16 +166,16 @@ const styles: Record<string, React.CSSProperties> = {
   upgradeBtn: {
     width: '100%',
     padding: '12px',
-    border: '2px solid #667eea',
+    border: '2px solid #2C3FD1',
     borderRadius: 8,
     background: '#fff',
-    color: '#667eea',
+    color: '#2C3FD1',
     cursor: 'pointer',
     fontWeight: 600,
     fontSize: 15
   },
   upgradeBtnPrimary: {
-    background: '#667eea',
+    background: '#2C3FD1',
     color: '#fff'
   }
 };

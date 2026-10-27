@@ -114,8 +114,8 @@ const styles: Record<string, CSSProperties> = {
     marginTop: 12,
     padding: 12,
     borderRadius: 12,
-    background: "rgba(102, 126, 234, 0.06)",
-    border: "1px solid rgba(102, 126, 234, 0.18)",
+    background: "rgba(44, 63, 209, 0.06)",
+    border: "1px solid rgba(44, 63, 209, 0.18)",
   },
   header: {
     display: "flex",
@@ -128,7 +128,7 @@ const styles: Record<string, CSSProperties> = {
     border: "none",
     borderRadius: 999,
     padding: "6px 12px",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "#2C3FD1",
     color: "#fff",
     fontSize: 13,
     fontWeight: 600,
@@ -140,17 +140,17 @@ const styles: Record<string, CSSProperties> = {
     gap: 6,
   },
   chip: {
-    border: "1px solid rgba(102, 126, 234, 0.3)",
+    border: "1px solid rgba(44, 63, 209, 0.3)",
     borderRadius: 999,
     padding: "6px 12px",
     background: "#fff",
-    color: "#333",
+    color: "#151B3B",
     fontSize: 13,
     cursor: "pointer",
   },
   chipActive: {
-    background: "#667eea",
-    borderColor: "#667eea",
+    background: "#2C3FD1",
+    borderColor: "#2C3FD1",
     color: "#fff",
   },
   panel: {
@@ -171,7 +171,7 @@ const styles: Record<string, CSSProperties> = {
   meta: {
     margin: "4px 0",
     fontSize: 13,
-    color: "#555",
+    color: "#3A4166",
   },
   links: {
     display: "flex",
