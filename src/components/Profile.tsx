@@ -34,9 +34,16 @@ interface Profile {
   avatarDataUrl?: string;
 }
 
+// Anciennes notes d'années enregistrées avec le type "genre"
+// (avant la migration) : on les affiche quand même comme des années.
+const normalizeRating = (r: Rating): Rating =>
+  r.item_type === 'genre' && /^\d{1,4}$/.test(r.item_name)
+    ? { ...r, item_type: 'year' }
+    : r;
+
 interface Rating {
   id: string;
-  item_type: 'genre' | 'country';
+  item_type: 'genre' | 'country' | 'year';
   item_name: string;
   rating: number;
   updated_at: string;
@@ -168,7 +175,7 @@ export default function ProfilePage() {
   // ──────── RATINGS ────────
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [loadingRatings, setLoadingRatings] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'genre' | 'country'>('all');
+  const [filter, setFilter] = useState<'all' | 'genre' | 'country' | 'year'>('all');
   const [sortBy, setSortBy] = useState<'date' | 'rating' | 'name'>('date');
 
   // Charger les ratings
@@ -203,7 +210,7 @@ export default function ProfilePage() {
         loadFromLocalStorage();
       } else if (data) {
         console.log(`✅ ${data.length} ratings chargés depuis Supabase`);
-        setRatings(data);
+        setRatings(data.map(normalizeRating));
       }
     } catch (err: any) {
       console.error("❌ Exception:", err.message);
@@ -224,7 +231,7 @@ export default function ProfilePage() {
       const key = localStorage.key(i);
       if (key?.startsWith(`rating_${userId}_`)) {
         const parts = key.split('_');
-        const itemType = parts[2] as 'genre' | 'country';
+        const itemType = parts[2] as 'genre' | 'country' | 'year';
         const itemName = parts.slice(3).join('_');
         const rating = parseInt(localStorage.getItem(key) || '0');
 
@@ -241,7 +248,7 @@ export default function ProfilePage() {
     }
 
     console.log(`📦 ${localRatings.length} ratings locaux chargés`);
-    setRatings(localRatings);
+    setRatings(localRatings.map(normalizeRating));
   };
 
   const filteredRatings = ratings
@@ -260,6 +267,7 @@ export default function ProfilePage() {
     total: ratings.length,
     genres: ratings.filter(r => r.item_type === 'genre').length,
     countries: ratings.filter(r => r.item_type === 'country').length,
+    years: ratings.filter(r => r.item_type === 'year').length,
     average: ratings.length > 0 
       ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
       : '0',
@@ -486,7 +494,7 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-2 justify-between">
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant={filter === 'all' ? 'default' : 'outline'}
                   size="sm"
@@ -508,6 +516,15 @@ export default function ProfilePage() {
                 >
                   <Globe className="w-4 h-4 mr-1" /> Pays ({stats.countries})
                 </Button>
+                {stats.years > 0 && (
+                  <Button
+                    variant={filter === 'year' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilter('year')}
+                  >
+                    📅 Années ({stats.years})
+                  </Button>
+                )}
               </div>
               <select
                 value={sortBy}
@@ -528,7 +545,7 @@ export default function ProfilePage() {
                 >
                   <div className="flex-1">
                     <div className="font-medium">
-                      {rating.item_type === 'genre' ? '🎸' : '🌍'} {rating.item_name}
+                      {rating.item_type === 'genre' ? '🎸' : rating.item_type === 'year' ? '📅' : '🌍'} {rating.item_name}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {new Date(rating.updated_at).toLocaleDateString('fr-FR')}

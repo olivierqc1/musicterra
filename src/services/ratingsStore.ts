@@ -10,7 +10,7 @@ import { supabase } from "../lib/supabase";
 import { genres } from "../data/genresLite";
 
 const SCHEMA_KEY = "mt_ratings_schema";
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 const PREFIX = "rating_";
 
 interface LocalRating {
@@ -77,6 +77,48 @@ function migrateGenreNames() {
   }
 }
 
+// v2 -> v3 : les années étaient notées avec le type "genre" (bug de
+// ResultCard). On les déplace vers le type "year". Idempotent : relancé
+// après chaque restauration cloud, qui peut ramener d'anciennes lignes.
+const isYearName = (name: string) => /^\d{1,4}$/.test(name);
+
+function migrateYearRatings() {
+  for (const r of readAll()) {
+    if (r.itemType !== "genre" || !isYearName(r.itemName)) continue;
+    write(r.userId, "year", r.itemName, r.rating);
+    try {
+      localStorage.removeItem(r.key);
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+// Côté Supabase : une fois les notes d'années sauvegardées en "year",
+// on supprime les anciennes lignes "genre". Rien n'est supprimé si la
+// sauvegarde a échoué, donc aucune note ne peut se perdre.
+async function migrateCloudYearRatings(userId: string) {
+  const years = readAll().filter((r) => r.userId === userId && r.itemType === "year");
+  if (years.length === 0) return;
+  const { error } = await supabase.from("ratings").upsert(
+    years.map((r) => ({
+      user_id: userId,
+      item_type: "year",
+      item_name: r.itemName,
+      rating: r.rating,
+      updated_at: new Date().toISOString(),
+    })),
+    { onConflict: "user_id,item_type,item_name" }
+  );
+  if (error) return;
+  await supabase
+    .from("ratings")
+    .delete()
+    .eq("user_id", userId)
+    .eq("item_type", "genre")
+    .in("item_name", years.map((r) => r.itemName));
+}
+
 export function migrateRatings() {
   let current = 0;
   try {
@@ -87,6 +129,7 @@ export function migrateRatings() {
   if (current >= SCHEMA_VERSION) return;
 
   if (current < 2) migrateGenreNames();
+  if (current < 3) migrateYearRatings();
   // if (current < 3) migrateXxx();  <- futures migrations ici
 
   try {
@@ -146,6 +189,8 @@ export async function syncRatings(userId?: string) {
   try {
     adoptAnonymousRatings(userId);
     await restoreFromSupabase(userId); // le cloud comble les trous locaux
+    migrateYearRatings(); // le cloud peut ramener des années notées "genre"
+    await migrateCloudYearRatings(userId);
     await backupToSupabase(userId); // le local comble les trous cloud
   } catch {
     /* hors-ligne : on réessaiera à la prochaine session */
