@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { notifyRatingsChanged } from "../services/ratedItems";
 
 interface RatingProps {
-  itemType: "genre" | "country";
+  itemType: "genre" | "country" | "year";
   itemName: string;
   max?: number;
   language?: "fr" | "en";
@@ -158,6 +159,7 @@ export const Rating: React.FC<RatingProps> = ({
       
       // 1. Sauvegarder IMMÉDIATEMENT en local
       localStorage.setItem(localKey, String(value));
+      notifyRatingsChanged();
       console.log("✅ Sauvegardé localement:", value);
       setSavedValue(value);
       if (onRated) onRated(value);

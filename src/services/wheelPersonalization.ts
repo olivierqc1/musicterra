@@ -7,6 +7,7 @@
 
 import type { Item } from "../itemTypes";
 import { matrix } from "../data/matrix";
+import { excludeRated } from "./ratedItems";
 
 const RATING_PREFIX = "rating_";
 const MIN_RATING = 6; // même seuil que artistsFromTopRatedGenres dans App.tsx
@@ -66,8 +67,11 @@ export function buildPersonalizedGenrePool(
   allGenres: Item[],
   size: number = DEFAULT_POOL_SIZE
 ): Item[] {
+  // Jamais un genre déjà noté sur la roue : on tire seulement parmi
+  // les genres pas encore notés (les notes servent juste à pondérer).
+  const candidates = excludeRated(allGenres, "genres");
   const topRated = getTopRatedGenreNames();
-  if (topRated.length === 0) return allGenres;
+  if (topRated.length === 0) return candidates;
 
   const byNameLower = new Map(allGenres.map((g) => [g.name.toLowerCase(), g]));
   const weights = new Map<string, number>();
@@ -93,10 +97,10 @@ export function buildPersonalizedGenrePool(
   // Tirage pondéré sans remise jusqu'à `size` items
   const picked: Item[] = [];
   const pickedNames = new Set<string>();
-  const targetSize = Math.min(size, allGenres.length);
+  const targetSize = Math.min(size, candidates.length);
 
   while (picked.length < targetSize) {
-    const available = allGenres.filter((g) => !pickedNames.has(g.name));
+    const available = candidates.filter((g) => !pickedNames.has(g.name));
     if (available.length === 0) break;
 
     const totalWeight = available.reduce((sum, g) => sum + (weights.get(g.name) || 1), 0);

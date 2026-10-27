@@ -163,7 +163,7 @@ export default function ResultCard({ item, pool, language }: Props) {
                       ? "genre" 
                       : pool === "countries"
                       ? "country"
-                      : "genre"
+                      : "year"
                   }
                   itemName={item.name}
                   max={10}

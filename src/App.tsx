@@ -25,6 +25,7 @@ import { trackAction } from "./services/userBehavior";
 import { updateStreak } from "./services/gamification";
 import { syncRatings } from "./services/ratingsStore";
 import { buildPersonalizedGenrePool } from "./services/wheelPersonalization";
+import { excludeRated, RATINGS_CHANGED_EVENT } from "./services/ratedItems";
 
 import { type Item, isGenre, isCountry, isYear } from "./itemTypes";
 
@@ -89,6 +90,8 @@ const App: React.FC = () => {
   // vers les genres bien notés (voir services/wheelPersonalization.ts).
   const [wheelMode, setWheelMode] = useState<"random" | "personalized">("random");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  // Incrémenté à chaque nouvelle note pour retirer l'item de la roue.
+  const [ratingsVersion, setRatingsVersion] = useState(0);
   // Les genres arrivent sans description : elle se charge à la demande.
   const selectedDescription = useItemDescription(selectedItem, language).text;
   const [currentStreak, setCurrentStreak] = useState<number>(0);
@@ -129,11 +132,19 @@ const App: React.FC = () => {
   // "personalized". Recalculé à chaque bascule de mode/pool pour lire
   // les notes les plus fraîches du localStorage.
   const wheelItems: Item[] = useMemo(() => {
+    // Dans les deux modes, la roue ne tombe jamais sur un item déjà noté.
     if (wheelMode === "personalized" && pool === "genres") {
       return buildPersonalizedGenrePool(items);
     }
-    return items;
-  }, [wheelMode, items, pool]);
+    return excludeRated(items, pool);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wheelMode, items, pool, ratingsVersion]);
+
+  useEffect(() => {
+    const bump = () => setRatingsVersion((v) => v + 1);
+    window.addEventListener(RATINGS_CHANGED_EVENT, bump);
+    return () => window.removeEventListener(RATINGS_CHANGED_EVENT, bump);
+  }, []);
 
   // Liste stable pour la roue : un nouveau tableau à chaque rendu ferait
   // retirer les segments au hasard en plein lancer.
@@ -196,7 +207,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // migrations locales tout de suite; sync cloud dès qu'on est connecté
-    syncRatings(session?.user?.id);
+    syncRatings(session?.user?.id).then(() => setRatingsVersion((v) => v + 1));
     if (session) {
       updateStreak(session.user.id).then(streak => {
         setCurrentStreak(streak);
