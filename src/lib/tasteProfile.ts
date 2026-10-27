@@ -47,7 +47,8 @@ export interface TasteProfile {
   average: number;
   favorite: RatedItem | null;
   top: RatedItem[];
-  families: FamilyScore[];
+  families: FamilyScore[]; // les 4 premières
+  allFamilies: FamilyScore[];
   places: PlaceScore[];
   suggestions: Suggestion[];
   countriesToExplore: PlaceScore[];
@@ -341,6 +342,7 @@ export function buildTasteProfile(rated: RatedItem[] = readRatings()): TasteProf
     favorite: sorted[0] || null,
     top: sorted.slice(0, 5),
     families: families.slice(0, 4),
+    allFamilies: families,
     places: places.slice(0, 6),
     suggestions,
     countriesToExplore: places.filter((p) => !p.rated).slice(0, 4),
