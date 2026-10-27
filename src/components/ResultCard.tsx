@@ -8,6 +8,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { C, R } from "../theme";
 import { type Item, isGenre, isCountry, isYear } from "../itemTypes";
 import { matrix } from "../data/matrix";
+import { genres } from "../data/genresLite";
 import { styles } from "../appStyles";
 import { getListenLinks } from "../listenLinks";
 import Rating from "./Rating";
@@ -24,6 +25,8 @@ interface Props {
   language: "fr" | "en";
   /** Fiche arrivée par un lancer de roue : animation et défilement. */
   justSpun?: boolean;
+  /** Ouvre un genre proche (puces « Si tu aimes, essaie aussi »). */
+  onOpenGenre?: (name: string) => void;
 }
 
 const PLATFORM_COLORS: Record<string, string> = {
@@ -34,7 +37,7 @@ const PLATFORM_COLORS: Record<string, string> = {
   Deezer: "#7c3aed",
 };
 
-export default function ResultCard({ item, pool, language, justSpun = false }: Props) {
+export default function ResultCard({ item, pool, language, justSpun = false, onOpenGenre }: Props) {
   const { session } = useAuth();
   const t = (fr: string, en: string) => (language === "fr" ? fr : en);
   const description = useItemDescription(item, language);
@@ -212,11 +215,28 @@ export default function ResultCard({ item, pool, language, justSpun = false }: P
             <div style={{ marginTop: 18 }}>
               <span style={styles.metaLabel}>{t("Si tu aimes, essaie aussi", "If you like it, try")}</span>
               <div style={styles.badgeContainer}>
-                {similarityBoost.slice(0, 8).map(([label, score]) => (
-                  <span key={label} style={styles.badge}>
-                    {label} <span style={{ color: C.faint }}>{Math.round(score * 100)} %</span>
-                  </span>
-                ))}
+                {similarityBoost.slice(0, 8).map(([label, score]) => {
+                  const known = genreNames.has(label.toLowerCase());
+                  const inner = (
+                    <>
+                      {label} <span style={{ color: C.faint }}>{Math.round(score * 100)} %</span>
+                    </>
+                  );
+                  return known && onOpenGenre ? (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => onOpenGenre(label)}
+                      style={{ ...styles.badge, background: C.surface, color: C.ink, fontWeight: 600 }}
+                    >
+                      {inner}
+                    </button>
+                  ) : (
+                    <span key={label} style={styles.badge}>
+                      {inner}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -225,6 +245,9 @@ export default function ResultCard({ item, pool, language, justSpun = false }: P
     </motion.article>
   );
 }
+
+// Noms de genres du catalogue, pour savoir quelles affinités ont une fiche
+const genreNames = new Set(genres.map((g) => g.name.toLowerCase()));
 
 const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
