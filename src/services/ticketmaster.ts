@@ -157,3 +157,88 @@ export async function searchConcertsByLocation(
     return [];
   }
 }
+// ── Concerts autour d'un lieu, filtrés par style ───────────────
+// Utilisé par « Pour toi, près de chez toi » (ConcertsForYou.tsx).
+
+export interface TmClassification {
+  primary?: boolean;
+  segment?: { name?: string };
+  genre?: { name?: string };
+  subGenre?: { name?: string };
+}
+
+export interface NearbyEvent extends TicketmasterEvent {
+  classifications?: TmClassification[];
+  images?: { url: string; width: number; height: number; ratio?: string }[];
+}
+
+export type Place =
+  | { kind: "gps"; lat: number; lng: number; label?: string }
+  | { kind: "city"; city: string };
+
+// Encodage geohash (paramètre geoPoint recommandé par Ticketmaster)
+const BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
+export function geohash(lat: number, lng: number, precision = 7): string {
+  let latMin = -90, latMax = 90, lngMin = -180, lngMax = 180;
+  let hash = "", bit = 0, ch = 0, even = true;
+  while (hash.length < precision) {
+    if (even) {
+      const mid = (lngMin + lngMax) / 2;
+      if (lng >= mid) { ch = (ch << 1) | 1; lngMin = mid; } else { ch <<= 1; lngMax = mid; }
+    } else {
+      const mid = (latMin + latMax) / 2;
+      if (lat >= mid) { ch = (ch << 1) | 1; latMin = mid; } else { ch <<= 1; latMax = mid; }
+    }
+    even = !even;
+    if (++bit === 5) {
+      hash += BASE32[ch];
+      bit = 0;
+      ch = 0;
+    }
+  }
+  return hash;
+}
+
+const isoNoMs = (d: Date) => d.toISOString().slice(0, 19) + "Z";
+
+/**
+ * Concerts à venir (90 jours) autour d'un lieu, pour un style Ticketmaster
+ * (« Jazz », « Rock »…) ou tous styles si `classification` est vide.
+ * Renvoie [] en cas d'erreur : l'appelant affiche alors un message.
+ */
+export async function searchNearbyEvents(
+  place: Place,
+  classification?: string,
+  size = 60
+): Promise<{ events: NearbyEvent[]; ok: boolean }> {
+  if (!API_KEY) return { events: [], ok: false };
+  const now = new Date();
+  const end = new Date(now.getTime() + 90 * 24 * 3600 * 1000);
+  const params = new URLSearchParams({
+    apikey: API_KEY,
+    size: String(size),
+    sort: "date,asc",
+    startDateTime: isoNoMs(now),
+    endDateTime: isoNoMs(end),
+  });
+  params.set("classificationName", classification || "music");
+  if (place.kind === "gps") {
+    params.set("geoPoint", geohash(place.lat, place.lng));
+    params.set("radius", "60");
+    params.set("unit", "km");
+  } else {
+    params.set("city", place.city);
+  }
+  try {
+    const res = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?${params}`);
+    if (!res.ok) {
+      console.error("Ticketmaster", res.status);
+      return { events: [], ok: false };
+    }
+    const data = await res.json();
+    return { events: data?._embedded?.events || [], ok: true };
+  } catch (err) {
+    console.error("Ticketmaster", err);
+    return { events: [], ok: false };
+  }
+}

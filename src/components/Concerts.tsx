@@ -8,10 +8,13 @@ import ConcertFeed from './ConcertFeed';
 import SEO from './SEO';
 import { toast } from "../lib/toast";
 import Loader from "./Loader";
+import ConcertsForYou from "./ConcertsForYou";
 
 interface Props {
   language: 'fr' | 'en';
   suggestedArtists?: string[];
+  /** Retour à la roue (bloc « Pour toi » quand il manque des notes). */
+  onSpin?: () => void;
 }
 
 type CombinedEvent = {
@@ -27,7 +30,7 @@ type CombinedEvent = {
   raw: any;
 };
 
-export default function Concerts({ language, suggestedArtists = [] }: Props) {
+export default function Concerts({ language, suggestedArtists = [], onSpin }: Props) {
   const [artistQuery, setArtistQuery] = useState('');
   const [events, setEvents] = useState<CombinedEvent[]>([]);
   const [loading, setLoading] = useState(false);
@@ -184,10 +187,14 @@ export default function Concerts({ language, suggestedArtists = [] }: Props) {
 
       {view === 'search' ? (
         <>
+          <ConcertsForYou language={language} onSpin={onSpin} />
+
           <div style={styles.card}>
-            <h2>{t('🎤 Concerts à venir', '🎤 Upcoming concerts')}</h2>
-            <p style={{ fontSize: 14, color: '#5A6183', marginBottom: 16 }}>
-              {t('Recherche par artiste (Ticketmaster)', 'Search by artist (Ticketmaster)')}
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>
+              {t('Chercher un artiste', 'Search an artist')}
+            </h2>
+            <p style={{ fontSize: 14, color: '#5A6183', margin: '4px 0 14px' }}>
+              {t('Toutes ses dates à venir, partout (Ticketmaster)', 'All upcoming dates, anywhere (Ticketmaster)')}
             </p>
 
             <div style={{ display: 'flex', gap: 8 }}>

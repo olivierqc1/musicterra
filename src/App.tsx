@@ -521,6 +521,7 @@ const App: React.FC = () => {
           {tab === "concerts" && (
             <Concerts
               language={language}
+              onSpin={() => setTab("discover")}
               suggestedArtists={
                 selectedItem && !isYear(selectedItem) && selectedItem.artists?.length
                   ? selectedItem.artists
