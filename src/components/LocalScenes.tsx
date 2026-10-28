@@ -8,6 +8,7 @@ import type { City, CityStyle } from "../types";
 import { getLocalScenes } from "../lib/localScenes";
 import { getListenLinks } from "../listenLinks";
 import ListenPreview from "./ListenPreview";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   country: {
@@ -16,18 +17,18 @@ interface Props {
     cities?: City[];
     cityStyles?: CityStyle[];
   };
-  language: "fr" | "en";
+  language: Lang;
 }
 
 export default function LocalScenes({ country, language }: Props) {
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
   const scenes = useMemo(() => getLocalScenes(country), [country]);
   const [selected, setSelected] = useState<string | null>(null);
 
   if (scenes.length === 0) return null;
 
   const scene = scenes.find((s) => s.name === selected) || null;
-  const note = scene ? (language === "fr" ? scene.noteFr : scene.noteEn) : undefined;
+  const note = scene?.noteFr ? t(scene.noteFr, scene.noteEn ?? scene.noteFr) : scene?.noteEn;
   // Nom de ville sans la précision entre parenthèses, pour les recherches
   const searchName = scene ? `${scene.name.split("(")[0].trim()} ${country.name}` : "";
 
@@ -79,7 +80,9 @@ export default function LocalScenes({ country, language }: Props) {
             <p style={styles.meta}>
               {t(
                 `Pas encore de fiche détaillée pour ${scene.name}, mais tu peux écouter sa scène :`,
-                `No detailed notes for ${scene.name} yet, but you can listen to its scene:`
+                `No detailed notes for ${scene.name} yet, but you can listen to its scene:`,
+          `Aún no hay ficha detallada de ${scene.name}, pero puedes escuchar su escena:`,
+          `Encara no hi ha fitxa detallada de ${scene.name}, però pots escoltar-ne l'escena:`
               )}
             </p>
           )}

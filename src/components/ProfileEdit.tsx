@@ -2,12 +2,13 @@ import { useState, useRef } from 'react';
 import { updateProfile, uploadAvatar, Profile } from '../services/profile';
 import { useAuth } from '../context/AuthContext';
 import { toast } from "../lib/toast";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   currentProfile: Profile;
   onSave: () => void;
   onCancel: () => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function ProfileEdit({ currentProfile, onSave, onCancel, language }: Props) {
@@ -21,7 +22,7 @@ export default function ProfileEdit({ currentProfile, onSave, onCancel, language
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { session } = useAuth();
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

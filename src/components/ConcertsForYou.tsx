@@ -18,9 +18,10 @@ import { RATINGS_CHANGED_EVENT } from "../services/ratedItems";
 import { toast } from "../lib/toast";
 import { C, R } from "../theme";
 import Loader from "./Loader";
+import { makeT, localeOf, type Lang } from "../i18n";
 
 interface Props {
-  language: "fr" | "en";
+  language: Lang;
   onSpin?: () => void;
 }
 
@@ -45,7 +46,7 @@ function savePlace(p: Place | null) {
 }
 
 export default function ConcertsForYou({ language, onSpin }: Props) {
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
   const [version, setVersion] = useState(0);
   const [place, setPlace] = useState<Place | null>(loadPlace);
   const [cityInput, setCityInput] = useState("");
@@ -141,7 +142,9 @@ export default function ConcertsForYou({ language, onSpin }: Props) {
         <p style={st.lead}>
           {t(
             `Note ${MIN_RATED_FOR_CONCERTS} genres sur la roue : on saura ce que tu aimes et on te proposera 5 concerts à venir autour de toi.`,
-            `Rate ${MIN_RATED_FOR_CONCERTS} genres on the wheel so we know your taste, and we'll suggest 5 upcoming concerts near you.`
+            `Rate ${MIN_RATED_FOR_CONCERTS} genres on the wheel so we know your taste, and we'll suggest 5 upcoming concerts near you.`,
+          `Puntúa ${MIN_RATED_FOR_CONCERTS} géneros en la ruleta: así sabremos qué te gusta y te propondremos 5 conciertos próximos cerca de ti.`,
+          `Puntua ${MIN_RATED_FOR_CONCERTS} gèneres a la ruleta: així sabrem què t'agrada i et proposarem 5 concerts propers a prop teu.`
           )}
         </p>
         <div style={st.progressHead}>
@@ -196,7 +199,9 @@ export default function ConcertsForYou({ language, onSpin }: Props) {
       <h2 style={st.title}>{t("Pour toi, près de chez toi", "For you, near you")}</h2>
       <p style={st.placeRow}>
         <MapPin size={15} aria-hidden style={{ flexShrink: 0 }} />
-        <span>{t(`Autour de ${placeLabel}, d'ici 3 mois`, `Around ${placeLabel}, next 3 months`)}</span>
+        <span>{t(`Autour de ${placeLabel}, d'ici 3 mois`, `Around ${placeLabel}, next 3 months`,
+          `Cerca de ${placeLabel}, en los próximos 3 meses`,
+          `A prop de ${placeLabel}, els pròxims 3 mesos`)}</span>
         <button style={st.link} onClick={changePlace}>
           {t("Changer", "Change")}
         </button>
@@ -217,7 +222,9 @@ export default function ConcertsForYou({ language, onSpin }: Props) {
         <p style={st.lead}>
           {t(
             `Aucun concert dans tes styles autour de ${placeLabel} pour l'instant. Essaie une grande ville voisine.`,
-            `No concerts in your styles around ${placeLabel} right now. Try a nearby big city.`
+            `No concerts in your styles around ${placeLabel} right now. Try a nearby big city.`,
+          `Por ahora no hay conciertos de tus estilos cerca de ${placeLabel}. Prueba con una ciudad grande cercana.`,
+          `Ara mateix no hi ha concerts dels teus estils a prop de ${placeLabel}. Prova amb una ciutat gran propera.`
           )}
         </p>
       )}
@@ -249,28 +256,44 @@ export default function ConcertsForYou({ language, onSpin }: Props) {
 function reasonText(
   p: ConcertPick,
   families: { key: string; fr: string; en: string }[],
-  language: "fr" | "en"
+  language: Lang
 ): string {
+  const t = makeT(language);
   if (p.because) {
-    return language === "fr"
-      ? `Artiste de ${p.because.genre}, que tu as noté ${p.because.rating}/10`
-      : `Artist from ${p.because.genre}, which you rated ${p.because.rating}/10`;
+    const g = p.because.genre, r = p.because.rating;
+    return t(
+      `Artiste de ${g}, que tu as noté ${r}/10`,
+      `Artist from ${g}, which you rated ${r}/10`,
+      `Artista de ${g}, que puntuaste con ${r}/10`,
+      `Artista de ${g}, que vas puntuar amb ${r}/10`
+    );
   }
   const idx = families.findIndex((f) => f.key === p.family);
   const f = families[idx];
   if (!f) return "";
   // « le folk et les musiques traditionnelles » → « le folk »
-  const short = (s: string) => s.split(/,| et | and /)[0];
-  const name = language === "fr" ? short(f.fr) : short(f.en);
-  if (idx === 0) return language === "fr" ? `${cap(name)}, ton style n° 1` : `${cap(name)}, your top style`;
-  return language === "fr" ? `Parce que tu aimes ${name}` : `Because you like ${name}`;
+  const short = (s: string) => s.split(/,| et | and | y | i /)[0];
+  const name = short(t(f.fr, f.en));
+  if (idx === 0)
+    return t(
+      `${cap(name)}, ton style n° 1`,
+      `${cap(name)}, your top style`,
+      `${cap(name)}, tu estilo n.º 1`,
+      `${cap(name)}, el teu estil n.º 1`
+    );
+  return t(
+    `Parce que tu aimes ${name}`,
+    `Because you like ${name}`,
+    `Porque te gusta ${name}`,
+    `Perquè t'agrada ${name}`
+  );
 }
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-function DateBadge({ date, language }: { date: string; language: "fr" | "en" }) {
+function DateBadge({ date, language }: { date: string; language: Lang }) {
   const d = new Date(`${date}T12:00:00`);
-  const locale = language === "fr" ? "fr-FR" : "en-GB";
+  const locale = localeOf(language);
   return (
     <div style={st.dateBadge} aria-label={d.toLocaleDateString(locale, { dateStyle: "full" })}>
       <span style={st.dateDay}>{d.getDate()}</span>

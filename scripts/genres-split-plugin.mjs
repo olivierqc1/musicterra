@@ -8,7 +8,7 @@
 // genres.ts reste la seule source de vérité : rien à générer à la main.
 
 import { build } from "esbuild";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, writeFileSync, rmSync, existsSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -39,7 +39,23 @@ async function loadGenres(root) {
   }
 }
 
-function split(genres) {
+// Traductions espagnole et catalane des descriptions, par slug de genre :
+// src/data/i18n/genres.es.json et genres.ca.json ({ "<slug>": "texte" }).
+// Un genre absent de ces fichiers retombe sur l'anglais dans l'app.
+function loadTranslations(root, lang) {
+  const file = resolve(root, `src/data/i18n/genres.${lang}.json`);
+  if (!existsSync(file)) return {};
+  try {
+    return JSON.parse(readFileSync(file, "utf8"));
+  } catch (err) {
+    console.warn(`genres-split : ${file} illisible`, err);
+    return {};
+  }
+}
+
+function split(genres, root) {
+  const es = loadTranslations(root, "es");
+  const ca = loadTranslations(root, "ca");
   const slugs = assignSlugs(genres);
   const lite = [];
   const descs = new Map();
@@ -47,7 +63,12 @@ function split(genres) {
     const { descriptionFr, descriptionEn, ...rest } = g;
     const slug = slugs[i];
     lite.push({ ...rest, descriptionFr: "", descriptionEn: "", descSlug: slug });
-    if (slug) descs.set(slug, { fr: descriptionFr || "", en: descriptionEn || "" });
+    if (slug) {
+      const d = { fr: descriptionFr || "", en: descriptionEn || "" };
+      if (es[slug]) d.es = es[slug];
+      if (ca[slug]) d.ca = ca[slug];
+      descs.set(slug, d);
+    }
   });
   return { lite, descs };
 }
@@ -57,7 +78,7 @@ export default function genresSplit() {
   let cache = null;
 
   const getData = async () => {
-    if (!cache) cache = split(await loadGenres(root));
+    if (!cache) cache = split(await loadGenres(root), root);
     return cache;
   };
 

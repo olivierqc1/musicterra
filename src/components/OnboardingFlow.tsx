@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { Wheel } from './Wheel';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   onComplete: (ratings: any[]) => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function OnboardingFlow({ onComplete, language }: Props) {
   const [step, setStep] = useState(0);
   const [ratings, setRatings] = useState<any[]>([]);
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   const STEPS = [
     {
@@ -65,7 +66,9 @@ export default function OnboardingFlow({ onComplete, language }: Props) {
         {step === 1 && (
           <div>
             <p style={{ fontSize: 14, marginBottom: 12 }}>
-              {t(`Notes données: ${ratings.length}/3`, `Ratings given: ${ratings.length}/3`)}
+              {t(`Notes données: ${ratings.length}/3`, `Ratings given: ${ratings.length}/3`,
+          `Puntuaciones: ${ratings.length}/3`,
+          `Puntuacions: ${ratings.length}/3`)}
             </p>
             {/* Afficher la roue et le système de notation ici */}
           </div>

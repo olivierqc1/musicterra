@@ -18,11 +18,13 @@ import { useItemDescription } from "../hooks/useItemDescription";
 import ListenPreview from "./ListenPreview";
 import LocalScenes from "./LocalScenes";
 import { shareUrl } from "../lib/share";
+import { makeT, type Lang } from "../i18n";
+import { countryLabel } from "../i18n/countryNames";
 
 interface Props {
   item: Item;
   pool: "genres" | "countries" | "years";
-  language: "fr" | "en";
+  language: Lang;
   /** Fiche arrivée par un lancer de roue : animation et défilement. */
   justSpun?: boolean;
   /** Ouvre un genre proche (puces « Si tu aimes, essaie aussi »). */
@@ -39,7 +41,7 @@ const PLATFORM_COLORS: Record<string, string> = {
 
 export default function ResultCard({ item, pool, language, justSpun = false, onOpenGenre }: Props) {
   const { session } = useAuth();
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
   const description = useItemDescription(item, language);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
   const reduceMotion = useReducedMotion();
@@ -59,10 +61,12 @@ export default function ResultCard({ item, pool, language, justSpun = false, onO
 
   const handleShare = async () => {
     const url = shareUrl(item, pool);
-    const label = isYear(item) ? String(item.year) : item.name;
+    const label = isYear(item) ? String(item.year) : isCountry(item) ? countryLabel(item.name, language) : item.name;
     const text = t(
       `J'ai découvert ${label} sur MusicTerra 🎡`,
-      `I just discovered ${label} on MusicTerra 🎡`
+      `I just discovered ${label} on MusicTerra 🎡`,
+          `He descubierto ${label} en MusicTerra 🎡`,
+          `He descobert ${label} a MusicTerra 🎡`
     );
     if (session) trackAction("share", pool, item.name);
     try {
@@ -96,7 +100,11 @@ export default function ResultCard({ item, pool, language, justSpun = false, onO
     : isCountry(item)
     ? t("🌍 Pays", "🌍 Country")
     : t("📅 Année", "📅 Year");
-  const title = isYear(item) ? String(item.year) : capitalize(item.name);
+  const title = isYear(item)
+    ? String(item.year)
+    : isCountry(item)
+    ? countryLabel(item.name, language)
+    : capitalize(item.name);
 
   return (
     <motion.article
@@ -200,7 +208,7 @@ export default function ResultCard({ item, pool, language, justSpun = false, onO
           </div>
 
           <ListenPreview
-            key={item.name}
+            key={`listen-${item.name}`}
             name={isYear(item) ? String(item.year) : item.name}
             artists={item.artists?.filter((a) => a !== "Anonymous")}
             spotify={item.spotify}
@@ -208,7 +216,7 @@ export default function ResultCard({ item, pool, language, justSpun = false, onO
           />
 
           {isCountry(item) && (
-            <LocalScenes key={item.name} country={item} language={language} />
+            <LocalScenes key={`scenes-${item.name}`} country={item} language={language} />
           )}
 
           <div style={{ marginTop: 18 }}>

@@ -1,11 +1,12 @@
 // src/components/AuthModal.tsx - AVEC EMAIL + OAUTH
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { makeT, type Lang } from "../i18n";
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  language?: 'fr' | 'en';
+  language?: Lang;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ 
@@ -21,7 +22,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   if (!isOpen) return null;
 

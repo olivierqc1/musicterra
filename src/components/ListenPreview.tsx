@@ -7,12 +7,13 @@
 // En cas d'échec (réseau, aucun résultat), le composant ne s'affiche pas.
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   name: string;
   artists?: string[];
   spotify?: string;
-  language: "fr" | "en";
+  language: Lang;
 }
 
 interface Track {
@@ -99,7 +100,7 @@ async function findTracks(artists: string[]): Promise<Track[]> {
 }
 
 export default function ListenPreview({ name, artists = [], spotify, language }: Props) {
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
   const embed = spotifyEmbedUrl(spotify);
 
   const [status, setStatus] = useState<"idle" | "loading" | "ready" | "empty">("idle");
@@ -118,7 +119,9 @@ export default function ListenPreview({ name, artists = [], spotify, language }:
   if (embed) {
     return (
       <iframe
-        title={t(`Écouter ${name} sur Spotify`, `Listen to ${name} on Spotify`)}
+        title={t(`Écouter ${name} sur Spotify`, `Listen to ${name} on Spotify`,
+          `Escuchar ${name} en Spotify`,
+          `Escoltar ${name} a Spotify`)}
         src={embed}
         width="100%"
         height="152"

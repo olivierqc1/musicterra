@@ -5,14 +5,15 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { C, R } from "../theme";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   onClose: () => void;
-  language: "fr" | "en";
+  language: Lang;
 }
 
 export default function Welcome({ onClose, language }: Props) {
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();

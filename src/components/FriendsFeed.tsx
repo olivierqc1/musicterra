@@ -2,9 +2,10 @@
 import { useState, useEffect } from 'react';
 import { getFriendsFeed, ActivityFeedItem } from '../services/social';
 import { useAuth } from '../context/AuthContext';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
-  language?: 'fr' | 'en';
+  language?: Lang;
   limit?: number;
 }
 
@@ -13,7 +14,7 @@ export default function FriendsFeed({ language = 'fr', limit = 20 }: Props) {
   const [loading, setLoading] = useState(true);
   const { session } = useAuth();
 
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   useEffect(() => {
     if (session) {

@@ -2,18 +2,19 @@
 import { useState, useEffect } from 'react';
 import { getFollowers, getFollowing } from '../services/social';
 import FollowButton from './FollowButton';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   userId: string;
   type: 'followers' | 'following';
-  language?: 'fr' | 'en';
+  language?: Lang;
 }
 
 export default function FollowersList({ userId, type, language = 'fr' }: Props) {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   useEffect(() => {
     loadUsers();
@@ -54,8 +55,12 @@ export default function FollowersList({ userId, type, language = 'fr' }: Props) 
     <div style={styles.container}>
       <h3 style={styles.title}>
         {type === 'followers'
-          ? t(`${users.length} Abonné(s)`, `${users.length} Follower(s)`)
-          : t(`${users.length} Abonnement(s)`, `${users.length} Following`)}
+          ? t(`${users.length} Abonné(s)`, `${users.length} Follower(s)`,
+          `${users.length} seguidor(es)`,
+          `${users.length} seguidor(s)`)
+          : t(`${users.length} Abonnement(s)`, `${users.length} Following`,
+          `${users.length} siguiendo`,
+          `${users.length} seguint`)}
       </h3>
 
       <div style={styles.list}>

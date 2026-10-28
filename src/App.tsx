@@ -1,6 +1,6 @@
 // src/App.tsx
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { genres } from "./data/genresLite";
 import { countries } from "./data/countries";
 import { years } from "./data/years";
@@ -30,6 +30,10 @@ import { buildPersonalizedGenrePool } from "./services/wheelPersonalization";
 import { excludeRated, RATINGS_CHANGED_EVENT } from "./services/ratedItems";
 
 import { type Item, isGenre, isCountry, isYear } from "./itemTypes";
+import { makeT, isLang, detectLang, LANGS, LANG_LABELS, type Lang } from "./i18n";
+import { countryLabel } from "./i18n/countryNames";
+
+const LANG_KEY = "mt_lang";
 
 // Artistes des genres les mieux notés (fallback pour les suggestions de concerts)
 function artistsFromTopRatedGenres(max = 8): string[] {
@@ -71,7 +75,25 @@ const App: React.FC = () => {
   const saved = useMemo(loadSavedState, []);
   // Lien partagé (?g=, ?c=, ?y=) : prioritaire sur l'état sauvegardé
   const deepLink = useMemo(readDeepLink, []);
-  const [language, setLanguage] = useState<"fr" | "en">(saved.language === "en" ? "en" : "fr");
+  // Langue : choix mémorisé, sinon celle du navigateur
+  const [language, setLanguage] = useState<Lang>(() => {
+    try {
+      const stored = localStorage.getItem(LANG_KEY);
+      if (isLang(stored)) return stored;
+    } catch {
+      /* ignore */
+    }
+    return isLang(saved.language) ? saved.language : detectLang();
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LANG_KEY, language);
+    } catch {
+      /* ignore */
+    }
+    document.documentElement.lang = language;
+  }, [language]);
   const [tab, setTab] = useState<
     "discover" | "emerging" | "concerts" | "profile"
   >(
@@ -154,8 +176,9 @@ const App: React.FC = () => {
   // Liste stable pour la roue : un nouveau tableau à chaque rendu ferait
   // retirer les segments au hasard en plein lancer.
   const wheelNames = useMemo(() => wheelItems.map((i) => i.name), [wheelItems]);
+  const countryLabelOf = useCallback((name: string) => countryLabel(name, language), [language]);
 
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
 
   // Ouvre l'élément d'un lien partagé, sinon restaure le dernier item
   // découvert après un rechargement de page
@@ -256,61 +279,47 @@ const App: React.FC = () => {
   };
 
   const getSEOData = () => {
-    let title = language === "fr" 
-      ? "Découvrez la musique du monde" 
-      : "Discover world music";
-    let description = language === "fr"
-      ? "Explorez des genres musicaux, pays et artistes du monde entier. Découvrez de nouveaux styles et élargissez vos horizons musicaux."
-      : "Explore music genres, countries and artists from around the world. Discover new styles and expand your musical horizons.";
-    let keywords = language === "fr"
-      ? "musique, genres musicaux, découverte musicale, artistes émergents, musique du monde"
-      : "music, music genres, music discovery, emerging artists, world music";
+    let title = t("Découvrez la musique du monde", "Discover world music");
+    let description = t("Explorez des genres musicaux, pays et artistes du monde entier. Découvrez de nouveaux styles et élargissez vos horizons musicaux.", "Explore music genres, countries and artists from around the world. Discover new styles and expand your musical horizons.");
+    let keywords = t("musique, genres musicaux, découverte musicale, artistes émergents, musique du monde", "music, music genres, music discovery, emerging artists, world music");
 
     if (selectedItem) {
       const itemDesc = selectedDescription;
       
       if (pool === "genres") {
-        title = language === "fr" 
-          ? `${selectedItem.name} - Genre Musical` 
-          : `${selectedItem.name} - Music Genre`;
-        description = `${itemDesc} ${language === "fr" 
-          ? "Découvrez les artistes, sous-genres et playlists." 
-          : "Discover artists, subgenres and playlists."}`;
-        keywords = `${selectedItem.name}, ${language === "fr" ? "genre musical" : "music genre"}, ${
+        title = t(`${selectedItem.name} - Genre Musical`, `${selectedItem.name} - Music Genre`,
+          `${selectedItem.name} - Género musical`,
+          `${selectedItem.name} - Gènere musical`);
+        description = `${itemDesc} ${t("Découvrez les artistes, sous-genres et playlists.", "Discover artists, subgenres and playlists.")}`;
+        keywords = `${selectedItem.name}, ${t("genre musical", "music genre")}, ${
           isGenre(selectedItem) && selectedItem.subgenres 
             ? selectedItem.subgenres.join(", ") 
             : ""
         }`;
       } else if (pool === "countries") {
-        title = language === "fr" 
-          ? `Musique de ${selectedItem.name}` 
-          : `Music from ${selectedItem.name}`;
-        description = `${itemDesc} ${language === "fr"
-          ? "Explorez la scène musicale et les artistes locaux."
-          : "Explore the music scene and local artists."}`;
-        keywords = `${selectedItem.name}, ${language === "fr" ? "musique" : "music"}, ${
+        title = t(`Musique de ${selectedItem.name}`, `Music from ${selectedItem.name}`,
+          `Música de ${selectedItem.name}`,
+          `Música de ${selectedItem.name}`);
+        description = `${itemDesc} ${t("Explorez la scène musicale et les artistes locaux.", "Explore the music scene and local artists.")}`;
+        keywords = `${selectedItem.name}, ${t("musique", "music")}, ${
           isCountry(selectedItem) && selectedItem.regions 
             ? selectedItem.regions.join(", ") 
             : ""
         }`;
       } else if (pool === "years") {
-        title = language === "fr" 
-          ? `Musique de ${selectedItem.name}` 
-          : `Music from ${selectedItem.name}`;
+        title = t(`Musique de ${selectedItem.name}`, `Music from ${selectedItem.name}`,
+          `Música de ${selectedItem.name}`,
+          `Música de ${selectedItem.name}`);
         description = itemDesc;
-        keywords = `${selectedItem.name}, ${language === "fr" ? "année, musique rétro" : "year, retro music"}`;
+        keywords = `${selectedItem.name}, ${t("année, musique rétro", "year, retro music")}`;
       }
     } else {
       if (tab === "emerging") {
-        title = language === "fr" ? "Artistes Émergents" : "Emerging Artists";
-        description = language === "fr"
-          ? "Découvrez les nouveaux talents et artistes émergents de la scène musicale mondiale."
-          : "Discover new talents and emerging artists from the global music scene.";
+        title = t("Artistes Émergents", "Emerging Artists");
+        description = t("Découvrez les nouveaux talents et artistes émergents de la scène musicale mondiale.", "Discover new talents and emerging artists from the global music scene.");
       } else if (tab === "concerts") {
-        title = language === "fr" ? "Concerts et Événements" : "Concerts and Events";
-        description = language === "fr"
-          ? "Trouvez des concerts et événements musicaux près de chez vous."
-          : "Find concerts and music events near you.";
+        title = t("Concerts et Événements", "Concerts and Events");
+        description = t("Trouvez des concerts et événements musicaux près de chez vous.", "Find concerts and music events near you.");
       }
     }
 
@@ -318,9 +327,7 @@ const App: React.FC = () => {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "MusicTerra",
-      "description": language === "fr"
-        ? "Plateforme de découverte musicale mondiale"
-        : "Global music discovery platform",
+      "description": t("Plateforme de découverte musicale mondiale", "Global music discovery platform"),
       "url": "https://musicterra.xyz",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Web",
@@ -350,10 +357,8 @@ const App: React.FC = () => {
     return (
       <>
         <SEO
-          title={language === "fr" ? "Réinitialiser le mot de passe" : "Reset Password"}
-          description={language === "fr" 
-            ? "Réinitialisez votre mot de passe MusicTerra" 
-            : "Reset your MusicTerra password"}
+          title={t("Réinitialiser le mot de passe", "Reset Password")}
+          description={t("Réinitialisez votre mot de passe MusicTerra", "Reset your MusicTerra password")}
         />
         <ResetPassword 
           language={language} 
@@ -387,14 +392,21 @@ const App: React.FC = () => {
               </div>
             )}
 
-            <button
-              onClick={() => setLanguage((l) => (l === "fr" ? "en" : "fr"))}
-              style={styles.iconBtn}
-              className="mt-icon-btn"
-              aria-label={t("Passer en anglais", "Switch to French")}
-            >
-              {t("EN", "FR")}
-            </button>
+            <label style={styles.langPick} className="mt-icon-btn">
+              <span aria-hidden>{language.toUpperCase()}</span>
+              <select
+                value={language}
+                onChange={(e) => isLang(e.target.value) && setLanguage(e.target.value)}
+                aria-label={t("Langue", "Language", "Idioma", "Idioma")}
+                style={styles.langSelect}
+              >
+                {LANGS.map((l) => (
+                  <option key={l} value={l}>
+                    {LANG_LABELS[l]}
+                  </option>
+                ))}
+              </select>
+            </label>
 
             <button
               onClick={() => setShowWelcome(true)}
@@ -497,6 +509,7 @@ const App: React.FC = () => {
               <div style={styles.wheelCard}>
                 <Wheel
                   items={wheelNames}
+                  labelOf={pool === "countries" ? countryLabelOf : undefined}
                   onSelect={onSpin}
                   language={language}
                 />

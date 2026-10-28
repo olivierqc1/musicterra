@@ -5,9 +5,10 @@ import { useAuth } from '../context/AuthContext';
 import { trackAction } from '../services/userBehavior';
 import SEO from './SEO';
 import Loader from "./Loader";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
-  language: 'fr' | 'en';
+  language: Lang;
   /** Ouvre la fenêtre de connexion (affiché aux visiteurs sans compte). */
   onSignIn?: () => void;
 }
@@ -41,7 +42,7 @@ export default function EmergingArtists({ language, onSignIn }: Props) {
   const [topGenres, setTopGenres] = useState<string[]>([]);
 
   const { session } = useAuth();
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   useEffect(() => {
     loadArtists();

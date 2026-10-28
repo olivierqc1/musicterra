@@ -9,9 +9,10 @@ import SEO from './SEO';
 import { toast } from "../lib/toast";
 import Loader from "./Loader";
 import ConcertsForYou from "./ConcertsForYou";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
-  language: 'fr' | 'en';
+  language: Lang;
   suggestedArtists?: string[];
   /** Retour à la roue (bloc « Pour toi » quand il manque des notes). */
   onSpin?: () => void;
@@ -39,7 +40,7 @@ export default function Concerts({ language, suggestedArtists = [], onSpin }: Pr
   const [view, setView] = useState<'search' | 'feed'>('search');
 
   const { session } = useAuth();
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   const loadUserStatuses = async () => {
     if (!session || events.length === 0) return;
@@ -82,7 +83,9 @@ export default function Concerts({ language, suggestedArtists = [], onSpin }: Pr
         toast(
           t(
             `Aucun concert trouvé pour "${artistQuery}". Essayez un artiste plus connu comme Coldplay, The Weeknd, etc.`,
-            `No concerts found for "${artistQuery}". Try a more popular artist like Coldplay, The Weeknd, etc.`
+            `No concerts found for "${artistQuery}". Try a more popular artist like Coldplay, The Weeknd, etc.`,
+          `No se encontraron conciertos de "${artistQuery}". Prueba con un artista más conocido, como Coldplay o The Weeknd.`,
+          `No s'han trobat concerts de "${artistQuery}". Prova amb un artista més conegut, com Coldplay o The Weeknd.`
           ), "info");
         setEvents([]);
         setLoading(false);

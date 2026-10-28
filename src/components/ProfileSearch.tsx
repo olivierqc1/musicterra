@@ -24,12 +24,15 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { supabase } from "@/lib/supabase";
+import { makeT, type Lang, type T } from "../i18n";
 
 interface Props {
   onApply: (p: any) => void;
+  language?: Lang;
 }
 
-export default function ProfileSearch({ onApply }: Props) {
+export default function ProfileSearch({ onApply, language = "fr" }: Props) {
+  const t = makeT(language);
   
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailProfile, setDetailProfile] = useState<any | null>(null);
@@ -88,32 +91,32 @@ export default function ProfileSearch({ onApply }: Props) {
       {/* Recherche de profils RÉELLE */}
       <Card className="rounded-2xl">
         <CardHeader>
-          <CardTitle>🔍 Recherche d'utilisateurs</CardTitle>
+          <CardTitle>🔍 {t("Recherche d'utilisateurs", "Find users", "Buscar usuarios", "Cerca usuaris")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher par nom, username, pays ou genre…"
+            placeholder={t("Rechercher par nom, username, pays ou genre…", "Search by name, username, country or genre…", "Busca por nombre, usuario, país o género…", "Cerca per nom, usuari, país o gènere…")}
             className="mb-4"
           />
 
           <div className="grid md:grid-cols-2 gap-4">
             {searching && (
               <p className="text-sm text-muted-foreground col-span-2 text-center">
-                🔍 Recherche en cours...
+                🔍 {t("Recherche en cours...", "Searching...", "Buscando...", "Cercant...")}
               </p>
             )}
             
             {!searching && searchResults.length === 0 && search.trim() && (
               <p className="text-muted-foreground text-sm text-center col-span-2">
-                Aucun utilisateur trouvé.
+                {t("Aucun utilisateur trouvé.", "No users found.", "No se encontró ningún usuario.", "No s'ha trobat cap usuari.")}
               </p>
             )}
             
             {!searching && searchResults.length === 0 && !search.trim() && (
               <p className="text-muted-foreground text-sm text-center col-span-2">
-                Tape pour chercher des utilisateurs MusicTerra...
+                {t("Tape pour chercher des utilisateurs MusicTerra...", "Type to search MusicTerra users...", "Escribe para buscar usuarios de MusicTerra...", "Escriu per cercar usuaris de MusicTerra...")}
               </p>
             )}
 
@@ -171,6 +174,7 @@ export default function ProfileSearch({ onApply }: Props) {
         onOpenChange={setDetailOpen}
         profile={detailProfile}
         onApply={onApply}
+        t={t}
       />
     </>
   );
@@ -184,11 +188,13 @@ function ResponsiveProfileDetail({
   onOpenChange,
   profile,
   onApply,
+  t,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   profile: any;
   onApply: (p: any) => void;
+  t: T;
 }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (!profile) return null;
@@ -228,7 +234,7 @@ function ResponsiveProfileDetail({
       )}
       
       <Button onClick={() => onApply(profile)} className="mt-2">
-        Appliquer à mon profil
+        {t("Appliquer à mon profil", "Apply to my profile", "Aplicar a mi perfil", "Aplica al meu perfil")}
       </Button>
     </div>
   );
@@ -238,9 +244,9 @@ function ResponsiveProfileDetail({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Profil utilisateur</DialogTitle>
+            <DialogTitle>{t("Profil utilisateur", "User profile", "Perfil de usuario", "Perfil d'usuari")}</DialogTitle>
             <DialogDescription>
-              Voir les détails et appliquer à ton profil.
+              {t("Voir les détails et appliquer à ton profil.", "See the details and apply them to your profile.", "Ver los detalles y aplicarlos a tu perfil.", "Veure els detalls i aplicar-los al teu perfil.")}
             </DialogDescription>
           </DialogHeader>
           <DetailContent />
@@ -253,9 +259,9 @@ function ResponsiveProfileDetail({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Profil utilisateur</DrawerTitle>
+          <DrawerTitle>{t("Profil utilisateur", "User profile", "Perfil de usuario", "Perfil d'usuari")}</DrawerTitle>
           <DrawerDescription>
-            Voir les détails et appliquer à ton profil.
+            {t("Voir les détails et appliquer à ton profil.", "See the details and apply them to your profile.", "Ver los detalles y aplicarlos a tu perfil.", "Veure els detalls i aplicar-los al teu perfil.")}
           </DrawerDescription>
         </DrawerHeader>
         <DetailContent />

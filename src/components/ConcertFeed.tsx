@@ -1,10 +1,11 @@
 // src/components/ConcertFeed.tsx
 import { useEffect, useState } from 'react';
 import { getConcertFeed } from '../services/concerts';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   groupId?: string;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function ConcertFeed({ groupId, language }: Props) {
@@ -12,7 +13,7 @@ export default function ConcertFeed({ groupId, language }: Props) {
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   useEffect(() => {
     loadFeed();

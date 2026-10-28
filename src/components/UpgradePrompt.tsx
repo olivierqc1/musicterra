@@ -1,13 +1,14 @@
 import { PRICING } from '../services/subscription';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   reason: 'limit_reached' | 'feature_locked';
   onClose: () => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function UpgradePrompt({ reason, onClose, language }: Props) {
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   return (
     <div style={styles.overlay} onClick={onClose}>
@@ -55,7 +56,9 @@ export default function UpgradePrompt({ reason, onClose, language }: Props) {
           {/* Plan Annual */}
           <div style={{ ...styles.planCard, ...styles.planCardHighlight }}>
             <div style={styles.savingsBadge}>
-              {t(`Économise ${PRICING.annual.savings}`, `Save ${PRICING.annual.savings}`)}
+              {t(`Économise ${PRICING.annual.savings}`, `Save ${PRICING.annual.savings}`,
+          `Ahorra ${PRICING.annual.savings}`,
+          `Estalvia ${PRICING.annual.savings}`)}
             </div>
             <h3 style={{ margin: '0 0 8px' }}>
               {t('Annuel', 'Annual')}

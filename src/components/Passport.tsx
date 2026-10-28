@@ -8,9 +8,10 @@ import { useAuth } from "../context/AuthContext";
 import { genres } from "../data/genresLite";
 import { countries } from "../data/countries";
 import { C, FONT, R, WHEEL_SEGMENTS } from "../theme";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
-  language?: "fr" | "en";
+  language?: Lang;
 }
 
 interface PassportStats {
@@ -66,7 +67,7 @@ export default function Passport({ language = "fr" }: Props) {
   const [stats, setStats] = useState<PassportStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
 
   useEffect(() => {
     loadStats();
@@ -249,7 +250,7 @@ export default function Passport({ language = "fr" }: Props) {
       const level = getLevel(stats.genresExplored);
       ctx.font = F(700, 44);
       ctx.fillStyle = C.cobalt;
-      ctx.fillText(`${level.emoji} ${language === "fr" ? level.fr : level.en}`, cx, 590);
+      ctx.fillText(`${level.emoji} ${t(level.fr, level.en)}`, cx, 590);
 
       // stats en ligne
       const rows: [string, string][] = [
@@ -293,7 +294,9 @@ export default function Passport({ language = "fr" }: Props) {
           title: "MusicTerra",
           text: t(
             `J'ai exploré ${stats.genresExplored} genres musicaux sur MusicTerra 🎡 musicterra.xyz`,
-            `I've explored ${stats.genresExplored} music genres on MusicTerra 🎡 musicterra.xyz`
+            `I've explored ${stats.genresExplored} music genres on MusicTerra 🎡 musicterra.xyz`,
+          `He explorado ${stats.genresExplored} géneros musicales en MusicTerra 🎡 musicterra.xyz`,
+          `He explorat ${stats.genresExplored} gèneres musicals a MusicTerra 🎡 musicterra.xyz`
           ),
         });
       } else {
@@ -330,11 +333,13 @@ export default function Passport({ language = "fr" }: Props) {
         <div>
           <div style={styles.title}>{t("Passeport musical", "Music passport")}</div>
           <div style={styles.level}>
-            {level.emoji} {language === "fr" ? level.fr : level.en}
+            {level.emoji} {t(level.fr, level.en)}
             {level.nextAt && (
               <span style={styles.levelNext}>
                 {" · "}
-                {t(`prochain niveau à ${level.nextAt} genres`, `next level at ${level.nextAt} genres`)}
+                {t(`prochain niveau à ${level.nextAt} genres`, `next level at ${level.nextAt} genres`,
+          `siguiente nivel a los ${level.nextAt} géneros`,
+          `següent nivell als ${level.nextAt} gèneres`)}
               </span>
             )}
           </div>

@@ -2,13 +2,14 @@
 import { useState } from 'react';
 import { submitConcertReview } from '../services/concerts';
 import { toast } from "../lib/toast";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   eventId: string;
   eventName: string;
   onClose: () => void;
   onSuccess: () => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function ConcertReview({ eventId, eventName, onClose, onSuccess, language }: Props) {
@@ -18,7 +19,7 @@ export default function ConcertReview({ eventId, eventName, onClose, onSuccess, 
   const [loading, setLoading] = useState(false);
   const [savedLocally, setSavedLocally] = useState(false);
 
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   const handleSubmit = async () => {
     if (rating === 0) {

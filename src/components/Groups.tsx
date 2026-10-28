@@ -5,9 +5,10 @@ import GroupSearch from './GroupSearch';
 import GroupDetail from './GroupDetail';
 import { Group } from '../services/groups';
 import SEO from './SEO';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function Groups({ language }: Props) {
@@ -18,7 +19,7 @@ export default function Groups({ language }: Props) {
   const [cachedGroups, setCachedGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   // 🧩 Chargement avec cache local pour réactivité immédiate
   useEffect(() => {
