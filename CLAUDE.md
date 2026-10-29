@@ -47,6 +47,7 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 
 ## Chargement des descriptions de genres
 - Le plugin Vite `scripts/genres-split-plugin.mjs` lit `genres.ts` et produit le module `virtual:genres-lite` (exposé par `src/data/genresLite.ts`) ainsi qu'un fichier `/genre-desc/<slug>.json` par genre (`{ "fr": "...", "en": "..." }`). En dev, ces fichiers sont servis depuis la mémoire ; au build, ils sont écrits dans `dist/genre-desc/`.
+- `src/data/genreTempo.json` (nom du genre → `[min, max]` en BPM, indicatif) est fusionné par le même plugin dans `/genre-desc/<slug>.json` (champ `bpm`). La fiche l'affiche dans le bloc « en bref » avec l'origine et les pays liés (`GenreFacts` dans `ResultCard.tsx`).
 - Pour afficher une description, utiliser le hook `useItemDescription(item, language)` (`src/hooks/useItemDescription.ts`), qui renvoie `{ text, loading }`. Il marche aussi pour les pays et les années, dont la description est déjà dans l'objet.
 - Les slugs viennent de `scripts/genre-slugs.mjs`, partagé avec `generate-genre-pages.mjs`.
 

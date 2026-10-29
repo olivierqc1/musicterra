@@ -7,11 +7,12 @@
 //   catalan sont dans /i18n/countries.<lang>.json et /i18n/years.<lang>.json,
 //   téléchargés une seule fois au premier besoin.
 // Sans traduction, le catalan se replie sur l'espagnol, puis l'anglais.
+// Pour un genre, renvoie aussi son tempo habituel (bpm) quand il est connu.
 
 import { useEffect, useState } from 'react';
 import { type Lang } from '../i18n';
 
-type Desc = { fr: string; en: string; es?: string; ca?: string };
+type Desc = { fr: string; en: string; es?: string; ca?: string; bpm?: [number, number] };
 
 type Describable = {
   name?: string;
@@ -70,7 +71,7 @@ function sourceOf(item: Describable | null | undefined, lang: Lang) {
 export function useItemDescription(
   item: Describable | null | undefined,
   language: Lang,
-): { text: string; loading: boolean } {
+): { text: string; loading: boolean; bpm?: [number, number] } {
   const { url, key } = sourceOf(item, language);
   const [, setVersion] = useState(0);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
@@ -96,7 +97,7 @@ export function useItemDescription(
   // Genre : tout est dans le fichier téléchargé
   if (item.descSlug) {
     const desc = cachedJson<Desc>(url);
-    if (desc) return { text: choose(language, desc), loading: false };
+    if (desc) return { text: choose(language, desc), loading: false, bpm: desc.bpm };
     if (failedUrl === url) return { text: '', loading: false };
     return { text: '', loading: true };
   }

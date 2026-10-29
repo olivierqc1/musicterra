@@ -50,14 +50,15 @@ export const styles: Record<string, React.CSSProperties> = {
     fontWeight: 700,
     padding: 0,
   },
-  // Sélecteur de langue : l'abréviation s'affiche, la liste native s'ouvre au toucher
+  // Sélecteur de langue : globe + code + flèche, la liste native s'ouvre au toucher
   langPick: {
     position: "relative",
-    width: 36,
     height: 36,
     flexShrink: 0,
-    display: "grid",
-    placeItems: "center",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    padding: "0 10px 0 9px",
     borderRadius: R.pill,
     border: `1px solid ${C.line}`,
     background: C.surface,

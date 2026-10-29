@@ -19,7 +19,8 @@ import ListenPreview from "./ListenPreview";
 import LocalScenes from "./LocalScenes";
 import { shareUrl } from "../lib/share";
 import { makeT, type Lang } from "../i18n";
-import { countryLabel } from "../i18n/countryNames";
+import { countryLabel, countryFlag } from "../i18n/countryNames";
+import { countries } from "../data/countries";
 
 interface Props {
   item: Item;
@@ -29,6 +30,8 @@ interface Props {
   justSpun?: boolean;
   /** Ouvre un genre proche (puces « Si tu aimes, essaie aussi »). */
   onOpenGenre?: (name: string) => void;
+  /** Ouvre la fiche d'un pays lié au genre. */
+  onOpenCountry?: (name: string) => void;
 }
 
 const PLATFORM_COLORS: Record<string, string> = {
@@ -39,7 +42,14 @@ const PLATFORM_COLORS: Record<string, string> = {
   Deezer: "#7c3aed",
 };
 
-export default function ResultCard({ item, pool, language, justSpun = false, onOpenGenre }: Props) {
+export default function ResultCard({
+  item,
+  pool,
+  language,
+  justSpun = false,
+  onOpenGenre,
+  onOpenCountry,
+}: Props) {
   const { session } = useAuth();
   const t = makeT(language);
   const description = useItemDescription(item, language);
@@ -169,6 +179,16 @@ export default function ResultCard({ item, pool, language, justSpun = false, onO
             </>
           )}
 
+          {isGenre(item) && (
+            <GenreFacts
+              origin={item.origin}
+              related={item.relatedCountries}
+              bpm={description.bpm}
+              language={language}
+              onOpenCountry={onOpenCountry}
+            />
+          )}
+
           {isGenre(item) && item.subgenres?.length ? (
             <p style={styles.lightText}>
               <span style={styles.metaLabel}>{t("Sous-genres", "Subgenres")} :</span>{" "}
@@ -263,6 +283,96 @@ export default function ResultCard({ item, pool, language, justSpun = false, onO
   );
 }
 
+// Fiches « en bref » d'un genre : origine, tempo habituel, pays liés.
+// Le tempo vient des descriptions d'origine : c'est un ordre de grandeur.
+function GenreFacts({
+  origin,
+  related,
+  bpm,
+  language,
+  onOpenCountry,
+}: {
+  origin?: string;
+  related?: string[];
+  bpm?: [number, number];
+  language: Lang;
+  onOpenCountry?: (name: string) => void;
+}) {
+  const t = makeT(language);
+  const place = origin && origin !== "International" && origin !== "Multiple" ? origin : null;
+  const others = (related || []).filter((c) => c !== "Multiple" && c !== place && countryNames.has(c));
+  if (!place && !bpm && others.length === 0) return null;
+
+  const tempoWord = (b: [number, number]) => {
+    const mid = (b[0] + b[1]) / 2;
+    if (mid < 85) return t("lent", "slow", "lento", "lent");
+    if (mid < 110) return t("posé", "laid-back", "pausado", "pausat");
+    if (mid < 135) return t("modéré", "mid-tempo", "moderado", "moderat");
+    if (mid < 160) return t("rapide", "fast", "rápido", "ràpid");
+    return t("très rapide", "very fast", "muy rápido", "molt ràpid");
+  };
+
+  const countryChip = (name: string) => {
+    const label = `${countryFlag(name)} ${countryLabel(name, language)}`.trim();
+    return countryNames.has(name) && onOpenCountry ? (
+      <button key={name} type="button" onClick={() => onOpenCountry(name)} style={factLink}>
+        {label}
+      </button>
+    ) : (
+      <span key={name}>{label}</span>
+    );
+  };
+
+  return (
+    <div style={factsGrid}>
+      {place && (
+        <div style={factTile}>
+          <span style={factLabel}>{t("Origine", "Origin", "Origen", "Origen")}</span>
+          <span style={factValue}>{countryChip(place)}</span>
+        </div>
+      )}
+      {bpm && (
+        <div style={factTile}>
+          <span style={factLabel}>{t("Tempo habituel", "Typical tempo", "Tempo habitual", "Tempo habitual")}</span>
+          <span style={factValue}>
+            {bpm[0]}–{bpm[1]} BPM
+            <span style={factSub}> · {tempoWord(bpm)}</span>
+          </span>
+          <TempoBar bpm={bpm} />
+        </div>
+      )}
+      {others.length > 0 && (
+        <div style={{ ...factTile, gridColumn: "1 / -1" }}>
+          <span style={factLabel}>{t("Aussi présent en", "Also found in", "También presente en", "També present a")}</span>
+          <span style={{ ...factValue, display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {others.slice(0, 6).map(countryChip)}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Petite jauge 50–200 BPM avec la plage du genre en couleur
+function TempoBar({ bpm }: { bpm: [number, number] }) {
+  const MIN = 50;
+  const MAX = 200;
+  const pct = (v: number) => ((Math.min(Math.max(v, MIN), MAX) - MIN) / (MAX - MIN)) * 100;
+  return (
+    <span style={tempoTrack} aria-hidden>
+      <span
+        style={{
+          ...tempoFill,
+          left: `${pct(bpm[0])}%`,
+          width: `${Math.max(pct(bpm[1]) - pct(bpm[0]), 3)}%`,
+        }}
+      />
+    </span>
+  );
+}
+
+const countryNames = new Set(countries.map((c) => c.name));
+
 // Noms de genres du catalogue, pour savoir quelles affinités ont une fiche
 const genreNames = new Set(genres.map((g) => g.name.toLowerCase()));
 
@@ -297,4 +407,67 @@ const listenLink: React.CSSProperties = {
   textDecoration: "none",
   fontSize: 14,
   fontWeight: 600,
+};
+
+const factsGrid: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+  gap: 8,
+  margin: "4px 0 12px",
+};
+
+const factTile: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 3,
+  padding: "10px 12px",
+  borderRadius: R.control,
+  background: C.soft,
+  minWidth: 0,
+};
+
+const factLabel: React.CSSProperties = {
+  fontSize: 12,
+  fontWeight: 600,
+  color: C.muted,
+  textTransform: "uppercase",
+  letterSpacing: "0.04em",
+};
+
+const factValue: React.CSSProperties = {
+  fontSize: 15,
+  fontWeight: 700,
+  color: C.ink,
+};
+
+const factSub: React.CSSProperties = {
+  fontWeight: 500,
+  color: C.inkSoft,
+};
+
+const factLink: React.CSSProperties = {
+  padding: 0,
+  border: "none",
+  background: "none",
+  color: C.cobalt,
+  fontSize: 15,
+  fontWeight: 700,
+  textAlign: "left",
+};
+
+const tempoTrack: React.CSSProperties = {
+  position: "relative",
+  display: "block",
+  height: 6,
+  marginTop: 4,
+  borderRadius: R.pill,
+  background: C.line,
+};
+
+const tempoFill: React.CSSProperties = {
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  borderRadius: R.pill,
+  background: C.marigold,
 };

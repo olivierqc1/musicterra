@@ -17,7 +17,7 @@ const ISO: Record<string, string> = {
   "Curaçao": "CW", "United Kingdom": "GB", Ireland: "IE", Spain: "ES", Portugal: "PT",
   Italy: "IT", Germany: "DE", Netherlands: "NL", Belgium: "BE", Luxembourg: "LU",
   Switzerland: "CH", Austria: "AT", Denmark: "DK", Sweden: "SE", Norway: "NO",
-  Finland: "FI", Iceland: "IS", Poland: "PL", Czechia: "CZ", Slovakia: "SK",
+  Finland: "FI", Iceland: "IS", Poland: "PL", Czechia: "CZ", "Czech Republic": "CZ", Slovakia: "SK",
   Hungary: "HU", Romania: "RO", Bulgaria: "BG", Greece: "GR", Malta: "MT", Cyprus: "CY",
   Estonia: "EE", Latvia: "LV", Lithuania: "LT", Ukraine: "UA", Belarus: "BY",
   Moldova: "MD", Slovenia: "SI", Croatia: "HR", "Bosnia and Herzegovina": "BA",
@@ -73,4 +73,11 @@ export function countryLabel(name: string, lang: Lang): string {
   } catch {
     return name;
   }
+}
+
+// Drapeau emoji d'un pays (nom anglais), ou chaîne vide si le code manque
+export function countryFlag(name: string): string {
+  const code = ISO[name];
+  if (!code || code === "XK") return "";
+  return String.fromCodePoint(...[...code].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
 }

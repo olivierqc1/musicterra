@@ -12,6 +12,7 @@ import Passport from "./components/Passport";
 import Concerts from "./components/Concerts";
 import { styles } from "./appStyles";
 import ResultCard from "./components/ResultCard";
+import { Globe, ChevronDown } from "lucide-react";
 import Toaster from "./components/Toaster";
 import TasteProfile from "./components/TasteProfile";
 import EmergingArtists from "./components/EmergingArtists";
@@ -392,8 +393,10 @@ const App: React.FC = () => {
               </div>
             )}
 
-            <label style={styles.langPick} className="mt-icon-btn">
+            <label style={styles.langPick} className="mt-lang-pick">
+              <Globe size={16} aria-hidden />
               <span aria-hidden>{language.toUpperCase()}</span>
+              <ChevronDown size={14} aria-hidden style={{ opacity: 0.6 }} />
               <select
                 value={language}
                 onChange={(e) => isLang(e.target.value) && setLanguage(e.target.value)}
@@ -523,6 +526,7 @@ const App: React.FC = () => {
                   language={language}
                   justSpun={hasSpun}
                   onOpenGenre={(name) => openItem("genres", name)}
+                  onOpenCountry={(name) => openItem("countries", name)}
                 />
               )}
             </section>
