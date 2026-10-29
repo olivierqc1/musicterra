@@ -9,6 +9,10 @@ export type GenreItem = {
   artists: string[];
   spotify?: string;
   image?: string;
+  /** Pays d'origine (nom anglais) ou « International » */
+  origin?: string;
+  /** Pays où le genre est présent (noms anglais) ou ["Multiple"] */
+  relatedCountries?: string[];
   /** Rempli par genres-split : clé de /genre-desc/<slug>.json */
   descSlug?: string | null;
 };

@@ -153,4 +153,8 @@ a {
   .mt-login-btn {
     padding: 0 12px !important;
   }
+  .mt-lang-pick {
+    height: 34px !important;
+    padding: 0 7px !important;
+  }
 }
