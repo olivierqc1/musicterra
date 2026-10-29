@@ -7,11 +7,14 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { C, FONT, R, WHEEL_SEGMENTS } from "../theme";
+import { makeT, type Lang } from "../i18n";
 
 type Props = {
   items: string[];
   onSelect: (name: string) => void;
-  language: "fr" | "en";
+  /** Texte affiché sur un segment (ex. nom du pays traduit). Par défaut, le nom. */
+  labelOf?: (name: string) => string;
+  language: Lang;
 };
 
 const SEGMENTS = 16;
@@ -40,7 +43,7 @@ function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number):
   return out.trimEnd() + "…";
 }
 
-export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
+export const Wheel: React.FC<Props> = ({ items, onSelect, language, labelOf }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
@@ -48,7 +51,7 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
   const animationRef = useRef<number | undefined>(undefined);
   const hasSpunRef = useRef(false);
 
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
 
   // Nouveau pool (genres / pays / années, ou mode personnalisé) : nouvel échantillon
   useEffect(() => {
@@ -105,7 +108,7 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
         ctx.textBaseline = "middle";
         ctx.fillStyle = seg.fg;
         ctx.font = `600 ${fontSize}px ${FONT}`;
-        const text = fitText(ctx, label, radius - 60);
+        const text = fitText(ctx, labelOf ? labelOf(label) : label, radius - 60);
         ctx.fillText(text, onLeft ? -(radius - 14) : radius - 14, 0);
         ctx.restore();
       });
@@ -148,7 +151,7 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
       ctx.stroke();
       ctx.restore();
     },
-    [visible]
+    [visible, labelOf]
   );
 
   useEffect(() => {
@@ -248,7 +251,7 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
           height={SIZE}
           style={styles.canvas}
           role="img"
-          aria-label={visible.join(", ")}
+          aria-label={visible.map((v) => (labelOf ? labelOf(v) : v)).join(", ")}
           data-rotation={rotation}
         />
       </div>
@@ -267,7 +270,9 @@ export const Wheel: React.FC<Props> = ({ items, onSelect, language }) => {
       <div style={styles.itemCount}>
         {t(
           `${items.length} possibilité${items.length > 1 ? "s" : ""} · ${visible.length} sur la roue`,
-          `${items.length} option${items.length > 1 ? "s" : ""} · ${visible.length} on the wheel`
+          `${items.length} option${items.length > 1 ? "s" : ""} · ${visible.length} on the wheel`,
+          `${items.length} posibilidad${items.length > 1 ? "es" : ""} · ${visible.length} en la ruleta`,
+          `${items.length} possibilitat${items.length > 1 ? "s" : ""} · ${visible.length} a la ruleta`
         )}
       </div>
     </div>

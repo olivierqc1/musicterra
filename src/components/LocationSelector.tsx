@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { toast } from "../lib/toast";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   onLocationSelect: (city: string, coords?: { lat: number; lng: number }) => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function LocationSelector({ onLocationSelect, language }: Props) {
@@ -11,7 +12,7 @@ export default function LocationSelector({ onLocationSelect, language }: Props) 
   const [useGPS, setUseGPS] = useState(false);
   const [loadingGPS, setLoadingGPS] = useState(false);
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   const handleGetGPS = () => {
     if (!navigator.geolocation) {

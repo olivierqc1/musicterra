@@ -4,12 +4,13 @@ import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 import { C, R } from "../theme";
 import { notifyRatingsChanged } from "../services/ratedItems";
+import { makeT, type Lang } from "../i18n";
 
 interface RatingProps {
   itemType: "genre" | "country" | "year";
   itemName: string;
   max?: number;
-  language?: "fr" | "en";
+  language?: Lang;
   onRated?: (score: number) => void;
 }
 
@@ -27,7 +28,7 @@ export const Rating: React.FC<RatingProps> = ({
   const [syncStatus, setSyncStatus] = useState<'local' | 'cloud' | 'syncing'>('local');
   const { session } = useAuth();
 
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
 
   const getStorageKey = () => {
     const userId = session?.user?.id || 'anonymous';
@@ -262,10 +263,14 @@ export const Rating: React.FC<RatingProps> = ({
         {loading
           ? t("Enregistrement…", "Saving…")
           : isSaved
-          ? t(`✓ Noté ${savedValue}/${max}`, `✓ Rated ${savedValue}/${max}`)
+          ? t(`✓ Noté ${savedValue}/${max}`, `✓ Rated ${savedValue}/${max}`,
+          `✓ Puntuado ${savedValue}/${max}`,
+          `✓ Puntuat ${savedValue}/${max}`)
           : value === 0
           ? t("Choisis une note", "Pick a rating")
-          : t(`Enregistrer ${value}/${max}`, `Save ${value}/${max}`)}
+          : t(`Enregistrer ${value}/${max}`, `Save ${value}/${max}`,
+          `Guardar ${value}/${max}`,
+          `Desar ${value}/${max}`)}
       </button>
     </div>
   );

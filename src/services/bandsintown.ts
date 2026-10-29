@@ -1,3 +1,4 @@
+import { type Lang } from "../i18n";
 const APP_ID = import.meta.env.VITE_BANDSINTOWN_APP_ID || 'musicterra';
 const BASE_URL = 'https://rest.bandsintown.com';
 
@@ -53,7 +54,7 @@ export async function searchLocationEvents(city: string): Promise<BandsintownEve
 }
 
 // Helper: formatter la date
-export function formatEventDate(datetime: string, language: 'fr' | 'en'): string {
+export function formatEventDate(datetime: string, language: Lang): string {
   const date = new Date(datetime);
   return date.toLocaleDateString(language, {
     weekday: 'short',

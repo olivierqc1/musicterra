@@ -11,10 +11,11 @@ import {
 } from '../services/groups';
 import { useAuth } from '../context/AuthContext';
 import { toast } from "../lib/toast";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   groupId: string;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function GroupDetail({ groupId, language }: Props) {
@@ -26,7 +27,7 @@ export default function GroupDetail({ groupId, language }: Props) {
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
   const { session } = useAuth();
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   // ⚡ Optimisation : cache local + rafraîchissement intelligent
   useEffect(() => {

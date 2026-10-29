@@ -9,11 +9,13 @@ import { ChevronRight } from "lucide-react";
 import { buildTasteProfile, type TasteProfile as Portrait } from "../lib/tasteProfile";
 import { RATINGS_CHANGED_EVENT } from "../services/ratedItems";
 import { C, R, WHEEL_SEGMENTS } from "../theme";
+import { makeT, type Lang } from "../i18n";
+import { countryLabel } from "../i18n/countryNames";
 
 export type OpenItem = (pool: "genres" | "countries" | "years", name: string) => void;
 
 interface Props {
-  language: "fr" | "en";
+  language: Lang;
   onOpen?: OpenItem;
   /** Bouton de l'état vide : retour à la roue. */
   onSpin?: () => void;
@@ -22,10 +24,12 @@ interface Props {
 const MIN_GENRES = 3;
 
 const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
-const shortLabel = (fr: string) => capitalize(fr.replace(/^(le |la |les |l')/, ""));
+// Sans l'article : « le jazz » → « Jazz », « la música clásica » → « Música clásica »
+const shortLabel = (s: string) =>
+  capitalize(s.replace(/^(le |la |les |l'|el |los |las |lo |els )/, ""));
 
 export default function TasteProfile({ language, onOpen, onSpin }: Props) {
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
@@ -47,7 +51,9 @@ export default function TasteProfile({ language, onOpen, onSpin }: Props) {
         <p style={s.lead}>
           {t(
             `Note encore ${left} genre${left > 1 ? "s" : ""} et on te montre ce que tes goûts disent de toi, avec des genres et des pays à explorer ensuite.`,
-            `Rate ${left} more genre${left > 1 ? "s" : ""} and we'll show you what your taste says about you, plus genres and countries to explore next.`
+            `Rate ${left} more genre${left > 1 ? "s" : ""} and we'll show you what your taste says about you, plus genres and countries to explore next.`,
+          `Puntúa ${left} género${left > 1 ? "s" : ""} más y te mostraremos lo que dicen tus gustos de ti, con géneros y países para explorar después.`,
+          `Puntua ${left} gènere${left > 1 ? "s" : ""} més i et mostrarem què diuen de tu els teus gustos, amb gèneres i països per explorar després.`
           )}
         </p>
         {onSpin && (
@@ -60,9 +66,9 @@ export default function TasteProfile({ language, onOpen, onSpin }: Props) {
   }
 
   const [first, ...others] = p.families;
-  const label = (f: { fr: string; en: string }) => (language === "fr" ? f.fr : f.en);
+  const label = (f: { fr: string; en: string }) => t(f.fr, f.en);
   const restText = others.slice(0, 2).map(label);
-  const avg = p.average.toFixed(1).replace(".", language === "fr" ? "," : ".");
+  const avg = p.average.toFixed(1).replace(".", language === "en" ? "." : ",");
 
   return (
     <section style={s.card} aria-labelledby="portrait-title">
@@ -71,7 +77,9 @@ export default function TasteProfile({ language, onOpen, onSpin }: Props) {
       {first ? (
         <>
           <h2 id="portrait-title" style={s.headline}>
-            {t(`Toi, c'est surtout ${first.fr}`, `You're mostly into ${first.en}`)}
+            {t(`Toi, c'est surtout ${first.fr}`, `You're mostly into ${first.en}`,
+          `Lo tuyo es sobre todo ${label(first)}`,
+          `El teu fort és ${label(first)}`)}
           </h2>
           {restText.length > 0 && (
             <p style={s.lead}>
@@ -89,7 +97,9 @@ export default function TasteProfile({ language, onOpen, onSpin }: Props) {
       <p style={s.meta}>
         {t(
           `${p.genresRated} genres notés, ${avg}/10 en moyenne`,
-          `${p.genresRated} genres rated, ${avg}/10 on average`
+          `${p.genresRated} genres rated, ${avg}/10 on average`,
+          `${p.genresRated} géneros puntuados, ${avg}/10 de media`,
+          `${p.genresRated} gèneres puntuats, ${avg}/10 de mitjana`
         )}
       </p>
 
@@ -98,7 +108,7 @@ export default function TasteProfile({ language, onOpen, onSpin }: Props) {
           {p.families.map((f, i) => (
             <div key={f.key}>
               <div style={s.barHead}>
-                <span style={s.barLabel}>{language === "fr" ? shortLabel(f.fr) : capitalize(f.en)}</span>
+                <span style={s.barLabel}>{shortLabel(label(f))}</span>
                 <span style={s.barPct}>{Math.round(f.share * 100)} %</span>
               </div>
               <div style={s.track}>
@@ -140,7 +150,9 @@ export default function TasteProfile({ language, onOpen, onSpin }: Props) {
               title={capitalize(sg.name)}
               sub={t(
                 `Parce que tu as aimé ${sg.because} (${sg.becauseRating}/10)`,
-                `Because you liked ${sg.because} (${sg.becauseRating}/10)`
+                `Because you liked ${sg.because} (${sg.becauseRating}/10)`,
+          `Porque te gustó ${sg.because} (${sg.becauseRating}/10)`,
+          `Perquè et va agradar ${sg.because} (${sg.becauseRating}/10)`
               )}
             />
           ))}
@@ -159,7 +171,7 @@ export default function TasteProfile({ language, onOpen, onSpin }: Props) {
             <Row
               key={c.country}
               onClick={onOpen ? () => onOpen("countries", c.country) : undefined}
-              title={c.country}
+              title={countryLabel(c.country, language)}
               sub={
                 c.examples.length
                   ? t("Vu dans ", "Seen in ") + c.examples.slice(0, 2).join(", ")

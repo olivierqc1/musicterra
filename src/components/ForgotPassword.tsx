@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   onBack: () => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function ForgotPassword({ onBack, language }: Props) {
@@ -12,7 +13,7 @@ export default function ForgotPassword({ onBack, language }: Props) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

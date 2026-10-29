@@ -2,11 +2,12 @@ import { useState, useRef } from 'react';
 import { createGroup, POPULAR_TAGS } from '../services/groups';
 import { supabase } from '../lib/supabase';
 import { toast } from "../lib/toast";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   onClose: () => void;
   onSuccess: () => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function CreateGroup({ onClose, onSuccess, language }: Props) {
@@ -20,7 +21,7 @@ export default function CreateGroup({ onClose, onSuccess, language }: Props) {
   const [creating, setCreating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {

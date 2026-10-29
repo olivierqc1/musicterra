@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ForgotPassword from "./ForgotPassword";
+import { makeT, type Lang } from "../i18n";
 
 interface AuthGateProps {
   children?: React.ReactNode;
   /** "sheet" : sans cadre, pour la fenêtre de connexion de l'en-tête. */
   mode?: "inline" | "fullpage" | "sheet";
-  language?: "fr" | "en";
+  language?: Lang;
 }
 
 const AuthGate: React.FC<AuthGateProps> = ({ 
@@ -24,7 +25,7 @@ const AuthGate: React.FC<AuthGateProps> = ({
   const [message, setMessage] = useState("");
   const { session, supabase } = useAuth();
 
-  const t = (fr: string, en: string) => (language === "fr" ? fr : en);
+  const t = makeT(language);
 
   // ============ CONNEXION EMAIL/PASSWORD ============
   const handleAuth = async (e: React.FormEvent) => {
@@ -155,7 +156,9 @@ const AuthGate: React.FC<AuthGateProps> = ({
       console.error(`❌ Erreur ${provider}:`, err);
       setMessage(t(
         `❌ Connexion ${provider} indisponible.`,
-        `❌ ${provider} login unavailable.`
+        `❌ ${provider} login unavailable.`,
+          `❌ Inicio de sesión con ${provider} no disponible.`,
+          `❌ Inici de sessió amb ${provider} no disponible.`
       ));
       setLoading(false);
     }

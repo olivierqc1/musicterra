@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function ChangePassword({ language }: Props) {
@@ -11,7 +12,7 @@ export default function ChangePassword({ language }: Props) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();

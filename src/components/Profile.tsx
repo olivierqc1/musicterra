@@ -18,6 +18,8 @@ import SEO from "@/components/SEO";
 import Passport from "@/components/Passport";
 import ProfileSearch from "@/components/ProfileSearch";
 import TasteProfile, { type OpenItem } from "./TasteProfile";
+import { makeT, localeOf, type Lang, type T } from "../i18n";
+import { countryLabel } from "../i18n/countryNames";
 
 // ───────────────────────────────
 // Types & storage
@@ -102,9 +104,11 @@ async function saveProfileToSupabase(userId: string, profile: Profile) {
 function GenreTags({
   value,
   onChange,
+  t,
 }: {
   value: string[];
   onChange: (v: string[]) => void;
+  t: T;
 }) {
   const [input, setInput] = useState("");
   const add = () => {
@@ -119,7 +123,9 @@ function GenreTags({
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2">
         {value.length === 0 && (
-          <p className="text-sm text-muted-foreground">Aucun genre ajouté.</p>
+          <p className="text-sm text-muted-foreground">
+            {t("Aucun genre ajouté.", "No genres added.", "Ningún género añadido.", "Cap gènere afegit.")}
+          </p>
         )}
         {value.map((g) => (
           <Badge key={g} variant="secondary" className="px-2 py-1 rounded-xl text-sm">
@@ -127,7 +133,7 @@ function GenreTags({
             <button
               className="ml-2 opacity-60 hover:opacity-100"
               onClick={() => remove(g)}
-              aria-label={`Retirer ${g}`}
+              aria-label={t(`Retirer ${g}`, `Remove ${g}`, `Quitar ${g}`, `Treure ${g}`)}
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
@@ -136,7 +142,7 @@ function GenreTags({
       </div>
       <div className="flex gap-2">
         <Input
-          placeholder="Ajouter un genre (Entrée)"
+          placeholder={t("Ajouter un genre (Entrée)", "Add a genre (Enter)", "Añadir un género (Intro)", "Afegeix un gènere (Retorn)")}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -146,7 +152,7 @@ function GenreTags({
             }
           }}
         />
-        <Button onClick={add}>Ajouter</Button>
+        <Button onClick={add}>{t("Ajouter", "Add")}</Button>
       </div>
     </div>
   );
@@ -156,13 +162,14 @@ function GenreTags({
 // Page principale
 // ───────────────────────────────
 interface ProfilePageProps {
-  language?: "fr" | "en";
+  language?: Lang;
   /** Ouvre la fiche d'un genre, d'un pays ou d'une année dans « Découvrir ». */
   onOpen?: OpenItem;
   onSpin?: () => void;
 }
 
 export default function ProfilePage({ language = "fr", onOpen, onSpin }: ProfilePageProps) {
+  const t = makeT(language);
   const { session, profile: authProfile } = useAuth();
   
   const [profile, setProfile] = useState<Profile>(
@@ -351,7 +358,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
   };return (
     <div className="mx-auto max-w-5xl p-4 md:p-8 space-y-8">
       <SEO 
-        title="Mon Profil Musical"
+        title={t("Mon Profil Musical", "My Music Profile", "Mi perfil musical", "El meu perfil musical")}
         description="Gérez votre profil MusicTerra : genres favoris, artistes émergents, notes et préférences musicales. Découvrez et partagez vos goûts musicaux avec la communauté."
         keywords="profil musical, genres favoris, découverte musicale, notes musique, communauté musique, préférences musicales"
         structuredData={{
@@ -369,7 +376,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
         transition={{ duration: 0.35 }}
         className="text-3xl font-semibold tracking-tight text-center"
       >
-        Mon profil
+        {t("Mon profil", "My profile", "Mi perfil", "El meu perfil")}
       </motion.h1>
 
       {/* PASSEPORT MUSICAL */}
@@ -382,7 +389,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
       <div className="grid md:grid-cols-3 gap-6">
         <Card className="rounded-2xl">
           <CardHeader>
-            <CardTitle>Photo et genres</CardTitle>
+            <CardTitle>{t("Photo et genres", "Photo and genres", "Foto y géneros", "Foto i gèneres")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
@@ -400,7 +407,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
               </Avatar>
               <div className="flex flex-col gap-2">
                 <Button variant="secondary" size="sm" onClick={onPickAvatar}>
-                  Choisir…
+                  {t("Choisir…", "Choose…", "Elegir…", "Tria…")}
                 </Button>
                 <Button
                   variant="ghost"
@@ -409,7 +416,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
                     setProfile((p) => ({ ...p, avatarDataUrl: undefined }))
                   }
                 >
-                  Réinitialiser
+                  {t("Réinitialiser", "Reset", "Restablecer", "Restableix")}
                 </Button>
                 <input
                   ref={fileRef}
@@ -423,6 +430,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
             <GenreTags
               value={profile.genres}
               onChange={(v) => setProfile((p) => ({ ...p, genres: v }))}
+              t={t}
             />
           </CardContent>
         </Card>
@@ -432,11 +440,11 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
             <CardTitle>Instagram</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Label htmlFor="insta">@handle Instagram</Label>
+            <Label htmlFor="insta">{t("Compte Instagram", "Instagram handle", "Cuenta de Instagram", "Compte d'Instagram")}</Label>
             <div className="flex gap-2">
               <Input
                 id="insta"
-                placeholder="ex. olivier.music"
+                placeholder={t("ex. olivier.music", "e.g. olivier.music", "p. ej. olivier.music", "p. ex. olivier.music")}
                 value={profile.instagram?.handle ?? ""}
                 onChange={(e) =>
                   setProfile((p) => ({
@@ -447,11 +455,11 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
               />
               {!isInstaConnected ? (
                 <Button onClick={connectInstagram} size="sm">
-                  <Instagram className="h-4 w-4 mr-2" /> Connecter
+                  <Instagram className="h-4 w-4 mr-2" /> {t("Connecter", "Connect", "Conectar", "Connecta")}
                 </Button>
               ) : (
                 <Button variant="destructive" size="sm" onClick={disconnectInstagram}>
-                  <LogOut className="h-4 w-4 mr-2" /> Déconnecter
+                  <LogOut className="h-4 w-4 mr-2" /> {t("Déconnecter", "Disconnect", "Desconectar", "Desconnecta")}
                 </Button>
               )}
             </div>
@@ -461,36 +469,36 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
         {/* LOCALISATION */}
         <Card className="rounded-2xl">
           <CardHeader>
-            <CardTitle>🌍 Localisation</CardTitle>
+            <CardTitle>🌍 {t("Localisation", "Location")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="current">Où je suis</Label>
+              <Label htmlFor="current">{t("Où je suis", "Where I live", "Dónde vivo", "On visc")}</Label>
               <Input
                 id="current"
-                placeholder="ex. Espagne"
+                placeholder={t("ex. Espagne", "e.g. Spain", "p. ej. España", "p. ex. Catalunya")}
                 value={profile.current_country || ''}
                 onChange={(e) =>
                   setProfile((p) => ({ ...p, current_country: e.target.value }))
                 }
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Artistes émergents locaux
+                {t("Artistes émergents locaux", "Local emerging artists", "Artistas emergentes locales", "Artistes emergents locals")}
               </p>
             </div>
             
             <div>
-              <Label htmlFor="origin">D'où je viens</Label>
+              <Label htmlFor="origin">{t("D'où je viens", "Where I'm from", "De dónde soy", "D'on soc")}</Label>
               <Input
                 id="origin"
-                placeholder="ex. Canada"
+                placeholder={t("ex. Canada", "e.g. Canada", "p. ej. Canadá", "p. ex. Canadà")}
                 value={profile.origin_country || ''}
                 onChange={(e) =>
                   setProfile((p) => ({ ...p, origin_country: e.target.value }))
                 }
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Garde un lien avec ton pays d'origine
+                {t("Garde un lien avec ton pays d'origine", "Stay connected to your home country", "Mantén el vínculo con tu país de origen", "Mantén el vincle amb el teu país d'origen")}
               </p>
             </div>
           </CardContent>
@@ -501,7 +509,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
       {ratings.length > 0 && (
         <Card className="rounded-2xl">
           <CardHeader>
-            <CardTitle>Mon historique de notes</CardTitle>
+            <CardTitle>{t("Mon historique de notes", "My rating history", "Mi historial de puntuaciones", "El meu historial de puntuacions")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-2 justify-between">
@@ -511,21 +519,21 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
                   size="sm"
                   onClick={() => setFilter('all')}
                 >
-                  Tout ({ratings.length})
+                  {t("Tout", "All", "Todo", "Tot")} ({ratings.length})
                 </Button>
                 <Button
                   variant={filter === 'genre' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setFilter('genre')}
                 >
-                  <Music className="w-4 h-4 mr-1" /> Genres ({stats.genres})
+                  <Music className="w-4 h-4 mr-1" /> {t("Genres", "Genres")} ({stats.genres})
                 </Button>
                 <Button
                   variant={filter === 'country' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setFilter('country')}
                 >
-                  <Globe className="w-4 h-4 mr-1" /> Pays ({stats.countries})
+                  <Globe className="w-4 h-4 mr-1" /> {t("Pays", "Countries")} ({stats.countries})
                 </Button>
                 {stats.years > 0 && (
                   <Button
@@ -533,7 +541,7 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
                     size="sm"
                     onClick={() => setFilter('year')}
                   >
-                    📅 Années ({stats.years})
+                    📅 {t("Années", "Years")} ({stats.years})
                   </Button>
                 )}
               </div>
@@ -542,9 +550,9 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="px-3 py-1.5 border rounded-lg text-sm"
               >
-                <option value="date">Récents</option>
-                <option value="rating">Note</option>
-                <option value="name">Nom</option>
+                <option value="date">{t("Récents", "Recent", "Recientes", "Recents")}</option>
+                <option value="rating">{t("Note", "Rating")}</option>
+                <option value="name">{t("Nom", "Name", "Nombre", "Nom")}</option>
               </select>
             </div>
 
@@ -563,10 +571,11 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
                 >
                   <div className="flex-1">
                     <div className="font-medium">
-                      {rating.item_type === 'genre' ? '🎸' : rating.item_type === 'year' ? '📅' : '🌍'} {rating.item_name}
+                      {rating.item_type === 'genre' ? '🎸' : rating.item_type === 'year' ? '📅' : '🌍'}{' '}
+                      {rating.item_type === 'country' ? countryLabel(rating.item_name, language) : rating.item_name}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {new Date(rating.updated_at).toLocaleDateString('fr-FR')}
+                      {new Date(rating.updated_at).toLocaleDateString(localeOf(language))}
                     </div>
                   </div>
                   <Badge variant="secondary" className="text-base font-bold">
@@ -582,20 +591,21 @@ export default function ProfilePage({ language = "fr", onOpen, onSpin }: Profile
       {/* Export profil */}
       <Card className="rounded-2xl border-dashed border-2">
         <CardHeader>
-          <CardTitle>Exporter mon profil</CardTitle>
+          <CardTitle>{t("Exporter mon profil", "Export my profile", "Exportar mi perfil", "Exporta el meu perfil")}</CardTitle>
         </CardHeader>
         <CardContent className="text-center">
           <p className="text-sm text-muted-foreground mb-3">
-            Télécharge ton profil MusicTerra en JSON {ratings.length > 0 && '(inclut tes notes)'}.
+            {t("Télécharge ton profil MusicTerra en JSON", "Download your MusicTerra profile as JSON", "Descarga tu perfil de MusicTerra en JSON", "Descarrega el teu perfil de MusicTerra en JSON")}
+            {ratings.length > 0 && ` ${t("(inclut tes notes)", "(includes your ratings)", "(incluye tus puntuaciones)", "(inclou les teves puntuacions)")}`}.
           </p>
           <Button onClick={exportProfile}>
-            <Download className="mr-2 h-4 w-4" /> Télécharger mon profil
+            <Download className="mr-2 h-4 w-4" /> {t("Télécharger mon profil", "Download my profile", "Descargar mi perfil", "Descarrega el meu perfil")}
           </Button>
         </CardContent>
       </Card>
 
       {/* Recherche d'utilisateurs */}
-      <ProfileSearch onApply={applyProfileFromResult} />
+      <ProfileSearch onApply={applyProfileFromResult} language={language} />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 # MusicTerra — CLAUDE.md
 
-Application web de découverte musicale (https://musicterra.xyz). L'utilisateur fait tourner une roue (genre, pays ou année), découvre une fiche détaillée, note ce qu'il écoute et remplit son « passeport ». S'y ajoutent des artistes émergents, des concerts, un profil social (abonnements, groupes, fil d'amis) et de la gamification (séries, succès, défis). Interface bilingue français / anglais.
+Application web de découverte musicale (https://musicterra.xyz). L'utilisateur fait tourner une roue (genre, pays ou année), découvre une fiche détaillée, note ce qu'il écoute et remplit son « passeport ». S'y ajoutent des artistes émergents, des concerts, un profil social (abonnements, groupes, fil d'amis) et de la gamification (séries, succès, défis). Interface en quatre langues : français, anglais, espagnol, catalan.
 
 ## Stack
 - React 19 + Vite 7, TypeScript (mode strict), SPA sans routeur : la navigation se fait par onglets (`discover`, `emerging`, `concerts`, `profile`) gérés dans `src/App.tsx`
@@ -71,7 +71,9 @@ Application web de découverte musicale (https://musicterra.xyz). L'utilisateur 
 
 ## Conventions
 - Composants fonctionnels et hooks uniquement, un composant par fichier, nom en PascalCase.
-- Tout texte visible passe par la fonction `t(fr, en)` ou reçoit la prop `language` : pas de texte dans une seule langue.
+- Langues (`src/i18n/`) : type `Lang` = `"fr" | "en" | "es" | "ca"`. Dans un composant, `const t = makeT(language)`, puis `t("français", "English")`. L'espagnol et le catalan d'un texte fixe viennent de `src/i18n/dict.ts` (clé = texte français) : tout nouveau texte fixe doit y être ajouté. Un texte avec variables reçoit l'espagnol et le catalan en 3e et 4e arguments : `t(\`${n} genres\`, \`${n} genres\`, \`${n} géneros\`, \`${n} gèneres\`)`. Sans traduction, le catalan se replie sur l'espagnol, puis l'anglais.
+- Noms de pays : stockés en anglais dans `countries.ts` ; pour l'affichage, `countryLabel(nom, langue)` (`src/i18n/countryNames.ts`).
+- Descriptions traduites : pays et années dans `public/i18n/countries.<es|ca>.json` et `years.<es|ca>.json` (téléchargés à la demande) ; genres dans `src/data/i18n/genres.<es|ca>.json` (slug → texte), fusionnés par le plugin dans `/genre-desc/<slug>.json`. `useItemDescription` gère tout et se replie sur l'anglais.
 - Respecter `noUnusedLocals` et `noUnusedParameters`.
 
 ## Façon de travailler

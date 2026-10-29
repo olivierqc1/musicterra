@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import { followUser, unfollowUser, isFollowing } from '../services/social';
 import { useAuth } from '../context/AuthContext';
 import { toast } from "../lib/toast";
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   userId: string;
   initialFollowing?: boolean;
   onFollowChange?: (isFollowing: boolean) => void;
   size?: 'sm' | 'md' | 'lg';
-  language?: 'fr' | 'en';
+  language?: Lang;
 }
 
 export default function FollowButton({
@@ -24,7 +25,7 @@ export default function FollowButton({
   const [checking, setChecking] = useState(true);
   const { session } = useAuth();
 
-  const t = (fr: string, en: string) => (language === 'fr' ? fr : en);
+  const t = makeT(language);
 
   // Vérifier le statut au chargement
   useEffect(() => {

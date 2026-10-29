@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+import { type Lang } from "../i18n";
 
 // ----------------------
 // TYPES
@@ -14,7 +15,7 @@ export interface UserProfile {
   bio?: string;
   location?: string;
   instagram_username?: string;
-  preferred_language?: "fr" | "en";
+  preferred_language?: Lang;
   created_at?: string;
   updated_at?: string;
 }

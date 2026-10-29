@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { searchGroups, POPULAR_TAGS, Group } from '../services/groups';
+import { makeT, type Lang } from "../i18n";
 
 interface Props {
   onGroupSelect: (group: Group) => void;
-  language: 'fr' | 'en';
+  language: Lang;
 }
 
 export default function GroupSearch({ onGroupSelect, language }: Props) {
@@ -12,7 +13,7 @@ export default function GroupSearch({ onGroupSelect, language }: Props) {
   const [results, setResults] = useState<Group[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const t = (fr: string, en: string) => language === 'fr' ? fr : en;
+  const t = makeT(language);
 
   useEffect(() => {
     handleSearch();
