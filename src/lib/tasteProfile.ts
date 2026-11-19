@@ -143,6 +143,7 @@ const PLACE_WORDS: Record<string, string[]> = {
   Romania: ["romanian", "romania", "bucharest"],
   Bulgaria: ["bulgarian", "bulgaria", "sofia"],
   Greece: ["greek", "greece", "athens", "cretan"],
+  Russia: ["russian", "russia", "moscow", "st petersburg", "saint petersburg", "siberian"],
   Ukraine: ["ukrainian", "ukraine", "kyiv", "kiev"],
   Belarus: ["belarusian", "belarus", "minsk"],
   Estonia: ["estonian", "estonia"],
