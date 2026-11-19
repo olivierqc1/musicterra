@@ -27,7 +27,7 @@ import { useAuth } from "./context/AuthContext";
 import { trackAction } from "./services/userBehavior";
 import { updateStreak } from "./services/gamification";
 import { syncRatings } from "./services/ratingsStore";
-import { buildPersonalizedGenrePool } from "./services/wheelPersonalization";
+import { buildPersonalizedGenrePool, buildPersonalizedPool } from "./services/wheelPersonalization";
 import { excludeRated, RATINGS_CHANGED_EVENT } from "./services/ratedItems";
 
 import { type Item, isGenre, isCountry, isYear } from "./itemTypes";
@@ -161,8 +161,10 @@ const App: React.FC = () => {
   // les notes les plus fraîches du localStorage.
   const wheelItems: Item[] = useMemo(() => {
     // Dans les deux modes, la roue ne tombe jamais sur un item déjà noté.
-    if (wheelMode === "personalized" && pool === "genres") {
-      return buildPersonalizedGenrePool(items);
+    if (wheelMode === "personalized") {
+      return pool === "genres"
+        ? buildPersonalizedGenrePool(items)
+        : buildPersonalizedPool(items, pool);
     }
     return excludeRated(items, pool);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -491,23 +493,13 @@ const App: React.FC = () => {
                   style={{
                     ...styles.seg,
                     ...(wheelMode === "personalized" ? styles.segActive : {}),
-                    ...(pool !== "genres" ? styles.segDisabled : {}),
                   }}
                   onClick={() => setWheelMode("personalized")}
-                  disabled={pool !== "genres"}
                   aria-pressed={wheelMode === "personalized"}
                 >
                   ✨ {t("Propose-moi un truc", "Suggest something")}
                 </button>
               </div>
-              {pool !== "genres" && (
-                <p style={styles.hint}>
-                  {t(
-                    "« Propose-moi un truc » marche seulement avec les genres pour l'instant.",
-                    "“Suggest something” only works with genres for now."
-                  )}
-                </p>
-              )}
 
               <div style={styles.wheelCard}>
                 <Wheel
