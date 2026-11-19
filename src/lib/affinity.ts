@@ -90,7 +90,7 @@ export function genresForCountry(country: string, limit = 8): string[] {
   const rows = genresOfCountry!.get(canon(country));
   if (!rows) return [];
   return [...rows.entries()]
-    .map(([name, w]) => ({ name, score: (isCore(name) ? 4 : 0) + 0.35 * w + Math.min(popularityOf(name), 1.8) }))
+    .map(([name, w]) => ({ name, score: (isCore(name) ? 4 : 0) + 0.35 * w + 0.6 * popularityOf(name) }))
     .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
     .slice(0, limit)
     .map((x) => x.name);
@@ -116,11 +116,12 @@ export function similarCountries(country: string, limit = 6): string[] {
     .map((x) => x.name);
 }
 
-export const decadeOf = (year: number) => Math.floor(year / 10) * 10;
+/** Époque d'une année : la décennie depuis 1890, le siècle avant. */
+export const eraOf = (year: number) => (year >= 1890 ? Math.floor(year / 10) * 10 : Math.floor(year / 100) * 100);
 
-/** Genres liés à la décennie d'une année (liste vide avant 1890). */
+/** Genres liés à l'époque d'une année (décennie, ou siècle avant 1890). */
 export function genresForYear(year: number, limit = 8): string[] {
-  const names = DECADE_GENRES[decadeOf(year)] || [];
+  const names = DECADE_GENRES[eraOf(year)] || [];
   const out: string[] = [];
   for (const n of names) {
     const real = genreName(n);
@@ -130,7 +131,7 @@ export function genresForYear(year: number, limit = 8): string[] {
 }
 
 let decadesByGenre: Map<string, number[]> | null = null;
-/** Décennies auxquelles un genre est lié. */
+/** Époques (décennies ou siècles) auxquelles un genre est lié. */
 export function decadesOfGenre(name: string): number[] {
   if (!decadesByGenre) {
     decadesByGenre = new Map();

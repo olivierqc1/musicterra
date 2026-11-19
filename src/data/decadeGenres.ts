@@ -1,5 +1,8 @@
 // src/data/decadeGenres.ts
-// Genres liés à chaque décennie : ceux qui y sont nés ou qui y ont percé.
+// Genres liés à chaque époque : ceux qui y sont nés ou qui y ont percé.
+// Depuis 1890, une entrée par décennie ; avant, une entrée par siècle (le
+// catalogue de genres compte très peu de musiques anciennes, les siècles
+// sans genre n'affichent rien).
 // Liste volontairement courte, limitée aux genres dont l'époque est bien
 // établie. Sert aux recommandations sur les fiches « année » et à la roue
 // « Propose-moi un truc » en mode années (src/lib/affinity.ts).
@@ -7,6 +10,15 @@
 // est simplement ignoré.
 
 export const DECADE_GENRES: Record<number, string[]> = {
+  900: ["medieval folk"],
+  1000: ["medieval folk"],
+  1100: ["medieval folk"],
+  1200: ["medieval folk"],
+  1300: ["medieval folk"],
+  1400: ["medieval folk"],
+  1600: ["early american folk"],
+  1700: ["early american folk"],
+  1800: ["fado", "flamenco", "tango", "early american folk"],
   1890: ["ragtime", "blues"],
   1900: ["ragtime", "blues"],
   1910: ["jazz", "blues"],

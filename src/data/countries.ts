@@ -1860,5 +1860,270 @@ export const countries: Item[] = [
     artists: [],
     spotify: "https://open.spotify.com/search/vanuatu%20music",
     image: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Port_Vila.jpg"
+  },
+  // ——— Compléments ———
+  {
+    name: 'Mexico',
+    descriptionFr: "Le Mexique est le berceau du mariachi, inscrit au patrimoine de l'UNESCO, et de la ranchera de José Alfredo Jiménez et de Vicente Fernández. Chaque région a sa couleur : le son jarocho à Veracruz, la banda et le norteño dans le nord, et aujourd'hui les corridos tumbados de Peso Pluma et de Natanael Cano. Le pays a aussi un rock en espagnol de premier plan, avec Café Tacvba et Caifanes, et une scène électronique et rap très active à Mexico.",
+    descriptionEn: "Mexico is the birthplace of mariachi, listed by UNESCO, and of the ranchera of José Alfredo Jiménez and Vicente Fernández. Each region has its own sound: son jarocho in Veracruz, banda and norteño in the north, and today the corridos tumbados of Peso Pluma and Natanael Cano. The country also has a first-rate Spanish-language rock scene, with Café Tacvba and Caifanes, and a very active electronic and rap scene in Mexico City.",
+    regions: ['Jalisco', 'Veracruz', 'Ciudad de México'],
+    artists: ['Vicente Fernández', 'Café Tacvba', 'Peso Pluma'],
+    spotify: "https://open.spotify.com/search/Mexico%20music"
+  },
+  {
+    name: 'Russia',
+    descriptionFr: "La Russie a une immense tradition classique, de Tchaïkovski et Rachmaninov à Stravinsky et Chostakovitch, et un folk où brillent la balalaïka et les chants à plusieurs voix. À l'époque soviétique, le rock russe est né dans la clandestinité avec Kino, de Viktor Tsoï, et Akvarium, tandis que Vladimir Vyssotski et Boulat Okoudjava portaient la chanson d'auteur. Le pays a aujourd'hui une scène rap et électronique très active à Moscou et à Saint-Pétersbourg.",
+    descriptionEn: "Russia has an immense classical tradition, from Tchaikovsky and Rachmaninoff to Stravinsky and Shostakovich, and a folk music where the balalaika and polyphonic singing stand out. In Soviet times, Russian rock was born underground with Kino, led by Viktor Tsoi, and Akvarium, while Vladimir Vysotsky and Bulat Okudzhava carried the author-song tradition. Today the country has a very active rap and electronic scene in Moscow and Saint Petersburg.",
+    regions: ['Moscou', 'Saint-Pétersbourg'],
+    artists: ['Kino', 'Vladimir Vysotsky', 'Oxxxymiron'],
+    spotify: "https://open.spotify.com/search/Russia%20music"
+  },
+  {
+    name: 'Belize',
+    descriptionFr: "Le Belize est le pays de la punta, musique et danse des Garifunas, descendants d'Africains et d'Amérindiens, avec des tambours et des chants en langue garifuna. On y entend aussi du reggae, du soca et de la musique créole, ainsi que des traditions mayas. Dangriga est considérée comme la capitale culturelle des Garifunas, et Andy Palacio a porté leur musique dans le monde.",
+    descriptionEn: "Belize is the land of punta, the music and dance of the Garifuna, descendants of Africans and Indigenous Americans, built on drums and songs in the Garifuna language. You also hear reggae, soca and Creole music, alongside Maya traditions. Dangriga is regarded as the cultural capital of the Garifuna, and Andy Palacio carried their music around the world.",
+    regions: ['Dangriga', 'Belize City'],
+    artists: ['Andy Palacio'],
+    spotify: "https://open.spotify.com/search/Belize%20music"
+  },
+  {
+    name: 'Burundi',
+    descriptionFr: "Le Burundi est célèbre pour ses tambourinaires, qui jouent ensemble de grands tambours ingoma en dansant avec une grande énergie. On y joue aussi de l'inanga, une cithare traditionnelle, et de l'umuduri, un arc musical. Bujumbura et Gitega sont les centres de cette scène, et la chanteuse Khadja Nin est l'une des voix burundaises les plus connues à l'international.",
+    descriptionEn: "Burundi is famous for its drummers, who play large ingoma drums together while dancing with great energy. The country also has the inanga, a traditional zither, and the umuduri, a musical bow. Bujumbura and Gitega are the centers of this scene, and singer Khadja Nin is one of the best-known Burundian voices abroad.",
+    regions: ['Bujumbura', 'Gitega'],
+    artists: ['Khadja Nin'],
+    spotify: "https://open.spotify.com/search/Burundi%20music"
+  },
+  {
+    name: 'Central African Republic',
+    descriptionFr: "La République centrafricaine abrite les chants polyphoniques des Aka, un peuple de la forêt dont les voix entrelacées sont très étudiées. Les ensembles de trompes des Banda-Linda, où chaque musicien joue une seule note, sont une autre tradition marquante. Bangui est le foyer de la musique moderne, chantée en sango et en français.",
+    descriptionEn: "The Central African Republic is home to the polyphonic singing of the Aka, a forest people whose interwoven voices have been widely studied. The horn ensembles of the Banda-Linda, in which each musician plays a single note, are another striking tradition. Bangui is the home of modern music, sung in Sango and French.",
+    regions: ['Bangui', 'Lobaye'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Central%20African%20Republic%20music"
+  },
+  {
+    name: 'Chad',
+    descriptionFr: "Le Tchad réunit de nombreux groupes ethniques, et sa musique mêle les traditions du Sahel au nord et celles des savanes du sud, chantées en arabe, en français et en langues locales. On y trouve des chants, des danses et des percussions qui accompagnent les fêtes et les cérémonies. N'Djamena est le centre de la vie musicale du pays.",
+    descriptionEn: "Chad brings together many ethnic groups, and its music blends the traditions of the Sahel in the north with those of the southern savannas, sung in Arabic, French and local languages. Songs, dances and percussion accompany festivals and ceremonies. N'Djamena is the center of the country's musical life.",
+    regions: ['N\'Djamena'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Chad%20music"
+  },
+  {
+    name: 'Comoros',
+    descriptionFr: "Les Comores ont une musique métissée par les liens avec la côte swahilie et le monde arabe, dont le twarab, un style de chanson accompagné d'instruments à cordes et de percussions, est l'un des genres populaires. Les chants et les danses animent les mariages et les grandes fêtes. Moroni est le cœur de cette scène, et la chanteuse Nawal est connue à l'international.",
+    descriptionEn: "The Comoros have a music shaped by ties to the Swahili coast and the Arab world, and twarab, a song style with string instruments and percussion, is one of its popular genres. Songs and dances enliven weddings and major celebrations. Moroni is the heart of this scene, and singer Nawal is known internationally.",
+    regions: ['Moroni'],
+    artists: ['Nawal'],
+    spotify: "https://open.spotify.com/search/Comoros%20music"
+  },
+  {
+    name: 'Djibouti',
+    descriptionFr: "À Djibouti, la musique s'appuie sur les traditions somalies et afars, avec une riche poésie chantée transmise à l'oral. Les chants et les danses accompagnent mariages et fêtes, souvent rythmés par des tambours et des battements de mains. La capitale, Djibouti, est le principal lieu de concerts et de rencontres musicales du pays.",
+    descriptionEn: "In Djibouti, music draws on Somali and Afar traditions, with a rich sung poetry passed down orally. Songs and dances accompany weddings and celebrations, often driven by drums and hand clapping. The capital, Djibouti City, is the country's main place for concerts and musical gatherings.",
+    regions: ['Djibouti'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Djibouti%20music"
+  },
+  {
+    name: 'Dominica',
+    descriptionFr: "La Dominique est le berceau du cadence-lypso, porté par des groupes comme Exile One, et du bouyon, un style festif et électronique né dans l'île avec Windward Caribbean Kulture. La culture créole, avec le kwéyòl, y reste très vivante. Roseau accueille le World Creole Music Festival, un grand rendez-vous des musiques créoles.",
+    descriptionEn: "Dominica is the cradle of cadence-lypso, carried by bands such as Exile One, and of bouyon, a festive electronic-flavored style born on the island with Windward Caribbean Kulture. Creole culture, including the Kwéyòl language, remains very much alive. Roseau hosts the World Creole Music Festival, a major gathering of Creole music.",
+    regions: ['Roseau'],
+    artists: ['Exile One', 'Windward Caribbean Kulture'],
+    spotify: "https://open.spotify.com/search/Dominica%20music"
+  },
+  {
+    name: 'Equatorial Guinea',
+    descriptionFr: "La Guinée équatoriale garde les traditions des Fang, dont l'épopée chantée accompagnée du mvet, un instrument à cordes, et celles des Bubis de l'île de Bioko, avec leurs danses. Les rythmes d'Afrique centrale se mêlent à l'héritage de l'espagnol, langue officielle du pays. Malabo et Bata sont les principaux centres de la vie musicale.",
+    descriptionEn: "Equatorial Guinea keeps the traditions of the Fang, including the sung epic accompanied by the mvet, a stringed instrument, and those of the Bubi of Bioko island, with their dances. Central African rhythms mix with the legacy of Spanish, one of the country's official languages. Malabo and Bata are the main centers of musical life.",
+    regions: ['Malabo', 'Bata'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Equatorial%20Guinea%20music"
+  },
+  {
+    name: 'Eritrea',
+    descriptionFr: "L'Érythrée possède une riche tradition de chant et de danse portée par ses neuf groupes ethniques, avec des instruments comme le krar, une lyre à cordes, et le kebero, un tambour. La musique tigrinya accompagne mariages et fêtes dans les hautes terres. Asmara est le cœur de la pop moderne, avec des artistes comme Helen Meles et Abraham Afewerki.",
+    descriptionEn: "Eritrea has a rich tradition of song and dance carried by its nine ethnic groups, with instruments such as the krar, a stringed lyre, and the kebero, a drum. Tigrinya music accompanies weddings and celebrations in the highlands. Asmara is the heart of modern pop, with artists like Helen Meles and Abraham Afewerki.",
+    regions: ['Asmara', 'Massawa'],
+    artists: ['Helen Meles', 'Abraham Afewerki'],
+    spotify: "https://open.spotify.com/search/Eritrea%20music"
+  },
+  {
+    name: 'Eswatini',
+    descriptionFr: "L'Eswatini est un petit royaume où la musique reste très liée aux cérémonies, comme l'Umhlanga, la danse des roseaux, où des milliers de jeunes femmes chantent et dansent devant la famille royale. L'Incwala, grande cérémonie des prémices, est elle aussi rythmée par des chants collectifs. On y chante surtout en swati, souvent à plusieurs voix, avec des tambours et des danses.",
+    descriptionEn: "Eswatini is a small kingdom where music remains closely tied to ceremonies, such as the Umhlanga, the Reed Dance, in which thousands of young women sing and dance before the royal family. The Incwala, the great first-fruits ceremony, is also driven by collective singing. Singing is mostly in Swati, often in several voices, with drums and dances.",
+    regions: ['Mbabane', 'Manzini'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Eswatini%20music"
+  },
+  {
+    name: 'Ethiopia',
+    descriptionFr: "L'Éthiopie a un patrimoine musical unique, avec des échelles musicales propres, des instruments comme le krar et le masenqo, les chanteurs azmari et la danse d'épaules eskista. Dans les années 1960 et 1970, Addis-Abeba a vu naître l'éthio-jazz de Mulatu Astatke. Aster Aweke et Teddy Afro font aujourd'hui vibrer le pays.",
+    descriptionEn: "Ethiopia has a unique musical heritage, with its own musical scales, instruments such as the krar and the masenqo, azmari singers and the eskista shoulder dance. In the 1960s and 1970s, Addis Ababa gave birth to the Ethio-jazz of Mulatu Astatke. Aster Aweke and Teddy Afro still move the country today.",
+    regions: ['Addis Ababa', 'Gondar'],
+    artists: ['Mulatu Astatke', 'Aster Aweke', 'Teddy Afro'],
+    spotify: "https://open.spotify.com/search/Ethiopia%20music"
+  },
+  {
+    name: 'Guinea-Bissau',
+    descriptionFr: "La Guinée-Bissau est le pays du gumbé, un style festif et rythmé, né dans la capitale et très populaire, chanté surtout en créole. Dans les années 1970, le groupe Super Mama Djombo a marqué la musique du pays. Bissau et l'archipel des Bijagós gardent aussi des traditions de percussions et de danses.",
+    descriptionEn: "Guinea-Bissau is the land of gumbé, a festive, rhythmic style born in the capital and hugely popular, sung mostly in Creole. In the 1970s, the band Super Mama Djombo left a mark on the country's music. Bissau and the Bijagós archipelago also keep traditions of percussion and dance.",
+    regions: ['Bissau', 'Bijagós'],
+    artists: ['Super Mama Djombo', 'Manecas Costa'],
+    spotify: "https://open.spotify.com/search/Guinea-Bissau%20music"
+  },
+  {
+    name: 'Kiribati',
+    descriptionFr: "Au Kiribati, la musique est avant tout vocale et collective, avec des chants et des danses micronésiens transmis de génération en génération. Les fêtes se déroulent souvent dans la maneaba, la grande maison commune des villages. On y chante en gilbertin, la langue du pays, en plus de l'anglais.",
+    descriptionEn: "In Kiribati, music is above all vocal and communal, with Micronesian songs and dances passed down from generation to generation. Celebrations often take place in the maneaba, the large communal meeting house of the villages. People sing in Gilbertese, the country's language, as well as English.",
+    regions: ['Tarawa'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Kiribati%20music"
+  },
+  {
+    name: 'Lesotho',
+    descriptionFr: "Le Lesotho est le royaume du famo, une musique populaire des Basotho portée par l'accordéon, la voix et un rythme entraînant. Les bergers y jouent aussi d'instruments traditionnels comme le lekolulo, une flûte, et le setolo-tolo, un arc musical. Le chanteur Tsepo Tshola et le groupe Sankomota ont fait connaître le pays au-delà de ses montagnes.",
+    descriptionEn: "Lesotho is the kingdom of famo, a popular Basotho music driven by accordion, voice and an infectious rhythm. Herders also play traditional instruments such as the lekolulo, a flute, and the setolo-tolo, a mouth bow. Singer Tsepo Tshola and the band Sankomota brought the country's music beyond its mountains.",
+    regions: ['Maseru'],
+    artists: ['Tsepo Tshola', 'Sankomota'],
+    spotify: "https://open.spotify.com/search/Lesotho%20music"
+  },
+  {
+    name: 'Liberia',
+    descriptionFr: "Le Libéria a une riche tradition de chants et de percussions chez des peuples comme les Kpelle, ainsi qu'une musique populaire influencée par le highlife ouest-africain. Le hipco, un hip-hop chanté en anglais libérien, s'est imposé comme le son de la jeunesse. Monrovia en est le cœur, avec des artistes comme Takun J.",
+    descriptionEn: "Liberia has a rich tradition of song and percussion among peoples such as the Kpelle, as well as a popular music influenced by West African highlife. Hipco, a hip-hop sung in Liberian English, has become the sound of the country's youth. Monrovia is its heart, with artists like Takun J.",
+    regions: ['Monrovia'],
+    artists: ['Takun J'],
+    spotify: "https://open.spotify.com/search/Liberia%20music"
+  },
+  {
+    name: 'Malawi',
+    descriptionFr: "Le Malawi est célèbre pour le gule wamkulu, une danse masquée des Chewa inscrite au patrimoine de l'UNESCO. La scène populaire chante surtout en chichewa, avec des artistes comme Lucius Banda et le groupe Black Missionaries. Le festival Lake of Stars, au bord du lac Malawi, réunit musiciens du pays et d'ailleurs.",
+    descriptionEn: "Malawi is famous for the gule wamkulu, a Chewa masked dance listed by UNESCO. The popular scene sings mostly in Chichewa, with artists like Lucius Banda and the band Black Missionaries. The Lake of Stars festival, on the shores of Lake Malawi, brings together musicians from the country and beyond.",
+    regions: ['Lilongwe', 'Blantyre'],
+    artists: ['Lucius Banda', 'Black Missionaries'],
+    spotify: "https://open.spotify.com/search/Malawi%20music"
+  },
+  {
+    name: 'Marshall Islands',
+    descriptionFr: "Les îles Marshall partagent avec le reste de la Micronésie une riche tradition de chants et de danses en langue marshallaise, transmise de génération en génération. Les chœurs d'église y occupent aussi une grande place dans la vie musicale quotidienne. La capitale, Majuro, est le principal lieu où se retrouvent les musiciens et les fêtes du pays.",
+    descriptionEn: "The Marshall Islands share with the rest of Micronesia a rich tradition of chants and dances in the Marshallese language, passed down from generation to generation. Church choirs also hold an important place in everyday musical life. The capital, Majuro, is the main place where the country's musicians and celebrations come together.",
+    regions: ['Majuro'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Marshall%20Islands%20music"
+  },
+  {
+    name: 'Mauritania',
+    descriptionFr: "La Mauritanie est un carrefour entre le monde arabo-berbère et l'Afrique subsaharienne, avec une musique maure portée par des griots et des griottes. On y joue la tidinit, un luth à quatre cordes, et l'ardin, une harpe réservée aux femmes. Dimi Mint Abba, Malouma et Noura Mint Seymali ont fait connaître cet héritage, de Nouakchott jusqu'aux scènes internationales.",
+    descriptionEn: "Mauritania is a crossroads between the Arab-Berber world and sub-Saharan Africa, with Moorish music carried by griots and griottes. Players use the tidinit, a four-string lute, and the ardin, a harp reserved for women. Dimi Mint Abba, Malouma and Noura Mint Seymali have brought this heritage from Nouakchott to international stages.",
+    regions: ['Nouakchott'],
+    artists: ['Dimi Mint Abba', 'Malouma', 'Noura Mint Seymali'],
+    spotify: "https://open.spotify.com/search/Mauritania%20music"
+  },
+  {
+    name: 'Micronesia',
+    descriptionFr: "Les États fédérés de Micronésie réunissent Yap, Chuuk, Pohnpei et Kosrae, quatre îles aux traditions de chants et de danses bien distinctes. Les danses de Yap, exécutées debout ou assis en rangs et accompagnées de chants, comptent parmi les plus connues du Pacifique. Les chœurs religieux et les musiques en langues locales complètent le paysage sonore de l'archipel.",
+    descriptionEn: "The Federated States of Micronesia bring together Yap, Chuuk, Pohnpei and Kosrae, four islands with distinct traditions of chant and dance. The dances of Yap, performed standing or seated in rows and accompanied by singing, are among the best known in the Pacific. Religious choirs and music in local languages complete the archipelago's soundscape.",
+    regions: ['Yap', 'Pohnpei', 'Chuuk'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Micronesia%20music"
+  },
+  {
+    name: 'Nauru',
+    descriptionFr: "Nauru, la plus petite république du monde, partage avec ses voisins micronésiens une tradition de chants et de danses en langue nauruane. Les chants religieux et les chœurs y tiennent aussi une place importante dans la vie communautaire. Le nauruan, parlé aux côtés de l'anglais, reste la langue de ces chants.",
+    descriptionEn: "Nauru, the world's smallest republic, shares with its Micronesian neighbours a tradition of songs and dances in the Nauruan language. Religious songs and choirs also hold an important place in community life. Nauruan, spoken alongside English, remains the language of these songs.",
+    regions: [],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Nauru%20music"
+  },
+  {
+    name: 'North Korea',
+    descriptionFr: "En Corée du Nord, la musique est étroitement liée à l'État, avec des opéras révolutionnaires, des chœurs et de grands spectacles collectifs comme les Mass Games d'Arirang. Le répertoire fait aussi place aux chansons populaires coréennes comme Arirang, partagées avec le Sud. À Pyongyang, des formations comme le Pochonbo Electronic Ensemble et le Moranbong Band ont popularisé une pop avec synthétiseurs et orchestre.",
+    descriptionEn: "In North Korea, music is closely tied to the state, with revolutionary operas, choirs and huge group spectacles such as the Arirang Mass Games. The repertoire also includes Korean folk songs like Arirang, shared with the South. In Pyongyang, groups such as the Pochonbo Electronic Ensemble and the Moranbong Band popularised a pop with synthesizers and an orchestra.",
+    regions: ['Pyongyang'],
+    artists: ['Moranbong Band', 'Pochonbo Electronic Ensemble'],
+    spotify: "https://open.spotify.com/search/North%20Korea%20music"
+  },
+  {
+    name: 'Palau',
+    descriptionFr: "Palau conserve des chants et des danses traditionnels en langue palauane, qui accompagnent récits, cérémonies et fêtes communautaires. Comme ailleurs en Micronésie, les chœurs d'église font aussi partie de la vie musicale. Koror, la plus grande ville, est le principal lieu de rassemblement des festivités du pays.",
+    descriptionEn: "Palau preserves traditional songs and dances in the Palauan language, which accompany stories, ceremonies and community celebrations. As elsewhere in Micronesia, church choirs are also part of musical life. Koror, the largest city, is the main gathering place for the country's festivities.",
+    regions: ['Koror'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Palau%20music"
+  },
+  {
+    name: 'São Tomé & Príncipe',
+    descriptionFr: "São Tomé-et-Principe mêle héritages africains et portugais dans des rythmes comme le socopé et l'ússua, que l'on danse en couple et en groupe. Le tchiloli, un théâtre musical et dansé inspiré d'une histoire de chevalerie européenne, est l'une des traditions les plus singulières de l'archipel. Le danço-congo, aux masques et aux percussions, anime lui aussi les fêtes populaires.",
+    descriptionEn: "São Tomé and Príncipe blends African and Portuguese heritage in rhythms such as socopé and ússua, danced in couples and in groups. Tchiloli, a musical and danced theatre inspired by a European chivalric story, is one of the archipelago's most distinctive traditions. Danço-congo, with its masks and percussion, also enlivens popular festivals.",
+    regions: ['São Tomé', 'Príncipe'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/São%20Tomé%20%26%20Príncipe%20music"
+  },
+  {
+    name: 'Seychelles',
+    descriptionFr: "Les Seychelles ont une musique créole née du métissage entre héritages africains, européens et malgaches, avec le sega, la contredanse et le moutya, une danse nocturne aux percussions. Les chansons sont le plus souvent en créole seychellois, et le Festival Kreol célèbre chaque année cette culture. Patrick Victor est l'une des voix les plus aimées du pays, entre Victoria et l'île de Mahé.",
+    descriptionEn: "Seychelles has a Creole music born from the blending of African, European and Malagasy heritage, with sega, the contredanse and moutya, a night dance driven by drums. Songs are most often in Seychellois Creole, and the Festival Kreol celebrates this culture every year. Patrick Victor is one of the country's best-loved voices, from Victoria to the island of Mahé.",
+    regions: ['Victoria', 'Mahé'],
+    artists: ['Patrick Victor'],
+    spotify: "https://open.spotify.com/search/Seychelles%20music"
+  },
+  {
+    name: 'Sierra Leone',
+    descriptionFr: "La Sierra Leone est le berceau de la musique palm-wine, des guitares douces et chaleureuses incarnées par S.E. Rogie. Le krio, langue du quotidien, nourrit des chansons populaires qui circulent dans tout le pays. Après la guerre civile, Sierra Leone's Refugee All Stars a fait connaître la scène locale bien au-delà de Freetown.",
+    descriptionEn: "Sierra Leone is a cradle of palm-wine music, with soft, warm guitar songs embodied by S.E. Rogie. Krio, the everyday language, feeds popular songs that travel across the whole country. After the civil war, Sierra Leone's Refugee All Stars brought the local scene to audiences far beyond Freetown.",
+    regions: ['Freetown'],
+    artists: ['S.E. Rogie', 'Sierra Leone\'s Refugee All Stars'],
+    spotify: "https://open.spotify.com/search/Sierra%20Leone%20music"
+  },
+  {
+    name: 'Somalia',
+    descriptionFr: "La Somalie est surnommée le pays des poètes : la poésie chantée y occupe une place centrale, accompagnée souvent d'un oud. La danse dhaanto et les chansons populaires de Mogadiscio et de Hargeisa font partie de son identité musicale. La diaspora a porté cette culture à l'étranger, notamment à travers des artistes comme K'naan et Maryam Mursal.",
+    descriptionEn: "Somalia is often called a nation of poets: sung poetry holds a central place there, frequently accompanied by an oud. The dhaanto dance and the popular songs of Mogadishu and Hargeisa are part of its musical identity. The diaspora has carried this culture abroad, notably through artists such as K'naan and Maryam Mursal.",
+    regions: ['Mogadishu', 'Hargeisa'],
+    artists: ['K\'naan', 'Maryam Mursal'],
+    spotify: "https://open.spotify.com/search/Somalia%20music"
+  },
+  {
+    name: 'South Sudan',
+    descriptionFr: "Le Soudan du Sud rassemble de nombreux peuples, comme les Dinka et les Nuer, dont les chants, les tambours et les danses rythment la vie communautaire. Ces traditions orales vivent aussi dans les chansons populaires de Juba. Le rappeur Emmanuel Jal, ancien enfant soldat, a fait connaître la voix du pays dans le monde entier.",
+    descriptionEn: "South Sudan brings together many peoples, such as the Dinka and the Nuer, whose songs, drums and dances mark the rhythm of community life. These oral traditions also live on in the popular songs of Juba. The rapper Emmanuel Jal, a former child soldier, has carried the country's voice around the world.",
+    regions: ['Juba'],
+    artists: ['Emmanuel Jal'],
+    spotify: "https://open.spotify.com/search/South%20Sudan%20music"
+  },
+  {
+    name: 'Sudan',
+    descriptionFr: "Le Soudan possède une riche tradition de chant en arabe, portée par l'oud et le tambour, avec Omdurman comme grand foyer culturel. Des voix légendaires comme Mohammed Wardi et Abdel Aziz El Mubarak ont marqué la chanson soudanaise sur plusieurs générations. Khartoum a aussi vu naître une scène moderne mêlant influences arabes et africaines.",
+    descriptionEn: "Sudan has a rich tradition of Arabic-language singing, carried by the oud and drums, with Omdurman as a major cultural hub. Legendary voices such as Mohammed Wardi and Abdel Aziz El Mubarak have shaped Sudanese song across generations. Khartoum has also seen a modern scene grow that blends Arab and African influences.",
+    regions: ['Omdurman', 'Khartoum'],
+    artists: ['Mohammed Wardi', 'Abdel Aziz El Mubarak'],
+    spotify: "https://open.spotify.com/search/Sudan%20music"
+  },
+  {
+    name: 'Saint Kitts & Nevis',
+    descriptionFr: "Saint-Christophe-et-Niévès vit au rythme du calypso et du soca, les musiques festives des Caraïbes anglophones. Au moment de Noël, le carnaval Sugar Mas fait défiler mascarades et orchestres de rue dans les rues de Basseterre. Les chansons et les danses de tradition locale se transmettent de génération en génération sur les deux îles.",
+    descriptionEn: "Saint Kitts and Nevis lives to the rhythm of calypso and soca, the festive music of the English-speaking Caribbean. Around Christmas, the Sugar Mas carnival fills the streets of Basseterre with masquerades and street bands. Traditional songs and dances are passed down from generation to generation on both islands.",
+    regions: ['Basseterre'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Saint%20Kitts%20%26%20Nevis%20music"
+  },
+  {
+    name: 'Saint Vincent & the Grenadines',
+    descriptionFr: "Saint-Vincent-et-les-Grenadines vibre au son du calypso et du soca, surtout pendant le carnaval Vincy Mas, qui anime Kingstown chaque été. Les steelbands et les orchestres de rue font partie du paysage sonore de l'archipel. Le chanteur Kevin Lyttle, originaire du pays, a connu un succès mondial avec le tube soca « Turn Me On ».",
+    descriptionEn: "Saint Vincent and the Grenadines vibrates to calypso and soca, especially during the Vincy Mas carnival, which energises Kingstown every summer. Steelbands and street bands are part of the archipelago's soundscape. The singer Kevin Lyttle, who comes from the country, had a worldwide hit with the soca track \"Turn Me On\".",
+    regions: ['Kingstown'],
+    artists: ['Kevin Lyttle'],
+    spotify: "https://open.spotify.com/search/Saint%20Vincent%20%26%20the%20Grenadines%20music"
+  },
+  {
+    name: 'Tuvalu',
+    descriptionFr: "Tuvalu, petit archipel polynésien du Pacifique, garde vivante la tradition du fatele, un ensemble de chants et de danses collectifs. Ces célébrations réunissent la communauté de Funafuti et des autres îles autour de rythmes frappés et de voix qui se répondent. La musique y reste avant tout une affaire de partage, de transmission orale et de fête.",
+    descriptionEn: "Tuvalu, a small Polynesian archipelago in the Pacific, keeps the fatele tradition alive, a set of collective songs and dances. These celebrations bring the community of Funafuti and the other islands together around beaten rhythms and answering voices. Music there remains above all a matter of sharing, oral transmission and festivity.",
+    regions: ['Funafuti'],
+    artists: [],
+    spotify: "https://open.spotify.com/search/Tuvalu%20music"
   }
 ];

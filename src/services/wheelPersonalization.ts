@@ -8,7 +8,7 @@
 import type { Item } from "../itemTypes";
 import { matrix } from "../data/matrix";
 import { excludeRated } from "./ratedItems";
-import { countriesOfGenre, decadeOf, decadesOfGenre } from "../lib/affinity";
+import { countriesOfGenre, eraOf, decadesOfGenre } from "../lib/affinity";
 
 const RATING_PREFIX = "rating_";
 const MIN_RATING = 6; // même seuil que artistsFromTopRatedGenres dans App.tsx
@@ -207,14 +207,14 @@ export function buildPersonalizedPool(
     if (pool === "countries") add(rated.name, intensity);
     else {
       const year = parseInt(rated.name, 10);
-      if (!Number.isNaN(year)) addDecade(decadeOf(year), intensity);
+      if (!Number.isNaN(year)) addDecade(eraOf(year), intensity);
     }
   }
 
   if (pool === "years") {
     for (const item of candidates) {
       const year = (item as { year?: number }).year;
-      const w = year === undefined ? 0 : decadeWeights.get(decadeOf(year)) || 0;
+      const w = year === undefined ? 0 : decadeWeights.get(eraOf(year)) || 0;
       if (w > 0) add(item.name, w);
     }
   }
