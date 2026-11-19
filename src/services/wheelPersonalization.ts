@@ -8,6 +8,7 @@
 import type { Item } from "../itemTypes";
 import { matrix } from "../data/matrix";
 import { excludeRated } from "./ratedItems";
+import { countriesOfGenre, decadeOf, decadesOfGenre } from "../lib/affinity";
 
 const RATING_PREFIX = "rating_";
 const MIN_RATING = 6; // même seuil que artistsFromTopRatedGenres dans App.tsx
@@ -120,4 +121,104 @@ export function buildPersonalizedGenrePool(
   }
 
   return picked;
+}
+
+// Tirage pondéré sans remise de `size` items parmi `candidates`.
+function weightedSample(candidates: Item[], weights: Map<string, number>, size: number): Item[] {
+  const picked: Item[] = [];
+  const left = [...candidates];
+  const target = Math.min(size, left.length);
+  while (picked.length < target) {
+    const total = left.reduce((sum, g) => sum + (weights.get(g.name) || 1), 0);
+    let r = Math.random() * total;
+    let index = left.length - 1;
+    for (let i = 0; i < left.length; i++) {
+      r -= weights.get(left[i].name) || 1;
+      if (r <= 0) {
+        index = i;
+        break;
+      }
+    }
+    picked.push(left[index]);
+    left.splice(index, 1);
+  }
+  return picked;
+}
+
+// Lit les notes >= MIN_RATING d'un type (« country » ou « year »).
+function getTopRatedNames(type: "country" | "year"): RatedGenre[] {
+  const rated: RatedGenre[] = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || !key.startsWith(RATING_PREFIX)) continue;
+      const parts = key.split("_");
+      if (parts[2] !== type) continue;
+      const rating = parseInt(localStorage.getItem(key) || "0", 10);
+      if (rating >= MIN_RATING) rated.push({ name: parts.slice(3).join("_"), rating });
+    }
+  } catch {
+    /* localStorage indisponible */
+  }
+  return rated;
+}
+
+/**
+ * Pool personnalisé pour la roue des pays ou des années.
+ * Les notes de genres servent de point de départ : un genre bien noté
+ * donne du poids aux pays où il est présent, ou aux décennies auxquelles
+ * il est lié. Les genres voisins dans la matrice comptent aussi, moins
+ * fort. Une note directe sur un pays ou une décennie pèse aussi.
+ * Sans aucune note utile, on retombe sur le pool complet (sans les items
+ * déjà notés).
+ */
+export function buildPersonalizedPool(
+  allItems: Item[],
+  pool: "countries" | "years",
+  size: number = DEFAULT_POOL_SIZE
+): Item[] {
+  const candidates = excludeRated(allItems, pool);
+  const topGenres = getTopRatedGenreNames();
+  const topDirect = getTopRatedNames(pool === "countries" ? "country" : "year");
+  if (topGenres.length === 0 && topDirect.length === 0) return candidates;
+
+  const weights = new Map<string, number>();
+  const add = (name: string, w: number) => weights.set(name, (weights.get(name) || 1) + w);
+  const decadeWeights = new Map<number, number>();
+  const addDecade = (dec: number, w: number) => decadeWeights.set(dec, (decadeWeights.get(dec) || 0) + w);
+
+  const spread = (genre: string, intensity: number) => {
+    if (pool === "countries") {
+      for (const [country, rel] of countriesOfGenre(genre)) add(country, (intensity * rel) / 3);
+    } else {
+      for (const dec of decadesOfGenre(genre)) addDecade(dec, intensity);
+    }
+  };
+
+  for (const rated of topGenres) {
+    // rating 6 -> x1, 7 -> x2, 8 -> x4, 9 -> x8, 10 -> x16
+    const intensity = Math.pow(2, rated.rating - MIN_RATING);
+    spread(rated.name, intensity);
+    for (const [simName, score] of getSimilarGenres(rated.name)) spread(simName, intensity * score * 1.5);
+  }
+
+  for (const rated of topDirect) {
+    const intensity = Math.pow(2, rated.rating - MIN_RATING);
+    if (pool === "countries") add(rated.name, intensity);
+    else {
+      const year = parseInt(rated.name, 10);
+      if (!Number.isNaN(year)) addDecade(decadeOf(year), intensity);
+    }
+  }
+
+  if (pool === "years") {
+    for (const item of candidates) {
+      const year = (item as { year?: number }).year;
+      const w = year === undefined ? 0 : decadeWeights.get(decadeOf(year)) || 0;
+      if (w > 0) add(item.name, w);
+    }
+  }
+
+  if (weights.size === 0) return candidates;
+  return weightedSample(candidates, weights, size);
 }

@@ -21,6 +21,7 @@ import { shareUrl } from "../lib/share";
 import { makeT, type Lang } from "../i18n";
 import { countryLabel, countryFlag } from "../i18n/countryNames";
 import { countries } from "../data/countries";
+import { genresForCountry, genresForYear, similarCountries } from "../lib/affinity";
 
 interface Props {
   item: Item;
@@ -98,6 +99,14 @@ export default function ResultCard({
     const row = matrix[item.name] || {};
     return Object.entries(row).sort((a, b) => (b[1] as number) - (a[1] as number));
   }, [item]);
+
+  // Pays et années : la matrice ne contient que des genres, on passe par
+  // les genres liés au pays ou à la décennie (src/lib/affinity.ts).
+  const suggestedGenres = useMemo(
+    () => (isCountry(item) ? genresForCountry(item.name, 8) : isYear(item) ? genresForYear(item.year, 8) : []),
+    [item]
+  );
+  const suggestedCountries = useMemo(() => (isCountry(item) ? similarCountries(item.name, 6) : []), [item]);
 
   const handleListenClick = (platform: string) => {
     if (session) {
@@ -247,6 +256,58 @@ export default function ResultCard({
               language={language}
             />
           </div>
+
+          {suggestedGenres.length > 0 && (
+            <div style={{ marginTop: 18 }}>
+              <span style={styles.metaLabel}>
+                {isCountry(item)
+                  ? t("Genres de ce pays", "Genres from this country")
+                  : t("Genres liés à cette époque", "Genres tied to this era")}
+              </span>
+              <div style={styles.badgeContainer}>
+                {suggestedGenres.map((label) =>
+                  onOpenGenre ? (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => onOpenGenre(label)}
+                      style={{ ...styles.badge, background: C.surface, color: C.ink, fontWeight: 600 }}
+                    >
+                      {capitalize(label)}
+                    </button>
+                  ) : (
+                    <span key={label} style={styles.badge}>
+                      {capitalize(label)}
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
+          {suggestedCountries.length > 0 && (
+            <div style={{ marginTop: 18 }}>
+              <span style={styles.metaLabel}>{t("Pays aux genres proches", "Countries with similar genres")}</span>
+              <div style={styles.badgeContainer}>
+                {suggestedCountries.map((name) =>
+                  onOpenCountry ? (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => onOpenCountry(name)}
+                      style={{ ...styles.badge, background: C.surface, color: C.ink, fontWeight: 600 }}
+                    >
+                      {countryFlag(name)} {countryLabel(name, language)}
+                    </button>
+                  ) : (
+                    <span key={name} style={styles.badge}>
+                      {countryLabel(name, language)}
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+          )}
 
           {similarityBoost.length > 0 && (
             <div style={{ marginTop: 18 }}>
